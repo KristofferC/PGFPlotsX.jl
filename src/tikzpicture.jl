@@ -75,7 +75,7 @@ function savepdf(filename::String, tp::TikzPicture)
         latexcmd = `$(latexengine()) --output-directory=$folder $tmp`
         latex_success = success(latexcmd)
         log = readstring("$tmp.log")
-        mv(tmp * ".pdf", filename * ".pdf"; remove_destination = true)
+
         rm("$(tmp).tex")
         rm("$(tmp).aux")
         rm("$(tmp).log")
@@ -84,6 +84,8 @@ function savepdf(filename::String, tp::TikzPicture)
             latexerrormsg(log)
             error("LaTeX error")
         end
+
+        mv(tmp * ".pdf", filename * ".pdf"; remove_destination = true)
 
     catch
         println("Error saving as PDF.")

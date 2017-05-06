@@ -10,8 +10,10 @@ include("tikzpicture.jl")
 
 
 # TikzElements
-include("tikzelements/plot.jl")
 
+abstract AxisElement
+
+include("axiselements.jl")
 include("axis.jl")
 
 end # module

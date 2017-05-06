@@ -1,14 +1,16 @@
-abstract PlotElement
-
-immutable PGFFunction <: PlotElement
+immutable RawString <: AxisElement
     str::String
 end
 
-immutable PGFTable <: PlotElement
-    filename::String
+function print_tex(io_main::IO, rs::RawString)
+    print_indent(io_main) do io
+        print(io, rs.str)
+    end
 end
 
-immutable Plot
+abstract PlotElement
+
+immutable Plot <: AxisElement
     element::PlotElement
     options::Vector{String}
     incremental::Bool # use \addplot+
@@ -30,12 +32,19 @@ function print_tex(io_main::IO, p::Plot)
     end
 end
 
-## PlotElements
+
+immutable PGFFunction <: PlotElement
+    str::String
+end
 
 function print_tex(io_main::IO, f::PGFFunction)
     print_indent(io_main) do io
         print(io, "{", f.str, "};")
     end
+end
+
+immutable PGFTable <: PlotElement
+    filename::String
 end
 
 function print_tex(io_main::IO, t::PGFTable)

@@ -1,16 +1,16 @@
 immutable Axis <: TikzElement
-    plots::Vector{Plot}
+    plots::Vector{AxisElement}
     options::Vector{String}
 end
 
-Base.push!(axis::Axis, plot::Plot) = push!(axis.plots, plot)
+Base.push!(axis::Axis, plot::AxisElement) = push!(axis.plots, plot)
 
-function Axis(plot::Vector{Plot}, args::Vararg{Pair})
+function Axis(plot::Vector{AxisElement}, args::Vararg{Pair})
     Axis(plot, create_options(args))
 end
 
 function Axis(args::Vararg{Pair})
-    Axis(Plot[], args...)
+    Axis(AxisElement[], args...)
 end
 
 function print_tex(io_main::IO, axis::Axis)
