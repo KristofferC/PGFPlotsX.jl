@@ -1,10 +1,14 @@
-function print_options(io::IO, options::String)
-    print(io, "[", options, "]\n")
+
+function print_options(io::IO, options::Dict{String, Any})
+    print(io, "[")
+    stringify(io, options)
+    print(io, "]\n")
 end
 
-function print_options(io::IO, options::Vector{String})
-    print(io, "[", join(options, ", "), "]\n")
-end
+# Print with indent
+printi(io::IO, x, i = 0) = print(io, "    "^i, x)
+printlni(io::IO, x, i = 0) = print(io, "    "^i, x)
+
 
 function print_indent(io::IO, str::String)
     for line in split(str, "\n")
@@ -12,20 +16,11 @@ function print_indent(io::IO, str::String)
     end
 end
 
+
 function print_indent(f, io_main::IO)
     io = IOBuffer()
     f(io)
     print_indent(io_main, String(take!(io)))
-end
-
-function create_options(args)
-    options = String[]
-    io = IOBuffer()
-    for arg in args
-        stringify(io, arg)
-        push!(options, String(take!(io)))
-    end
-    return options
 end
 
 """
@@ -44,17 +39,32 @@ stringify(STDOUT, "legend style" => ["at" => (0.5,-0.15),
 stringify(STDOUT, "symbolic x coords" => ["excellent", "good", "neutral"])
 ```
 """
-function stringify(io::IO, p::Pair)
-    print(io, first(p), " = {")
-    stringify(io, last(p))
-    print(io, "}")
+
+function dictify(args)
+    d = Dict{String, Any}()
+    for arg in args
+        accum_opt!(d, arg)
+    end
+    return d
+end
+
+accum_opt!(d::Dict, opt::String) = d[opt] = nothing
+accum_opt!(d::Dict, opt::Pair) = d[first(opt)] = valuify(last(opt))
+
+valuify(x) = x
+valuify(opts::Vector) = dictify(opts)
+
+
+function stringify(io::IO, d::Dict)
+    for (k, v) in d
+        print(io, k)
+        if v != nothing
+            print(io, " = {")
+            stringify(io, v)
+            print(io, "}")
+        end
+        print(io, ", ")
+    end
 end
 
 stringify(io::IO, s) = print(io::IO, s)
-
-function stringify(io::IO, opts::Vector)
-    for opt in opts
-        stringify(io, opt)
-        println(io, ",")
-    end
-end

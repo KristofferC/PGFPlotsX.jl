@@ -1,42 +1,17 @@
-latexengine() = "lualatex"
-
-const TikzElementOrStr = Union{TikzElement, String}
-
-type TikzPicture  <: OptionType
-    elements::Vector{TikzElementOrStr} # Plots, nodes etc
+type TikzPicture <: LateXElement
+    elements::Vector{TikzElement} # Plots, nodes etc
     options::Dict{String, Any}
-    preamble::Vector{String}
 end
 
-function TikzPicture(options::Vararg{PGFOption}; preamble = String[])
-    TikzPicture(TikzElementOrStr[], dictify(options), preamble)
+function TikzPicture(elements = TikzElement[], options...;)
+    TikzPicture(elements, dictify(options))
 end
 
-function TikzPicture(elements::Vector, options::Vararg{PGFOption}; preamble = String[])
-    TikzPicture(elements, dictify(options), preamble)
-end
-
-Base.push!(tp::TikzPicture, element::TikzElementOrStr) = push!(tp.elements, element)
+Base.push!(tp::TikzPicture, element::TikzElement) = push!(tp.elements, element)
 
 ##########
 # Output #
 ##########
-
-function save(filename::String, tp::TikzPicture; include_preamble::Bool = true)
-    file_ending = split(basename(filename), '.')[end]
-    filename_stripped = filename[1:end-4] # This is ugly, whatccha gonna do about it?
-    if !(file_ending in ("tex", "svg", "pdf"))
-        throw(ArgumentError("allowed file endings are .tex, .svg, .pdf"))
-    end
-    if file_ending == "tex"
-        savetex(filename_stripped, tp; include_preamble = include_preamble)
-    elseif file_ending == "svg"
-        savesvg(filename_stripped, tp)
-    elseif file_ending == "pdf"
-        savepdf(filename_stripped, tp)
-    end
-    return
-end
 
 # TeX
 function savetex(filename::String, tp::TikzPicture; include_preamble::Bool = true)
@@ -45,7 +20,7 @@ function savetex(filename::String, tp::TikzPicture; include_preamble::Bool = tru
     end
 end
 
-function savetex(io::IO, tp::TikzPicture; include_preamble::Bool = true)
+function savetex(io::IO, tps::TikzPictures include_preamble::Bool = true)
     if include_preamble
         println(io, "\\RequirePackage{luatex85}")
         println(io, "\\documentclass{standalone}")
@@ -133,24 +108,3 @@ function savesvg(filename::String, tp::TikzPicture)
 end
 
 Base.mimewritable(::MIME"image/svg+xml", ::TikzPicture) = true
-
-
-global _tikzid = round(UInt64, time() * 1e6)
-
-function Base.show(f::IO, ::MIME"image/svg+xml", tp::TikzPicture)
-    global _tikzid
-    filename = tempname()
-    savesvg(filename, tp)
-    s = readstring("$filename.svg")
-    s = replace(s, "glyph", "glyph-$(_tikzid)-")
-    s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
-    s = replace(s, "#clip", "#clip-$(_tikzid)-")
-    s = replace(s, "\"image", "\"image-$(_tikzid)-")
-    s = replace(s, "#image", "#image-$(_tikzid)-")
-    s = replace(s, "linearGradient id=\"linear", "linearGradient id=\"linear-$(_tikzid)-")
-    s = replace(s, "#linear", "#linear-$(_tikzid)-")
-    s = replace(s, "image id=\"", "image style=\"image-rendering: pixelated;\" id=\"")
-    _tikzid += 1
-    println(f, s)
-    rm("$filename.svg")
-end
