@@ -67,24 +67,50 @@ end
 
 
 immutable PGFFunction <: PlotElement
-    str::String
+    fs::Vector{String}
 end
 
+PGFFunction(str::String) = PGFFunction([str])
+
 function print_tex(io_main::IO, f::PGFFunction)
+    multiple_f = length(f.fs) != 1
     print_indent(io_main) do io
-        print(io, "{", f.str, "}")
+        multiple_f && print(io, "(\n")
+        for (i, fstr) in enumerate(f.fs)
+            print(io, "{", fstr, "}")
+            if i != length(f.fs)
+                print(io, ",\n")
+            end
+        end
+        multiple_f && print(io, ")")
     end
 end
 
 immutable PGFCoordinates <: PlotElement
-    data
-    PGFCoordinates(mat::Matrix) = new(mat)
-    PGFCoordinates(mat::Vector{<:Tuple}) = new(mat)
+    data::Matrix
+    metadata::Union{Void, Vector}
 end
 
-function PGFCoordinates(x::Vector, y::Vector)
+function PGFCoordinates(vec::Vector{<:Tuple}; metadata = nothing)
+    if length(vec) == 0
+        mat = Matrix[]
+    else
+        l = length(vec[1])
+        mat = Matrix(l, length(vec))
+        for (i, v) in enumerate(vec)
+            @assert length(v) == l
+            for (j, c) in enumerate(v)
+                mat[j, i] = c
+            end
+        end
+    end
+    PGFCoordinates(mat, metadata)
+end
+
+
+function PGFCoordinates(x::Vector, y::Vector; metadata = nothing)
     mat = transpose(hcat(x, y))
-    PGFCoordinates(mat)
+    PGFCoordinates(mat, metadata)
 end
 
 
@@ -92,40 +118,26 @@ function print_tex(io_main::IO, t::PGFCoordinates)
     print_indent(io_main) do io
         print(io, "coordinates ")
         print(io, "{\n")
-        print_coordinates(io, t.data)
+        m = t.data
+        for j in 1:size(m, 2)
+            print(io, "(")
+            for i in 1:size(m, 1)
+                i != 1 && print(io, ", ")
+                print(io, m[i, j])
+            end
+            print(io, ")")
+            if t.metadata != nothing
+                print(io, " [", t.metadata[j], "]")
+            end
+            if j != size(m, 2)
+                print(io, "\n")
+            end
+        end
+
         print(io, "\n}")
     end
 end
 
-function print_coordinates(io, m::Matrix)
-    for j in 1:size(m, 2)
-        print(io, "(")
-        for i in 1:size(m, 1)
-            i != 1 && print(io, ", ")
-            print(io, m[i, j])
-        end
-        print(io, ")")
-        if j != size(m, 2)
-            print(io, "\n")
-        end
-    end
-end
-
-function print_coordinates(io, v::Vector{<:Tuple})
-    for j in 1:length(v)
-        print(io, "(")
-        first = true
-        for c in v[j]
-            !first && print(io, ", ")
-            print(io, c)
-            first = false
-        end
-        print(io, ")")
-        if j != length(v)
-            print(io, "\n")
-        end
-    end
-end
 
 immutable PGFTable <: PlotElement
     filename::String
@@ -139,6 +151,23 @@ end
 function print_tex(io_main::IO, t::PGFTable)
     print_indent(io_main) do io
         print(io, "table ")
+        print_options(io, t.options)
+        print(io, "{", t.filename, "}")
+    end
+end
+
+immutable PGFGraphics <: PlotElement
+    filename::String
+    options::Dict{String, Any}
+end
+
+function PGFGraphics(filename::String, args::Vararg{PGFOption})
+    PGFGraphics(filename, dictify(args))
+end
+
+function print_tex(io_main::IO, t::PGFGraphics)
+    print_indent(io_main) do io
+        print(io, "graphics ")
         print_options(io, t.options)
         print(io, "{", t.filename, "}")
     end

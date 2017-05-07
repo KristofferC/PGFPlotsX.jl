@@ -5,6 +5,7 @@ const PGFOption = Union{Pair, String}
 PGFPLOTS_DEFAULT_PREAMBLE =
 """
 \\usepackage{pgfplots}
+\\pgfplotsset{compat=1.13}
 """
 
 PGFPLOTS_CUSTOM_PREAMBLE = String[]

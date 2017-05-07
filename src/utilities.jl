@@ -68,3 +68,12 @@ function stringify(io::IO, d::Dict)
 end
 
 stringify(io::IO, s) = print(io::IO, s)
+
+function stringify(io::IO, t::Tuple)
+    length(t) == 0 && return
+    for i in 1:length(t)
+        i != 1 && print(io, "{")
+        stringify(io, t[i])
+        i != length(t) && print(io, "}")
+    end
+end

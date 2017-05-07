@@ -66,7 +66,7 @@ function savetex(io::IO, tp::TikzPicture; include_preamble::Bool = true)
     end
 end
 
-# TODO: Copyright TikzPictures.jl
+# Copyright TikzPictures.jl (see LICENSE.md)
 
 function latexerrormsg(s)
     beginError = false
