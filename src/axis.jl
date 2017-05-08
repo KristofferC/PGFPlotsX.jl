@@ -2,7 +2,7 @@ const AxisElementOrStr = Union{AxisElement, String}
 
 immutable Axis <: TikzElement
     plots::Vector{AxisElementOrStr}
-    options::Dict{String, Any}
+    options::OrderedDict{Any, Any}
 end
 
 Base.push!(axis::Axis, plot::AxisElementOrStr) = push!(axis.plots, plot)
@@ -28,18 +28,14 @@ function print_tex(io_main::IO, axis::Axis)
     end
 end
 
-function totikzpicture(axis::Axis)
-    tp = TikzPicture(preamble = vcat(PGFPLOTS_DEFAULT_PREAMBLE, PGFPLOTS_CUSTOM_PREAMBLE))
-    push!(tp, axis)
-    return tp
-end
-
 function save(filename::String, axis::Axis; include_preamble::Bool = true)
-    save(filename, totikzpicture(axis); include_preamble = include_preamble)
+    save(filename, TikzPicture(axis); include_preamble = include_preamble)
 end
 
 Base.mimewritable(::MIME"image/svg+xml", ::Axis) = true
 
-function Base.show(f::IO, ::MIME"image/svg+xml", axis::Axis)
-    show(f, MIME("image/svg+xml"), totikzpicture(axis))
+function Base.show(f::IO, ::MIME"image/svg+xml", axes::Vector{Axis})
+    show(f, MIME("image/svg+xml"), TikzPicture(axes))
 end
+
+Base.show(f::IO, ::MIME"image/svg+xml", axis::Axis) = show(f, MIME("image/svg+xml"), [axis])

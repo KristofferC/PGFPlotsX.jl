@@ -21,6 +21,10 @@ sets if the preamble should be included in the output (only relevant for `tex` e
 * Error bars
 * Group plots
 * Gnuplot
+* Document custom preamble
+* Document option macro `@pgf`
+* Make option macro recursive on calls.
 * Good way of including Tikz Nodes.
-* Real documentation instead of only examples.
 * Create Tables from in memory data.
+* `copy` for `Plot`, `Axis` etc (perhaps just use `deepcopy`)
+* `merge` an option dictionary into types with options.

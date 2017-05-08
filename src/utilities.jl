@@ -1,7 +1,7 @@
 
-function print_options(io::IO, options::Dict{String, Any})
+function print_options(io::IO, options::OrderedDict{Any, Any})
     print(io, "[")
-    stringify(io, options)
+    print_opt(io, options)
     print(io, "]\n")
 end
 
@@ -16,11 +16,34 @@ function print_indent(io::IO, str::String)
     end
 end
 
-
 function print_indent(f, io_main::IO)
     io = IOBuffer()
     f(io)
     print_indent(io_main, String(take!(io)))
+end
+
+
+function prockey(key)
+    if isa(key, Symbol) || isa(key, String)
+        return :($(string(key)) => nothing)
+    elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
+        return :($(string(a))=>$b)
+    end
+    error("Invalid pgf option $key")
+end
+
+function procmap(d)
+  if @capture(d, f_(xs__))
+      return :($f($(map(procmap, xs)...)))
+  elseif !@capture(d, {xs__})
+      return d
+  else
+      return :(PGFPlotsX.OrderedDict{Any, Any}($(map(prockey, xs)...)))
+  end
+end
+
+macro pgf(ex)
+    esc(prewalk(procmap, ex))
 end
 
 """
@@ -41,35 +64,39 @@ stringify(STDOUT, "symbolic x coords" => ["excellent", "good", "neutral"])
 """
 
 function dictify(args)
-    d = Dict{String, Any}()
+    d = OrderedDict{Any, Any}()
     for arg in args
         accum_opt!(d, arg)
     end
     return d
 end
 
-accum_opt!(d::Dict, opt::String) = d[opt] = nothing
-accum_opt!(d::Dict, opt::Pair) = d[first(opt)] = valuify(last(opt))
+accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
+accum_opt!(d::AbstractDict, opt::Pair) = d[first(opt)] = last(opt)
+function accum_opt!(d::AbstractDict, opt::AbstractDict)
+    for (k, v) in opt
+        d[k] = v
+    end
+end
 
-valuify(x) = x
-valuify(opts::Vector) = dictify(opts)
-
-
-function stringify(io::IO, d::Dict)
+function print_opt(io::IO, d::AbstractDict)
+    replace_underline(x) = x
+    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_", " ")
     for (k, v) in d
-        print(io, k)
+        print(io, replace_underline(k))
         if v != nothing
             print(io, " = {")
-            stringify(io, v)
+            print_opt(io, v)
             print(io, "}")
         end
         print(io, ", ")
     end
 end
 
-stringify(io::IO, s) = print(io::IO, s)
+print_opt(io::IO, s) = print(io, s)
+print_opt(io::IO, v::Vector) = print(io, join(v, ","))
 
-function stringify(io::IO, t::Tuple)
+function print_opt(io::IO, t::Tuple)
     length(t) == 0 && return
     for i in 1:length(t)
         i != 1 && print(io, "{")

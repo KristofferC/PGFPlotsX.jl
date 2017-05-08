@@ -4,9 +4,9 @@ const PlotElementOrStr = Union{PlotElement, String}
 
 immutable Plot <: AxisElement
     elements::Vector{PlotElementOrStr}
-    options::Dict{String, Any}
+    options::OrderedDict{Any, Any}
     label
-    incremental::Bool # use \addplot+
+    incremental::Bool
     _3d::Bool
 end
 
@@ -34,14 +34,13 @@ Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
 Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
 
 function save(filename::String, plot::Plot; include_preamble::Bool = true)
-    save(filename, toaxis(plot); include_preamble = include_preamble)
+    save(filename, Axis(plot); include_preamble = include_preamble)
 end
-
 
 Base.mimewritable(::MIME"image/svg+xml", ::Plot) = true
 
 function Base.show(f::IO, ::MIME"image/svg+xml", plot::Plot)
-    show(f, MIME("image/svg+xml"), toaxis(plot))
+    show(f, MIME("image/svg+xml"), Axis(plot))
 end
 
 
@@ -66,13 +65,13 @@ function print_tex(io_main::IO, p::Plot)
 end
 
 
-immutable PGFFunction <: PlotElement
+immutable Expression <: PlotElement
     fs::Vector{String}
 end
 
-PGFFunction(str::String) = PGFFunction([str])
+Expression(str::String) = Expression([str])
 
-function print_tex(io_main::IO, f::PGFFunction)
+function print_tex(io_main::IO, f::Expression)
     multiple_f = length(f.fs) != 1
     print_indent(io_main) do io
         multiple_f && print(io, "(\n")
@@ -86,35 +85,37 @@ function print_tex(io_main::IO, f::PGFFunction)
     end
 end
 
-immutable PGFCoordinates <: PlotElement
+immutable Coordinates <: PlotElement
     data::Matrix
     metadata::Union{Void, Vector}
 end
 
-function PGFCoordinates(vec::Vector{<:Tuple}; metadata = nothing)
+function Coordinates(vec::Vector; metadata = nothing)
     if length(vec) == 0
         mat = Matrix[]
     else
+        @assert typeof(vec[1]) <: Tuple
         l = length(vec[1])
         mat = Matrix(l, length(vec))
         for (i, v) in enumerate(vec)
+            @assert typeof(v) <: Tuple
             @assert length(v) == l
             for (j, c) in enumerate(v)
                 mat[j, i] = c
             end
         end
     end
-    PGFCoordinates(mat, metadata)
+    Coordinates(mat, metadata)
 end
 
 
-function PGFCoordinates(x::Vector, y::Vector; metadata = nothing)
+function Coordinates(x::Vector, y::Vector; metadata = nothing)
     mat = transpose(hcat(x, y))
-    PGFCoordinates(mat, metadata)
+    Coordinates(mat, metadata)
 end
 
 
-function print_tex(io_main::IO, t::PGFCoordinates)
+function print_tex(io_main::IO, t::Coordinates)
     print_indent(io_main) do io
         print(io, "coordinates ")
         print(io, "{\n")
@@ -139,16 +140,16 @@ function print_tex(io_main::IO, t::PGFCoordinates)
 end
 
 
-immutable PGFTable <: PlotElement
+immutable Table <: PlotElement
     filename::String
-    options::Dict{String, Any}
+    options::OrderedDict{Any, Any}
 end
 
-function PGFTable(filename::String, args::Vararg{PGFOption})
-    PGFTable(filename, dictify(args))
+function Table(filename::String, args::Vararg{PGFOption})
+    Table(filename, dictify(args))
 end
 
-function print_tex(io_main::IO, t::PGFTable)
+function print_tex(io_main::IO, t::Table)
     print_indent(io_main) do io
         print(io, "table ")
         print_options(io, t.options)
@@ -156,16 +157,16 @@ function print_tex(io_main::IO, t::PGFTable)
     end
 end
 
-immutable PGFGraphics <: PlotElement
+immutable Graphics <: PlotElement
     filename::String
-    options::Dict{String, Any}
+    options::OrderedDict{Any, Any}
 end
 
-function PGFGraphics(filename::String, args::Vararg{PGFOption})
-    PGFGraphics(filename, dictify(args))
+function Graphics(filename::String, args::Vararg{PGFOption})
+    Graphics(filename, dictify(args))
 end
 
-function print_tex(io_main::IO, t::PGFGraphics)
+function print_tex(io_main::IO, t::Graphics)
     print_indent(io_main) do io
         print(io, "graphics ")
         print_options(io, t.options)
