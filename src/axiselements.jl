@@ -90,7 +90,7 @@ immutable Coordinates <: PlotElement
     metadata::Union{Void, Vector}
 end
 
-function Coordinates(vec::Vector; metadata = nothing)
+function Coordinates(vec::AbstractVector; metadata = nothing)
     if length(vec) == 0
         mat = Matrix[]
     else
@@ -109,10 +109,11 @@ function Coordinates(vec::Vector; metadata = nothing)
 end
 
 
-function Coordinates(x::Vector, y::Vector; metadata = nothing)
-    mat = transpose(hcat(x, y))
-    Coordinates(mat, metadata)
-end
+Coordinates(x::AbstractVector, y::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y)), metadata)
+Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y, z)), metadata)
+
+Coordinates(x::AbstractVector, f::Function; metadata = nothing) = Coordinates(x, f.(x); metadata = metadata)
+Coordinates(x::AbstractVector, y::AbstractVector, f::Function; metadata = nothing) = Coordinates(x, y, f.(x, y); metadata = metadata)
 
 
 function print_tex(io_main::IO, t::Coordinates)
@@ -141,21 +142,28 @@ end
 
 
 immutable Table <: PlotElement
-    filename::String
+    data
     options::OrderedDict{Any, Any}
 end
 
-function Table(filename::String, args::Vararg{PGFOption})
-    Table(filename, dictify(args))
+function Table(data, args::Vararg{PGFOption})
+    Table(data, dictify(args))
 end
 
 function print_tex(io_main::IO, t::Table)
     print_indent(io_main) do io
         print(io, "table ")
         print_options(io, t.options)
-        print(io, "{", t.filename, "}")
+        print(io, "{")
+        print_tex(io, t.data, t)
+        print(io, "}")
     end
 end
+
+
+print_tex(io, str::String, ::Table) = print(io, str)
+
+
 
 immutable Graphics <: PlotElement
     filename::String
