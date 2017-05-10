@@ -48,12 +48,16 @@ function savetex(filename::String, td::TikzDocument; include_preamble::Bool = tr
     end
 end
 
+_OLD_LUALATEX = false
+
 function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     if isempty(td.elements)
         warn("Tikz document is empty")
     end
     if include_preamble
-        println(io, "\\RequirePackage{luatex85}")
+        if _OLD_LUALATEX
+            println(io, "\\RequirePackage{luatex85}")
+        end
         println(io, "\\documentclass{standalone}")
         _print_preamble(io)
         println(io, "\\begin{document}")
@@ -67,10 +71,10 @@ function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
 end
 
 
-has_warned_shell_escape = false
+_HAS_WARNED_SHELL_ESCAPE = false
 
 function savepdf(filename::String, td::TikzDocument)
-    global has_warned_shell_escape
+    global _HAS_WARNED_SHELL_ESCAPE
     # Create a temporary path, cd to it, run latex command, run cd from it,
     # move the pdf from the temporary path to the directory
     run_again = false
@@ -89,11 +93,15 @@ function savepdf(filename::String, td::TikzDocument)
 
             if !latex_success
                 DEBUG && println("LaTeX command $latexcmd failed")
-                if (contains(log, "Maybe you need to enable the shell-escape feature") ||
+                if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
+                    DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
+                    _OLD_LUALATEX = true
+                    run_again = true
+                elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
                     contains(log, "Package pgfplots Error: sorry, plot file{"))
-                    if !has_warned_shell_escape
+                    if !_HAS_WARNED_SHELL_ESCAPE
                         warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
-                        has_warned_shell_escape = true
+                        _HAS_WARNED_SHELL_ESCAPE = true
                     end
                     DEBUG && println("The log indicates that shell-escape is needed")
                     shell_escape = "--shell-escape"

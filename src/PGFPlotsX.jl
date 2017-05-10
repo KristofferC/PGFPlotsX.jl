@@ -7,7 +7,7 @@ using Requires
 
 export @pgf
 
-const DEBUG = get(ENV, "PGFPLOTSX_DEBUG", false)
+const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
 
