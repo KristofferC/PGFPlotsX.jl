@@ -14,6 +14,8 @@ before_install:
   - sudo apt-get install -y texlive-binaries
   - sudo apt-get install -y texlive-pictures
   - sudo apt-get install -y texlive-latex-extra
+  - tlmgr update --self
+  - tlmgr update pgfplots
 
 notifications:
   email: false
