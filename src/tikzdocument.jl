@@ -51,11 +51,12 @@ end
 _OLD_LUALATEX = false
 
 function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
+    global _OLD_LUALATEX
     if isempty(td.elements)
         warn("Tikz document is empty")
     end
     if include_preamble
-        if _OLD_LUALATEX
+        if !_OLD_LUALATEX
             println(io, "\\RequirePackage{luatex85}")
         end
         println(io, "\\documentclass{standalone}")
@@ -74,7 +75,7 @@ end
 _HAS_WARNED_SHELL_ESCAPE = false
 
 function savepdf(filename::String, td::TikzDocument)
-    global _HAS_WARNED_SHELL_ESCAPE
+    global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     # Create a temporary path, cd to it, run latex command, run cd from it,
     # move the pdf from the temporary path to the directory
     run_again = false
