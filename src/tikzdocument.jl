@@ -59,7 +59,12 @@ function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         if !_OLD_LUALATEX
             println(io, "\\RequirePackage{luatex85}")
         end
-        println(io, "\\documentclass{standalone}")
+        # Temp workaround for CI
+        if haskey(ENV, "CI")
+            println(io, "\\documentclass{article}")
+        else
+            println(io, "\\documentclass{standalone}")
+        end
         _print_preamble(io)
         println(io, "\\begin{document}")
     end
