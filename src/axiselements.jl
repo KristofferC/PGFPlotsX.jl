@@ -94,6 +94,7 @@ function Coordinates(vec::AbstractVector; metadata = nothing)
     if length(vec) == 0
         mat = Matrix[]
     else
+        # TODO, should not be @asserts but real checks
         @assert typeof(vec[1]) <: Tuple
         l = length(vec[1])
         mat = Matrix(l, length(vec))

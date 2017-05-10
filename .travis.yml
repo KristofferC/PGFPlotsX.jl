@@ -6,6 +6,16 @@ os:
 julia:
   - release
   - nightly
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y gnuplot
+  - sudo apt-get install -y pdf2svg
+  - sudo apt-get install -y texlive-latex-base
+  - sudo apt-get install -y texlive-binaries
+  - sudo apt-get install -y texlive-pictures
+  - sudo apt-get install -y texlive-latex-extra
+
 notifications:
   email: false
 # uncomment the following lines to override the default test script
