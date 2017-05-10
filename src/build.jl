@@ -24,7 +24,7 @@ DEFAULT_PREAMBLE =
 String[
 "\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
-"\\pgfplotsset{compat=1.14}",
+haskey(ENV, "CI") ? "" : "\\pgfplotsset{compat=1.14}",
 ]
 
 # Collects the full preamble from the different sources, default and custom
