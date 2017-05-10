@@ -1,5 +1,9 @@
 using PGFPlotsX
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+const pgf = PGFPlotsX
+
+include("test_build.jl")
+
+# Run doc stuff
+include("../docs/make.jl")

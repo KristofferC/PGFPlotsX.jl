@@ -48,14 +48,24 @@ function savetex(filename::String, td::TikzDocument; include_preamble::Bool = tr
     end
 end
 
+_OLD_LUALATEX = false
+
 function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
+    global _OLD_LUALATEX
+    if isempty(td.elements)
+        warn("Tikz document is empty")
+    end
     if include_preamble
-        println(io, "\\RequirePackage{luatex85}")
-        println(io, "\\documentclass{standalone}")
-        println(io, "\\usepackage{tikz}")
-        for preamble in td.preamble
-            println(io, preamble)
+        if !_OLD_LUALATEX
+            println(io, "\\RequirePackage{luatex85}")
         end
+        # Temp workaround for CI
+        if haskey(ENV, "CI")
+            println(io, "\\documentclass{article}")
+        else
+            println(io, "\\documentclass{standalone}")
+        end
+        _print_preamble(io)
         println(io, "\\begin{document}")
     end
     for element in td.elements
@@ -66,7 +76,88 @@ function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     end
 end
 
-# Copyright TikzPictures.jl (see LICENSE.md)
+
+_HAS_WARNED_SHELL_ESCAPE = false
+
+function savepdf(filename::String, td::TikzDocument)
+    global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
+    # Create a temporary path, cd to it, run latex command, run cd from it,
+    # move the pdf from the temporary path to the directory
+    run_again = false
+    buildpath = ""
+    mktemp() do tmppath, tmp
+        buildpath = tmppath
+        tmpfolder, tmpfile = dirname(tmppath), basename(tmppath)
+
+        cd(tmpfolder) do
+            savetex(tmp, td)
+            close(tmp)
+            latexcmd = _latex_cmd(tmpfile)
+            latex_success = success(latexcmd)
+
+            log = readstring("$tmppath.log")
+
+            if !latex_success
+                DEBUG && println("LaTeX command $latexcmd failed")
+                if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
+                    DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
+                    _OLD_LUALATEX = true
+                    run_again = true
+                elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
+                    contains(log, "Package pgfplots Error: sorry, plot file{"))
+                    if !_HAS_WARNED_SHELL_ESCAPE
+                        warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
+                        _HAS_WARNED_SHELL_ESCAPE = true
+                    end
+                    DEBUG && println("The log indicates that shell-escape is needed")
+                    shell_escape = "--shell-escape"
+                    if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
+                        DEBUG && println("Adding shell-escape and trying to save pdf again")
+                        # Try again with enabling shell_escape
+                        push!(DEFAULT_FLAGS, shell_escape)
+                        run_again = true
+                    else
+                        latexerrormsg(log)
+                        error(string("The latex command $latexcmd failed ",
+                                     "shell-escape feature seemed to not be ",
+                                     "detected even though it was passed as a flag"))
+                    end
+                else
+                    latexerrormsg(log)
+                    error("The latex command $latexcmd failed")
+                end
+            end
+        end # cd
+    end # mktemp
+
+    if run_again
+        savepdf(filename, td)
+        return
+    end
+
+    folder, file = dirname(filename), basename(filename)
+    mv(buildpath * ".pdf", joinpath(folder, file * ".pdf"); remove_destination = true)
+end
+
+
+function savesvg(filename::String, td::TikzDocument)
+    tmp = tempname()
+    keep_pdf = isfile(filename * ".pdf")
+    savepdf(tmp, td)
+    # TODO Better error
+    svg_cmd = `pdf2svg $tmp.pdf $filename.svg`
+    svg_sucess = success(`pdf2svg $tmp.pdf $filename.svg`)
+    if !svg_sucess
+        error("Failed to run $svg_cmd")
+    end
+    if !keep_pdf
+        rm("$tmp.pdf")
+    end
+end
+
+Base.mimewritable(::MIME"image/svg+xml", ::TikzDocument) = true
+
+# Below here, Copyright TikzPictures.jl (see LICENSE.md)
 
 function latexerrormsg(s)
     beginError = false
@@ -85,55 +176,6 @@ function latexerrormsg(s)
         end
     end
 end
-
-function savepdf(filename::String, td::TikzDocument)
-    folder, file = dirname(filename), basename(filename)
-    if isempty(folder)
-        folder = "."
-    end
-    # TODO: Check no tikz elements?
-    try
-        tmp = joinpath(folder, basename(tempname()))
-        savetex(tmp, td)
-        latexcmd = `$(latexengine()) --output-directory=$folder $tmp`
-        latex_success = success(latexcmd)
-        log = readstring("$tmp.log")
-
-        rm("$(tmp).tex")
-        rm("$(tmp).aux")
-        rm("$(tmp).log")
-
-        if !latex_success
-            latexerrormsg(log)
-            error("LaTeX error")
-        end
-
-        mv(tmp * ".pdf", filename * ".pdf"; remove_destination = true)
-
-    catch
-        println("Error saving as PDF.")
-        rethrow()
-    end
-end
-
-
-function savesvg(filename::String, td::TikzDocument)
-    try
-        tmp = tempname()
-        keep_pdf = isfile(filename * ".pdf")
-
-        savepdf(tmp, td)
-
-        success(`pdf2svg $tmp.pdf $filename.svg`) || error("pdf2svg failure")
-        rm("$tmp.pdf")
-    catch
-        println("Error saving as SVG")
-        rethrow()
-    end
-end
-
-Base.mimewritable(::MIME"image/svg+xml", ::TikzDocument) = true
-
 
 global _tikzid = round(UInt64, time() * 1e6)
 

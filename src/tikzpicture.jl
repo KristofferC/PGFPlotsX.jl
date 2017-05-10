@@ -1,5 +1,3 @@
-latexengine() = "lualatex"
-
 const TikzElementOrStr = Union{TikzElement, String}
 
 type TikzPicture <: OptionType

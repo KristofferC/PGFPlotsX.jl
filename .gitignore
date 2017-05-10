@@ -5,3 +5,5 @@
 *.pdf
 *.tex
 scratch.jl
+docs/build
+deps/custom_preamble.tex

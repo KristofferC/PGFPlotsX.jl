@@ -7,17 +7,12 @@ using Requires
 
 export @pgf
 
+const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
+
+const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
+
 const PGFOption = Union{Pair, String, OrderedDict}
 const AbstractDict = Union{Dict, OrderedDict}
-
-DEFAULT_PREAMBLE =
-"""
-\\usepackage{pgfplots}
-\\pgfplotsset{compat=1.13}
-"""
-
-CUSTOM_PREAMBLE = String[]
-
 
 abstract type OptionType end
 
@@ -62,5 +57,6 @@ include("axis.jl")
 include("tikzpicture.jl")
 include("tikzdocument.jl")
 include("requires.jl")
+include("build.jl")
 
 end # module
