@@ -48,6 +48,6 @@ function _print_preamble(io::IO)
 
     if haskey(ENV, "PGFPLOTSX_PREAMBLE_PATH") && isfile(ENV["PGFPLOTSX_PREAMBLE_PATH"])
         println(io, "% Custom preamble from ENV path:")
-        println(io, readstring(ENV["PGFPLOTSX_PREAMBLE_PATH"], "\n"))
+        println(io, readstring(ENV["PGFPLOTSX_PREAMBLE_PATH"]), "\n")
     end
 end
