@@ -1,7 +1,11 @@
 @testset "engine" begin
-    pgf.latexengine!(pgf.XELATEX)
-    @test pgf.latexengine() == pgf.XELATEX
-    @test pgf._engine_cmd() == `xelatex`
+    try
+        pgf.latexengine!(pgf.XELATEX)
+        @test pgf.latexengine() == pgf.XELATEX
+        @test pgf._engine_cmd() == `xelatex`
+    finally
+        pgf.latexengine!(pgf.LUALATEX)
+    end
 end
 
 @testset "preamble" begin
