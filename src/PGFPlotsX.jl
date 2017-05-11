@@ -52,7 +52,7 @@ A `TikzElement` is a component of a `TikzPicture`. It can be a node or an `Axis`
 """
 abstract type TikzElement <: OptionType end
 
-include("axis.jl")
+include("axislike.jl")
 
 include("tikzpicture.jl")
 include("tikzdocument.jl")

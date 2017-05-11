@@ -19,7 +19,6 @@ sets if the preamble should be included in the output (only relevant for `tex` e
 ### TODO:
 
 * Error bars
-* Group plots
 * Gnuplot
 * Document option macro `@pgf`
 * Good way of including Tikz Nodes.

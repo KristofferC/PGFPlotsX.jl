@@ -25,6 +25,8 @@ String[
 "\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
 haskey(ENV, "CI") ? "" : "\\pgfplotsset{compat=1.14}",
+"\\usepgfplotslibrary{groupplots}",
+"\\usepgfplotslibrary{polar}",
 ]
 
 # Collects the full preamble from the different sources, default and custom

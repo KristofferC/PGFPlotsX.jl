@@ -2,6 +2,10 @@ abstract type PlotElement <: OptionType end
 
 const PlotElementOrStr = Union{PlotElement, String}
 
+########
+# Plot #
+########
+
 immutable Plot <: AxisElement
     elements::Vector{PlotElementOrStr}
     options::OrderedDict{Any, Any}
@@ -39,10 +43,11 @@ end
 
 Base.mimewritable(::MIME"image/svg+xml", ::Plot) = true
 
-function Base.show(f::IO, ::MIME"image/svg+xml", plot::Plot)
+Base.show(f::IO, ::MIME"image/svg+xml", plot::Plot) = show(f, MIME("image/svg+xml"), [plot])
+
+function Base.show(f::IO, ::MIME"image/svg+xml", plot::AbstractVector{Plot})
     show(f, MIME("image/svg+xml"), Axis(plot))
 end
-
 
 function print_tex(io_main::IO, p::Plot)
     print_indent(io_main) do io
@@ -64,6 +69,10 @@ function print_tex(io_main::IO, p::Plot)
     end
 end
 
+
+##############
+# Expression #
+##############
 
 immutable Expression <: PlotElement
     fs::Vector{String}
