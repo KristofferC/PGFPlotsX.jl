@@ -1,38 +1,25 @@
-abstract type PlotElement <: OptionType end
-
-const PlotElementOrStr = Union{PlotElement, String}
-
 ########
 # Plot #
 ########
 
 immutable Plot <: AxisElement
-    elements::Vector{PlotElementOrStr}
+    elements::AbstractVector{Any}
     options::OrderedDict{Any, Any}
     label
     incremental::Bool
     _3d::Bool
 end
 
-Base.push!(plot::Plot, element::PlotElementOrStr) = push!(plot.elements, element)
-
-function Plot(element::PlotElementOrStr, args...; kwargs...)
-    Plot([element], args...; kwargs...)
-end
-
-function Plot(elements::Vector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(convert(Vector{PlotElementOrStr}, elements), dictify(args), label, incremental, false)
-end
+Base.push!(plot, element) = push!(plot.elements, element)
 
 
-function Plot3(element::PlotElementOrStr, args...; kwargs...)
-    Plot3([element], args...; kwargs...)
+function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
+    Plot(elements, dictify(args), label, incremental, false)
 end
 
 function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, label = nothing)
     Plot(element, dictify(args), label, incremental, true)
 end
-
 
 Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
 Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
@@ -60,7 +47,7 @@ function print_tex(io_main::IO, p::Plot)
         end
         print_options(io, p.options)
         for element in p.elements
-            print_tex(io, element)
+            print_tex(io, element, p)
         end
         print(io, ";")
         if p.label != nothing
@@ -74,7 +61,7 @@ end
 # Expression #
 ##############
 
-immutable Expression <: PlotElement
+immutable Expression <: OptionType
     fs::Vector{String}
 end
 
@@ -94,8 +81,8 @@ function print_tex(io_main::IO, f::Expression)
     end
 end
 
-immutable Coordinates <: PlotElement
-    data::Matrix
+immutable Coordinates <: OptionType
+    data::Matrix{Any}
     metadata::Union{Void, Vector}
 end
 
@@ -151,31 +138,86 @@ function print_tex(io_main::IO, t::Coordinates)
 end
 
 
-immutable Table <: PlotElement
+immutable Table <: OptionType
     data
     options::OrderedDict{Any, Any}
+
+    # Some ambiguity fixing
+    Table(data, options::OrderedDict{Any, Any}) = new(data, options)
+
+    Table(data::Union{DataStructures.OrderedDict, Pair, String},
+          options::DataStructures.OrderedDict{Any,Any}) = new(data, options)
+
+    Table(data::String, options::DataStructures.OrderedDict{Any,Any}) = new(data, options)
 end
 
 function Table(data, args::Vararg{PGFOption})
     Table(data, dictify(args))
 end
 
+
+function Table(data::String, args::Vararg{PGFOption})
+    Table(data, dictify(args))
+end
+
+function Table(args::Vararg{PGFOption}; kwargs...)
+    Table(kwargs, dictify(args))
+end
+
 function print_tex(io_main::IO, t::Table)
     print_indent(io_main) do io
         print(io, "table ")
         print_options(io, t.options)
-        print(io, "{")
+        print(io, "{\n")
         print_tex(io, t.data, t)
-        print(io, "}")
+        print(io, "\n}")
     end
 end
 
+print_tex(io::IO, str::String, ::Table) = print(io, str)
+function print_tex(io::IO, v::AbstractVector, ::Table)
+    length(v) == 0 && return
+    if v[1] isa Tuple # Assume the kw constructor was called
+        # Do some basic checking
+        # Print header
+        vs = []
+        first = true
+        l = -1
+        for s in v
+            if !(length(s) == 2) || !(s[1] isa Symbol) || !(s[2] isa AbstractVector)
+                error("Expected a call like Table(; a = [1,2,...], b = [2,3,...])")
+            end
 
-print_tex(io, str::String, ::Table) = print(io, str)
+            if first
+                l = length(s[2])
+            end
 
+            if !(l == length(s[2]))
+                error("length of data in columns not the same")
+            end
 
+            print(io, s[1], "    ")
+            push!(vs, s[2])
+        end
 
-immutable Graphics <: PlotElement
+        println(io)
+
+        v_mat = hcat(vs...)'
+
+        for j in 1:size(v_mat, 2)
+            for i in 1:size(v_mat, 1)
+                print(io, v_mat[i, j], "    ")
+            end
+            if j != size(v_mat, 2)
+                println(io)
+            end
+        end
+    else
+        print(io, join(v, "\n"))
+    end
+end
+
+immutable Graphics <: OptionType
     filename::String
     options::OrderedDict{Any, Any}
 end

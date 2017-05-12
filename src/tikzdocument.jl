@@ -1,25 +1,20 @@
 const TikzPictureOrStr = Union{TikzPicture, String}
 
 type TikzDocument <: OptionType
-    elements::Vector{TikzPictureOrStr} # Plots, nodes etc
+    elements::Vector # Plots, nodes etc
     preamble::Vector{String}
 
-    function TikzDocument(elements::Vector{TikzPictureOrStr}, preamble::Union{String, Vector{String}})
+    function TikzDocument(elements::Vector, preamble::Union{String, Vector{String}})
         new(elements, vcat(DEFAULT_PREAMBLE, CUSTOM_PREAMBLE, preamble))
     end
 end
 
 function TikzDocument(; preamble = String[])
-    TikzDocument(TikzPictureOrStr[], preamble)
+    TikzDocument([], preamble)
 end
 
-TikzDocument(element::TikzPictureOrStr, args...) = TikzDocument([element], args...)
-
-function TikzDocument(elements::Vector; preamble = String[])
-    TikzDocument(convert(Vector{TikzPictureOrStr}, elements), preamble)
-end
-
-
+TikzDocument(element, args...) = TikzDocument([element], args...)
+TikzDocument(elements::Vector; preamble = String[]) = TikzDocument(elements, preamble)
 
 ##########
 # Output #
@@ -50,7 +45,9 @@ end
 
 _OLD_LUALATEX = false
 
-function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
+savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) = print_tex(io, td; include_preamble = include_preamble)
+
+function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
     if isempty(td.elements)
         warn("Tikz document is empty")
@@ -69,7 +66,8 @@ function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         println(io, "\\begin{document}")
     end
     for element in td.elements
-        print_tex(io, element)
+        print_tex(io, element, td)
+        println(io)
     end
     if include_preamble
         println(io, "\\end{document}")

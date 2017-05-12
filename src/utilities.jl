@@ -82,14 +82,16 @@ end
 function print_opt(io::IO, d::AbstractDict)
     replace_underline(x) = x
     replace_underline(x::Union{String, Symbol}) = replace(string(x), "_", " ")
-    for (k, v) in d
+    for (i, (k, v)) in enumerate(d)
         print(io, replace_underline(k))
         if v != nothing
-            print(io, " = {")
+            print(io, "={")
             print_opt(io, v)
             print(io, "}")
         end
-        print(io, ", ")
+        if i != length(d)
+          print(io, ", ")
+        end
     end
 end
 

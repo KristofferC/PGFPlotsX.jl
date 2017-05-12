@@ -21,7 +21,7 @@ function print_tex(io::IO, tp::TikzPicture)
     print(io, "\\begin{tikzpicture}")
     print_options(io, tp.options)
     for element in tp.elements
-        print_tex(io, element)
+        print_tex(io, element, tp)
     end
     println(io, "\\end{tikzpicture}")
 end

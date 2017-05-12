@@ -27,6 +27,7 @@ String[
 haskey(ENV, "CI") ? "" : "\\pgfplotsset{compat=1.14}",
 "\\usepgfplotslibrary{groupplots}",
 "\\usepgfplotslibrary{polar}",
+"\\usepgfplotslibrary{statistics}",
 ]
 
 # Collects the full preamble from the different sources, default and custom

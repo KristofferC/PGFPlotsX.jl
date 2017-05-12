@@ -1,10 +1,17 @@
 @require Colors begin
-    function PGFPlotsX.print_opt(io::IO, c::Colors.RGB)
+    # TODO: Accept any color and convert to rgb?
+    function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
         rgb = convert(Colors.RGB, c)
         rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
         print(io, "rgb,1:", "red,"  , rgb_64[1], ";",
                             "green,", rgb_64[2], ";",
                             "blue," , rgb_64[3])
+    end
+
+    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, <: Colors.Colorant}, ::TikzDocument)
+        name, color = c
+        rgb = convert(Colors.RGB, color)
+        print(io, "\\definecolor{$name}{rgb}{", join(float.((rgb.r, rgb.g, rgb.b)), ","), "}")
     end
 end
 
@@ -26,6 +33,19 @@ end
                     println(io, join((x, y, lvl), " "))
                 end
             end
+        end
+    end
+end
+
+@require StatsBase begin
+    function PGFPlotsX.print_tex(io::IO, c::StatsBase.Histogram, ::PGFPlotsX.Table)
+        dim = length(c.edges)
+        if dim != 1
+            error("dim != 1 not supported")
+        end
+        edge = c.edges[1]
+        for v in 1:length(c.weights)
+            println(io, 0.5 * (edge[v] + edge[v+1]), "    ", c.weights[v])
         end
     end
 end

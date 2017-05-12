@@ -1,29 +1,27 @@
-const AxisLikeElementOrStr = Union{AxisElement, String}
-
 abstract type AxisLike <: TikzElement end
 
-Base.push!(axislike::AxisLike, plot::AxisLikeElementOrStr) = push!(axislike.plots, plot)
+Base.push!(axislike::AxisLike, plot) = (push!(axislike.plots, plot); axislike)
 
 function (T::Type{<:AxisLike})(plots::AbstractVector, args::Vararg{PGFOption})
-    T(convert(Vector{AxisLikeElementOrStr}, plots), dictify(args))
+    T(plots, dictify(args))
 end
 
-(T::Type{<:AxisLike})(plot::AxisLikeElementOrStr, args::Vararg{PGFOption}) = T([plot], dictify(args))
+(T::Type{<:AxisLike})(plot, args::Vararg{PGFOption}) = T([plot], dictify(args))
 
 function (T::Type{<:AxisLike})(args::Vararg{PGFOption})
-    T(AxisLikeElementOrStr[], args...)
+    T([], args...)
 end
 
 function print_tex(io_main::IO, axislike::AxisLike)
     print_indent(io_main) do io
         print(io, "\\begin{", _tex_name(axislike), "}")
         print_options(io, axislike.options)
-        for plot in axislike.plots
-            between = _in_between(axislike)
+        for (i, plot) in enumerate(axislike.plots)
+            between = _in_between(axislike, i)
             if !isempty(between)
                 print_tex(io, between)
             end
-            print_tex(io, plot)
+            print_tex(io, plot, axislike)
         end
         print(io, "\\end{", _tex_name(axislike), "}")
     end
@@ -41,48 +39,58 @@ end
 
 Base.show(f::IO, ::MIME"image/svg+xml", axislike::AxisLike) = show(f, MIME("image/svg+xml"), [axislike])
 
+_in_between(::, ::Any) = ""
 
 ########
 # Axis #
 ########
 
 immutable Axis <: AxisLike
-    plots::Vector{AxisLikeElementOrStr}
+    plots::Vector{Any}
     options::OrderedDict{Any, Any}
 
     # get rid of default constructor or ambiguities
-    Axis(v::Vector{AxisLikeElementOrStr}, o::OrderedDict{Any, Any}) = new(v, o)
+    Axis(v::Vector, o::OrderedDict{Any, Any}) = new(v, o)
 end
 
 _tex_name(::Axis) = "axis"
-_in_between(::Axis) = ""
 
 #############
 # GroupPlot #
 #############
 
 immutable GroupPlot <: AxisLike
-    plots::Vector{AxisLikeElementOrStr}
+    plots::Vector{Any}
+    axisoptions::Vector{OrderedDict{Any, Any}}
     options::OrderedDict{Any, Any}
     # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
     # get rid of default constructor or ambiguities
-    GroupPlot(v::Vector{AxisLikeElementOrStr}, o::OrderedDict{Any, Any}) = new(v, o)
+    GroupPlot(v::Vector, o::OrderedDict{Any, Any}) = new(convert(Vector{Any}, v), [OrderedDict() for i in 1:length(v)], o)
 end
 
+
+Base.push!(gp::GroupPlot, plot) = (push!(gp.plots, plot); push!(gp.axisoptions, OrderedDict()); gp)
+Base.push!(gp::GroupPlot, plot, args...) = (push!(gp.plots, plot); push!(gp.axisoptions, dictify(args)); gp)
+
 _tex_name(::GroupPlot) = "groupplot"
-_in_between(::GroupPlot) = "\\nextgroupplot"
+#TODO Should these take IO instead?
+function _in_between(gp::GroupPlot, i::Int)
+     io = IOBuffer()
+     print(io, "\\nextgroupplot")
+     print_options(io, gp.axisoptions[i])
+     return String(take!(io))
+end
 
 #############
 # PolarAxis #
 #############
 
 immutable PolarAxis <: AxisLike
-    plots::Vector{AxisLikeElementOrStr}
+    plots::Vector{Any}
     options::OrderedDict{Any, Any}
     # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
     # get rid of default constructor or ambiguities
-    PolarAxis(v::Vector{AxisLikeElementOrStr}, o::OrderedDict{Any, Any}) = new(v, o)
+    PolarAxis(v::Vector, o::OrderedDict{Any, Any}) = new(convert(Vector{Any}, v), o)
 end
 
 _tex_name(::PolarAxis) = "polaraxis"
-_in_between(::PolarAxis) = ""

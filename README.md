@@ -19,8 +19,9 @@ sets if the preamble should be included in the output (only relevant for `tex` e
 ### TODO:
 
 * Error bars
-* Gnuplot
+* Gnuplot type?
 * Document option macro `@pgf`
 * Good way of including Tikz Nodes.
-* Create Tables from in memory data.
 * Document `merge!`
+* Pass preambles and stuff explicitly into functions and have them just take default arguments that depend on the global variables.
+At least gives the option of "purity".
