@@ -2,7 +2,7 @@
     try
         pgf.latexengine!(pgf.XELATEX)
         @test pgf.latexengine() == pgf.XELATEX
-        @test pgf._engine_cmd() == `xelatex`
+        @test pgf._engine_cmd(pgf.XELATEX) == `xelatex`
     finally
         pgf.latexengine!(pgf.LUALATEX)
     end
@@ -47,10 +47,10 @@ end
             y_domain = "74:87.9",
             view = (0, 90),
         })
-
-        path, name = tempdir(), tempname()
-        pdf_file = joinpath(path, name) * ".pdf"
-        pgf.save(pdf_file, p)
-        @test isfile(pdf_file)
-        rm(pdf_file)
+        cd(tempdir()) do
+            file = "gnuplot.pdf"
+            pgf.save(file, p)
+            @test isfile(file)
+            rm(file)
+        end
 end

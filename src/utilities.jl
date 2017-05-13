@@ -1,28 +1,3 @@
-
-function print_options(io::IO, options::OrderedDict{Any, Any})
-    print(io, "[")
-    print_opt(io, options)
-    print(io, "]\n")
-end
-
-# Print with indent
-printi(io::IO, x, i = 0) = print(io, "    "^i, x)
-printlni(io::IO, x, i = 0) = print(io, "    "^i, x)
-
-
-function print_indent(io::IO, str::String)
-    for line in split(str, "\n")
-        println(io, "    ", line)
-    end
-end
-
-function print_indent(f, io_main::IO)
-    io = IOBuffer()
-    f(io)
-    print_indent(io_main, String(take!(io)))
-end
-
-
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
         return :($(string(key)) => nothing)
@@ -46,29 +21,31 @@ macro pgf(ex)
     esc(prewalk(procmap, ex))
 end
 
-"""
-    stringify(io::IO, p::Pair)
-
-Converts a key => value(s) to a string valid as options for PGFPlots.
-
-
-## Examples:
-
-```
-stringify(STDOUT, "legend style" => ["at" => (0.5,-0.15),
-                                     "anchor" => "north",
-                                     "legend columns" => -1]
-
-stringify(STDOUT, "symbolic x coords" => ["excellent", "good", "neutral"])
-```
-"""
-
 function dictify(args)
     d = OrderedDict{Any, Any}()
     for arg in args
         accum_opt!(d, arg)
     end
     return d
+end
+
+function print_indent(io::IO, str::String)
+    for line in split(str, "\n")
+        println(io, "    ", line)
+    end
+end
+
+function print_indent(f, io_main::IO)
+    io = IOBuffer()
+    f(io)
+    print_indent(io_main, String(take!(io)))
+end
+
+
+function print_options(io::IO, options::OrderedDict{Any, Any})
+    print(io, "[")
+    print_opt(io, options)
+    print(io, "]\n")
 end
 
 accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
