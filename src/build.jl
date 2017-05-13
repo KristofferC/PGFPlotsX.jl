@@ -9,7 +9,7 @@ latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 
 _engine_cmd() = `$(lowercase(string(latexengine())))`
 
-_latex_cmd(file::String) = `$(_engine_cmd()) $DEFAULT_FLAGS $CUSTOM_FLAGS $file`
+_latex_cmd(file::String, path::String) = `$(_engine_cmd()) --output-directory=$path $DEFAULT_FLAGS $CUSTOM_FLAGS $file`
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
 CUSTOM_FLAGS = Union{String}[]

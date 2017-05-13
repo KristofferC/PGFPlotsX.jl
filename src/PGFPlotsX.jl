@@ -20,14 +20,13 @@ print_tex(io::IO, a, b) = print_tex(io, a)
 abstract type OptionType end
 
 Base.getindex(a::OptionType, s::String) = a.options[s]
-Base.setindex!(a::OptionType, v, s::String) = (a.options[s] = v; a)
-Base.delete!(a::OptionType, s::String) = (delete!(a.options, s); a)
+Base.setindex!(a::OptionType, v, s::String) = a.options[s] = v
+Base.delete!(a::OptionType, s::String) = delete!(a.options, s)
 Base.copy(a::OptionType) = deepcopy(a)
 function Base.merge!(a::OptionType, d::OrderedDict)
     for (k, v) in d
         a[k] = v
     end
-    return a
 end
 
 include("utilities.jl")
@@ -38,12 +37,9 @@ function print_tex(io_main::IO, str::String)
     end
 end
 
-function print_tex(io::IO, v)
-    throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
-                              "Define one by overloading\n    `print_tex(io::IO, data::T)`\n or ",
-                              "\n    `print_tex(io::IO, data::T, t::PGFType)`\n where `T` is the type of the data to dispatch on",
-                              "and `t` is a `PGFType` (like `TikzDocument`, `TikzPicture`, `Axis` etc.).")))
-end
+print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)).",
+                                                  "Define one by overloading print_tex(io::IO, data::T, ::$(typeof(typ))), ",
+                                                  "where T is the type of the data to dispatch on.")))
 
 
 

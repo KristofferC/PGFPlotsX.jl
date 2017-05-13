@@ -82,59 +82,55 @@ function savepdf(filename::String, td::TikzDocument)
     # Create a temporary path, cd to it, run latex command, run cd from it,
     # move the pdf from the temporary path to the directory
     run_again = false
-    buildpath = ""
     mktemp() do tmppath, tmp
-        buildpath = tmppath
         tmpfolder, tmpfile = dirname(tmppath), basename(tmppath)
+        savetex(tmp, td)
+        close(tmp)
+        latexcmd = _latex_cmd(tmpfile, tmpfolder)
+        latex_success = success(latexcmd)
 
-        cd(tmpfolder) do
-            savetex(tmp, td)
-            close(tmp)
-            latexcmd = _latex_cmd(tmpfile)
-            latex_success = success(latexcmd)
+        log = readstring("$tmppath.log")
+        rm("$tmppath.log")
+        rm("$tmppath.aux")
 
-            log = readstring("$tmppath.log")
-
-            if !latex_success
-                DEBUG && println("LaTeX command $latexcmd failed")
-                if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
-                    DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
-                    _OLD_LUALATEX = true
+        if !latex_success
+            DEBUG && println("LaTeX command $latexcmd failed")
+            if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
+                DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
+                _OLD_LUALATEX = true
+                run_again = true
+            elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
+                contains(log, "Package pgfplots Error: sorry, plot file{"))
+                if !_HAS_WARNED_SHELL_ESCAPE
+                    warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
+                    _HAS_WARNED_SHELL_ESCAPE = true
+                end
+                DEBUG && println("The log indicates that shell-escape is needed")
+                shell_escape = "--shell-escape"
+                if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
+                    DEBUG && println("Adding shell-escape and trying to save pdf again")
+                    # Try again with enabling shell_escape
+                    push!(DEFAULT_FLAGS, shell_escape)
                     run_again = true
-                elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
-                    contains(log, "Package pgfplots Error: sorry, plot file{"))
-                    if !_HAS_WARNED_SHELL_ESCAPE
-                        warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
-                        _HAS_WARNED_SHELL_ESCAPE = true
-                    end
-                    DEBUG && println("The log indicates that shell-escape is needed")
-                    shell_escape = "--shell-escape"
-                    if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
-                        DEBUG && println("Adding shell-escape and trying to save pdf again")
-                        # Try again with enabling shell_escape
-                        push!(DEFAULT_FLAGS, shell_escape)
-                        run_again = true
-                    else
-                        latexerrormsg(log)
-                        error(string("The latex command $latexcmd failed ",
-                                     "shell-escape feature seemed to not be ",
-                                     "detected even though it was passed as a flag"))
-                    end
                 else
                     latexerrormsg(log)
-                    error("The latex command $latexcmd failed")
+                    error(string("The latex command $latexcmd failed ",
+                                 "shell-escape feature seemed to not be ",
+                                 "detected even though it was passed as a flag"))
                 end
+            else
+                latexerrormsg(log)
+                error("The latex command $latexcmd failed")
             end
-        end # cd
+        end
+        if run_again
+            savepdf(filename, td)
+            return
+        end
+
+        folder, file = dirname(filename), basename(filename)
+        mv(tmppath * ".pdf", joinpath(folder, file * ".pdf"); remove_destination = true)
     end # mktemp
-
-    if run_again
-        savepdf(filename, td)
-        return
-    end
-
-    folder, file = dirname(filename), basename(filename)
-    mv(buildpath * ".pdf", joinpath(folder, file * ".pdf"); remove_destination = true)
 end
 
 

@@ -168,9 +168,9 @@ function print_tex(io_main::IO, t::Table)
     print_indent(io_main) do io
         print(io, "table ")
         print_options(io, t.options)
-        print(io, "{\n")
+        print(io, "{")
         print_tex(io, t.data, t)
-        print(io, "\n}")
+        print(io, "}")
     end
 end
 
@@ -208,12 +208,10 @@ function print_tex(io::IO, v::AbstractVector, ::Table)
             for i in 1:size(v_mat, 1)
                 print(io, v_mat[i, j], "    ")
             end
-            if j != size(v_mat, 2)
-                println(io)
-            end
+            println(io)
         end
     else
-        print(io, join(v, "\n"))
+        println(io, join(v, "\n"))
     end
 end
 
