@@ -88,10 +88,9 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
     latex_success = success(latexcmd)
 
     log = readstring("$filename.log")
-    rmifexist(p) = isfile(p) && rm(p)
-    rmifexist("$filename.log")
-    rmifexist("$filename.aux")
-    rmifexist("$filename.tex")
+    rm("$filename.log"; force = true)
+    rm("$filename.aux"; force = true)
+    rm("$filename.tex"; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")

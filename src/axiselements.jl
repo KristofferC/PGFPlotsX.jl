@@ -10,7 +10,7 @@ struct Plot <: AxisElement
     _3d::Bool
 end
 
-Base.push!(plot, element) = push!(plot.elements, element)
+Base.push!(plot::Plot, element) = push!(plot.elements, element)
 
 
 function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
