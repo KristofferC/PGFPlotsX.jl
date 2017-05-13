@@ -58,7 +58,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     end
     if include_preamble
         if !_OLD_LUALATEX
-            println(io, "\\RequirePackage{luatex85}")
+        #    println(io, "\\RequirePackage{luatex85}")
         end
         # Temp workaround for CI
         if haskey(ENV, "CI")
