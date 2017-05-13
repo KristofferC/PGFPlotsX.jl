@@ -5,7 +5,7 @@
         @test pgf.latexengine() == pgf.XELATEX
         @test pgf._engine_cmd(pgf.XELATEX) == `xelatex`
     finally
-        pgf.latexengine!eng)
+        pgf.latexengine!(eng)
     end
 end
 
@@ -33,7 +33,7 @@ end
     end
 end
 
-@test "simple" begin
+@testset "simple" begin
     a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
     pgf.save("texfile.tex", a)
     println(readstring("texfile.tex"))
