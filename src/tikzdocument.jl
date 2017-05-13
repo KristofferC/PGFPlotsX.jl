@@ -20,7 +20,9 @@ TikzDocument(elements::Vector; preamble = String[]) = TikzDocument(elements, pre
 # Output #
 ##########
 
-function save(filename::String, td::TikzDocument; include_preamble::Bool = true)
+function save(filename::String, td::TikzDocument; include_preamble::Bool = true,
+                                                  latex_engine = latexengine(),
+                                                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
     file_ending = split(basename(filename), '.')[end]
     filename_stripped = filename[1:end-4] # This is ugly, whatccha gonna do about it?
     if !(file_ending in ("tex", "svg", "pdf"))
@@ -29,9 +31,11 @@ function save(filename::String, td::TikzDocument; include_preamble::Bool = true)
     if file_ending == "tex"
         savetex(filename_stripped, td; include_preamble = include_preamble)
     elseif file_ending == "svg"
-        savesvg(filename_stripped, td)
+        savesvg(filename_stripped, td; latex_engine = latex_engine,
+                                       buildflags = buildflags)
     elseif file_ending == "pdf"
-        savepdf(filename_stripped, td)
+        savepdf(filename_stripped, td; latex_engine = latex_engine,
+                                       buildflags = buildflags)
     end
     return
 end
@@ -57,11 +61,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
             println(io, "\\RequirePackage{luatex85}")
         end
         # Temp workaround for CI
-        if haskey(ENV, "CI")
-            println(io, "\\documentclass{article}")
-        else
-            println(io, "\\documentclass{standalone}")
-        end
+        println(io, "\\documentclass{standalone}")
         _print_preamble(io)
         println(io, "\\begin{document}")
     end
@@ -77,67 +77,67 @@ end
 
 _HAS_WARNED_SHELL_ESCAPE = false
 
-function savepdf(filename::String, td::TikzDocument)
+function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
+                                                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
-    # Create a temporary path, cd to it, run latex command, run cd from it,
-    # move the pdf from the temporary path to the directory
     run_again = false
-    mktemp() do tmppath, tmp
-        tmpfolder, tmpfile = dirname(tmppath), basename(tmppath)
-        savetex(tmp, td)
-        close(tmp)
-        latexcmd = _latex_cmd(tmpfile, tmpfolder)
-        latex_success = success(latexcmd)
 
-        log = readstring("$tmppath.log")
-        rm("$tmppath.log")
-        rm("$tmppath.aux")
+    filename = basename(path)
+    savetex(filename, td)
+    latexcmd = _latex_cmd(filename, latex_engine, buildflags)
+    latex_success = success(latexcmd)
 
-        if !latex_success
-            DEBUG && println("LaTeX command $latexcmd failed")
-            if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
-                DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
-                _OLD_LUALATEX = true
+    log = readstring("$filename.log")
+    rmifexist(p) = isfile(p) && rm(p)
+    rmifexist("$filename.log")
+    rmifexist("$filename.aux")
+    rmifexist("$filename.tex")
+
+    if !latex_success
+        DEBUG && println("LaTeX command $latexcmd failed")
+        if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
+            DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
+            _OLD_LUALATEX = true
+            run_again = true
+        elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
+            contains(log, "Package pgfplots Error: sorry, plot file{"))
+            if !_HAS_WARNED_SHELL_ESCAPE
+                warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
+                _HAS_WARNED_SHELL_ESCAPE = true
+            end
+            DEBUG && println("The log indicates that shell-escape is needed")
+            shell_escape = "--shell-escape"
+            if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
+                DEBUG && println("Adding shell-escape and trying to save pdf again")
+                # Try again with enabling shell_escape
+                push!(DEFAULT_FLAGS, shell_escape)
                 run_again = true
-            elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
-                contains(log, "Package pgfplots Error: sorry, plot file{"))
-                if !_HAS_WARNED_SHELL_ESCAPE
-                    warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
-                    _HAS_WARNED_SHELL_ESCAPE = true
-                end
-                DEBUG && println("The log indicates that shell-escape is needed")
-                shell_escape = "--shell-escape"
-                if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
-                    DEBUG && println("Adding shell-escape and trying to save pdf again")
-                    # Try again with enabling shell_escape
-                    push!(DEFAULT_FLAGS, shell_escape)
-                    run_again = true
-                else
-                    latexerrormsg(log)
-                    error(string("The latex command $latexcmd failed ",
-                                 "shell-escape feature seemed to not be ",
-                                 "detected even though it was passed as a flag"))
-                end
             else
                 latexerrormsg(log)
-                error("The latex command $latexcmd failed")
+                error(string("The latex command $latexcmd failed ",
+                             "shell-escape feature seemed to not be ",
+                             "detected even though it was passed as a flag"))
             end
+        else
+            latexerrormsg(log)
+            error("The latex command $latexcmd failed")
         end
-        if run_again
-            savepdf(filename, td)
-            return
-        end
-
-        folder, file = dirname(filename), basename(filename)
-        mv(tmppath * ".pdf", joinpath(folder, file * ".pdf"); remove_destination = true)
-    end # mktemp
+    end
+    if run_again
+        savepdf(path, td)
+        return
+    end
+    if normpath(filename) != normpath(path)
+        mv(filename * ".pdf", joinpath(path * ".pdf"); remove_destination = true)
+    end
 end
 
 
-function savesvg(filename::String, td::TikzDocument)
+function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(),
+                                                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
     tmp = tempname()
     keep_pdf = isfile(filename * ".pdf")
-    savepdf(tmp, td)
+    savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
     # TODO Better error
     svg_cmd = `pdf2svg $tmp.pdf $filename.svg`
     svg_sucess = success(`pdf2svg $tmp.pdf $filename.svg`)

@@ -7,9 +7,9 @@ const ACTIVE_LATEX_ENGINE = Ref(LUALATEX)
 latexengine() = ACTIVE_LATEX_ENGINE[]
 latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 
-_engine_cmd() = `$(lowercase(string(latexengine())))`
+_engine_cmd(eng::LaTeXEngine) = `$(lowercase(string(eng)))`
 
-_latex_cmd(file::String, path::String) = `$(_engine_cmd()) --output-directory=$path $DEFAULT_FLAGS $CUSTOM_FLAGS $file`
+_latex_cmd(file::String, eng::LaTeXEngine, flags) = `$(_engine_cmd(eng)) $flags $file`
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
 CUSTOM_FLAGS = Union{String}[]
@@ -24,7 +24,7 @@ DEFAULT_PREAMBLE =
 String[
 "\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
-haskey(ENV, "CI") ? "" : "\\pgfplotsset{compat=1.14}",
+"\\pgfplotsset{compat=1.13}",
 "\\usepgfplotslibrary{groupplots}",
 "\\usepgfplotslibrary{polar}",
 "\\usepgfplotslibrary{statistics}",

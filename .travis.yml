@@ -6,15 +6,15 @@ julia:
   - 0.6
   - nightly
 
+dist: trusty
+
 before_install:
+  - sudo add-apt-repository -y ppa:jonathonf/texlive-2016
   - sudo apt-get -qq update
   - sudo apt-get install -y gnuplot
   - sudo apt-get install -y pdf2svg
-  - sudo apt-get install -y texlive-latex-base
-  - sudo apt-get install -y texlive-binaries
-  - sudo apt-get install -y texlive-pictures
+  - sudo apt-get install -y texlive
   - sudo apt-get install -y texlive-latex-extra
-
 notifications:
   email: false
 # uncomment the following lines to override the default test script
