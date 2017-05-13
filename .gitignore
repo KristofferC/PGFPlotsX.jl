@@ -4,6 +4,8 @@
 *.svg
 *.pdf
 *.tex
+*.log
+*.aux
 scratch.jl
 docs/build
 deps/custom_preamble.tex

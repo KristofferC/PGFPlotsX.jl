@@ -1,10 +1,11 @@
 @testset "engine" begin
     try
+        eng = pgf.latexengine()
         pgf.latexengine!(pgf.XELATEX)
         @test pgf.latexengine() == pgf.XELATEX
         @test pgf._engine_cmd(pgf.XELATEX) == `xelatex`
     finally
-        pgf.latexengine!(pgf.LUALATEX)
+        pgf.latexengine!eng)
     end
 end
 
@@ -32,8 +33,7 @@ end
     end
 end
 
-
-cd(tempdir()) do
+@test "simple" begin
     a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
     pgf.save("texfile.tex", a)
     println(readstring("texfile.tex"))

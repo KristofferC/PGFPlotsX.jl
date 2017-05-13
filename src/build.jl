@@ -24,10 +24,10 @@ DEFAULT_PREAMBLE =
 String[
 "\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
-haskey(ENV, "CI") ? "" : "\\pgfplotsset{compat=1.14}",
-#"\\usepgfplotslibrary{groupplots}",
-#"\\usepgfplotslibrary{polar}",
-#"\\usepgfplotslibrary{statistics}",
+"\\pgfplotsset{compat=1.13}",
+"\\usepgfplotslibrary{groupplots}",
+"\\usepgfplotslibrary{polar}",
+"\\usepgfplotslibrary{statistics}",
 ]
 
 # Collects the full preamble from the different sources, default and custom
