@@ -14,7 +14,7 @@ before_install:
   - sudo apt-get install -y gnuplot
   - sudo apt-get install -y pdf2svg
   - sudo apt-get install -y texlive
-
+  - sudo apt-get install -y texlive-latex-extra
 notifications:
   email: false
 # uncomment the following lines to override the default test script
