@@ -6,6 +6,8 @@ julia:
   - 0.6
   - nightly
 
+dist: trusty
+
 before_install:
   - sudo add-apt-repository -y ppa:jonathonf/texlive-2016
   - sudo apt-get -qq update
