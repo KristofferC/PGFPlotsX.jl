@@ -83,10 +83,34 @@ end
 
 immutable Coordinates <: OptionType
     data::Matrix{Any}
+    xerror::AbstractVector
+    yerror::AbstractVector
+    xerrorplus::AbstractVector
+    xerrorminus::AbstractVector
+    yerrorplus::AbstractVector
+    yerrorminus::AbstractVector
     metadata::Union{Void, Vector}
+
+
 end
 
-function Coordinates(vec::AbstractVector; metadata = nothing)
+function Coordinates(mat::Matrix; metadata = nothing, xerror::AbstractVector = [],
+                                            yerror::AbstractVector = [],
+                                            xerrorplus::AbstractVector = [],
+                                            xerrorminus::AbstractVector = [],
+                                            yerrorplus::AbstractVector = [],
+                                            yerrorminus::AbstractVector = [])
+    Coordinates(mat,
+    xerror,
+    yerror,
+    xerrorplus,
+    xerrorminus,
+    yerrorplus,
+    yerrorminus,
+    metadata)
+end
+
+function Coordinates(vec::AbstractVector; kwargs...)
     if length(vec) == 0
         mat = Matrix[]
     else
@@ -102,18 +126,62 @@ function Coordinates(vec::AbstractVector; metadata = nothing)
             end
         end
     end
-    Coordinates(mat, metadata)
+    Coordinates(mat; kwargs...)
 end
 
 
-Coordinates(x::AbstractVector, y::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y)), metadata)
-Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y, z)), metadata)
+
+Coordinates(x::AbstractVector, y::AbstractVector; kwargs...) = Coordinates(transpose(hcat(x, y)); kwargs...)
+
+Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y, z)); metadata = metadata)
 
 Coordinates(x::AbstractVector, f::Function; metadata = nothing) = Coordinates(x, f.(x); metadata = metadata)
+
 Coordinates(x::AbstractVector, y::AbstractVector, f::Function; metadata = nothing) = Coordinates(x, y, f.(x, y); metadata = metadata)
 
 
+function _print_error(io, i, xerror, yerror, xerrorplus, xerrorminus, yerrorplus, yerrorminus)
+
+end
+
 function print_tex(io_main::IO, t::Coordinates)
+
+    n_coords = size(t.data, 2)
+    isdef(x) = length(x) != 0
+
+    for err in [t.xerror, t.yerror, t.xerrorplus, t.xerrorminus, t.yerrorplus, t.yerrorminus]
+        if isdef(err) && length(err) != n_coords
+            error("length of vector with error not same as number of points")
+        end
+    end
+
+    if isdef(t.xerror) && (isdef(t.xerrorplus) || isdef(t.xerrorminus))
+        error("cannot specify both symmetric `xerror` and nonsymmetric `xerrorplus` / `xerrormins`")
+    end
+
+    if isdef(t.yerror) && (isdef(t.yerrorplus) || isdef(t.yerrorminus))
+        error("cannot specify both symmetric `yerror` and nonsymmetric `yerrorplus` / `yerrormins`")
+    end
+
+    get_err(i, a) = !isdef(a) ? 0.0 : a[i]
+
+    print_err(io, i, x, y, char) = print(io, char, "(", get_err(i, x), ", ", get_err(i, y), ")")
+    print_sym(io, i, x, y) = print_err(io, i, x, y, "+-")
+    print_sym_l(io, i, x, y) = print_err(io, i, x, y, "-=")
+    print_sym_r(io, i, x, y) = print_err(io, i, x, y, "+=")
+
+    if isdef(t.xerror) || isdef(t.yerror) # Symmetric error
+        print_error = (io, i, t) -> print_sym(io, i, t.xerror, t.yerror)
+    elseif !isdef(t.xerrorplus) && !isdef(t.yerrorplus) && (isdef(t.xerrorminus) || isdef(t.yerrorminus)) # Only minus error
+        print_error = (io, i, t) -> print_sym_l(io, i, t.xerrorminus, t.yerrorminus)
+    elseif !isdef(t.xerrorminus) && !isdef(t.yerrorminus) && (isdef(t.xerrorplus) || isdef(t.yerrorplus)) # Only plus error
+        print_error = (io, i, t) -> print_sym_r(io, i, t.xerrorplus, t.yerrorplus)
+    elseif (isdef(t.xerrorplus) || isdef(t.yerrorplus)) && (isdef(t.xerrorminus) || isdef(t.yerrorminus)) # Both error
+        print_error = (io, i, t) -> (print_sym_l(io, i, t.xerrorminus, t.yerrorminus); print(io, " "); print_sym_r(io, i, t.xerrorplus, t.yerrorplus))
+    else
+        print_error = (io, i, t) -> return
+    end
+
     print_indent(io_main) do io
         print(io, "coordinates ")
         print(io, "{\n")
@@ -125,6 +193,10 @@ function print_tex(io_main::IO, t::Coordinates)
                 print(io, m[i, j])
             end
             print(io, ")")
+
+            print_error(io, j, t)
+
+
             if t.metadata != nothing
                 print(io, " [", t.metadata[j], "]")
             end

@@ -39,7 +39,7 @@ function print_tex(io_main::IO, str::String)
 end
 
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)).",
-                                                  "Define one by overloading print_tex(io::IO, data::T, ::$(typeof(typ))), ",
+                                                  "Define one by overloading print_tex(io::IO, data::T)",
                                                   "where T is the type of the data to dispatch on.")))
 
 

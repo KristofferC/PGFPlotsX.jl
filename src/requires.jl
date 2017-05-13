@@ -1,5 +1,4 @@
 @require Colors begin
-    # TODO: Accept any color and convert to rgb?
     function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
         rgb = convert(Colors.RGB, c)
         rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
@@ -8,10 +7,22 @@
                             "blue," , rgb_64[3])
     end
 
-    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, <: Colors.Colorant}, ::TikzDocument)
+    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::)
         name, color = c
         rgb = convert(Colors.RGB, color)
-        print(io, "\\definecolor{$name}{rgb}{", join(float.((rgb.r, rgb.g, rgb.b)), ","), "}")
+        rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
+        print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
+    end
+
+    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Vector{<:Colors.Colorant}}, ::)
+        name, colors = c
+        println(io, "\\pgfplotsset{ colormap={$name}{")
+        for col in colors
+            rgb = convert(Colors.RGB, col)
+            rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
+            println(io, "rgb=(", join(rgb_64, ","), ")")
+        end
+        println(io, "}}")
     end
 end
 
@@ -37,6 +48,7 @@ end
     end
 end
 
+# TODO: Check if the bins are completely correct
 @require StatsBase begin
     function PGFPlotsX.print_tex(io::IO, c::StatsBase.Histogram, ::PGFPlotsX.Table)
         dim = length(c.edges)
