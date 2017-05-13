@@ -2,7 +2,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
+| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] |
 
 
 *PGFPlotsX* is a Julia package to generate publication quality figures using the LaTeX library PGFPlots.
@@ -32,3 +32,15 @@ julia> Pkg.add("PGFPlotsX")
 ## Author
 
 Kristoffer Carlsson - @KristofferC89
+
+
+[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-latest-url]: https://kristofferc.github.io/PGFPlotsX.jl/latest/
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://kristofferc.github.io/PGFPlotsX.jl/stable
+
+[travis-img]: https://travis-ci.org/KristofferC/PGFPlotsX.jl.svg?branch=master
+[travis-url]: https://travis-ci.org/KristofferC/PGFPlotsX.jl
+
+[issues-url]: https://github.com/KristofferC/PGFPlotsX.jl/issues
