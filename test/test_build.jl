@@ -32,6 +32,15 @@ end
     end
 end
 
+
+cd(tempdir()) do
+    a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
+    pgf.save("texfile.tex", a)
+    println(readstring("texfile.tex"))
+    success(`lualatex texfile.tex`)
+    println(readstring("texfile.log"))
+end
+
 @testset "gnuplot / shell-escape" begin
     pgf.@pgf p = pgf.Axis(pgf.Plot3(pgf.Expression("-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"),
             {
