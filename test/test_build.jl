@@ -37,8 +37,7 @@ end
     a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
     pgf.save("texfile.tex", a)
     println(readstring("texfile.tex"))
-    success(`lualatex texfile.tex`)
-    println(readstring("texfile.log"))
+    pgf.save("texfile.pdf", a)
 end
 
 @testset "gnuplot / shell-escape" begin
