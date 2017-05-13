@@ -1,27 +1,34 @@
 # PGFPlotsX
 
-*PGFPlotsX* is a Julia package to generate high quality figures using the LaTeX library PGFPlots.
+| **Documentation**                                                               | **Build Status**                                                                                |
+|:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
+| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
+
+
+*PGFPlotsX* is a Julia package to generate publication quality figures using the LaTeX library PGFPlots.
 
 It is similar in spirit to the package [PGFPlots.jl](https://github.com/sisl/PGFPlots.jl) but it
-tries to have a closer (more low level) mapping to the PGFPlots API as well as striving to reduce the number of dependencies.
+tries to have a very close mapping to the PGFPlots API as well as minimize the number of dependencies.
+The fact that the syntax is similar to the TeX version means that examples from Stack Overflow and the PGFPlots manual can
+easily be incorporated in the Julia code.
 
-Examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
+Documentation is currently lacking but a quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
 
-A `Plot` or `Axis` can be saved to a `pdf`, `tex` or `svg` file using
 
-```jl
-save(filename::String, object; include_preamble::Bool = true)
+## Installation
+
+The package is registered in `METADATA.jl` and so can be installed with `Pkg.add`.
+
+```julia
+julia> Pkg.add("PGFPlotsX")
 ```
 
-where the file extension of `filename` determines the file type and `include_preamble`
-sets if the preamble should be included in the output (only relevant for `tex` export).
+## Documentation
 
-### TODO:
+- [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the documentation.**
+- [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
-* Error bars
-* Gnuplot type?
-* Document option macro `@pgf`
-* Good way of including Tikz Nodes.
-* Document `merge!`
-* Pass preambles and stuff explicitly into functions and have them just take default arguments that depend on the global variables.
-At least gives the option of "purity".
+
+## Author
+
+Kristoffer Carlsson - @KristofferC89

@@ -2,7 +2,7 @@
 # Plot #
 ########
 
-immutable Plot <: AxisElement
+struct Plot <: AxisElement
     elements::AbstractVector{Any}
     options::OrderedDict{Any, Any}
     label
@@ -61,7 +61,7 @@ end
 # Expression #
 ##############
 
-immutable Expression <: OptionType
+struct Expression <: OptionType
     fs::Vector{String}
 end
 
@@ -81,7 +81,7 @@ function print_tex(io_main::IO, f::Expression)
     end
 end
 
-immutable Coordinates <: OptionType
+struct Coordinates <: OptionType
     data::Matrix{Any}
     xerror::AbstractVector
     yerror::AbstractVector
@@ -210,7 +210,7 @@ function print_tex(io_main::IO, t::Coordinates)
 end
 
 
-immutable Table <: OptionType
+struct Table <: OptionType
     data
     options::OrderedDict{Any, Any}
 
@@ -287,7 +287,7 @@ function print_tex(io::IO, v::AbstractVector, ::Table)
     end
 end
 
-immutable Graphics <: OptionType
+struct Graphics <: OptionType
     filename::String
     options::OrderedDict{Any, Any}
 end

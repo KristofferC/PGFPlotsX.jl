@@ -45,7 +45,7 @@ _in_between(::, ::Any) = ""
 # Axis #
 ########
 
-immutable Axis <: AxisLike
+struct Axis <: AxisLike
     plots::Vector{Any}
     options::OrderedDict{Any, Any}
 
@@ -59,7 +59,7 @@ _tex_name(::Axis) = "axis"
 # GroupPlot #
 #############
 
-immutable GroupPlot <: AxisLike
+struct GroupPlot <: AxisLike
     plots::Vector{Any}
     axisoptions::Vector{OrderedDict{Any, Any}}
     options::OrderedDict{Any, Any}
@@ -85,7 +85,7 @@ end
 # PolarAxis #
 #############
 
-immutable PolarAxis <: AxisLike
+struct PolarAxis <: AxisLike
     plots::Vector{Any}
     options::OrderedDict{Any, Any}
     # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
