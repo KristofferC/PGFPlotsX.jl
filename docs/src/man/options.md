@@ -27,7 +27,7 @@ This works well when the options are few and there is only one level of options 
 ```julia-repl
 julia> c = pgf.Coordinates([1,2,3], [2, 4, 8]);
 
-julia> p = pgf.Plot(c, "very thick", "mark" => "halfcircle");
+julia> p = pgf.Plot(c, "very thick", "mark" => "halfcircle")
 
 julia> pgf.print_tex(p); # print_tex is typically not called from user code
 \addplot+[very thick, mark={halfcircle}]
@@ -51,13 +51,13 @@ pgf.@pgf pgf.Plot(c,
     {
         very_thick,
         mark = "halfcircle"
-    });
+    })
 ```
 
 A more complicated example is:
 
 ```julia-repl
-pgf.@pgf p2 = pgf.Plot(c,
+pgf.@pgf a = pgf.Axis(pgf.Plot(c),
     {
         "axis background/.style" =
         {
@@ -73,14 +73,16 @@ pgf.@pgf p2 = pgf.Plot(c,
 which is printed as
 
 ```julia-repl
-julia> pgf.print_tex(p2)
-    \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
-        coordinates {
-        (1, 2)
-        (2, 4)
-        (3, 8)
-        }
-    ;
+julia> pgf.print_tex(a)
+    \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
+        \addplot+[]
+            coordinates {
+            (1, 2)
+            (2, 4)
+            (3, 8)
+            }
+        ;
+    \end{axis}
 ```
 
 The macro can be applied to any type of expression and will be applied to everything inside that expression
@@ -109,17 +111,19 @@ julia> p = pgf.Plot(c)
 
 julia> p["fill"] = "blue";
 
-julia> p["fill"]
+julia> p["fill"];
 "blue"
 
 julia> pgf.@pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
 
-julia> p["axis background/.style"]["top_color"]
+julia> p["axis background/.style"]["top_color"];
 "gray"
 
-julia> p["very tick"] = nothing # Set a value less options
+julia> p["very thick"] = nothing # Set a value less options;
 
-julia> delete!(p, "fill")
+julia> delete!(p, "fill");
+
+julia> p
 
 julia> pgf.print_tex(p)
     \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very tick]
@@ -134,7 +138,7 @@ julia> pgf.print_tex(p)
 You can also merge in options that have been separately created using `merge!`
 
 ```julia-repl
-julia> a = pgf.Axis()
+julia> a = pgf.Axis();
 
 julia> pgf.@pgf opts =  {xmin = 0, ymax = 1, ybar};
 

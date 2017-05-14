@@ -1,9 +1,20 @@
-# Exporting figures
+#  Showing / Exporting figures
 
-Figures that are shown in the Jupyter notebook in the examples are saved with
+## Jupyter
+
+Figures are shown in .svg format when evaluated in Jupyter. For this you need the `pdf2svg` software installed.
+
+## REPL
+
+In the REPL, the figure will be exported to a pdf and attempted to be opened in the default pdf viewing program.
+If you wish to disable this, run `pgf.enable_interactive(false)`.
+
+## Exporting
+
+Figures can be exported to files using
 
 ```jlcon
-save(filename::String, figure; include_preamble::Bool = true)
+pgf.save(filename::String, figure; include_preamble::Bool = true)
 ```
 
 where the file extension of `filename` determines the file type (can be `.pdf`, `.svg` or `.tex`) and `include_preamble`

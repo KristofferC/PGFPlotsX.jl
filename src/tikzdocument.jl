@@ -129,10 +129,9 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
         return
     end
     if normpath(filename) != normpath(path)
-        mv(filename * ".pdf", joinpath(path * ".pdf"); remove_destination = true)
+            mv(filename * ".pdf", joinpath(path * ".pdf"); remove_destination = true)
     end
 end
-
 
 function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(),
                                                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
@@ -190,4 +189,28 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::TikzDocument)
     _tikzid += 1
     println(f, s)
     rm("$filename.svg")
+end
+
+_DISPLAY_PDF = true
+
+enable_interactive(v::Bool) = global _DISPLAY_PDF = v
+
+function Base.show(io::IO, ::MIME"text/plain", p::Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture})
+    if isinteractive() && _DISPLAY_PDF
+        f = tempname() .* ".pdf"
+        save(f, p)
+        try
+            if is_linux() || is_bsd()
+                run(`xdg-open $f`)
+            elseif is_windows()
+                run(`start $f`)
+            elseif is_apple()
+                run(`open $f`)
+            end
+        catch e
+            error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false) to stop trying to show pdfs.`")
+        end
+    else
+        print(io, p)
+    end
 end
