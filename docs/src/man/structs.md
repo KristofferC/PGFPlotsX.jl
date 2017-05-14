@@ -151,7 +151,7 @@ Example:
 ```jldoctest
 julia> x, y, z = rand(3), rand(3), rand(3);
 
-julia> p = pgf.@pgf pgf.Plot3(pgf.Coordinates(x,y,z), { very_thick });
+julia> p = pgf.@pgf pgf.Plot3(pgf.Coordinates(x,y,z), { very_thick })
 
 julia> pgf.print_tex(p)
     \addplot3+[very thick]
@@ -182,7 +182,7 @@ julia> pgf.@pgf a = pgf.Axis( pgf.Plot( pgf.Expression("x^2")), {
               xlabel = "x"
               ylabel = "y"
               title = "Figure"
-          });
+          })
 
 julia> pgf.print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
@@ -219,7 +219,7 @@ julia> pgf.@pgf gp = pgf.GroupPlot({group_style = { group_size = "2 by 1",}, hei
 
 julia> for (expr, data) in zip(["x^2", "exp(x)"], ["data1.dat", "data2.dat"])
            push!(gp, [pgf.Plot(pgf.Expression(expr)),  pgf.Plot(pgf.Table(data))])
-       end
+       end;
 
 julia> pgf.print_tex(gp)
     \begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]
@@ -275,7 +275,7 @@ A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 Example:
 
 ```jldoctest
-julia> tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), "scale" => 1.5);
+julia> tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), "scale" => 1.5)
 
 julia> pgf.print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
@@ -304,9 +304,7 @@ Normally you would also push `Axis`'s that contain plots.
 ```julia-repl
 julia> td = pgf.TikzDocument();
 
-julia> push!(td, "Hello World");
-
-julia> save("hello.pdf", td);
+julia> push!(td, "Hello World")
 ```
 
 !!! note

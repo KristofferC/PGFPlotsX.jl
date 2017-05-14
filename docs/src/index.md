@@ -17,6 +17,8 @@ Documentation is a WIP but a quite extensive set of examples can be found at the
 Pkg.add("PGFPlotsX")
 ```
 
+To show figures in svg (like is done by default in Jupyter notebooks) you need `pdf2svg`. On Ubuntu, you can get this by running `sudo apt-get install pdf2svg` and on RHEL/Fedora by running `sudo dnf install pdf2svg`. On Windows, you can download the binaries from [here](http://www.cityinthesky.co.uk/opensource/pdf2svg/). Be sure to add `pdf2svg` to your path.
+
 ## Manual Outline
 
 !!! note
