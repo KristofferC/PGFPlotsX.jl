@@ -165,7 +165,7 @@ julia> pgf.print_tex(p)
 
 ## Axis-like
 
-### `Axis`
+### `Axis` - `X`
 
 `Axis` make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as
 
@@ -208,7 +208,7 @@ julia> pgf.print_tex(a)
 Any struct can be pushed in to an `Axis`. What will be printed is the result of `PGFPlotsX.print_tex(io::IO, t::T, ::Axis)` where `T` is the type of the struct.
 Pushed strings are written out verbatim.
 
-### `GroupPlot`
+### `GroupPlot` - `X`
 
 A `GroupPlot` is a way of grouping multiple plots in one figure.
 
@@ -268,7 +268,17 @@ julia> pgf.print_tex(gp)
     \end{groupplot}
 ```
 
-## `TikzPicture`
+### `PolarAxis`
+
+A `PolarAxis` plot data on a polar grid.
+
+Example:
+
+```jldoctest
+julia> pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))
+```
+
+## `TikzPicture` - `X`
 
 A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 
