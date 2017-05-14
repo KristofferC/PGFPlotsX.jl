@@ -16,6 +16,8 @@ end
 TikzDocument(element, args...) = TikzDocument([element], args...)
 TikzDocument(elements::Vector; preamble = String[]) = TikzDocument(elements, preamble)
 
+Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
+
 ##########
 # Output #
 ##########

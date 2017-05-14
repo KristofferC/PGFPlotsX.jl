@@ -19,7 +19,7 @@ Documentation is currently lacking but a quite extensive set of examples can be 
 
 The package is registered in `METADATA.jl` and so can be installed with `Pkg.add`.
 
-```julia
+```julia-repl
 julia> Pkg.add("PGFPlotsX")
 ```
 
@@ -28,6 +28,13 @@ julia> Pkg.add("PGFPlotsX")
 - [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the documentation.**
 - [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
+
+## TODO:s / Roadmap
+
+* Add more examples
+* Make the generated LaTeX code pretty printed
+* Show in REPL
+* Add figures to the documentation
 
 ## Author
 

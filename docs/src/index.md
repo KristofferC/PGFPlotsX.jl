@@ -9,26 +9,27 @@ tries to have a very close mapping to the PGFPlots API as well as minimize the n
 The fact that the syntax is similar to the TeX version means that examples from Stack Overflow and the PGFPlots manual can
 easily be incorporated in the Julia code.
 
-Documentation is currently lacking but a quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
-
+Documentation is a WIP but a quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
 
 ## Installation
 
-```julia
+```julia-repl
 Pkg.add("PGFPlotsX")
 ```
 
 ## Manual Outline
 
-Note that `PGFPlotsX` does not export anything.
-Therefore the objects used in the documentation must be explicitly imported to be used.
+!!! note
+    `PGFPlotsX` does not export anything. In the manual we assume that the command
+    `import PGFPlotsX; const pgf = PGFPlotsX` has been run
+
 
 ```@contents
-pages = Any[
-    "Home" => "index.md",
-    "Manual" => [
-        "man/build.md"
-        ],
+Pages = [
+    "man/options.md",
+    "man/structs.md",
+    "man/save.md",
+    "man/custom_types.md",
 ]
 Depth = 1
 ```
