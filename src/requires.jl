@@ -43,6 +43,7 @@ end
                 for (x, y) in zip(xs, ys)
                     println(io, join((x, y, lvl), " "))
                 end
+                println(io) # Break this line
             end
         end
     end

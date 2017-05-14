@@ -1,10 +1,4 @@
-# Structs
-
-```@meta
-using PGFPlotsX
-const pgf = PGFPlotsX
-srand(1234)
-```
+# Building up figures
 
 This section presents the structs used in PGFPlotsX to build up figures. An `X` after the struct name means that it supports option as described in
 
@@ -71,7 +65,7 @@ julia> pgf.print_tex(c)
 ```
 
 
-## `Expression`
+### `Expression`
 
 An `Expression` is a string, representing a function and is written in a way LaTeX understands.
 
@@ -169,13 +163,11 @@ julia> pgf.print_tex(p)
     ;
 ```
 
-## Axis like structs
-
-Axes like structs make up the labels and titles etc in the figure.
+## Axis-like
 
 ### `Axis`
 
-The standard way of adding wrapping plots, represented in tex as
+`Axis` make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as
 
 ```tex
 \begin{axis}[...]
@@ -218,9 +210,7 @@ Pushed strings are written out verbatim.
 
 ### `GroupPlot`
 
-A `GroupPlot` is a way of showing multiple grouping plots in one figure.
-
-
+A `GroupPlot` is a way of grouping multiple plots in one figure.
 
 Example:
 
@@ -278,7 +268,7 @@ julia> pgf.print_tex(gp)
     \end{groupplot}
 ```
 
-## TikzPicture
+## `TikzPicture`
 
 A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 
@@ -303,7 +293,7 @@ julia> pgf.print_tex(tp)
 \end{tikzpicture}
 ```
 
-### `TikzDocument`
+## `TikzDocument`
 
 A `TikzDocument` is the highest level object and represents a whole .tex file.
 It includes a list of objects that will sit between `\begin{document}` and `\end{document}`.
@@ -311,7 +301,7 @@ It includes a list of objects that will sit between `\begin{document}` and `\end
 A very simple example where we simply create a `TikzDocument` with a string in is shown below.
 Normally you would also push `Axis`'s that contain plots.
 
-```jl
+```julia-repl
 julia> td = pgf.TikzDocument();
 
 julia> push!(td, "Hello World");
@@ -320,6 +310,7 @@ julia> save("hello.pdf", td);
 ```
 
 !!! note
+
     There is usually no need to explicitly create a `TikzDocument` or `TikzPicture`.
     Only do this if you want to give special options to them. It is possible to show or save
     an `Axis` or e.g. a `Plot` directly, and they will then be wrapped in the default "higher level" objects.

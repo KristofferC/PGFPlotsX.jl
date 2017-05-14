@@ -19,7 +19,7 @@ Documentation is currently lacking but a quite extensive set of examples can be 
 
 The package is registered in `METADATA.jl` and so can be installed with `Pkg.add`.
 
-```julia
+```julia-repl
 julia> Pkg.add("PGFPlotsX")
 ```
 

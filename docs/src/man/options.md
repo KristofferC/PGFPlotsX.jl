@@ -1,10 +1,5 @@
-# Setting options
+# Defining options
 
-```@meta
-using PGFPlotsX
-const pgf = PGFPlotsX
-srand(1234)
-```
 
 In PGFPlots, options are given as a list of keys that might have corresponding values
 inside of two square brackets e.g.
@@ -29,7 +24,7 @@ When constructing an object (like a `Plot`), options to that object can be enter
 where a string represents a key without a value (e.g. `"very thick"`) and a pair represents a key/value option, (e.g. `"samples" => 50`).
 This works well when the options are few and there is only one level of options in the object.
 
-```jl
+```julia-repl
 julia> c = pgf.Coordinates([1,2,3], [2, 4, 8]);
 
 julia> p = pgf.Plot(c, "very thick", "mark" => "halfcircle");
@@ -51,7 +46,7 @@ Instead, we provide a macro `@pgf` so that options can be entered similarly to h
 
 The previous example is then written as
 
-```jl
+```julia-repl
 pgf.@pgf pgf.Plot(c,
     {
         very_thick,
@@ -61,7 +56,7 @@ pgf.@pgf pgf.Plot(c,
 
 A more complicated example is:
 
-```jl
+```julia-repl
 pgf.@pgf p2 = pgf.Plot(c,
     {
         "axis background/.style" =
@@ -77,7 +72,7 @@ pgf.@pgf p2 = pgf.Plot(c,
 
 which is printed as
 
-```jl
+```julia-repl
 julia> pgf.print_tex(p2)
     \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
         coordinates {
@@ -103,11 +98,11 @@ The following transformations of keys/values are done when the options are writt
 * A list as a value is written as "comma joined" e.g. `[1, 2, 3] -> "1, 2, 3"`.
 * A tuple as a value is written with braces delimiting the elements e.g. `(60, 30) -> {60}{30}`
 
-### Modifying options after an object is created
+## Modifying options after an object is created
 
 It is sometimes convenient to set and get options after an object has been created.
 
-```jl
+```julia-repl
 julia> c = pgf.Coordinates([1,2,3], [2, 4, 8]);
 
 julia> p = pgf.Plot(c)
@@ -138,7 +133,7 @@ julia> pgf.print_tex(p)
 
 You can also merge in options that have been separately created using `merge!`
 
-```jl
+```julia-repl
 julia> a = pgf.Axis()
 
 julia> pgf.@pgf opts =  {xmin = 0, ymax = 1, ybar};

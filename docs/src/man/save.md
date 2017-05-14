@@ -1,9 +1,9 @@
-# Saving objects
+# Exporting figures
 
-Objects that are shown in the Jupyter notebook in the examples are saved with
+Figures that are shown in the Jupyter notebook in the examples are saved with
 
-```jl
-save(filename::String, object; include_preamble::Bool = true)
+```jlcon
+save(filename::String, figure; include_preamble::Bool = true)
 ```
 
 where the file extension of `filename` determines the file type (can be `.pdf`, `.svg` or `.tex`) and `include_preamble`

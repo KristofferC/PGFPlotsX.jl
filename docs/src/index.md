@@ -13,7 +13,7 @@ Documentation is a WIP but a quite extensive set of examples can be found at the
 
 ## Installation
 
-```julia
+```julia-repl
 Pkg.add("PGFPlotsX")
 ```
 
@@ -25,14 +25,11 @@ Pkg.add("PGFPlotsX")
 
 
 ```@contents
-pages = Any[
-    "Home" => "index.md",
-    "Manual" => [
-        "man/options.md"
-        "man/structs.md"
-        "man/build.md"
-        "man/custom_types.md"
-        ],
+Pages = [
+    "man/options.md",
+    "man/structs.md",
+    "man/save.md",
+    "man/custom_types.md",
 ]
 Depth = 1
 ```
