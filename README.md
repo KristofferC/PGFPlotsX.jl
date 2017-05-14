@@ -29,6 +29,13 @@ julia> Pkg.add("PGFPlotsX")
 - [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
 
+## TODO:s / Roadmap
+
+* Add more examples
+* Make the generated LaTeX code pretty printed
+* Show in REPL
+* Add figures to the documentation
+
 ## Author
 
 Kristoffer Carlsson - @KristofferC89

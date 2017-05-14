@@ -15,6 +15,7 @@ const PGFOption = Union{Pair, String, OrderedDict}
 const AbstractDict = Union{Dict, OrderedDict}
 
 print_tex(io::IO, a, b) = print_tex(io, a)
+print_tex(a) = print_tex(STDOUT, a)
 
 # TODO: Make OptionType a trait somehow?
 abstract type OptionType end
@@ -38,8 +39,8 @@ function print_tex(io_main::IO, str::String)
     end
 end
 
-print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)).",
-                                                  "Define one by overloading print_tex(io::IO, data::T)",
+print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
+                                                  "Define one by overloading print_tex(io::IO, data::T) ",
                                                   "where T is the type of the data to dispatch on.")))
 
 

@@ -7,8 +7,7 @@ if get(ENV, "CI", false) == true
     pgf.latexengine!(pgf.PDFLATEX)
 end
 
-
-@show get(ENV, "CI", false)
+@show pgf.latexengine
 pgf.latexengine!(pgf.PDFLATEX)
 
 cd(tempdir()) do
