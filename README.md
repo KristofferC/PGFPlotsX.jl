@@ -32,8 +32,7 @@ julia> Pkg.add("PGFPlotsX")
 ## TODO:s / Roadmap
 
 * Add more examples
-* Make the generated LaTeX code pretty printed
-* Show in REPL
+* Make the generated LaTeX code pretty printed (more than currently)
 * Add figures to the documentation
 
 ## Author
