@@ -1,3 +1,5 @@
+![logo](https://cloud.githubusercontent.com/assets/1282691/26038394/c1886afe-3907-11e7-8027-213d36bc011a.png)
+
 # PGFPlotsX
 
 | **Documentation**                                                               | **Build Status**                                                                                |
