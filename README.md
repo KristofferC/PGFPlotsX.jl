@@ -1,8 +1,3 @@
-<h1 align="center">
-    <img width="400" src="https://cloud.githubusercontent.com/assets/1282691/26036720/610ef806-38e3-11e7-8472-5c9bee3dfe4c.png" alt="logo">
-    <br>
-</h1>
-
 # PGFPlotsX
 
 | **Documentation**                                                               | **Build Status**                                                                                |
