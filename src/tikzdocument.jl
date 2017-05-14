@@ -196,7 +196,7 @@ _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 
 function Base.show(io::IO, ::MIME"text/plain", p::Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture})
-    if isinteractive() && _DISPLAY_PDF
+    if isinteractive() && _DISPLAY_PDF && !(isdefined(Main, :IJulia) && Main.IJulia.inited)
         f = tempname() .* ".pdf"
         save(f, p)
         try
