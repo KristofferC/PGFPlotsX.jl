@@ -14,9 +14,6 @@ tries to have a very close mapping to the PGFPlots API as well as minimize the n
 The fact that the syntax is similar to the TeX version means that examples from Stack Overflow and the PGFPlots manual can
 easily be incorporated in the Julia code.
 
-Documentation is currently lacking but a quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
-
-
 ## Installation
 
 The package is registered in `METADATA.jl` and so can be installed with `Pkg.add`.
