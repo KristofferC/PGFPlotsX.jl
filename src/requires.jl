@@ -58,7 +58,8 @@ end
         end
         edge = c.edges[1]
         for v in 1:length(c.weights)
-            println(io, 0.5 * (edge[v] + edge[v+1]), "    ", c.weights[v])
+            println(io, edge[v], "    ", c.weights[v])
         end
+        println(io, edge[end], "    ", 0)
     end
 end
