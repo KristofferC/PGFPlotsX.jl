@@ -142,26 +142,9 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
     end
 end
 
-function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(),
-                                                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
-    tmp = tempname()
-    keep_pdf = isfile(filename * ".pdf")
-    savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
-    # TODO Better error
-    svg_cmd = `pdf2svg $tmp.pdf $filename.svg`
-    svg_sucess = success(`pdf2svg $tmp.pdf $filename.svg`)
-    if !svg_sucess
-        error("Failed to run $svg_cmd")
-    end
-    if !keep_pdf
-        rm("$tmp.pdf")
-    end
-end
-
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
 
-# Below here, Copyright TikzPictures.jl (see LICENSE.md)
-
+# Copyright TikzPictures.jl (see LICENSE.md)
 function latexerrormsg(s)
     beginError = false
     for l in split(s, '\n')
@@ -182,26 +165,42 @@ end
 
 global _tikzid = round(UInt64, time() * 1e6)
 
-function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
-    global _tikzid
-    filename = tempname() * ".svg"
-    save(filename, td)
-    s = readstring(filename)
-    s = replace(s, "glyph", "glyph-$(_tikzid)-")
-    s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
-    s = replace(s, "#clip", "#clip-$(_tikzid)-")
-    s = replace(s, "\"image", "\"image-$(_tikzid)-")
-    s = replace(s, "#image", "#image-$(_tikzid)-")
-    s = replace(s, "linearGradient id=\"linear", "linearGradient id=\"linear-$(_tikzid)-")
-    s = replace(s, "#linear", "#linear-$(_tikzid)-")
-    s = replace(s, "image id=\"", "image style=\"image-rendering: pixelated;\" id=\"")
-    _tikzid += 1
-    println(f, s)
-    rm(filename; force = true)
+if HAVE_PDFTOSVG
+    function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(),
+                                                         buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
+        tmp = tempname()
+        keep_pdf = isfile(filename * ".pdf")
+        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+        # TODO Better error
+        svg_cmd = `pdf2svg $tmp.pdf $filename.svg`
+        svg_sucess = success(`pdf2svg $tmp.pdf $filename.svg`)
+        if !svg_sucess
+            error("Failed to run $svg_cmd")
+        end
+        if !keep_pdf
+            rm("$tmp.pdf")
+        end
+    end
+
+    # Copyright TikzPictures.jl (see LICENSE.md)
+    function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
+        global _tikzid
+        filename = tempname() * ".svg"
+        save(filename, td)
+        s = readstring(filename)
+        s = replace(s, "glyph", "glyph-$(_tikzid)-")
+        s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
+        s = replace(s, "#clip", "#clip-$(_tikzid)-")
+        s = replace(s, "\"image", "\"image-$(_tikzid)-")
+        s = replace(s, "#image", "#image-$(_tikzid)-")
+        s = replace(s, "linearGradient id=\"linear", "linearGradient id=\"linear-$(_tikzid)-")
+        s = replace(s, "#linear", "#linear-$(_tikzid)-")
+        s = replace(s, "image id=\"", "image style=\"image-rendering: pixelated;\" id=\"")
+        _tikzid += 1
+        println(f, s)
+        rm(filename; force = true)
+    end
 end
-
-# end copyright TikzPictures.jl
-
 
 media(_SHOWABLE, Media.Plot)
 

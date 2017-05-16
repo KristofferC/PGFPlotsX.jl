@@ -19,7 +19,10 @@ Pkg.add("PGFPlotsX")
 
 To show figures in svg (like is done by default in Jupyter notebooks) you need `pdf2svg`. On Ubuntu, you can get this by running `sudo apt-get install pdf2svg` and on RHEL/Fedora by running `sudo dnf install pdf2svg`. On Windows, you can download the binaries from [here](http://www.cityinthesky.co.uk/opensource/pdf2svg/). Be sure to add `pdf2svg` to your path.
 
-For saving (or showing) png figures you need `pdf2ppm` which should be installed by default on Linux but can otherwise be downloaded [here](http://www.foolabs.com/xpdf/download.html).
+For saving (or showing) png figures you need `pdftoppm` which should be installed by default on Linux but can otherwise be downloaded [here](http://www.foolabs.com/xpdf/download.html).
+
+!!! note
+    If you installed a new latex engine, `pdf2svg` or `pdftoppm` after you installed *PGFPlotsX* you need to run `Pkg.build("PGFPlotsX")` for this to be reflected.
 
 ## Manual Outline
 
