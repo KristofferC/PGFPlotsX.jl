@@ -27,17 +27,9 @@ function print_tex(io_main::IO, axislike::AxisLike)
     end
 end
 
-function save(filename::String, axislike::AxisLike; include_preamble::Bool = true)
-    save(filename, TikzPicture(axislike); include_preamble = include_preamble)
+function save(filename::String, axislike::AxisLike; kwargs...)
+    save(filename, TikzPicture(axislike); kwargs...)
 end
-
-Base.mimewritable(::MIME"image/svg+xml", ::AxisLike) = true
-
-function Base.show(f::IO, ::MIME"image/svg+xml", axes::AbstractVector{T} where T <: AxisLike)
-    show(f, MIME("image/svg+xml"), TikzPicture(convert(Vector{AxisLike}, axes)))
-end
-
-Base.show(f::IO, ::MIME"image/svg+xml", axislike::AxisLike) = show(f, MIME("image/svg+xml"), [axislike])
 
 _in_between(::, ::Any) = ""
 
@@ -66,6 +58,7 @@ struct GroupPlot <: AxisLike
     # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
     # get rid of default constructor or ambiguities
     GroupPlot(v::Vector, o::OrderedDict{Any, Any}) = new(convert(Vector{Any}, v), [OrderedDict() for i in 1:length(v)], o)
+    GroupPlot(o::OrderedDict{Any, Any}) = new(Any[], OrderedDict{Any, Any}[], o)
 end
 
 function print_tex(io::IO, v::Vector, gp::GroupPlot)

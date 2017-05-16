@@ -24,16 +24,8 @@ end
 Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
 Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
 
-function save(filename::String, plot::Plot; include_preamble::Bool = true)
-    save(filename, Axis(plot); include_preamble = include_preamble)
-end
-
-Base.mimewritable(::MIME"image/svg+xml", ::Plot) = true
-
-Base.show(f::IO, ::MIME"image/svg+xml", plot::Plot) = show(f, MIME("image/svg+xml"), [plot])
-
-function Base.show(f::IO, ::MIME"image/svg+xml", plot::AbstractVector{Plot})
-    show(f, MIME("image/svg+xml"), Axis(plot))
+function save(filename::String, plot::Plot; kwargs...)
+    save(filename, Axis(plot); kwargs...)
 end
 
 function print_tex(io_main::IO, p::Plot)
@@ -55,7 +47,6 @@ function print_tex(io_main::IO, p::Plot)
         end
     end
 end
-
 
 ##############
 # Expression #

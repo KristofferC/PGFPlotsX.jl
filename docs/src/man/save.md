@@ -2,11 +2,17 @@
 
 ## Jupyter
 
-Figures are shown in .svg format when evaluated in Jupyter. For this you need the `pdf2svg` software installed.
+Figures are shown in `svg` format when evaluated in Jupyter. For this you need the `pdf2svg` software installed.
+If you want to show them in `png` format (because perhaps is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show.
+
+## Juno
+
+Figures are shown in the Juno plot pane as `svg`s by default. If you want to show them as `png`, run `show_juno_png(true)`, (`false` to go back to `svg`).
+To set the dpi of the figures in Juno when using `png`, run `dpi_juno_png(dpi::Int)`
 
 ## REPL
 
-In the REPL, the figure will be exported to a pdf and attempted to be opened in the default pdf viewing program.
+In the REPL, the figure will be exported to a `pdf` and attempted to be opened in the default `pdf` viewing program.
 If you wish to disable this, run `pgf.enable_interactive(false)`.
 
 ## Exporting
@@ -14,11 +20,11 @@ If you wish to disable this, run `pgf.enable_interactive(false)`.
 Figures can be exported to files using
 
 ```jlcon
-pgf.save(filename::String, figure; include_preamble::Bool = true)
+pgf.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)
 ```
 
-where the file extension of `filename` determines the file type (can be `.pdf`, `.svg` or `.tex`) and `include_preamble`
-sets if the preamble should be included in the output (only relevant for `tex` export).
+where the file extension of `filename` determines the file type (can be `.pdf`, `.svg` or `.tex`), `include_preamble`
+sets if the preamble should be included in the output (only relevant for `tex` export) and `dpi` determines the dpi of the figure (only relevant for `png` export).
 
 ## Customizing the preamble
 

@@ -7,11 +7,14 @@ using Requires
 import Juno: Juno, @render, media, Media, Hiccup
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
-
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
-
 const PGFOption = Union{Pair, String, OrderedDict}
 const AbstractDict = Union{Dict, OrderedDict}
+
+if !isfile(joinpath(@__DIR__, "..", "deps", "deps.jl"))
+    error("""please run Pkg.build("PGFPlotsX") before loading the package""")
+end
+include("../deps/deps.jl")
 
 print_tex(io::IO, a, b) = print_tex(io, a)
 print_tex(a) = print_tex(STDOUT, a)
