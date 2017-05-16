@@ -191,12 +191,26 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::TikzDocument)
     rm("$filename.svg")
 end
 
-_DISPLAY_PDF = true
 
+_is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
+_is_juno() = isdefined(Main, :Juno) && Main.Juno.isactive()
+
+const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
+
+media(_SHOWABLE, Media.Plot)
+
+function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
+    f = tempname() * ".svg"
+    save(f, p)
+    Media.render(pane, Hiccup.div(style="background-color:#ffffff",
+                       Hiccup.img(src = f)))
+end
+
+_DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 
-function Base.show(io::IO, ::MIME"text/plain", p::Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture})
-    if isinteractive() && _DISPLAY_PDF && !(isdefined(Main, :IJulia) && Main.IJulia.inited)
+function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
+    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno()
         f = tempname() .* ".pdf"
         save(f, p)
         try

@@ -4,8 +4,7 @@ import MacroTools: prewalk, @capture
 
 using DataStructures
 using Requires
-
-export @pgf
+import Juno: Juno, @render, media, Media, Hiccup
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 
