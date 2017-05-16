@@ -9,3 +9,4 @@
 scratch.jl
 docs/build
 deps/custom_preamble.tex
+deps/deps.jl

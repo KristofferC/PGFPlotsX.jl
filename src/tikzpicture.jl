@@ -26,14 +26,6 @@ function print_tex(io::IO, tp::TikzPicture)
     println(io, "\\end{tikzpicture}")
 end
 
-function save(filename::String, tp::TikzPicture; include_preamble::Bool = true)
-    save(filename, TikzDocument(tp); include_preamble = include_preamble)
+function save(filename::String, tp::TikzPicture; kwargs...)
+    save(filename, TikzDocument(tp); kwargs...)
 end
-
-Base.mimewritable(::MIME"image/svg+xml", ::TikzPicture) = true
-
-function Base.show(f::IO, ::MIME"image/svg+xml", tps::Vector{TikzPicture})
-    show(f, MIME("image/svg+xml"), TikzDocument(tps))
-end
-
-Base.show(f::IO, ::MIME"image/svg+xml", tp::TikzPicture) = show(f, MIME("image/svg+xml"), [tp])

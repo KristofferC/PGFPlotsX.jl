@@ -31,26 +31,28 @@ String[
 ]
 
 # Collects the full preamble from the different sources, default and custom
-function _print_preamble(io::IO)
-    println(io, "% Default preamble")
-    println(io, join(DEFAULT_PREAMBLE, "\n"), "\n")
+function _default_preamble()
+    preamble = []
+    push!(preamble, "% Default preamble")
+    append!(preamble, DEFAULT_PREAMBLE)
 
     # Collect custom preambles
     if !isempty(CUSTOM_PREAMBLE)
-        println(io, "% Custom preamble from global variable:")
-        println(io, join(CUSTOM_PREAMBLE, "\n"), "\n")
+        push!(preamble, "% Custom preamble from global variable:")
+        append!(preamble, CUSTOM_PREAMBLE)
     end
 
     if isfile(CUSTOM_PREAMBLE_PATH)
         str = readstring(CUSTOM_PREAMBLE_PATH)
         if !isempty(str)
-            println(io, "% Custom preamble from custom_preamble.tex:")
-            println(io, str, "\n")
+            push!(preamble, "% Custom preamble from custom_preamble.tex:")
+            push!(preamble, str, "\n")
         end
     end
 
     if haskey(ENV, "PGFPLOTSX_PREAMBLE_PATH") && isfile(ENV["PGFPLOTSX_PREAMBLE_PATH"])
-        println(io, "% Custom preamble from ENV path:")
-        println(io, readstring(ENV["PGFPLOTSX_PREAMBLE_PATH"]), "\n")
+        push!(preamble, "% Custom preamble from ENV path:")
+        push!(preamble, readstring(ENV["PGFPLOTSX_PREAMBLE_PATH"]), "\n")
     end
+    return preamble
 end

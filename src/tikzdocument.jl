@@ -2,21 +2,21 @@ const TikzPictureOrStr = Union{TikzPicture, String}
 
 type TikzDocument <: OptionType
     elements::Vector # Plots, nodes etc
-    preamble::Vector{String}
+    preamble::Vector
 
-    function TikzDocument(elements::Vector, preamble::Union{String, Vector{String}})
-        new(elements, vcat(DEFAULT_PREAMBLE, CUSTOM_PREAMBLE, preamble))
+    function TikzDocument(elements::Vector, preamble)
+        new(elements, vcat(preamble, _default_preamble()))
     end
+
 end
 
-function TikzDocument(; preamble = String[])
-    TikzDocument([], preamble)
-end
-
+TikzDocument(; preamble = String[]) = TikzDocument([], preamble)
+TikzDocument(element::Vector) = TikzDocument(element, String[])
 TikzDocument(element, args...) = TikzDocument([element], args...)
-TikzDocument(elements::Vector; preamble = String[]) = TikzDocument(elements, preamble)
 
 Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
+push_preamble!(td::TikzDocument, v) = (push!(td.preamble, v); td)
+
 
 ##########
 # Output #
@@ -24,11 +24,14 @@ Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
 
 function save(filename::String, td::TikzDocument; include_preamble::Bool = true,
                                                   latex_engine = latexengine(),
-                                                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
+                                                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                                                  dpi = 150)
     file_ending = split(basename(filename), '.')[end]
     filename_stripped = filename[1:end-4] # This is ugly, whatccha gonna do about it?
-    if !(file_ending in ("tex", "svg", "pdf"))
-        throw(ArgumentError("allowed file endings are .tex, .svg, .pdf"))
+    file_endings = ["tex", "svg", "pdf"]
+    HAVE_PDFTOPPM && push!(file_endings, "png")
+    if !(file_ending in file_endings)
+        throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
     end
     if file_ending == "tex"
         savetex(filename_stripped, td; include_preamble = include_preamble)
@@ -38,6 +41,10 @@ function save(filename::String, td::TikzDocument; include_preamble::Bool = true,
     elseif file_ending == "pdf"
         savepdf(filename_stripped, td; latex_engine = latex_engine,
                                        buildflags = buildflags)
+    elseif file_ending == "png"
+        savepng(filename_stripped, td; latex_engine = latex_engine,
+                                       buildflags = buildflags,
+                                       dpi = dpi)
     end
     return
 end
@@ -64,7 +71,9 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         end
         # Temp workaround for CI
         println(io, "\\documentclass{standalone}")
-        _print_preamble(io)
+        for pream in td.preamble
+            print_tex(io, pream, td)
+        end
         println(io, "\\begin{document}")
     end
     for element in td.elements
@@ -149,7 +158,7 @@ function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(
     end
 end
 
-Base.mimewritable(::MIME"image/svg+xml", ::TikzDocument) = true
+const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
 
 # Below here, Copyright TikzPictures.jl (see LICENSE.md)
 
@@ -173,11 +182,11 @@ end
 
 global _tikzid = round(UInt64, time() * 1e6)
 
-function Base.show(f::IO, ::MIME"image/svg+xml", td::TikzDocument)
+function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
     global _tikzid
-    filename = tempname()
-    savesvg(filename, td)
-    s = readstring("$filename.svg")
+    filename = tempname() * ".svg"
+    save(filename, td)
+    s = readstring(filename)
     s = replace(s, "glyph", "glyph-$(_tikzid)-")
     s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
     s = replace(s, "#clip", "#clip-$(_tikzid)-")
@@ -188,29 +197,57 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::TikzDocument)
     s = replace(s, "image id=\"", "image style=\"image-rendering: pixelated;\" id=\"")
     _tikzid += 1
     println(f, s)
-    rm("$filename.svg")
+    rm(filename; force = true)
 end
 
+# end copyright TikzPictures.jl
 
-_is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
-_is_juno() = isdefined(Main, :Juno) && Main.Juno.isactive()
-
-const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
 
 media(_SHOWABLE, Media.Plot)
 
+_JUNO_PNG = false
+_JUNO_DPI = 150
+show_juno_png(v::Bool) = global _JUNO_PNG = v
+dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
+
 function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
-    f = tempname() * ".svg"
-    save(f, p)
+    f = tempname() * (_JUNO_PNG ? ".png" : ".svg")
+    save(f, p; dpi = _JUNO_DPI)
     Media.render(pane, Hiccup.div(style="background-color:#ffffff",
                        Hiccup.img(src = f)))
 end
 
+
+if HAVE_PDFTOPPM
+    function savepng(filename::String, td::TikzDocument; latex_engine = latexengine(),
+                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                     dpi::Int = 150)
+        tmp = tempname()
+        keep_pdf = isfile(filename * ".pdf")
+        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp.pdf $filename`
+        png_success = success(png_cmd)
+        if !png_success
+            error("Error when saving to png")
+        end
+    end
+
+    function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
+        filename = tempname() * ".png"
+        save(filename, p)
+        write(io, read(filename))
+        rm(filename; force = true)
+    end
+end
+
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
+_is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
+_is_juno() = isdefined(Main, :Juno) && Main.Juno.isactive()
+
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
-    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno()
+    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
         f = tempname() .* ".pdf"
         save(f, p)
         try

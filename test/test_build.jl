@@ -1,16 +1,3 @@
-#=
-@testset "engine" begin
-    try
-        eng = pgf.latexengine()
-        pgf.latexengine!(pgf.XELATEX)
-        @test pgf.latexengine() == pgf.XELATEX
-        @test pgf._engine_cmd(pgf.XELATEX) == `xelatex`
-    finally
-        pgf.latexengine!(eng)
-    end
-end
-=#
-
 @testset "preamble" begin
     mktemp() do path, f
         withenv("PGFPLOTSX_PREAMBLE_PATH" => path) do
@@ -22,12 +9,14 @@ end
                 print(f, test_preamble_env)
                 close(f)
 
-                io = IOBuffer()
-                pgf._print_preamble(io)
+                td = pgf.TikzDocument()
 
-                preamble = String(take!(io))
-                @test contains(preamble, test_preamble_env)
-                @test contains(preamble, test_preamble_var)
+                io = IOBuffer()
+                pgf.savetex(io, td)
+
+                texstring = String(take!(io))
+                @test contains(texstring, test_preamble_env)
+                @test contains(texstring, test_preamble_var)
             finally
                 empty!(pgf.CUSTOM_PREAMBLE)
             end
