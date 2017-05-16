@@ -14,6 +14,13 @@ tries to have a very close mapping to the PGFPlots API as well as minimize the n
 The fact that the syntax is similar to the TeX version means that examples from Stack Overflow and the PGFPlots manual can
 easily be incorporated in the Julia code.
 
+Features include:
+
+* Showing figures inline in Jupyter notebooks and Juno. Both png- and svg-figures can be shown.
+* Exporting to tex, pdf, svg, or png.
+* Customizing the preamble so that commands from latex packages can be used.
+* [Extra functionality](https://github.com/KristofferC/PGFPlotsXExamples/blob/master/examples/custom_types.ipynb) when different packages are loaded, for example *Colors*, *DataFrames*, *Contour* etc.
+
 A quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
 
 ## Installation
