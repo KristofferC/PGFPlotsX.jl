@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Installation",
     "category": "section",
-    "text": "Pkg.add(\"PGFPlotsX\")To show figures in svg (like is done by default in Jupyter notebooks) you need pdf2svg. On Ubuntu, you can get this by running sudo apt-get install pdf2svg and on RHEL/Fedora by running sudo dnf install pdf2svg. On Windows, you can download the binaries from here. Be sure to add pdf2svg to your path."
+    "text": "Pkg.add(\"PGFPlotsX\")To show figures in svg (like is done by default in Jupyter notebooks) you need pdf2svg. On Ubuntu, you can get this by running sudo apt-get install pdf2svg and on RHEL/Fedora by running sudo dnf install pdf2svg. On Windows, you can download the binaries from here. Be sure to add pdf2svg to your path.For saving (or showing) png figures you need pdftoppm which should be installed by default on Linux but can otherwise be downloaded here.note: Note\nIf you installed a new latex engine, pdf2svg or pdftoppm after you installed PGFPlotsX you need to run Pkg.build(\"PGFPlotsX\") for this to be reflected."
 },
 
 {
@@ -245,7 +245,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "Jupyter",
     "category": "section",
-    "text": "Figures are shown in .svg format when evaluated in Jupyter. For this you need the pdf2svg software installed."
+    "text": "Figures are shown in svg format when evaluated in Jupyter. For this you need the pdf2svg software installed. If you want to show them in png format (because perhaps is too large), you can use display(MIME\"image/png\", p) where p is the figure to show."
+},
+
+{
+    "location": "man/save.html#Juno-1",
+    "page": "Showing / Exporting figures",
+    "title": "Juno",
+    "category": "section",
+    "text": "Figures are shown in the Juno plot pane as svgs by default. If you want to show them as png, run show_juno_png(true), (false to go back to svg). To set the dpi of the figures in Juno when using png, run dpi_juno_png(dpi::Int)"
 },
 
 {
@@ -261,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "Exporting",
     "category": "section",
-    "text": "Figures can be exported to files usingpgf.save(filename::String, figure; include_preamble::Bool = true)where the file extension of filename determines the file type (can be .pdf, .svg or .tex) and include_preamble sets if the preamble should be included in the output (only relevant for tex export)."
+    "text": "Figures can be exported to files usingpgf.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)where the file extension of filename determines the file type (can be .pdf, .svg or .tex), include_preamble sets if the preamble should be included in the output (only relevant for tex export) and dpi determines the dpi of the figure (only relevant for png export)."
 },
 
 {
@@ -277,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "Choosing the LaTeX engine used",
     "category": "section",
-    "text": "Thee are three different choices for latex engines, PDFLATEX, LUALATEX and XELATEX. By default, LUALATEX is used. The active engine can be retrieved with the latexengine() function and be set with latexengine!(engine) where engine is one of the three previously mentioned engines."
+    "text": "Thee are two different choices for latex engines, PDFLATEX, LUALATEX. By default, LUALATEX is used if it was available during Pkg.build(). The active engine can be retrieved with the latexengine() function and be set with latexengine!(engine) where engine is one of the three previously mentioned engines."
 },
 
 {
