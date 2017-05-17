@@ -5,11 +5,11 @@ const OK =  GREEN_FG * BOLD("OK")
 const X =  RED_FG * BOLD("X")
 
 print(STDERR, "Looking for lualatex...")
-have_lualatex = success(`lualatex -v`)
+have_lualatex = try success(`lualatex -v`); catch; false; end
 println(STDERR, "   ", have_lualatex ? OK : X)
 
 print(STDERR, "Looking for pdflatex...")
-have_pdflatex = success(`pdflatex -v`)
+have_pdflatex = try success(`pdflatex -v`); catch; false; end
 println(STDERR, "   ", have_pdflatex ? OK : X)
 
 
@@ -25,7 +25,7 @@ else
 end
 
 print(STDERR, "Looking for pdftoppm...")
-have_pdftoppm = success(`pdftoppm -v`)
+have_pdftoppm =  try success(`pdftoppm  -v`); catch; false; end
 println(STDERR, "   ", have_pdftoppm ? OK : X)
 if !have_pdftoppm
     warn(string("Did not find `pdftoppm`, png output will be disabled. Install `pdftoppm` ",
@@ -35,7 +35,7 @@ end
 print(STDERR, "Looking for pdf2svg...")
 pdfpath = joinpath(@__DIR__, "pdf2svg.pdf")
 svgpath = joinpath(@__DIR__, "pdf2svg.svg")
-have_pdf2svg = success(`pdf2svg $pdfpath $svgpath`)
+have_pdf2svg = try success(`pdf2svg $pdfpath $svgpath`); catch; false; end
 println(STDERR, "    ", have_pdf2svg ? OK : X)
 if !have_pdf2svg
     warn(string("Did not find `pdf2svg`, svg output will be disabled. Install `pdf2svg` ",
