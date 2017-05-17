@@ -33,7 +33,9 @@ if !have_pdftoppm
 end
 
 print(STDERR, "Looking for pdf2svg...")
-have_pdf2svg = success(`pdf2svg pdf2svg.pdf pdf2svg.svg`)
+pdfpath = joinpath(@__DIR__, "pdf2svg.pdf")
+svgpath = joinpath(@__DIR__, "pdf2svg.svg")
+have_pdf2svg = success(`pdf2svg $pdfpath $svgpath`)
 println(STDERR, "    ", have_pdf2svg ? OK : X)
 if !have_pdf2svg
     warn(string("Did not find `pdf2svg`, svg output will be disabled. Install `pdf2svg` ",
