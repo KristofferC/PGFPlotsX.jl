@@ -1,7 +1,7 @@
 ################
 # LaTeX-engine #
 ################
-@enum(LaTeXEngine, LUALATEX, XELATEX, PDFLATEX)
+@enum(LaTeXEngine, LUALATEX, PDFLATEX)
 
 const ACTIVE_LATEX_ENGINE = Ref(LUALATEX)
 latexengine() = ACTIVE_LATEX_ENGINE[]
@@ -24,7 +24,7 @@ DEFAULT_PREAMBLE =
 String[
 "\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
-"\\pgfplotsset{compat=1.13}",
+"\\pgfplotsset{compat=newest}",
 "\\usepgfplotslibrary{groupplots}",
 "\\usepgfplotslibrary{polar}",
 "\\usepgfplotslibrary{statistics}",

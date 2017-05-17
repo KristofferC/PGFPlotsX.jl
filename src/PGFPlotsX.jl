@@ -66,4 +66,10 @@ include("tikzdocument.jl")
 include("requires.jl")
 include("build.jl")
 
+function __init__()
+    if DEFAULT_ENGINE == "pdflatex"
+        latexengine!(PDFLATEX)
+    end
+end
+
 end # module
