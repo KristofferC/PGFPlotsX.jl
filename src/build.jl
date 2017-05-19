@@ -22,7 +22,6 @@ CUSTOM_PREAMBLE = String[]
 
 DEFAULT_PREAMBLE =
 String[
-"\\usepackage{tikz}",
 "\\usepackage{pgfplots}",
 "\\pgfplotsset{compat=newest}",
 "\\usepgfplotslibrary{groupplots}",

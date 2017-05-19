@@ -70,7 +70,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
             println(io, "\\RequirePackage{luatex85}")
         end
         # Temp workaround for CI
-        println(io, "\\documentclass{standalone}")
+        println(io, "\\documentclass[tikz]{standalone}")
         for pream in td.preamble
             print_tex(io, pream, td)
         end

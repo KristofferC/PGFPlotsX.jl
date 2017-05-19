@@ -10,8 +10,8 @@ struct Plot <: AxisElement
     _3d::Bool
 end
 
-Base.push!(plot::Plot, element) = push!(plot.elements, element)
-
+Base.push!(plot::Plot, element) = (push!(plot.elements, element); plot)
+Base.append!(plot::Plot, element) = (append!(plot.elements, element); plot)
 
 function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
     Plot(elements, dictify(args), label, incremental, false)
@@ -43,7 +43,7 @@ function print_tex(io_main::IO, p::Plot)
         end
         print(io, ";")
         if p.label != nothing
-            println(io, "\\addlegendentry{$(p.label)}")
+            print(io, "\n\\addlegendentry{$(p.label)}")
         end
     end
 end

@@ -1,6 +1,8 @@
 abstract type AxisLike <: TikzElement end
 
 Base.push!(axislike::AxisLike, plot) = (push!(axislike.plots, plot); axislike)
+Base.append!(axislike::AxisLike, plot) = (append!(axislike.plots, plot); axislike)
+
 
 function (T::Type{<:AxisLike})(plots::AbstractVector, args::Vararg{PGFOption})
     T(plots, dictify(args))
