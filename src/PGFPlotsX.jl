@@ -41,6 +41,15 @@ function print_tex(io_main::IO, str::String)
     end
 end
 
+function print_tex(io_main::IO, vs::Vector)
+    print_indent(io_main) do io
+        for v in vs
+            print_tex(io, v)
+        end
+    end
+end
+
+
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",
                                                   "where T is the type of the data to dispatch on.")))
