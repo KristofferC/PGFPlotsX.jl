@@ -1,10 +1,11 @@
+__precompile__()
+
 module PGFPlotsX
 
 import MacroTools: prewalk, @capture
 
 using DataStructures
 using Requires
-import Juno: Juno, @render, media, Media, Hiccup
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
@@ -69,16 +70,13 @@ A `TikzElement` is a component of a `TikzPicture`. It can be a node or an `Axis`
 abstract type TikzElement <: OptionType end
 
 include("axislike.jl")
-
 include("tikzpicture.jl")
 include("tikzdocument.jl")
 include("requires.jl")
 include("build.jl")
 
-function __init__()
-    if DEFAULT_ENGINE == "pdflatex"
-        latexengine!(PDFLATEX)
-    end
+if DEFAULT_ENGINE == "PDFLATEX"
+    latexengine!(PDFLATEX)
 end
 
 end # module
