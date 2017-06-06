@@ -122,9 +122,9 @@ end
 
 
 
-Coordinates(x::AbstractVector, y::AbstractVector; kwargs...) = Coordinates(transpose(hcat(x, y)); kwargs...)
+Coordinates(x::AbstractVector, y::AbstractVector; kwargs...) = Coordinates(permutedims(hcat(x, y), (2,1)); kwargs...)
 
-Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector; metadata = nothing) = Coordinates(transpose(hcat(x, y, z)); metadata = metadata)
+Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector; metadata = nothing) = Coordinates(permutedims(hcat(x, y, z), (2,1)); metadata = metadata)
 
 Coordinates(x::AbstractVector, f::Function; metadata = nothing) = Coordinates(x, f.(x); metadata = metadata)
 
@@ -265,7 +265,7 @@ function print_tex(io::IO, v::AbstractVector, ::Table)
 
         println(io)
 
-        v_mat = hcat(vs...)'
+        v_mat = permutedims(hcat(vs...), (2,1))
 
         for j in 1:size(v_mat, 2)
             for i in 1:size(v_mat, 1)
