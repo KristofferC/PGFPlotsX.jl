@@ -21,6 +21,8 @@ Features include:
 * Customizing the preamble so that commands from latex packages can be used.
 * [Extra functionality](https://github.com/KristofferC/PGFPlotsXExamples/blob/master/examples/custom_types.ipynb) when different packages are loaded, for example *Colors*, *DataFrames*, *Contour* etc.
 
+## Examples
+
 A quite extensive set of examples can be found at the [PGFPlotsXExamples repo](https://github.com/KristofferC/PGFPlotsXExamples).
 
 ## Installation
