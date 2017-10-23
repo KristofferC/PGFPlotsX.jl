@@ -5,6 +5,7 @@
 struct Plot <: AxisElement
     elements::AbstractVector{Any}
     options::OrderedDict{Any, Any}
+    legend
     label
     incremental::Bool
     _3d::Bool
@@ -13,12 +14,14 @@ end
 Base.push!(plot::Plot, element) = (push!(plot.elements, element); plot)
 Base.append!(plot::Plot, element) = (append!(plot.elements, element); plot)
 
-function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(elements, dictify(args), label, incremental, false)
+function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental =
+              true, legend = nothing, label = nothing,)
+    Plot(elements, dictify(args), legend, label, incremental, false,)
 end
 
-function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(element, dictify(args), label, incremental, true)
+function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true,
+               legend = nothing, label = nothing,)
+    Plot(element, dictify(args), legend, label, incremental, true,)
 end
 
 Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
@@ -43,7 +46,10 @@ function print_tex(io_main::IO, p::Plot)
         end
         print(io, ";")
         if p.label != nothing
-            print(io, "\n\\addlegendentry{$(p.label)}")
+            print(io, "\n\\label{$(p.label)}")
+        end
+        if p.legend != nothing
+            print(io, "\n\\addlegendentry{$(p.legend)}")
         end
     end
 end
