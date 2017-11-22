@@ -28,10 +28,12 @@ function save(filename::String, td::TikzDocument; include_preamble::Bool = true,
                                                   dpi = 150)
     file_ending = split(basename(filename), '.')[end]
     filename_stripped = filename[1:end-4] # This is ugly, whatccha gonna do about it?
-    file_endings = ["tex", "svg", "pdf"]
+    file_endings = ["tex", "pdf"]
+    HAVE_PDFTOSVG && push!(file_endings, "svg")
     HAVE_PDFTOPPM && push!(file_endings, "png")
     if !(file_ending in file_endings)
-        throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
+        throw(ArgumentError(string("file endings available on this installation are $(join(file_endings, ", ")).",
+                                   "Run Pkg.build("PGFPlotsX") and look at output to see what is not installed")))
     end
     if file_ending == "tex"
         savetex(filename_stripped, td; include_preamble = include_preamble)
@@ -212,7 +214,7 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
     import Hiccup
     Media.media(_SHOWABLE, Media.Plot)
     function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
-        f = tempname() * (_JUNO_PNG ? ".png" : ".svg")
+        f = tempname() * (!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png"
         save(f, p; dpi = _JUNO_DPI)
         Media.render(pane, Hiccup.div(style="background-color:#ffffff",
                            Hiccup.img(src = f)))
