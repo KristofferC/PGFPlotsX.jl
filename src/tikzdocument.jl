@@ -90,8 +90,7 @@ _HAS_WARNED_SHELL_ESCAPE = false
 
 function savepdf(path::String, td::TikzDocument; 
                  latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 runtwice = false)
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
@@ -104,9 +103,6 @@ function savepdf(path::String, td::TikzDocument;
     end
 
     log = readstring("$filename.log")
-    rm("$filename.log"; force = true)
-    rm("$filename.aux"; force = true)
-    rm("$filename.tex"; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -138,6 +134,12 @@ function savepdf(path::String, td::TikzDocument;
             error("The latex command $latexcmd failed")
         end
     end
+    if contains(log, "LaTeX Warning: Label(s)")
+        success(latexcmd)
+    end
+    rm("$filename.log"; force = true)
+    rm("$filename.aux"; force = true)
+    rm("$filename.tex"; force = true)
     if run_again
         savepdf(path, td)
         return
