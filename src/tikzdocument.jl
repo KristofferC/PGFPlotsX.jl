@@ -99,9 +99,6 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
     latex_success = success(latexcmd)
 
     log = readstring("$filename.log")
-    rm("$filename.log"; force = true)
-    rm("$filename.aux"; force = true)
-    rm("$filename.tex"; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -133,6 +130,12 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
             error("The latex command $latexcmd failed")
         end
     end
+    if contains(log, "LaTeX Warning: Label(s)")
+        success(latexcmd)
+    end
+    rm("$filename.log"; force = true)
+    rm("$filename.aux"; force = true)
+    rm("$filename.tex"; force = true)
     if run_again
         savepdf(path, td)
         return
