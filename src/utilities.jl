@@ -83,3 +83,18 @@ function print_opt(io::IO, t::Tuple)
         i != length(t) && print(io, "}")
     end
 end
+
+"""
+    $SIGNATURES
+
+Replace the extension in `filename` by `ext` (which should include the `.`).
+When the resulting filename is unchanged, throw an error.
+"""
+function _replace_fileext(filename, ext)
+    filebase, fileext = splitext(filename)
+    new_filename = filename * ext
+    if filename == new_filename
+        error("$filename already has extension $ext.")
+    end
+    new_filename
+end

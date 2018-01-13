@@ -42,7 +42,7 @@ function save(filename::String, td::TikzDocument;
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
         savetex(filename, td; include_preamble = false)
     elseif fileext == ".svg"
-        savesvg(filebase, td;
+        savesvg(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".pdf"
         savepdf(filename, td;
@@ -179,19 +179,32 @@ end
 global _tikzid = round(UInt64, time() * 1e6)
 
 if HAVE_PDFTOSVG
-    function savesvg(filebase::String, td::TikzDocument; latex_engine = latexengine(),
-                                                         buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
-        tmp = tempname()
-        keep_pdf = isfile(filebase * ".pdf")
-        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+    """
+    $SIGNATURES
+
+Save `td` in `filename` using the SVG format.
+
+Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
+`filename` with the extension (if any) replaced by `".pdf"`. This overwrites
+an existing PDF file with the same name.
+"""
+    function savesvg(filename::String, td::TikzDocument;
+                     latex_engine = latexengine(),
+                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                     keep_pdf = false)
+        tmp_pdf = tempname() * ".pdf"
+        savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
         # TODO Better error
-        svg_cmd = `pdf2svg $tmp.pdf $filebase.svg`
-        svg_sucess = success(`pdf2svg $tmp.pdf $filebase.svg`)
-        if !svg_sucess
+        svg_cmd = `pdf2svg $tmp_pdf $filename`
+        svg_success = success(svg_cmd)
+        if !svg_success
             error("Failed to run $svg_cmd")
         end
-        if !keep_pdf
-            rm("$tmp.pdf")
+        if keep_pdf
+            mv(tmp_pdf, _replace_fileext(filename, ".pdf");
+               remove_destination = true)
+        else
+            rm(tmp_pdf)
         end
     end
 
