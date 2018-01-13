@@ -9,7 +9,19 @@ latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 
 _engine_cmd(eng::LaTeXEngine) = `$(lowercase(string(eng)))`
 
-_latex_cmd(file::String, eng::LaTeXEngine, flags) = `$(_engine_cmd(eng)) $flags $file`
+"""
+    $SIGNATURES
+
+Return a `Cmd` object for running LaTeX on `filename`, which can be a relative
+or an absolute path (recommended). Output files end up in the same directory.
+"""
+function _latex_cmd(filename::String, eng::LaTeXEngine, flags)
+    dir = splitdir(filename)[1]
+    if !isempty(dir)
+        push!(flags, "--output-directory $dir") # works for both engines
+    end
+    `$(_engine_cmd(eng)) $flags $filename`
+end
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
 CUSTOM_FLAGS = Union{String}[]
