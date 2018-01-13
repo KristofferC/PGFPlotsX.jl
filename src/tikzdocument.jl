@@ -130,7 +130,7 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
             error("The latex command $latexcmd failed")
         end
     end
-    run_again = contains(log, "LaTeX Warning: Label(s)")
+    run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
     if run_again
         savepdf(path, td)
         return
