@@ -25,15 +25,19 @@
 end
 
 @testset "simple" begin
-    a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
-    pgf.save("texfile.tex", a)
-    println(readstring("texfile.tex"))
-    pgf.save("texfile.pdf", a)
-    pgf.save("texfile.tikz", a)
-    let tikz_lines = readlines("texfile.tikz")
-        @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
-        last_line = findlast(!isempty, tikz_lines)
-        @test tikz_lines[last_line] == "\\end{tikzpicture}"
+    mktempdir() do dir
+        cd(dir) do
+            a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
+            pgf.save("texfile.tex", a)
+            println(readstring("texfile.tex"))
+            pgf.save("texfile.pdf", a)
+            pgf.save("texfile.tikz", a)
+            let tikz_lines = readlines("texfile.tikz")
+                @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
+                last_line = findlast(!isempty, tikz_lines)
+                @test tikz_lines[last_line] == "\\end{tikzpicture}"
+            end
+        end
     end
 end
 

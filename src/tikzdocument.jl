@@ -112,12 +112,11 @@ function savepdf(filename::String, td::TikzDocument;
     latexcmd = _latex_cmd(filename, latex_engine, buildflags)
     latex_success = success(latexcmd)
 
-    let filebase = splitext(filename)[1]
-        log = readstring("$filebase.log")
-        rm("$filebase.log"; force = true)
-        rm("$filebase.aux"; force = true)
-        rm("$filebase.tex"; force = true)
-    end
+    filebase = splitext(filename)[1]
+    log = readstring("$filebase.log")
+    rm("$filebase.log"; force = true)
+    rm("$filebase.aux"; force = true)
+    rm("$filebase.tex"; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")

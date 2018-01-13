@@ -18,7 +18,7 @@ or an absolute path (recommended). Output files end up in the same directory.
 function _latex_cmd(filename::String, eng::LaTeXEngine, flags)
     dir = splitdir(filename)[1]
     if !isempty(dir)
-        push!(flags, "--output-directory $dir") # works for both engines
+        append!(flags, ["--output-directory", "$dir"]) # works for both engines
     end
     `$(_engine_cmd(eng)) $flags $filename`
 end
