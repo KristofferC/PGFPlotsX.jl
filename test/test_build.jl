@@ -25,14 +25,15 @@
 end
 
 @testset "simple" begin
+    tmp = tempname()
     mktempdir() do dir
         cd(dir) do
             a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
-            pgf.save("texfile.tex", a)
-            println(readstring("texfile.tex"))
-            pgf.save("texfile.pdf", a)
-            pgf.save("texfile.tikz", a)
-            let tikz_lines = readlines("texfile.tikz")
+            pgf.save("$tmp.tex", a)
+            println(readstring("$tmp.tex"))
+            pgf.save("$tmp.pdf", a)
+            pgf.save("$tmp.tikz", a)
+            let tikz_lines = readlines("$tmp.tikz")
                 @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
                 last_line = findlast(!isempty, tikz_lines)
                 @test tikz_lines[last_line] == "\\end{tikzpicture}"
