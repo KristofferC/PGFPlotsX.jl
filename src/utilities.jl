@@ -92,7 +92,7 @@ When the resulting filename is unchanged, throw an error.
 """
 function _replace_fileext(filename, ext)
     filebase, fileext = splitext(filename)
-    new_filename = filename * ext
+    new_filename = filebase * ext
     if filename == new_filename
         error("$filename already has extension $ext.")
     end

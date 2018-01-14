@@ -10,17 +10,31 @@ latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 _engine_cmd(eng::LaTeXEngine) = `$(lowercase(string(eng)))`
 
 """
-    $SIGNATURES
+    succ, log, cmd = $SIGNATURES
 
-Return a `Cmd` object for running LaTeX on `filename`, which can be a relative
-or an absolute path (recommended). Output files end up in the same directory.
+Compile `filename` with LaTeX engine `eng` using the given `flags`.
+
+Return the result of `success`, the contents of the logfile as a string, and the
+`Cmd` object that was run (the latter two useful for diagnostics and informative
+error messages).
+
+Temporary files (`.aux`, `.log`) are cleaned up.
+
+!!! NOTE
+
+    Changing the working directory is required because of external tools like
+    `gnuplot`, which don't respect `--output-directory`.
 """
-function _latex_cmd(filename::String, eng::LaTeXEngine, flags)
-    dir = splitdir(filename)[1]
-    if !isempty(dir)
-        append!(flags, ["--output-directory", "$dir"]) # works for both engines
-    end
-    `$(_engine_cmd(eng)) $flags $filename`
+function run_latex_once(filename::String, eng::LaTeXEngine, flags)
+    dir, file = splitdir(filename)
+    cmd = `$(_engine_cmd(eng)) $flags $file`
+    succ = cd(() -> success(cmd), dir)
+    logfile = _replace_fileext(filename, ".log")
+    auxfile = _replace_fileext(filename, ".aux")
+    log = readstring(logfile)
+    rm(logfile; force = true)
+    rm(auxfile; force = true)
+    succ, log, cmd
 end
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently

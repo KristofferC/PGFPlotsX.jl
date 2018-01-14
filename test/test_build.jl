@@ -50,7 +50,9 @@ end
             pgf.@pgf p =
                 pgf.Axis(pgf.Plot3(pgf.Expression(expr),
                                    {
-                                       contour_gnuplot = {number = 30, labels = false},
+                                       contour_gnuplot = {
+                                           number = 30,
+                                           labels = false},
                                        thick,
                                        samples = 40,
                                    }; incremental = false),
@@ -65,7 +67,6 @@ end
             pgf.save(tmp_pdf, p)
             @test isfile(tmp_pdf)
             rm(tmp_pdf)
-            end
         end
     end
 end

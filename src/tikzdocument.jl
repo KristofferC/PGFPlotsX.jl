@@ -108,15 +108,13 @@ function savepdf(filename::String, td::TikzDocument;
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
-    savetex(filename, td)
-    latexcmd = _latex_cmd(filename, latex_engine, buildflags)
-    latex_success = success(latexcmd)
-
-    filebase = splitext(filename)[1]
-    log = readstring("$filebase.log")
-    rm("$filebase.log"; force = true)
-    rm("$filebase.aux"; force = true)
-    rm("$filebase.tex"; force = true)
+    tmp = tempname()
+    tmp_tex = tmp * ".tex"
+    tmp_pdf = tmp * ".pdf"
+    savetex(tmp_tex, td)
+    latex_success, log, latexcmd = run_latex_once(tmp_tex,
+                                                  latex_engine, buildflags)
+    rm(tmp_tex; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -152,6 +150,7 @@ function savepdf(filename::String, td::TikzDocument;
         savepdf(filename, td)
         return
     end
+    mv(tmp_pdf, filename; remove_destination = true)
 end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
