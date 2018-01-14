@@ -43,24 +43,29 @@ end
 end
 
 @testset "gnuplot / shell-escape" begin
-    pgf.@pgf p = pgf.Axis(pgf.Plot3(pgf.Expression("-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"),
-            {
-                contour_gnuplot = {number = 30, labels = false},
-                thick,
-                samples = 40,
-            }; incremental = false),
-        {
-            colorbar,
-            xlabel = "x",
-            ylabel = "y",
-            domain = 1:2,
-            y_domain = "74:87.9",
-            view = (0, 90),
-        })
-        cd(tempdir()) do
-            file = "gnuplot.pdf"
-            pgf.save(file, p)
-            @test isfile(file)
-            rm(file)
+    tmp_pdf = tempname() * ".pdf"
+    expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
+    mktempdir() do dir
+        cd(dir) do
+            pgf.@pgf p =
+                pgf.Axis(pgf.Plot3(pgf.Expression(expr),
+                                   {
+                                       contour_gnuplot = {number = 30, labels = false},
+                                       thick,
+                                       samples = 40,
+                                   }; incremental = false),
+                         {
+                             colorbar,
+                             xlabel = "x",
+                             ylabel = "y",
+                             domain = 1:2,
+                             y_domain = "74:87.9",
+                             view = (0, 90),
+                         })
+            pgf.save(tmp_pdf, p)
+            @test isfile(tmp_pdf)
+            rm(tmp_pdf)
+            end
         end
+    end
 end
