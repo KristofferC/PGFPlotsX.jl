@@ -48,7 +48,7 @@ function save(filename::String, td::TikzDocument;
         savepdf(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags)
     elseif HAVE_PDFTOPPM && fileext == ".png"
-        savepng(filebase, td;
+        savepng(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
     else
         allowed_file_endings = vcat(["tex", "svg", "pdf"],
@@ -245,11 +245,12 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
 end
 
 if HAVE_PDFTOPPM
-    function savepng(filebase::String, td::TikzDocument; latex_engine = latexengine(),
+    function savepng(filename::String, td::TikzDocument;
+                     latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
         tmp = tempname()
-        keep_pdf = isfile(filebase * ".pdf")
+        filebase = splitext(filename)[1]
         savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
         png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp.pdf $filebase`
         png_success = success(png_cmd)
