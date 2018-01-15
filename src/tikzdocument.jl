@@ -99,9 +99,6 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
     latex_success = success(latexcmd)
 
     log = readstring("$filename.log")
-    rm("$filename.log"; force = true)
-    rm("$filename.aux"; force = true)
-    rm("$filename.tex"; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -133,10 +130,14 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
             error("The latex command $latexcmd failed")
         end
     end
+    run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
     if run_again
         savepdf(path, td)
         return
     end
+    rm("$filename.log"; force = true)
+    rm("$filename.aux"; force = true)
+    rm("$filename.tex"; force = true)
     if normpath(filename) != normpath(path)
             mv(filename * ".pdf", joinpath(path * ".pdf"); remove_destination = true)
     end
