@@ -248,10 +248,10 @@ if HAVE_PDFTOPPM
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
-        tmp = tempname()
+        tmp = tempname() * ".pdf"
         filebase = splitext(filename)[1]
         savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
-        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp.pdf $filebase`
+        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp $filebase`
         png_success = success(png_cmd)
         if !png_success
             error("Error when saving to png")
