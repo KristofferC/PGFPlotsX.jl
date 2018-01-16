@@ -13,7 +13,7 @@ function procmap(d)
   elseif !@capture(d, {xs__})
       return d
   else
-      return :(PGFPlotsX.OrderedDict{Any, Any}($(map(prockey, xs)...)))
+      return :($(OrderedDict{Any, Any})($(map(prockey, xs)...)))
   end
 end
 
