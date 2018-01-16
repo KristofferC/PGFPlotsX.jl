@@ -1,5 +1,6 @@
 julia 0.6.0-pre
 MacroTools
+Compat
 DataStructures
 DocStringExtensions
 Requires

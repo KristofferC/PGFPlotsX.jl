@@ -7,14 +7,14 @@
                             "blue," , rgb_64[3])
     end
 
-    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::)
+    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::Any)
         name, color = c
         rgb = convert(Colors.RGB, color)
         rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
         print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
     end
 
-    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Vector{<:Colors.Colorant}}, ::)
+    function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Vector{<:Colors.Colorant}}, ::Any)
         name, colors = c
         println(io, "\\pgfplotsset{ colormap={$name}{")
         for col in colors

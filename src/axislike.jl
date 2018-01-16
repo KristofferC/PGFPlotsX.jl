@@ -33,7 +33,7 @@ function save(filename::String, axislike::AxisLike; kwargs...)
     save(filename, TikzPicture(axislike); kwargs...)
 end
 
-_in_between(::, ::Any) = ""
+_in_between(::Any, ::Any) = ""
 
 ########
 # Axis #

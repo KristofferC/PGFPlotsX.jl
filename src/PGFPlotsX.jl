@@ -4,6 +4,8 @@ module PGFPlotsX
 
 import MacroTools: prewalk, @capture
 
+using Compat
+using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions
 using Requires

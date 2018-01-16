@@ -1,6 +1,6 @@
 const TikzElementOrStr = Union{TikzElement, String}
 
-type TikzPicture <: OptionType
+struct TikzPicture <: OptionType
     elements::Vector{TikzElementOrStr} # Plots, nodes etc
     options::OrderedDict{Any, Any}
 end
