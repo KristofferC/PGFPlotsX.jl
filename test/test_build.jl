@@ -1,3 +1,30 @@
+function is_file_starting_with(filename, bytes::Vector{UInt8})
+    isfile(filename) && read(filename, length(bytes)) == bytes
+end
+
+function is_file_starting_with(filename, regex::Regex, nlines = 1)
+    isfile(filename) || return false
+    content = ""
+    open(filename, "r") do io
+        for _ in 1:nlines
+            content *= readline(io; chomp = true)
+        end
+    end
+    contains(content, regex)
+end
+
+is_png_file(filename) = is_file_starting_with(filename, b"\x89PNG")
+
+is_pdf_file(filename) = is_file_starting_with(filename, b"%PDF")
+
+is_tex_document(filename) =     # may have a \Require in the first line
+    is_file_starting_with(filename, r"\\documentclass\[tikz\]{standalone}", 2)
+
+is_tikz_standalone(filename) =
+    is_file_starting_with(filename, r"\\begin{tikzpicture}")
+
+is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
+
 @testset "preamble" begin
     mktemp() do path, f
         withenv("PGFPLOTSX_PREAMBLE_PATH" => path) do
@@ -30,9 +57,17 @@ end
         cd(dir) do
             a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
             pgf.save("$tmp.tex", a)
+            @test is_tex_document("$tmp.tex")
             println(readstring("$tmp.tex"))
+            pgf.save("$tmp.png", a)
+            @test is_png_file("$tmp.png")
             pgf.save("$tmp.pdf", a)
+            @test is_pdf_file("$tmp.pdf")
+            pgf.save("$tmp.svg", a)
+            @test is_svg_file("$tmp.svg")
             pgf.save("$tmp.tikz", a)
+            @test is_tikz_standalone("$tmp.tikz")
+
             let tikz_lines = readlines("$tmp.tikz")
                 @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
                 last_line = findlast(!isempty, tikz_lines)
@@ -65,7 +100,7 @@ end
                              view = (0, 90),
                          })
             pgf.save(tmp_pdf, p)
-            @test isfile(tmp_pdf)
+            @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)
         end
     end
