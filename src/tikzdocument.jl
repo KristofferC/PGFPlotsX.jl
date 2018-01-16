@@ -13,6 +13,7 @@ end
 TikzDocument(; preamble = String[]) = TikzDocument([], preamble)
 TikzDocument(element::Vector) = TikzDocument(element, String[])
 TikzDocument(element, args...) = TikzDocument([element], args...)
+TikzDocument(options::OrderedDict, element) = TikzDocument(element, options)
 
 Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
 push_preamble!(td::TikzDocument, v) = (push!(td.preamble, v); td)

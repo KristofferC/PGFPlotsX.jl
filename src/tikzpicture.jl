@@ -10,6 +10,7 @@ function TikzPicture(options::Vararg{PGFOption})
 end
 
 TikzPicture(element::TikzElementOrStr, args...) = TikzPicture([element], args...)
+TikzPicture(options::OrderedDict, element::TikzElementOrStr) = TikzPicture(element, options)
 
 function TikzPicture(elements::Vector, options::Vararg{PGFOption})
     TikzPicture(convert(Vector{TikzElementOrStr}, elements), dictify(options))

@@ -9,6 +9,7 @@ function (T::Type{<:AxisLike})(plots::AbstractVector, args::Vararg{PGFOption})
 end
 
 (T::Type{<:AxisLike})(plot, args::Vararg{PGFOption}) = T([plot], dictify(args))
+(T::Type{<:AxisLike})(options::OrderedDict, element) = T(element, options)
 
 function (T::Type{<:AxisLike})(args::Vararg{PGFOption})
     T([], args...)
