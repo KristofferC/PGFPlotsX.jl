@@ -1,5 +1,6 @@
 using PGFPlotsX
 using Base.Test
+using DataStructures: OrderedDict
 
 const pgf = PGFPlotsX
 
