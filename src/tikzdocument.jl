@@ -22,43 +22,57 @@ push_preamble!(td::TikzDocument, v) = (push!(td.preamble, v); td)
 # Output #
 ##########
 
-function save(filename::String, td::TikzDocument; include_preamble::Bool = true,
-                                                  latex_engine = latexengine(),
-                                                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                                                  dpi = 150)
-    file_ending = split(basename(filename), '.')[end]
-    filename_stripped = filename[1:end-4] # This is ugly, whatccha gonna do about it?
-    file_endings = ["tex", "svg", "pdf"]
-    HAVE_PDFTOPPM && push!(file_endings, "png")
-    if !(file_ending in file_endings)
+"""
+Extensions that make [`save`](@ref) choose a standalone `tikz` format.
+
+The saved file has no preamble, just a `tikzpicture` environment. These
+extensions should be recognized by `\includegraphics` when the
+[tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package is used.
+"""
+const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
+
+function save(filename::String, td::TikzDocument;
+              include_preamble::Bool = true,
+              latex_engine = latexengine(),
+              buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+              dpi = 150)
+    filebase, fileext = splitext(filename)
+    if fileext == ".tex"
+        savetex(filename, td; include_preamble = include_preamble)
+    elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
+        savetex(filename, td; include_preamble = false)
+    elseif fileext == ".svg"
+        savesvg(filename, td;
+                latex_engine = latex_engine, buildflags = buildflags)
+    elseif fileext == ".pdf"
+        savepdf(filename, td;
+                latex_engine = latex_engine, buildflags = buildflags)
+    elseif HAVE_PDFTOPPM && fileext == ".png"
+        savepng(filename, td;
+                latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
+    else
+        allowed_file_endings = vcat(["tex", "svg", "pdf"],
+                                    lstrip.(STANDALONE_TIKZ_FILEEXTS, '.'))
+        if HAVE_PDFTOPPM
+            push!(allowed_file_endings, "png")
+        end
         throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
-    end
-    if file_ending == "tex"
-        savetex(filename_stripped, td; include_preamble = include_preamble)
-    elseif file_ending == "svg"
-        savesvg(filename_stripped, td; latex_engine = latex_engine,
-                                       buildflags = buildflags)
-    elseif file_ending == "pdf"
-        savepdf(filename_stripped, td; latex_engine = latex_engine,
-                                       buildflags = buildflags)
-    elseif file_ending == "png"
-        savepng(filename_stripped, td; latex_engine = latex_engine,
-                                       buildflags = buildflags,
-                                       dpi = dpi)
     end
     return
 end
 
 # TeX
-function savetex(filename::String, td::TikzDocument; include_preamble::Bool = true)
-    open("$(filename).tex", "w") do tex
-        savetex(tex, td; include_preamble = include_preamble)
+function savetex(filename::String, td::TikzDocument;
+                 include_preamble::Bool = true)
+    open(filename, "w") do io
+        savetex(io, td; include_preamble = include_preamble)
     end
 end
 
 _OLD_LUALATEX = false
 
-savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) = print_tex(io, td; include_preamble = include_preamble)
+savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
+    print_tex(io, td; include_preamble = include_preamble)
 
 function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
@@ -88,20 +102,19 @@ end
 
 _HAS_WARNED_SHELL_ESCAPE = false
 
-function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
-                                                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
+function savepdf(filename::String, td::TikzDocument;
+                 latex_engine = latexengine(),
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
-    filename = basename(path)
-    savetex(filename, td)
-    latexcmd = _latex_cmd(filename, latex_engine, buildflags)
-    latex_success = success(latexcmd)
-
-    log = readstring("$filename.log")
-    rm("$filename.log"; force = true)
-    rm("$filename.aux"; force = true)
-    rm("$filename.tex"; force = true)
+    tmp = tempname()
+    tmp_tex = tmp * ".tex"
+    tmp_pdf = tmp * ".pdf"
+    savetex(tmp_tex, td)
+    latex_success, log, latexcmd = run_latex_once(tmp_tex,
+                                                  latex_engine, buildflags)
+    rm(tmp_tex; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -134,12 +147,10 @@ function savepdf(path::String, td::TikzDocument; latex_engine = latexengine(),
         end
     end
     if run_again
-        savepdf(path, td)
+        savepdf(filename, td)
         return
     end
-    if normpath(filename) != normpath(path)
-            mv(filename * ".pdf", joinpath(path * ".pdf"); remove_destination = true)
-    end
+    mv(tmp_pdf, filename; remove_destination = true)
 end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
@@ -166,19 +177,32 @@ end
 global _tikzid = round(UInt64, time() * 1e6)
 
 if HAVE_PDFTOSVG
-    function savesvg(filename::String, td::TikzDocument; latex_engine = latexengine(),
-                                                         buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
-        tmp = tempname()
-        keep_pdf = isfile(filename * ".pdf")
-        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+    """
+    $SIGNATURES
+
+Save `td` in `filename` using the SVG format.
+
+Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
+`filename` with the extension (if any) replaced by `".pdf"`. This overwrites
+an existing PDF file with the same name.
+"""
+    function savesvg(filename::String, td::TikzDocument;
+                     latex_engine = latexengine(),
+                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                     keep_pdf = false)
+        tmp_pdf = tempname() * ".pdf"
+        savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
         # TODO Better error
-        svg_cmd = `pdf2svg $tmp.pdf $filename.svg`
-        svg_sucess = success(`pdf2svg $tmp.pdf $filename.svg`)
-        if !svg_sucess
+        svg_cmd = `pdf2svg $tmp_pdf $filename`
+        svg_success = success(svg_cmd)
+        if !svg_success
             error("Failed to run $svg_cmd")
         end
-        if !keep_pdf
-            rm("$tmp.pdf")
+        if keep_pdf
+            mv(tmp_pdf, _replace_fileext(filename, ".pdf");
+               remove_destination = true)
+        else
+            rm(tmp_pdf)
         end
     end
 
@@ -220,13 +244,14 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
 end
 
 if HAVE_PDFTOPPM
-    function savepng(filename::String, td::TikzDocument; latex_engine = latexengine(),
+    function savepng(filename::String, td::TikzDocument;
+                     latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
         tmp = tempname()
-        keep_pdf = isfile(filename * ".pdf")
+        filebase = splitext(filename)[1]
         savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
-        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp.pdf $filename`
+        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp.pdf $filebase`
         png_success = success(png_cmd)
         if !png_success
             error("Error when saving to png")
@@ -249,15 +274,15 @@ _is_juno() = isdefined(Main, :Juno) && Main.Juno.isactive()
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
     if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
-        f = tempname() .* ".pdf"
-        save(f, p)
+        filename = tempname() .* ".pdf"
+        save(filename, p)
         try
             if is_apple()
-                run(`open $f`)
+                run(`open $filename`)
             elseif is_linux() || is_bsd()
-                run(`xdg-open $f`)
+                run(`xdg-open $filename`)
             elseif is_windows()
-                run(`start $f`)
+                run(`start $filename`)
             end
         catch e
             error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))

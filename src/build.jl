@@ -9,7 +9,33 @@ latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 
 _engine_cmd(eng::LaTeXEngine) = `$(lowercase(string(eng)))`
 
-_latex_cmd(file::String, eng::LaTeXEngine, flags) = `$(_engine_cmd(eng)) $flags $file`
+"""
+    succ, log, cmd = $SIGNATURES
+
+Compile `filename` with LaTeX engine `eng` using the given `flags`.
+
+Return the result of `success`, the contents of the logfile as a string, and the
+`Cmd` object that was run (the latter two useful for diagnostics and informative
+error messages).
+
+Temporary files (`.aux`, `.log`) are cleaned up.
+
+!!! NOTE
+
+    Changing the working directory is required because of external tools like
+    `gnuplot`, which don't respect `--output-directory`.
+"""
+function run_latex_once(filename::String, eng::LaTeXEngine, flags)
+    dir, file = splitdir(filename)
+    cmd = `$(_engine_cmd(eng)) $flags $file`
+    succ = cd(() -> success(cmd), dir)
+    logfile = _replace_fileext(filename, ".log")
+    auxfile = _replace_fileext(filename, ".aux")
+    log = readstring(logfile)
+    rm(logfile; force = true)
+    rm(auxfile; force = true)
+    succ, log, cmd
+end
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
 CUSTOM_FLAGS = Union{String}[]

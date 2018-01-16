@@ -5,6 +5,7 @@ module PGFPlotsX
 import MacroTools: prewalk, @capture
 
 using DataStructures
+using DocStringExtensions
 using Requires
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")

@@ -25,31 +25,48 @@
 end
 
 @testset "simple" begin
-    a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
-    pgf.save("texfile.tex", a)
-    println(readstring("texfile.tex"))
-    pgf.save("texfile.pdf", a)
+    tmp = tempname()
+    mktempdir() do dir
+        cd(dir) do
+            a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
+            pgf.save("$tmp.tex", a)
+            println(readstring("$tmp.tex"))
+            pgf.save("$tmp.pdf", a)
+            pgf.save("$tmp.tikz", a)
+            let tikz_lines = readlines("$tmp.tikz")
+                @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
+                last_line = findlast(!isempty, tikz_lines)
+                @test tikz_lines[last_line] == "\\end{tikzpicture}"
+            end
+        end
+    end
 end
 
 @testset "gnuplot / shell-escape" begin
-    pgf.@pgf p = pgf.Axis(pgf.Plot3(pgf.Expression("-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"),
-            {
-                contour_gnuplot = {number = 30, labels = false},
-                thick,
-                samples = 40,
-            }; incremental = false),
-        {
-            colorbar,
-            xlabel = "x",
-            ylabel = "y",
-            domain = 1:2,
-            y_domain = "74:87.9",
-            view = (0, 90),
-        })
-        cd(tempdir()) do
-            file = "gnuplot.pdf"
-            pgf.save(file, p)
-            @test isfile(file)
-            rm(file)
+    tmp_pdf = tempname() * ".pdf"
+    expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
+    mktempdir() do dir
+        cd(dir) do
+            pgf.@pgf p =
+                pgf.Axis(pgf.Plot3(pgf.Expression(expr),
+                                   {
+                                       contour_gnuplot = {
+                                           number = 30,
+                                           labels = false},
+                                       thick,
+                                       samples = 40,
+                                   }; incremental = false),
+                         {
+                             colorbar,
+                             xlabel = "x",
+                             ylabel = "y",
+                             domain = 1:2,
+                             y_domain = "74:87.9",
+                             view = (0, 90),
+                         })
+            pgf.save(tmp_pdf, p)
+            @test isfile(tmp_pdf)
+            rm(tmp_pdf)
         end
+    end
 end
