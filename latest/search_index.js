@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "Exporting",
     "category": "section",
-    "text": "Figures can be exported to files usingpgf.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)where the file extension of filename determines the file type (can be .pdf, .svg or .tex), include_preamble sets if the preamble should be included in the output (only relevant for tex export) and dpi determines the dpi of the figure (only relevant for png export)."
+    "text": "Figures can be exported to files usingpgf.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)where the file extension of filename determines the file type (can be .pdf, .svg or .tex, or the standalone tikz file extensions below), include_preamble sets if the preamble should be included in the output (only relevant for tex export) and dpi determines the dpi of the figure (only relevant for png export).The standalone file extensions .tikz, .TIKZ, .TikZ, .pgf, .PGF save LaTeX code for a tikzpicture environment without a preamble. You can \\input them directly into a LaTeX document, or use the the tikzscale LaTeX package for using \\includegraphics with possible size adjustments."
 },
 
 {
