@@ -1,6 +1,6 @@
 const TikzPictureOrStr = Union{TikzPicture, String}
 
-type TikzDocument <: OptionType
+struct TikzDocument <: OptionType
     elements::Vector # Plots, nodes etc
     preamble::Vector
 
@@ -26,7 +26,7 @@ push_preamble!(td::TikzDocument, v) = (push!(td.preamble, v); td)
 Extensions that make [`save`](@ref) choose a standalone `tikz` format.
 
 The saved file has no preamble, just a `tikzpicture` environment. These
-extensions should be recognized by `\includegraphics` when the
+extensions should be recognized by `\\includegraphics` when the
 [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package is used.
 """
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]

@@ -80,9 +80,7 @@ struct Coordinates <: OptionType
     xerrorminus::AbstractVector
     yerrorplus::AbstractVector
     yerrorminus::AbstractVector
-    metadata::Union{Void, Vector}
-
-
+    metadata::Union{Nothing, Vector}
 end
 
 function Coordinates(mat::Matrix; metadata = nothing, xerror::AbstractVector = [],
