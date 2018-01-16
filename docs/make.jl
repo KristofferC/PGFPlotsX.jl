@@ -14,6 +14,9 @@ makedocs(
             "man/save.md",
             "man/custom_types.md",
             ],
+        "Examples" => [
+            "examples/gallery.md",
+        ]
     ]
 )
 

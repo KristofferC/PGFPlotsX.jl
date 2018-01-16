@@ -29,14 +29,3 @@ For saving (or showing) png figures you need `pdftoppm` which should be installe
 !!! note
     `PGFPlotsX` does not export anything. In the manual we assume that the command
     `import PGFPlotsX; const pgf = PGFPlotsX` has been run
-
-
-```@contents
-Pages = [
-    "man/options.md",
-    "man/structs.md",
-    "man/save.md",
-    "man/custom_types.md",
-]
-Depth = 1
-```
