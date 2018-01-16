@@ -5,6 +5,10 @@ os:
 julia:
   - 0.6
   - nightly
+  
+matrix:
+  allow_failures:
+    - julia: nightly
 
 dist: trusty
 
