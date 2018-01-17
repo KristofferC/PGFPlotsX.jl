@@ -18,13 +18,15 @@ services:
   - docker
 
 before_install:
+  - echo "**** pulling Docker image"
   - docker pull tkpapp/texlive-julia-minimal:0.2
-
 notifications:
   email: false
 # uncomment the following lines to override the default test script
 script:
+  - echo "**** running Docker"
   - docker run -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt texlive-julia-minimal:0.2 /test/test-script.sh $TRAVIS_JULIA_VERSION PGFPlotsX
 after_success:
   # push coverage results to Coveralls
+  - echo "**** submitting coverage information"
   - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
