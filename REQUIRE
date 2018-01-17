@@ -1,4 +1,4 @@
-julia 0.6.0-pre
+julia 0.6
 MacroTools
 Compat
 DataStructures
