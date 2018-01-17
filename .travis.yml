@@ -3,7 +3,7 @@ language: julia
 os:
   - linux
 julia:
-  - stable
+  - 0.6
   - nightly
 
 matrix:
@@ -19,14 +19,15 @@ services:
 
 before_install:
   - echo "**** pulling Docker image"
-  - docker pull tkpapp/texlive-julia-minimal:0.2
+  - docker pull tkpapp/texlive-julia-minimal
 notifications:
   email: false
 # uncomment the following lines to override the default test script
 script:
   - echo "**** running Docker"
-  - docker run -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal:0.2 /test/test-script.sh $TRAVIS_JULIA_VERSION PGFPlotsX
+  - docker run -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /test/test-script.sh $TRAVIS_JULIA_VERSION PGFPlotsX
 after_success:
   # push coverage results to Coveralls
   - echo "**** submitting coverage information"
+  - sudo apt install libhttp-parser
   - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
