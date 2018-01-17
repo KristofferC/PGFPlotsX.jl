@@ -3,28 +3,27 @@ language: julia
 os:
   - linux
 julia:
-  - 0.6
+  - stable
   - nightly
-  
+
 matrix:
   allow_failures:
     - julia: nightly
 
 dist: trusty
 
+sudo: required
+
+services:
+  - docker
+
 before_install:
-  - sudo add-apt-repository -y ppa:jonathonf/texlive-2016
-  - sudo apt-get -qq update
-  - sudo apt-get install -y gnuplot
-  - sudo apt-get install -y pdf2svg
-  - sudo apt-get install -y texlive
-  - sudo apt-get install -y texlive-latex-extra
+  - docker pull tkpapp/texlive-julia-minimal
 notifications:
   email: false
 # uncomment the following lines to override the default test script
 script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone(pwd()); Pkg.build("PGFPlotsX"); Pkg.test("PGFPlotsX"; coverage=true)'
+  - docker run -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt texlive-julia-minimal /test/test-script.sh $TRAVIS_JULIA_VERSION PGFPlotsX
 after_success:
   # push coverage results to Coveralls
   - julia -e 'cd(Pkg.dir("PGFPlotsX")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
