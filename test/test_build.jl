@@ -1,4 +1,4 @@
-function is_file_starting_with(filename, bytes::Vector{UInt8})
+function is_file_starting_with(filename, bytes::DenseVector{UInt8})
     isfile(filename) && read(filename, length(bytes)) == bytes
 end
 
