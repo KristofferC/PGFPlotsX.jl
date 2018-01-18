@@ -14,6 +14,8 @@ pgf.latexengine!(pgf.PDFLATEX)
 
 include("test_macros.jl")
 
+include("test_elements.jl")
+
 cd(tempdir()) do
     include("test_build.jl")
 end
