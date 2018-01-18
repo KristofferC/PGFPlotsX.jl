@@ -22,11 +22,10 @@ before_install:
   - docker pull tkpapp/texlive-julia-minimal
 notifications:
   email: false
-# uncomment the following lines to override the default test script
 script:
   - echo "**** running Docker"
-  - docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /test/test-script.sh $TRAVIS_JULIA_VERSION PGFPlotsX
+  - docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh $TRAVIS_JULIA_VERSION
 after_success:
-  # push coverage results to Coveralls
+  # push coverage results to Coveralls, .cov files were copied back by script above
   - echo "**** submitting coverage information"
   - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
