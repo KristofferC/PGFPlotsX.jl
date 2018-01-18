@@ -1,0 +1,25 @@
+\documentclass[tikz]{standalone}
+    % Default preamble
+    \usepackage{pgfplots}
+    \pgfplotsset{compat=newest}
+    \usepgfplotslibrary{groupplots}
+    \usepgfplotslibrary{polar}
+    \usepgfplotslibrary{statistics}
+\begin{document}
+\begin{tikzpicture}[]
+    \begin{axis}[xlabel={Cost}, ylabel={Gain}, xmode={log}, ymode={log}]
+        \addplot+[color={red}, mark={x}]
+            coordinates {
+            (10, 100)
+            (20, 150)
+            (40, 225)
+            (80, 340)
+            (160, 510)
+            (320, 765)
+            (640, 1150)
+            }
+        ;
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}
