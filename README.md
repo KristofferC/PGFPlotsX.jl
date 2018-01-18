@@ -4,8 +4,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)
- | 
+| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)| 
 
 
 *PGFPlotsX* is a Julia package to generate publication quality figures using the LaTeX library PGFPlots.

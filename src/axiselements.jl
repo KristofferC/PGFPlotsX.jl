@@ -21,8 +21,10 @@ function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, lab
     Plot(element, dictify(args), label, incremental, true)
 end
 
+Plot(options::OrderedDict, element; kwargs...) = Plot(element, options; kwargs...)
 Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
 Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
+Plot3(options::OrderedDict, element; kwargs...) = Plot3(element, options; kwargs...)
 
 function save(filename::String, plot::Plot; kwargs...)
     save(filename, Axis(plot); kwargs...)

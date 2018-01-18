@@ -13,7 +13,7 @@ end
 
 # test the @pgf macro
 
-od(args...) =  DataStructures.OrderedDict{Any, Any}(args...)
+od(args...) =  OrderedDict{Any, Any}(args...)
 
 @testset "pgf tests" begin
     a = 1

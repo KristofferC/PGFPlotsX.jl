@@ -1,12 +1,10 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
-*.svg
-*.pdf
-*.tex
 *.log
 *.aux
 scratch.jl
 docs/build
 deps/custom_preamble.tex
 deps/deps.jl
+deps/pdf2svg.svg
