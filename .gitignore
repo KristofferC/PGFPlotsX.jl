@@ -1,9 +1,6 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
-*.svg
-*.pdf
-*.tex
 *.log
 *.aux
 scratch.jl
