@@ -42,7 +42,7 @@ function save(filename::String, td::TikzDocument;
         savetex(filename, td; include_preamble = include_preamble)
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
         savetex(filename, td; include_preamble = false)
-    elseif fileext == ".svg"
+    elseif HAVE_PDFTOSVG && fileext == ".svg"
         savesvg(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".pdf"
@@ -52,10 +52,13 @@ function save(filename::String, td::TikzDocument;
         savepng(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
     else
-        allowed_file_endings = vcat(["tex", "svg", "pdf"],
+        allowed_file_endings = vcat(["tex", "pdf"],
                                     lstrip.(STANDALONE_TIKZ_FILEEXTS, '.'))
         if HAVE_PDFTOPPM
             push!(allowed_file_endings, "png")
+        end
+        if HAVE_PDFTOSVG
+            push!(allowed_file_endings, "svg")
         end
         throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
     end
@@ -237,7 +240,7 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
     import Hiccup
     Media.media(_SHOWABLE, Media.Plot)
     function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
-        f = tempname() * (_JUNO_PNG ? ".png" : ".svg")
+        f = tempname() * (!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png"
         save(f, p; dpi = _JUNO_DPI)
         Media.render(pane, Hiccup.div(style="background-color:#ffffff",
                            Hiccup.img(src = f)))
