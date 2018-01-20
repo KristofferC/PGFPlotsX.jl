@@ -13,6 +13,12 @@ using LaTeXStrings
 import PGFPlotsX
 const pgf = PGFPlotsX
 using LaTeXStrings
+savefigs = (figname, obj) -> begin
+    pgf.save(figname * ".pdf", obj)
+    run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
+    pgf.save(figname * ".tex", obj);
+    return nothing
+end
 ```
 
 ## Colors.jl
@@ -37,8 +43,7 @@ pgf.@pgf for (i, col) in enumerate(distinguishable_colors(10))
     push!(axis, p)
 end
 axis
-a = ans; figname = "colors" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("colors", ans) # hide
 ```
 
 [\[.pdf\]](colors.pdf), [\[generated .tex\]](colors.tex)
@@ -75,8 +80,7 @@ for cmap in colormaps
 end
 
 end
-figname = "colormap" # hide
-pgf.save(figname * ".pdf", td); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", td); nothing # hide
+savefigs("colormap", td) # hide
 ```
 
 [\[.pdf\]](colormap.pdf), [\[generated .tex\]](colormap.tex)
@@ -104,8 +108,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "dataframes" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("dataframes", ans) # hide
 ```
 
 [\[.pdf\]](dataframes.pdf), [\[generated .tex\]](dataframes.tex)
@@ -129,9 +132,7 @@ pgf.@pgf pgf.Plot(pgf.Table(contours(x, y, f.(x, y'), 6)),
     };
     incremental = false
 )
-
-a = ans; figname = "contour" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("contour", ans) # hide
 ```
 
 [\[.pdf\]](contour.pdf), [\[generated .tex\]](contour.tex)
