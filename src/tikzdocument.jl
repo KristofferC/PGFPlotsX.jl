@@ -57,7 +57,7 @@ function save(filename::String, td::TikzDocument;
         if HAVE_PDFTOPPM
             push!(allowed_file_endings, "png")
         end
-        throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
+        throw(ArgumentError("allowed file endings are $(join(allowed_file_endings, ", "))."))
     end
     return
 end
