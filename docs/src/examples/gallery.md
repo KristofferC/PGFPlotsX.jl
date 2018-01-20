@@ -13,6 +13,12 @@ using LaTeXStrings
 import PGFPlotsX
 const pgf = PGFPlotsX
 using LaTeXStrings
+savefigs = (figname, obj) -> begin
+    pgf.save(figname * ".pdf", obj)
+    run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
+    pgf.save(figname * ".tex", obj);
+    return nothing
+end
 ```
 
 ------------------------
@@ -42,8 +48,7 @@ pgf.@pgf pgf.Axis(
         ),
     ),
 )
-a = ans; figname = "cost-error" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("cost-error", ans) # hide
 ```
 
 [\[.pdf\]](cost-error.pdf), [\[generated .tex\]](cost-error.tex)
@@ -62,8 +67,7 @@ pgf.@pgf pgf.Axis(
         pgf.Expression("x^2 - x + 4")
     )
 )
-a = ans; figname = "simple-expression" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("simple-expression", ans) # hide
 ```
 
 [\[.pdf\]](simple-expression.pdf), [\[generated .tex\]](simple-expression.tex)
@@ -96,8 +100,7 @@ pgf.@pgf pgf.Axis(
         ); label = "estimate")
     ]
 )
-a = ans; figname = "cost-gain" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("cost-gain", ans) # hide
 ```
 
 [\[.pdf\]](cost-gain.pdf), [\[generated .tex\]](cost-gain.tex)
@@ -132,8 +135,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "cost-gain-log-log" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("cost-gain-log-log", ans) # hide
 ```
 
 [\[.pdf\]](cost-gain-log-log.pdf), [\[generated .tex\]](cost-gain-log-log.tex)
@@ -167,8 +169,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "cost-gain-ylog" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("cost-gain-ylog", ans) # hide
 ```
 
 [\[.pdf\]](cost-gain-ylog.pdf), [\[generated .tex\]](cost-gain-ylog.tex)
@@ -218,8 +219,7 @@ pgf.@pgf pgf.Axis(
         )),
     ]
 )
-a = ans; figname = "dof-error" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("dof-error", ans) # hide
 ```
 
 [\[.pdf\]](dof-error.pdf), [\[generated .tex\]](dof-error.tex)
@@ -253,8 +253,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "table-label" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("table-label", ans) # hide
 ```
 
 [\[.pdf\]](table-label.pdf), [\[generated .tex\]](table-label.tex)
@@ -286,8 +285,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "spline-quadratic" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("spline-quadratic", ans) # hide
 ```
 
 [\[.pdf\]](spline-quadratic.pdf), [\[generated .tex\]](spline-quadratic.tex)
@@ -306,8 +304,7 @@ pgf.@pgf pgf.Plot3(
     },
     pgf.Expression("x * (1-x) * y * (1-y)")
 )
-a = ans; figname = "mesh-scatter" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("mesh-scatter", ans) # hide
 ```
 
 [\[.pdf\]](mesh-scatter.pdf), [\[generated .tex\]](mesh-scatter.tex)

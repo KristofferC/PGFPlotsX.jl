@@ -1,7 +1,7 @@
 # Julia types
 
 There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.
-All code is assumed to include the following.
+All code is assumed to include the following:
 
 ```jl
 import PGFPlotsX
@@ -13,6 +13,12 @@ using LaTeXStrings
 import PGFPlotsX
 const pgf = PGFPlotsX
 using LaTeXStrings
+savefigs = (figname, obj) -> begin
+    pgf.save(figname * ".pdf", obj)
+    run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
+    pgf.save(figname * ".tex", obj);
+    return nothing
+end
 ```
 
 ## Colors.jl
@@ -37,8 +43,7 @@ pgf.@pgf for (i, col) in enumerate(distinguishable_colors(10))
     push!(axis, p)
 end
 axis
-a = ans; figname = "colors" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("colors", ans) # hide
 ```
 
 [\[.pdf\]](colors.pdf), [\[generated .tex\]](colors.tex)
@@ -48,8 +53,17 @@ pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".sv
 Using a colormap
 
 ```@example pgf
+using Colors
 pgf.@pgf begin
-p = pgf.Plot3(pgf.Expression("cos(deg(x)) * sin(deg(y))"), { surf, point_meta = "y" }; incremental = false)
+p = pgf.Plot3(
+    pgf.Expression("cos(deg(x)) * sin(deg(y))"),
+    {
+        surf,
+        point_meta = "y",
+        samples = 13
+    };
+    incremental = false
+)
 colormaps = ["Blues", "Greens", "Oranges", "Purples"]
 td = pgf.TikzDocument()
 for cmap in colormaps
@@ -66,13 +80,12 @@ for cmap in colormaps
 end
 
 end
-figname = "colormap" # hide
-pgf.save(figname * ".pdf", td); pgf.save(figname * ".png", td); pgf.save(figname * ".tex", td); nothing # hide
+savefigs("colormap", td) # hide
 ```
 
 [\[.pdf\]](colormap.pdf), [\[generated .tex\]](colormap.tex)
 
-![](colormap.png)
+![](colormap.svg)
 
 ## DataFrames.jl
 
@@ -83,7 +96,9 @@ using DataFrames
 using RDatasets
 pgf.@pgf pgf.Axis(
     pgf.Plot(
-        { only_marks },
+        {
+            only_marks
+        },
         pgf.Table(
             dataset("datasets", "iris"),
             {
@@ -93,8 +108,7 @@ pgf.@pgf pgf.Axis(
         )
     )
 )
-a = ans; figname = "dataframes" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("dataframes", ans) # hide
 ```
 
 [\[.pdf\]](dataframes.pdf), [\[generated .tex\]](dataframes.tex)
@@ -112,15 +126,13 @@ x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -> sin(x)*sin(y)
 pgf.@pgf pgf.Plot(pgf.Table(contours(x, y, f.(x, y'), 6)),
-        {
-            contour_prepared,
-            very_thick
-        };
-        incremental = false
+    {
+        contour_prepared,
+        very_thick
+    };
+    incremental = false
 )
-
-a = ans; figname = "contour" # hide
-pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", a); nothing # hide
+savefigs("contour", ans) # hide
 ```
 
 [\[.pdf\]](contour.pdf), [\[generated .tex\]](contour.tex)
