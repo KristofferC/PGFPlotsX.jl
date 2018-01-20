@@ -1,5 +1,7 @@
 using Documenter, PGFPlotsX
 
+using Contour, Colors, DataFrames, RDatasets
+
 makedocs(
     modules = [PGFPlotsX],
     format = :html,
@@ -16,6 +18,7 @@ makedocs(
             ],
         "Examples" => [
             "examples/gallery.md",
+            "examples/juliatypes.md"
         ]
     ]
 )

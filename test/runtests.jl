@@ -20,5 +20,9 @@ cd(tempdir()) do
     include("test_build.jl")
 end
 
-# Run doc stuff
 include("../docs/make.jl")
+
+# Run doc stuff, turn off dprecations (this doesn't seem to work on .travis)
+# cd(joinpath(@__DIR__, "..", "docs")) do
+#    run(`$(Base.julia_cmd()) --depwarn=no --color=yes -L make.jl`)
+#end
