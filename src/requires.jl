@@ -28,9 +28,10 @@ end
 
 @require DataFrames begin
     function PGFPlotsX.print_tex(io::IO, df::DataFrames.DataFrame, ::PGFPlotsX.Table)
-        tmp = tempname() * ".tsv"
-        DataFrames.writetable(tmp, df; quotemark = ' ')
-        print(io, readstring(tmp))
+        print(io, join(names(df), "    "), "\n")
+        for col in 1:size(df, 1)
+            print(io, join([df[col, row] for row in 1:size(df, 2)], "   "), "\n")
+        end
     end
 end
 
