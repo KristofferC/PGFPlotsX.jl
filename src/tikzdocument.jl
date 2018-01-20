@@ -60,7 +60,7 @@ function save(filename::String, td::TikzDocument;
         if HAVE_PDFTOSVG
             push!(allowed_file_endings, "svg")
         end
-        throw(ArgumentError("allowed file endings are $(join(file_endings, ", "))."))
+        throw(ArgumentError("allowed file endings are $(join(allowed_file_endings, ", "))."))
     end
     return
 end

@@ -1,7 +1,7 @@
 # Julia types
 
 There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.
-All code is assumed to include the following.
+All code is assumed to include the following:
 
 ```jl
 import PGFPlotsX
@@ -48,8 +48,17 @@ pgf.save(figname * ".pdf", a); run(`pdf2svg $(figname * ".pdf") $(figname * ".sv
 Using a colormap
 
 ```@example pgf
+using Colors
 pgf.@pgf begin
-p = pgf.Plot3(pgf.Expression("cos(deg(x)) * sin(deg(y))"), { surf, point_meta = "y" }; incremental = false)
+p = pgf.Plot3(
+    pgf.Expression("cos(deg(x)) * sin(deg(y))"),
+    {
+        surf,
+        point_meta = "y",
+        samples = 13
+    };
+    incremental = false
+)
 colormaps = ["Blues", "Greens", "Oranges", "Purples"]
 td = pgf.TikzDocument()
 for cmap in colormaps
@@ -67,12 +76,12 @@ end
 
 end
 figname = "colormap" # hide
-pgf.save(figname * ".pdf", td); pgf.save(figname * ".png", td); pgf.save(figname * ".tex", td); nothing # hide
+pgf.save(figname * ".pdf", td); run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`); pgf.save(figname * ".tex", td); nothing # hide
 ```
 
 [\[.pdf\]](colormap.pdf), [\[generated .tex\]](colormap.tex)
 
-![](colormap.png)
+![](colormap.svg)
 
 ## DataFrames.jl
 
@@ -83,7 +92,9 @@ using DataFrames
 using RDatasets
 pgf.@pgf pgf.Axis(
     pgf.Plot(
-        { only_marks },
+        {
+            only_marks
+        },
         pgf.Table(
             dataset("datasets", "iris"),
             {
@@ -112,11 +123,11 @@ x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -> sin(x)*sin(y)
 pgf.@pgf pgf.Plot(pgf.Table(contours(x, y, f.(x, y'), 6)),
-        {
-            contour_prepared,
-            very_thick
-        };
-        incremental = false
+    {
+        contour_prepared,
+        very_thick
+    };
+    incremental = false
 )
 
 a = ans; figname = "contour" # hide
