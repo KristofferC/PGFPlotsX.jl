@@ -18,6 +18,6 @@ cd(tempdir()) do
 end
 
 # Run doc stuff, turn off dprecations
-cd(joinpath(@__DIR, "..", "docs")) do
+cd(joinpath(@__DIR__, "..", "docs")) do
     run(`$(Base.julia_cmd()) --depwarn=no --color=yes -L make.jl`)
 end
