@@ -294,3 +294,10 @@ function print_tex(io_main::IO, t::Graphics)
         print(io, "{", t.filename, "}")
     end
 end
+
+
+struct Legend
+    labels::Vector{String}
+end
+
+print_tex(io_main::IO, l::Legend) = print(io_main, "\\legend{", join(l.labels, ", "), "}")
