@@ -92,21 +92,37 @@ savefigs("colormap", td) # hide
 Creating a `Table` from a `DataFrame` will write it as expected.
 
 ```@example pgf
-using DataFrames
 using RDatasets
+df = dataset("datasets", "iris") # load the dataset
+
 pgf.@pgf pgf.Axis(
-    pgf.Plot(
+    {
+        legend_pos = "south east",
+        xlabel = "Sepal length",
+        ylabel = "Sepal width",
+    },
+    [pgf.Plot(
         {
-            only_marks
+            scatter,
+            "only marks",
+            "scatter src"="explicit symbolic",
+            "scatter/classes"=
+            {
+                setosa     = {mark = "square*",   "blue"},
+                versicolor = {mark = "triangle*", "red"},
+                virginica  = {mark = "o",         "black"},
+            }
         },
         pgf.Table(
-            dataset("datasets", "iris"),
+            df, # <--- Creating a Table from a DataFrame
             {
                 x = "SepalLength",
-                y = "SepalWidth"
-            }
+                y = "SepalWidth",
+                meta = "Species" }
         )
-    )
+    ),
+    pgf.Legend(["Setosa", "Versicolor", "Virginica"])
+    ]
 )
 savefigs("dataframes", ans) # hide
 ```

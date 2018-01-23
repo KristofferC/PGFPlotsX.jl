@@ -23,7 +23,7 @@ For two dimensional coordinates, errors can be added to `Coordinates` with the k
 
 Examples:
 
-```jldoctest    
+```jldoctest
 julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];
 
 julia> pgf.print_tex(pgf.Coordinates(x, y))
@@ -99,10 +99,10 @@ julia> t = pgf.Table("x" => "Dof", "y" => "Err"; Dof = rand(3), Err = rand(3));
 
 julia> pgf.print_tex(t)
     table [x={Dof}, y={Err}]
-    {Dof    Err    
-    0.6073590230719768    0.36281513247882136    
-    0.7285438246638971    0.11629575623266741    
-    0.29590973933842424    0.9782972101143201    
+    {Dof    Err
+    0.6073590230719768    0.36281513247882136
+    0.7285438246638971    0.11629575623266741
+    0.29590973933842424    0.9782972101143201
     }
 ```
 
@@ -276,6 +276,17 @@ Example:
 
 ```jldoctest
 julia> pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))
+```
+
+### `Legend`
+
+A `Legend` can be used to add legends to plots.
+
+Example:
+
+```jldoctest
+julia> pgf.print_tex(pgf.Legend(["Plot A", "Plot B"]))
+\legend{Plot A, Plot B}
 ```
 
 ## `TikzPicture` - `X`
