@@ -43,21 +43,37 @@ for cmap in colormaps
     push!(gp, p, { colormap_name = cmap })
 end
 
-end</code></pre></div><p><a href="colormap.pdf">[.pdf]</a>, <a href="colormap.tex">[generated .tex]</a></p><p><img src="colormap.svg" alt/></p><h2><a class="nav-anchor" id="DataFrames.jl-1" href="#DataFrames.jl-1">DataFrames.jl</a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><div><pre><code class="language-julia">using DataFrames
-using RDatasets
+end</code></pre></div><p><a href="colormap.pdf">[.pdf]</a>, <a href="colormap.tex">[generated .tex]</a></p><p><img src="colormap.svg" alt/></p><h2><a class="nav-anchor" id="DataFrames.jl-1" href="#DataFrames.jl-1">DataFrames.jl</a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><div><pre><code class="language-julia">using RDatasets
+df = dataset(&quot;datasets&quot;, &quot;iris&quot;) # load the dataset
+
 pgf.@pgf pgf.Axis(
-    pgf.Plot(
+    {
+        legend_pos = &quot;south east&quot;,
+        xlabel = &quot;Sepal length&quot;,
+        ylabel = &quot;Sepal width&quot;,
+    },
+    [pgf.Plot(
         {
-            only_marks
+            scatter,
+            &quot;only marks&quot;,
+            &quot;scatter src&quot;=&quot;explicit symbolic&quot;,
+            &quot;scatter/classes&quot;=
+            {
+                setosa     = {mark = &quot;square*&quot;,   &quot;blue&quot;},
+                versicolor = {mark = &quot;triangle*&quot;, &quot;red&quot;},
+                virginica  = {mark = &quot;o&quot;,         &quot;black&quot;},
+            }
         },
         pgf.Table(
-            dataset(&quot;datasets&quot;, &quot;iris&quot;),
+            df, # &lt;--- Creating a Table from a DataFrame
             {
                 x = &quot;SepalLength&quot;,
-                y = &quot;SepalWidth&quot;
-            }
+                y = &quot;SepalWidth&quot;,
+                meta = &quot;Species&quot; }
         )
-    )
+    ),
+    pgf.Legend([&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;])
+    ]
 )</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
 x = 0.0:0.1:2π
 y = 0.0:0.1:2π

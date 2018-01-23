@@ -141,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Building up figures",
     "title": "Table - X",
     "category": "section",
-    "text": "A table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the .tex file.Examples:julia> t = pgf.Table(\"data.dat\", \"x\" => \"Dof\");\n\njulia> pgf.print_tex(t)\n    table [x={Dof}]\n    {data.dat}Inline data is constructed using a keyword constructor:julia> t = pgf.Table(\"x\" => \"Dof\", \"y\" => \"Err\"; Dof = rand(3), Err = rand(3));\n\njulia> pgf.print_tex(t)\n    table [x={Dof}, y={Err}]\n    {Dof    Err    \n    0.6073590230719768    0.36281513247882136    \n    0.7285438246638971    0.11629575623266741    \n    0.29590973933842424    0.9782972101143201    \n    }If you load the DataFrames package, you can also create tables from data frames, see the TODO"
+    "text": "A table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the .tex file.Examples:julia> t = pgf.Table(\"data.dat\", \"x\" => \"Dof\");\n\njulia> pgf.print_tex(t)\n    table [x={Dof}]\n    {data.dat}Inline data is constructed using a keyword constructor:julia> t = pgf.Table(\"x\" => \"Dof\", \"y\" => \"Err\"; Dof = rand(3), Err = rand(3));\n\njulia> pgf.print_tex(t)\n    table [x={Dof}, y={Err}]\n    {Dof    Err\n    0.6073590230719768    0.36281513247882136\n    0.7285438246638971    0.11629575623266741\n    0.29590973933842424    0.9782972101143201\n    }If you load the DataFrames package, you can also create tables from data frames, see the TODO"
 },
 
 {
@@ -206,6 +206,14 @@ var documenterSearchIndex = {"docs": [
     "title": "PolarAxis",
     "category": "section",
     "text": "A PolarAxis plot data on a polar grid.Example:julia> pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))"
+},
+
+{
+    "location": "man/structs.html#Legend-1",
+    "page": "Building up figures",
+    "title": "Legend",
+    "category": "section",
+    "text": "A Legend can be used to add legends to plots.Example:julia> pgf.print_tex(pgf.Legend([\"Plot A\", \"Plot B\"]))\n\\legend{Plot A, Plot B}"
 },
 
 {
@@ -357,7 +365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "DataFrames.jl",
     "category": "section",
-    "text": "Creating a Table from a DataFrame will write it as expected.using DataFrames\nusing RDatasets\npgf.@pgf pgf.Axis(\n    pgf.Plot(\n        {\n            only_marks\n        },\n        pgf.Table(\n            dataset(\"datasets\", \"iris\"),\n            {\n                x = \"SepalLength\",\n                y = \"SepalWidth\"\n            }\n        )\n    )\n)\nsavefigs(\"dataframes\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Creating a Table from a DataFrame will write it as expected.using RDatasets\ndf = dataset(\"datasets\", \"iris\") # load the dataset\n\npgf.@pgf pgf.Axis(\n    {\n        legend_pos = \"south east\",\n        xlabel = \"Sepal length\",\n        ylabel = \"Sepal width\",\n    },\n    [pgf.Plot(\n        {\n            scatter,\n            \"only marks\",\n            \"scatter src\"=\"explicit symbolic\",\n            \"scatter/classes\"=\n            {\n                setosa     = {mark = \"square*\",   \"blue\"},\n                versicolor = {mark = \"triangle*\", \"red\"},\n                virginica  = {mark = \"o\",         \"black\"},\n            }\n        },\n        pgf.Table(\n            df, # <--- Creating a Table from a DataFrame\n            {\n                x = \"SepalLength\",\n                y = \"SepalWidth\",\n                meta = \"Species\" }\n        )\n    ),\n    pgf.Legend([\"Setosa\", \"Versicolor\", \"Virginica\"])\n    ]\n)\nsavefigs(\"dataframes\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {

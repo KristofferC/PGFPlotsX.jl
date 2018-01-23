@@ -49,10 +49,10 @@ julia&gt; pgf.print_tex(t)
 
 julia&gt; pgf.print_tex(t)
     table [x={Dof}, y={Err}]
-    {Dof    Err    
-    0.6073590230719768    0.36281513247882136    
-    0.7285438246638971    0.11629575623266741    
-    0.29590973933842424    0.9782972101143201    
+    {Dof    Err
+    0.6073590230719768    0.36281513247882136
+    0.7285438246638971    0.11629575623266741
+    0.29590973933842424    0.9782972101143201
     }</code></pre><p>If you load the DataFrames package, you can also create tables from data frames, see the TODO</p><h3><a class="nav-anchor" id="Graphics-X-1" href="#Graphics-X-1">Graphics - <code>X</code></a></h3><p><code>Graphics</code> data simply wraps an image like a .png. It is constructed as <code>Graphics(filepath)</code> where <code>filepath</code> is the path to the image.</p><p>Example:</p><pre><code class="language-juliadoctest">julia&gt; pgf.print_tex(pgf.Graphics(&quot;img.png&quot;))
     graphics []
     {img.png}</code></pre><h2><a class="nav-anchor" id="Plots-1" href="#Plots-1">Plots</a></h2><p>A plot is an element inside an axis. It could be a simple line or a 3d surface etc. A plot is created by wrapping one of the structs shown above.</p><h3><a class="nav-anchor" id="Plot-X-1" href="#Plot-X-1"><code>Plot</code> - <code>X</code></a></h3><p>A keyword argument <code>incremental::Bool</code> is used to determine if <code>\addplot+</code> (default) should be used or <code>\addplot</code>.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; p = pgf.@pgf pgf.Plot(pgf.Table(&quot;plotdata/invcum.dat&quot;), { blue }; incremental = false);
@@ -141,7 +141,8 @@ julia&gt; pgf.print_tex(gp)
             table []
             {data2.dat}
         ;
-    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), &quot;scale&quot; =&gt; 1.5)
+    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))</code></pre><h3><a class="nav-anchor" id="Legend-1" href="#Legend-1"><code>Legend</code></a></h3><p>A <code>Legend</code> can be used to add legends to plots.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.print_tex(pgf.Legend([&quot;Plot A&quot;, &quot;Plot B&quot;]))
+\legend{Plot A, Plot B}</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), &quot;scale&quot; =&gt; 1.5)
 
 julia&gt; pgf.print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
