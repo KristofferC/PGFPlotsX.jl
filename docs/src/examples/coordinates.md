@@ -35,7 +35,8 @@ savefigs("coordinates-simple", ans) # hide
 
 ![](coordinates-simple.svg)
 
-Use `xerror`, `xerrorplus`, `xerrorminus`, `yerror` etc for error bars.
+Use `xerror`, `xerrorplus`, `xerrorminus`, `yerror` etc. for error bars.
+
 ```@example pgf
 x = linspace(0, 2π, 20)
 @pgf Plot(
