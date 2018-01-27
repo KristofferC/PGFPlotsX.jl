@@ -240,7 +240,7 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
     import Hiccup
     Media.media(_SHOWABLE, Media.Plot)
     function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
-        f = tempname() * (!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png"
+        f = tempname() * ((!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png")
         save(f, p; dpi = _JUNO_DPI)
         Media.render(pane, Hiccup.div(style="background-color:#ffffff",
                            Hiccup.img(src = f)))
