@@ -63,4 +63,10 @@ end
         end
         println(io, edge[end], "    ", 0)
     end
+
+    function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T
+        PGFPlotsX.Coordinates(midpoints(histogram.edges[1]),
+                              midpoints(histogram.edges[2]),
+                              histogram.weights)
+    end
 end
