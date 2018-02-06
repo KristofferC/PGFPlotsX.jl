@@ -5,7 +5,7 @@ This is a work in progress. All the examples are run with the following code add
 
 ```jl
 import PGFPlotsX
-const pgf = PGFPlotsX; # hide
+const pgf = PGFPlotsX
 using LaTeXStrings
 ```
 
