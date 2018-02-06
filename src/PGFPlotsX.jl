@@ -4,10 +4,12 @@ module PGFPlotsX
 
 import MacroTools: prewalk, @capture
 
+using ArgCheck
 using Compat
 using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions
+using Parameters
 using Requires
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")

@@ -5,7 +5,7 @@ All code is assumed to include the following:
 
 ```jl
 import PGFPlotsX
-const pgf = PGFPlotsX; # hide
+const pgf = PGFPlotsX
 using LaTeXStrings
 ```
 

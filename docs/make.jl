@@ -17,6 +17,7 @@ makedocs(
             "man/custom_types.md",
             ],
         "Examples" => [
+            "examples/coordinates.md",
             "examples/gallery.md",
             "examples/juliatypes.md"
         ]
