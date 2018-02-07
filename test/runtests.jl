@@ -2,6 +2,7 @@ using PGFPlotsX
 using Base.Test
 using Compat
 using DataStructures: OrderedDict
+using DataFrames
 
 const pgf = PGFPlotsX
 

@@ -114,11 +114,11 @@ pgf.@pgf pgf.Axis(
             }
         },
         pgf.Table(
-            df, # <--- Creating a Table from a DataFrame
             {
                 x = "SepalLength",
                 y = "SepalWidth",
-                meta = "Species" }
+                meta = "Species" },
+            df, # <--- Creating a Table from a DataFrame
         )
     ),
     pgf.Legend(["Setosa", "Versicolor", "Virginica"])
@@ -141,16 +141,65 @@ using Contour
 x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -> sin(x)*sin(y)
-pgf.@pgf pgf.Plot(pgf.Table(contours(x, y, f.(x, y'), 6)),
-    {
-        contour_prepared,
-        very_thick
-    };
-    incremental = false
-)
+pgf.@pgf pgf.Plot({
+                      contour_prepared,
+                      very_thick
+                  },
+                  pgf.Table(contours(x, y, f.(x, y'), 6));
+                  incremental = false)
 savefigs("contour", ans) # hide
 ```
 
 [\[.pdf\]](contour.pdf), [\[generated .tex\]](contour.tex)
 
 ![](contour.svg)
+
+## StatsBase.jl
+
+`StatsBase.Histogram` can be plotted using `Table`, both for 1D and 2D histograms.
+
+```@example pgf
+using StatsBase: Histogram, fit
+pgf.Axis(pgf.Plot(pgf.Table(fit(Histogram, randn(100), closed = :left));
+                  incremental = false),
+         pgf.@pgf {
+             "ybar interval",
+             "xticklabel interval boundaries",
+             xticklabel = raw"$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$",
+             "xticklabel style" =
+             {
+                 font = raw"\tiny"
+             }
+         })
+savefigs("histogram-1d", ans) # hide
+```
+
+[\[.pdf\]](histogram-1d.pdf), [\[generated .tex\]](histogram-1d.tex)
+
+![](histogram-1d.svg)
+
+```@example pgf
+using StatsBase: Histogram, fit
+h = fit(Histogram, (randn(1000), randn(1000)), closed = :left)
+@pgf.pgf pgf.Axis(
+    {
+        view = (0, 90),
+        colorbar,
+        "colormap/jet"
+    },
+    pgf.Plot3(
+        {
+            surf,
+            shader = "flat",
+
+        },
+        pgf.Table(h);
+        incremental = false
+    )
+)
+savefigs("histogram-2d", ans) # hide
+```
+
+[\[.pdf\]](histogram-2d.pdf), [\[generated .tex\]](histogram-2d.tex)
+
+![](histogram-2d.svg)

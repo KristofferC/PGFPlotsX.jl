@@ -293,10 +293,8 @@ Coordinates(x, y, z)
 function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
                      meta::Union{Void, AbstractMatrix} = nothing)
     meta ≠ nothing && @argcheck size(meta) == size(z)
-    x_grid = @. first(tuple(x, y'))
-    y_grid = @. last(tuple(x, y'))
-    @argcheck size(x_grid) == size(y_grid) == size(z) "Incompatible sizes."
-    insert_scanlines(Coordinates(vec(x_grid), vec(y_grid), vec(z); meta = meta),
+    insert_scanlines(Coordinates(matrix_xyz(x, y, z)...;
+                                 meta = meta ≠ nothing ? vec(meta) : meta),
                      length(x))
 end
 
@@ -310,82 +308,213 @@ function print_tex(io::IO, coordinates::Coordinates)
     end
 end
 
+#########
+# Table #
+#########
+
+"""
+    $SIGNATURES
+
+Expand scanlines, which is a vector of scanline positions or an integer for
+repeated scanlines, into a `Vector{Int}`.
+"""
+expand_scanlines(n::Int, nrow) = n > 0 ? (n:n:nrow) : Vector{Int}()
+
+expand_scanlines(v::Vector{Int}, _) = v
+
+expand_scanlines(itr, _) = collect(Int, itr)
+
 struct Table <: OptionType
-    data
     options::OrderedDict{Any, Any}
-
-    # Some ambiguity fixing
-    Table(data, options::OrderedDict{Any, Any}) = new(data, options)
-
-    Table(data::Union{DataStructures.OrderedDict, Pair, String},
-          options::DataStructures.OrderedDict{Any,Any}) = new(data, options)
-
-    Table(data::String, options::DataStructures.OrderedDict{Any,Any}) = new(data, options)
+    data::AbstractMatrix
+    colnames::Union{Void, Vector{String}}
+    scanlines::AbstractVector{Int}
+    function Table(options::OrderedDict{Any, Any}, data::AbstractMatrix,
+                   colnames::Union{Void, Vector{String}},
+                   scanlines::AbstractVector{Int})
+        nrow, ncol = size(data)
+        if colnames ≠ nothing
+            @argcheck allunique(colnames) "Column names are not unique."
+            @argcheck length(colnames) == ncol
+        end
+        new(options, data, colnames, scanlines)
+    end
 end
 
-function Table(data, args::Vararg{PGFOption})
-    Table(data, dictify(args))
+"""
+    $SIGNATURES
+
+Data structure for emitting coordinates as a `table` in `pgfplots`.
+
+`options` stores the options. `data` is a matrix, which contains the contents of
+the table, which will be printed using `print_tex`. `colnames` is a vector of
+column names (converted to string), or `nothing` for a table with no column
+names.
+
+`scanlines` specifies the row indexes after which a newline will be insterted,
+this can be used for skipping coordinates or implicitly defining the dimensions
+of a matrix for `surf` and `mesh` plots. They are expanded using
+[`expand_scanlines`](@ref).
+"""
+function Table(options::OrderedDict{Any, Any}, data::AbstractMatrix,
+               colnames, scanlines)
+    Table(options, data,
+          colnames ≡ nothing ? colnames : collect(String, colnames),
+          expand_scanlines(scanlines, size(data, 1)))
 end
 
+"""
+    $SIGNATURES
 
-function Table(data::String, args::Vararg{PGFOption})
-    Table(data, dictify(args))
+Convert the arguments to `data`, `colnames`, `scanlines` suitable for use in
+`Table`, and return these in a tuple.
+
+This method should be defined for conversion into `Table`s, with wrapper methods
+handing options.
+"""
+table_fields(rest...) = table_fields(collect(rest)) # fallback
+
+table_fields(itr) = table_fields(collect(itr))
+
+"""
+    $SIGNATURES
+
+`data` provided directly as a matrix, `colnames` and `scanlines` are optional.
+"""
+table_fields(data::AbstractMatrix; colnames = nothing, scanlines = 0) =
+    data, colnames, scanlines
+
+"""
+    $SIGNATURES
+
+Named columns provided as a vector of pairs, eg `[:x => 1:10, :y => 11:20]`.
+Symbols or strings are accepted as column names.
+"""
+table_fields(name_column_pairs::Vector{<: Pair}) =
+    hcat(last.(name_column_pairs)...), first.(name_column_pairs), 0
+
+"""
+    $SIGNATURES
+
+Use keys and values for the column names and vectors. Symbols or strings are
+accepted as column names.
+"""
+table_fields(assoc::Associative) = hcat(values(assoc)...), collect(keys(assoc)), 0
+
+"""
+    $SIGNATURES
+
+Unnamed columns, given as vectors.
+"""
+table_fields(columns::Vector{<: AbstractVector}) = hcat(columns...), nothing, 0
+
+"""
+    $SIGNATURES
+
+Use the keyword arguments as columns.
+"""
+table_fields(; named_columns...) = table_fields(Pair(nc...) for nc in named_columns)
+
+table_fields(::AbstractVector) =
+    throw(ArgumentError("Could not determine whether columns are named from the element type."))
+
+function table_fields(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
+                      meta::Union{Void, AbstractMatrix} = nothing)
+    colnames = ["x", "y", "z"]
+    columns = hcat(matrix_xyz(x, y, z)...)
+    if meta ≠ nothing
+        @argcheck size(z) == size(meta) "Incompatible sizes."
+        push!(colnames, "meta")
+        columns = hcat(columns, vec(meta))
+    end
+    columns, colnames, length(x)
 end
 
-function Table(args::Vararg{PGFOption}; kwargs...)
-    Table(kwargs, dictify(args))
-end
+"""
+    Table([options], args...)
 
-function print_tex(io_main::IO, t::Table)
+Construct a table from the given arguments. Examples:
+
+```julia
+Table(["x" => 1:10, "y" => 11:20])        # from a vector
+
+Table([1:10, 11:20])                      # same contents, unnamed
+
+Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
+
+Table(@pgf { "x index" = 2, "y index" = 1" }, randn(10, 3))
+
+let x = linspace(0, 1, 10), y = linspace(-2, 3, 15)
+    Table(x, y, sin.(x + y'))             # edges & matrix
+end
+```
+
+[`table_fields`](@ref) is used to convert the arguments after options. See its
+methods for possible conversions.
+"""
+Table(options::OrderedDict{Any, Any}, args...; kwargs...) =
+    Table(options, table_fields(args...; kwargs...)...)
+
+Table(args...; kwargs...) =
+    Table(OrderedDict{Any, Any}(), table_fields(args...; kwargs...)...)
+
+function print_tex(io_main::IO, table::Table)
+    @unpack options, data, colnames, scanlines = table
     print_indent(io_main) do io
         print(io, "table ")
-        print_options(io, t.options)
+        print_options(io, options)
         print(io, "{")
-        print_tex(io, t.data, t)
+        _sep() = print(io, "  ")
+        if colnames ≠ nothing
+            for colname in colnames
+                print(io, colname)
+                _sep()
+            end
+        end
+        println(io)
+        for row_index in indices(data, 1)
+            for col_index in indices(data, 2)
+                print_tex(io, data[row_index, col_index])
+                _sep()
+            end
+            println(io)
+            if row_index ∈ scanlines
+                println(io)
+            end
+        end
         print(io, "}")
     end
 end
 
-print_tex(io::IO, str::String, ::Table) = print(io, str)
-function print_tex(io::IO, v::AbstractVector, ::Table)
-    length(v) == 0 && return
-    if v[1] isa Tuple # Assume the kw constructor was called
-        # Do some basic checking
-        # Print header
-        vs = []
-        first = true
-        l = -1
-        for s in v
-            if !(length(s) == 2) || !(s[1] isa Symbol) || !(s[2] isa AbstractVector)
-                error("Expected a call like Table(; a = [1,2,...], b = [2,3,...])")
-            end
+#############
+# TableFile #
+#############
 
-            if first
-                l = length(s[2])
-            end
+struct TableFile <: OptionType
+    options::OrderedDict{Any, Any}
+    path::AbstractString
+end
 
-            if !(l == length(s[2]))
-                error("length of data in columns not the same")
-            end
+"""
+    TableFile([options], path)
 
-            print(io, s[1], "    ")
-            push!(vs, s[2])
-        end
+For reading tables directly from files. See the `pgfplots` manual for the
+accepted format.
+"""
+TableFile(path::AbstractString) = TableFile(OrderedDict{Any, Any}(), path)
 
-        println(io)
-
-        v_mat = permutedims(hcat(vs...), (2,1))
-
-        for j in 1:size(v_mat, 2)
-            for i in 1:size(v_mat, 1)
-                print(io, v_mat[i, j], "    ")
-            end
-            println(io)
-        end
-    else
-        println(io, join(v, "\n"))
+function print_tex(io_main::IO, tablefile::TableFile)
+    @unpack options, path = tablefile
+    print_indent(io_main) do io
+        print(io, "table ")
+        print_options(io, options)
+        print(io, "{$(path)}")
     end
 end
+
+############
+# Graphics #
+############
 
 struct Graphics <: OptionType
     filename::String
@@ -403,7 +532,6 @@ function print_tex(io_main::IO, t::Graphics)
         print(io, "{", t.filename, "}")
     end
 end
-
 
 struct Legend
     labels::Vector{String}
