@@ -132,7 +132,9 @@ end
 end
 
 @testset "tablefile" begin
-    @test squashed_repr_tex(pgf.TableFile(pgf.@pgf({x = "a", y = "b"}), "somefile.dat")) ==
-                                              "table [x={a}, y={b}]\n{somefile.dat}"
-    @test squashed_repr_tex(pgf.TableFile("somefile.dat")) == "table []\n{somefile.dat}"
+    path = "somefile.dat"
+    _abspath = abspath(path)
+    @test squashed_repr_tex(pgf.Table(pgf.@pgf({x = "a", y = "b"}), path)) ==
+                                              "table [x={a}, y={b}]\n{$(_abspath)}"
+    @test squashed_repr_tex(pgf.Table("somefile.dat")) == "table []\n{$(_abspath)}"
 end

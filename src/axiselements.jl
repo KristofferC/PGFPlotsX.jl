@@ -482,18 +482,29 @@ end
 # TableFile #
 #############
 
+"""
+$(TYPEDEF)
+
+Placeholder for a table for which data is read directly from a file. Use the
+[`Table`](@ref) constructor.
+"""
 struct TableFile <: OptionType
     options::OrderedDict{Any, Any}
     path::AbstractString
 end
 
 """
-    TableFile([options], path)
+    $SIGNATURES
 
 For reading tables directly from files. See the `pgfplots` manual for the
 accepted format.
+
+If you don't use an absolute path, it will be converted to one.
 """
-TableFile(path::AbstractString) = TableFile(OrderedDict{Any, Any}(), path)
+Table(options::OrderedDict{Any, Any}, path::AbstractString) =
+    TableFile(options, abspath(path))
+
+Table(path::AbstractString) = Table(OrderedDict{Any, Any}(), path)
 
 function print_tex(io_main::IO, tablefile::TableFile)
     @unpack options, path = tablefile
