@@ -396,14 +396,6 @@ table_fields(name_column_pairs::Vector{<: Pair}) =
 """
     $SIGNATURES
 
-Use keys and values for the column names and vectors. Symbols or strings are
-accepted as column names.
-"""
-table_fields(assoc::Associative) = hcat(values(assoc)...), collect(keys(assoc)), 0
-
-"""
-    $SIGNATURES
-
 Unnamed columns, given as vectors.
 """
 table_fields(columns::Vector{<: AbstractVector}) = hcat(columns...), nothing, 0

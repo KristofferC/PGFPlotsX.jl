@@ -1,8 +1,12 @@
 using PGFPlotsX
 using Base.Test
+using Colors
 using Compat
-using DataStructures: OrderedDict
+using Contour
 using DataFrames
+using DataStructures: OrderedDict
+using LaTeXStrings
+using RDatasets
 
 const pgf = PGFPlotsX
 

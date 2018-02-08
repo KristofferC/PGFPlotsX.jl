@@ -95,14 +95,12 @@ end
     table_named_opt = pgf.Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
 
     # named columns, without options
-    @test pgf.Table(Dict(:a => 1:10, :b => 11:20)) ≅ table_named_noopt
     @test pgf.Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
     @test pgf.Table(; a = 1:10, b = 11:20) ≅ table_named_noopt
     @test pgf.Table([:a => 1:10, :b => 11:20]) ≅ table_named_noopt
     @test pgf.Table(hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_noopt
 
     # named columns, with options
-    @test pgf.Table(opt, Dict(:a => 1:10, :b => 11:20)) ≅ table_named_opt
     @test pgf.Table(opt, :a => 1:10, :b => 11:20) ≅ table_named_opt
     @test pgf.Table(opt, [:a => 1:10, :b => 11:20]) ≅ table_named_opt
     @test pgf.Table(opt, hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_opt

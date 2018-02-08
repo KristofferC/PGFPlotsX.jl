@@ -53,7 +53,7 @@ savefigs("table-named-columns", ans) # hide
 
 ![](table-named-columns.svg)
 
-or a dictionary, here renamed using options:
+or rename using options:
 
 ```@example pgf
 pgf.@pgf pgf.Plot(
@@ -61,7 +61,7 @@ pgf.@pgf pgf.Plot(
         x = "a",
         y = "b",
     },
-    pgf.Table(Dict(:a => x, :b => y));
+    pgf.Table([:a => x, :b => y]);
     incremental = false)
 savefigs("table-dict-rename", ans) # hide
 ```
