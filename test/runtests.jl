@@ -4,7 +4,6 @@ using Colors
 using Compat
 using Contour
 using DataFrames
-using DataStructures: OrderedDict
 using LaTeXStrings
 using RDatasets
 

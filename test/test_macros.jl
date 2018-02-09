@@ -13,7 +13,7 @@ end
 
 # test the @pgf macro
 
-od(args...) =  OrderedDict{Any, Any}(args...)
+od(args...) =  pgf.Options(args...)
 
 @testset "pgf tests" begin
     a = 1

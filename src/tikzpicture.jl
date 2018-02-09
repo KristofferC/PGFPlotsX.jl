@@ -2,7 +2,7 @@ const TikzElementOrStr = Union{TikzElement, String}
 
 struct TikzPicture <: OptionType
     elements::Vector{TikzElementOrStr} # Plots, nodes etc
-    options::OrderedDict{Any, Any}
+    options::Options
 end
 
 function TikzPicture(options::Vararg{PGFOption})
@@ -10,7 +10,7 @@ function TikzPicture(options::Vararg{PGFOption})
 end
 
 TikzPicture(element::TikzElementOrStr, args...) = TikzPicture([element], args...)
-TikzPicture(options::OrderedDict, element::TikzElementOrStr) = TikzPicture(element, options)
+TikzPicture(options::Options, element::TikzElementOrStr) = TikzPicture(element, options)
 
 function TikzPicture(elements::Vector, options::Vararg{PGFOption})
     TikzPicture(convert(Vector{TikzElementOrStr}, elements), dictify(options))
