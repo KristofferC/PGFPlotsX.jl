@@ -1,0 +1,26 @@
+\documentclass[tikz]{standalone}
+    % Default preamble
+    \usepackage{pgfplots}
+    \pgfplotsset{compat=newest}
+    \usepgfplotslibrary{groupplots}
+    \usepgfplotslibrary{polar}
+    \usepgfplotslibrary{statistics}
+\begin{document}
+\begin{tikzpicture}[]
+    \begin{axis}[ybar interval, xticklabel interval boundaries, xticklabel={$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$}, xticklabel style={font={\tiny}}]
+        \addplot[]
+            table []
+            {
+            -2.0  14.0  
+            -1.0  32.0  
+            0.0  34.0  
+            1.0  16.0  
+            2.0  3.0  
+            3.0  1.0  
+            4.0  0.0  
+            }
+        ;
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}
