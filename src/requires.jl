@@ -27,46 +27,48 @@
 end
 
 @require DataFrames begin
-    function PGFPlotsX.print_tex(io::IO, df::DataFrames.DataFrame, ::PGFPlotsX.Table)
-        print(io, join(names(df), "    "), "\n")
-        for col in 1:size(df, 1)
-            print(io, join([df[col, row] for row in 1:size(df, 2)], "   "), "\n")
-        end
-    end
+    PGFPlotsX.table_fields(df::DataFrames.DataFrame) =
+        hcat(DataFrames.columns(df)...), string.(names(df)), 0
 end
 
 @require Contour begin
-    function PGFPlotsX.print_tex(io::IO, c::Contour.ContourCollection, ::PGFPlotsX.Table)
+    function PGFPlotsX.table_fields(c::Contour.ContourCollection)
+        colx = Any[]
+        coly = Any[]
+        colz = Any[]
+        ns = Int[]
         for cl in Contour.levels(c)
             lvl = Contour.level(cl) # the z-value of this contour level
             for line in Contour.lines(cl)
                 xs, ys = Contour.coordinates(line) # coordinates of this line segment
-                for (x, y) in zip(xs, ys)
-                    println(io, join((x, y, lvl), " "))
-                end
-                println(io) # Break this line
+                n = length(xs)
+                append!(colx, xs)
+                append!(coly, ys)
+                append!(colz, fill(lvl, n))
+                push!(ns, n)
             end
         end
+        hcat(colx, coly, colz), ["x", "y", "z"], cumsum(ns)
     end
 end
 
-# TODO: Check if the bins are completely correct
 @require StatsBase begin
-    function PGFPlotsX.print_tex(io::IO, c::StatsBase.Histogram, ::PGFPlotsX.Table)
-        dim = length(c.edges)
-        if dim != 1
-            error("dim != 1 not supported")
-        end
-        edge = c.edges[1]
-        for v in 1:length(c.weights)
-            println(io, edge[v], "    ", c.weights[v])
-        end
-        println(io, edge[end], "    ", 0)
+    # workaround for https://github.com/JuliaStats/StatsBase.jl/issues/344
+    const _midpoints = x -> middle.(x[2:end], x[1:(end-1)])
+
+    function PGFPlotsX.table_fields(h::StatsBase.Histogram{T, 1}) where T
+        hcat(h.edges[1], vcat(h.weights, 0)), nothing, 0
+    end
+
+    function PGFPlotsX.table_fields(histogram::StatsBase.Histogram{T, 2}) where T
+        PGFPlotsX.table_fields(_midpoints(histogram.edges[1]),
+                               _midpoints(histogram.edges[2]),
+                               histogram.weights)
     end
 
     function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T
-        PGFPlotsX.Coordinates(midpoints(histogram.edges[1]),
-                              midpoints(histogram.edges[2]),
+        PGFPlotsX.Coordinates(_midpoints(histogram.edges[1]),
+                              _midpoints(histogram.edges[2]),
                               histogram.weights)
     end
 end

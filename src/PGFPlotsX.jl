@@ -41,7 +41,7 @@ end
 
 include("utilities.jl")
 
-function print_tex(io_main::IO, str::String)
+function print_tex(io_main::IO, str::AbstractString)
     print_indent(io_main) do io
         print(io, str)
     end
@@ -55,6 +55,18 @@ function print_tex(io_main::IO, vs::Vector)
     end
 end
 
+function print_tex(io::IO, x::Real)
+    if isfinite(x)
+        print(io, x)
+    elseif isnan(x)
+        print(io, "nan")
+    elseif isinf(x)
+        s = x > 0 ? "+" : "-"
+        print(io, "$(s)inf")
+    else
+        throw(ArgumentError("Don't know how to print $x for LaTeX."))
+    end
+end
 
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",

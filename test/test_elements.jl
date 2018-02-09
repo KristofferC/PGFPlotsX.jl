@@ -1,4 +1,3 @@
-
 "Invoke print_tex with the given arguments, collect the results in a string."
 function repr_tex(args...)
     io = IOBuffer()
@@ -7,26 +6,40 @@ function repr_tex(args...)
 end
 
 """
-Trim lines, merge whitespace to a single space, remove empty lines.
+Trim lines, merge whitespace to a single space, merge multiple empty lines into
+one, merge beginning and ending newlines.
 
 Useful for unit testing printed representations.
 """
 function squash_whitespace(str::AbstractString)
     lines = split(str, '\n')
     squashed_lines = map(line -> replace(strip(line), r" +", " "), lines)
-    join(filter(!isempty, squashed_lines), "\n")
+    strip(replace(join(squashed_lines, "\n"), r"\n{2,}", "\n\n"), '\n')
 end
 
-@test squash_whitespace("  a  line  \nsome   other line\n\ndone\n") ==
-    "a line\nsome other line\ndone"
+@test squash_whitespace("\n\n  a  line  \nsome   other line\n\n\ndone\n") ==
+    "a line\nsome other line\n\ndone"
 
 "Squashed result of `print_tex` with given arguments."
 squashed_repr_tex(args...) = squash_whitespace(repr_tex(args...))
 
+"A simple comparison of fields for unit tests."
+≅(x, y) = x == y
+
+function ≅(x::T, y::T) where T
+    for f in fieldnames(T)
+        getfield(x, f) == getfield(y, f) || return false
+    end
+    true
+end
+
 @testset "printing Julia types to TeX" begin
     @test squashed_repr_tex("something") == "something"
     @test squashed_repr_tex(string.([2, 3, 4])) == "2\n3\n4"
-    @test_throws ArgumentError repr_tex(4) # undefined
+    @test squashed_repr_tex(4) == "4"
+    @test squashed_repr_tex(NaN) == "nan"
+    @test squashed_repr_tex(Inf) == "+inf"
+    @test squashed_repr_tex(-Inf) == "-inf"
 end
 
 @testset "coordinate" begin
@@ -70,4 +83,58 @@ end
         @test pgf.Coordinates(x, y, z).data ==
             pgf.Coordinates((x, y, x / y) for (x,y) in zip(x, y)).data
     end
+end
+
+@testset "tables" begin
+    # compare results to these using ≅, defined above
+    table_named_noopt = pgf.Table(OrderedDict{Any, Any}(), hcat(1:10, 11:20),
+                                  ["a", "b"], Int[])
+    table_unnamed_noopt = pgf.Table(OrderedDict{Any, Any}(), hcat(1:10, 11:20),
+                                    nothing, Int[])
+    opt = pgf.@pgf { meaningless = "option" }
+    table_named_opt = pgf.Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
+
+    # named columns, without options
+    @test pgf.Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
+    @test pgf.Table(; a = 1:10, b = 11:20) ≅ table_named_noopt
+    @test pgf.Table([:a => 1:10, :b => 11:20]) ≅ table_named_noopt
+    @test pgf.Table(hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_noopt
+
+    # named columns, with options
+    @test pgf.Table(opt, :a => 1:10, :b => 11:20) ≅ table_named_opt
+    @test pgf.Table(opt, [:a => 1:10, :b => 11:20]) ≅ table_named_opt
+    @test pgf.Table(opt, hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_opt
+
+    # unnamed columns, without options
+    @test pgf.Table(1:10, 11:20) ≅ table_unnamed_noopt
+    @test pgf.Table([1:10, 11:20]) ≅ table_unnamed_noopt
+    @test pgf.Table(hcat(1:10, 11:20)) ≅ table_unnamed_noopt
+
+    # matrix and edges
+    let x = randn(10), y = randn(5), z = cos.(x .+ y')
+        @test pgf.Table(x, y, z) ≅ pgf.Table(OrderedDict{Any, Any}(),
+                                             hcat(pgf.matrix_xyz(x, y, z)...),
+                                             ["x", "y", "z"], 10)
+    end
+
+    # dataframe
+    @test pgf.Table(DataFrame(a = 1:5, b = 6:10)) ≅
+        pgf.Table(OrderedDict{Any, Any}(), hcat(1:5, 6:10), ["a", "b"], 0)
+
+    # can't determine if it is named or unnamed
+    @test_throws ArgumentError pgf.Table([1:10, :a => 11:20])
+
+    @test squashed_repr_tex(pgf.Table(OrderedDict{Any, Any}(),
+                                      [1 NaN;
+                                       -Inf 4.0],
+                                      ["xx", "yy"],
+                                      [1])) == "table []\n{xx yy\n1.0 nan\n\n-inf 4.0\n}"
+end
+
+@testset "tablefile" begin
+    path = "somefile.dat"
+    _abspath = abspath(path)
+    @test squashed_repr_tex(pgf.Table(pgf.@pgf({x = "a", y = "b"}), path)) ==
+                                              "table [x={a}, y={b}]\n{$(_abspath)}"
+    @test squashed_repr_tex(pgf.Table("somefile.dat")) == "table []\n{$(_abspath)}"
 end
