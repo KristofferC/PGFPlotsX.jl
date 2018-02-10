@@ -34,11 +34,13 @@ Construct [`Options`](@ref) from comma-delimited `key` (without value),
 `key = value`, `key : value`, or `key => value` pairs enclosed in `{ ... }`,
 anywhere in the expression.
 
-Multi-word keys need to be quoted.
+Multi-word keys need to be either quoted, or written with underscores replacing
+spaces.
 
 ```julia
 @pgf {
     "only marks",
+    mark_size = "0.6pt",
     mark = "o",
     color => "black",
 }
