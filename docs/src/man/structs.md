@@ -26,21 +26,21 @@ Examples:
 ```jldoctest
 julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];
 
-julia> pgf.print_tex(pgf.Coordinates(x, y))
+julia> print_tex(Coordinates(x, y))
     coordinates {
     (1, 2)
     (2, 4)
     (3, 8)
     }
 
-julia> pgf.print_tex(pgf.Coordinates(x, y, z))
+julia> print_tex(Coordinates(x, y, z))
     coordinates {
     (1, 2, -1)
     (2, 4, -2)
     (3, 8, -3)
     }
 
-julia> pgf.print_tex(pgf.Coordinates(x, x -> x^3))
+julia> print_tex(Coordinates(x, x -> x^3))
 
     coordinates {
     (1, 1)
@@ -48,15 +48,15 @@ julia> pgf.print_tex(pgf.Coordinates(x, x -> x^3))
     (3, 27)
     }
 
-julia> pgf.print_tex(pgf.Coordinates([(1.0, 2.0), (2.0, 4.0)]))
+julia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))
     coordinates {
     (1.0, 2.0)
     (2.0, 4.0)
     }
 
-julia> c = pgf.Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);
+julia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);
 
-julia> pgf.print_tex(c)
+julia> print_tex(c)
     coordinates {
     (1, 2)+-(0.2, 0.2)
     (2, 4)+-(0.3, 0.1)
@@ -72,9 +72,9 @@ An `Expression` is a string, representing a function and is written in a way LaT
 Example:
 
 ```jldoctest
-julia> ex = pgf.Expression("exp(-x^2)");
+julia> ex = Expression("exp(-x^2)");
 
-julia> pgf.print_tex(ex)
+julia> print_tex(ex)
     {exp(-x^2)}
 ```
 
@@ -85,9 +85,9 @@ A table represents a matrix of data where each column is labeled. It can simply 
 Examples:
 
 ```jldoctest
-julia> t = pgf.Table("data.dat", "x" => "Dof");
+julia> t = Table("data.dat", "x" => "Dof");
 
-julia> pgf.print_tex(t)
+julia> print_tex(t)
     table [x={Dof}]
     {data.dat}
 ```
@@ -95,9 +95,9 @@ julia> pgf.print_tex(t)
 Inline data is constructed using a keyword constructor:
 
 ```jldoctest
-julia> t = pgf.Table("x" => "Dof", "y" => "Err"; Dof = rand(3), Err = rand(3));
+julia> t = Table("x" => "Dof", "y" => "Err"; Dof = rand(3), Err = rand(3));
 
-julia> pgf.print_tex(t)
+julia> print_tex(t)
     table [x={Dof}, y={Err}]
     {Dof    Err
     0.6073590230719768    0.36281513247882136
@@ -116,7 +116,7 @@ If you load the DataFrames package, you can also create tables from data frames,
 Example:
 
 ```juliadoctest
-julia> pgf.print_tex(pgf.Graphics("img.png"))
+julia> print_tex(Graphics("img.png"))
     graphics []
     {img.png}
 ```
@@ -132,9 +132,9 @@ A keyword argument `incremental::Bool` is used to determine if `\addplot+` (defa
 Example:
 
 ```jldoctest
-julia> p = pgf.@pgf pgf.Plot(pgf.Table("plotdata/invcum.dat"), { blue }; incremental = false);
+julia> p = @pgf Plot(Table("plotdata/invcum.dat"), { blue }; incremental = false);
 
-julia> pgf.print_tex(p)
+julia> print_tex(p)
     \addplot[blue]
         table []
         {plotdata/invcum.dat}
@@ -151,9 +151,9 @@ Example:
 ```jldoctest
 julia> x, y, z = rand(3), rand(3), rand(3);
 
-julia> p = pgf.@pgf pgf.Plot3(pgf.Coordinates(x,y,z), { very_thick })
+julia> p = @pgf Plot3(Coordinates(x,y,z), { very_thick })
 
-julia> pgf.print_tex(p)
+julia> print_tex(p)
     \addplot3+[very thick]
         coordinates {
         (0.7399041050338018, 0.4333342656950161, 0.31102760595379864)
@@ -178,22 +178,22 @@ julia> pgf.print_tex(p)
 Examples:
 
 ```jldoctest
-julia> pgf.@pgf a = pgf.Axis( pgf.Plot( pgf.Expression("x^2")), {
+julia> @pgf a = Axis( Plot( Expression("x^2")), {
               xlabel = "x"
               ylabel = "y"
               title = "Figure"
           })
 
-julia> pgf.print_tex(a)
+julia> print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
         \addplot+[]
             {x^2}
         ;
     \end{axis}
 
-julia> push!(a, pgf.Plot( pgf.Table("data.dat")));
+julia> push!(a, Plot( Table("data.dat")));
 
-julia> pgf.print_tex(a)
+julia> print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
         \addplot+[]
             {x^2}
@@ -215,13 +215,13 @@ A `GroupPlot` is a way of grouping multiple plots in one figure.
 Example:
 
 ```jldoctest
-julia> pgf.@pgf gp = pgf.GroupPlot({group_style = { group_size = "2 by 1",}, height = "6cm", width = "6cm"});
+julia> @pgf gp = GroupPlot({group_style = { group_size = "2 by 1",}, height = "6cm", width = "6cm"});
 
 julia> for (expr, data) in zip(["x^2", "exp(x)"], ["data1.dat", "data2.dat"])
-           push!(gp, [pgf.Plot(pgf.Expression(expr)),  pgf.Plot(pgf.Table(data))])
+           push!(gp, [Plot(Expression(expr)),  Plot(Table(data))])
        end;
 
-julia> pgf.print_tex(gp)
+julia> print_tex(gp)
     \begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]
         \nextgroupplot[]
 
@@ -248,13 +248,13 @@ In order to add options to the `\nextgroupplot` call simply add arguments in
 an "option like way" (using strings / pairs / `@pgf`) when you `push!`
 
 ```jldoctest
-julia> pgf.@pgf gp = pgf.GroupPlot({group_style = { group_size = "1 by 1",}, height = "6cm", width = "6cm"});
+julia> @pgf gp = GroupPlot({group_style = { group_size = "1 by 1",}, height = "6cm", width = "6cm"});
 
-julia> pgf.@pgf for (expr, data) in zip(["x^2"], ["data2.dat"])
-           push!(gp, [pgf.Plot(pgf.Expression(expr)),  pgf.Plot(pgf.Table(data))], {title = "Data $data"})
+julia> @pgf for (expr, data) in zip(["x^2"], ["data2.dat"])
+           push!(gp, [Plot(Expression(expr)),  Plot(Table(data))], {title = "Data $data"})
        end;
 
-julia> pgf.print_tex(gp)
+julia> print_tex(gp)
     \begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]
         \nextgroupplot[title={Data data2.dat}]
 
@@ -275,7 +275,7 @@ A `PolarAxis` plot data on a polar grid.
 Example:
 
 ```jldoctest
-julia> pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))
+julia> PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))
 ```
 
 ### `Legend`
@@ -285,7 +285,7 @@ A `Legend` can be used to add legends to plots.
 Example:
 
 ```jldoctest
-julia> pgf.print_tex(pgf.Legend(["Plot A", "Plot B"]))
+julia> print_tex(Legend(["Plot A", "Plot B"]))
 \legend{Plot A, Plot B}
 ```
 
@@ -296,9 +296,9 @@ A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 Example:
 
 ```jldoctest
-julia> tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), "scale" => 1.5)
+julia> tp = TikzPicture( Axis( Plot( Coordinates(rand(5), rand(5)))), "scale" => 1.5)
 
-julia> pgf.print_tex(tp)
+julia> print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
     \begin{axis}[]
         \addplot+[]
@@ -323,7 +323,7 @@ A very simple example where we simply create a `TikzDocument` with a string in i
 Normally you would also push `Axis`'s that contain plots.
 
 ```julia-repl
-julia> td = pgf.TikzDocument();
+julia> td = TikzDocument();
 
 julia> push!(td, "Hello World")
 ```

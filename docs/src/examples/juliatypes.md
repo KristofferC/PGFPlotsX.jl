@@ -1,22 +1,13 @@
 # Julia types
 
 There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.
-All code is assumed to include the following:
-
-```jl
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
-```
 
 ```@setup pgf
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
+using PGFPlotsX
 savefigs = (figname, obj) -> begin
-    pgf.save(figname * ".pdf", obj)
+    PGFPlotsX.save(figname * ".pdf", obj)
     run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
-    pgf.save(figname * ".tex", obj);
+    PGFPlotsX.save(figname * ".tex", obj);
     return nothing
 end
 ```
@@ -30,10 +21,10 @@ using Colors
 μ = 0
 σ = 1e-3
 
-axis = pgf.Axis()
-pgf.@pgf for (i, col) in enumerate(distinguishable_colors(10))
+axis = Axis()
+@pgf for (i, col) in enumerate(distinguishable_colors(10))
     offset = i * 50
-    p = pgf.Plot(pgf.Expression("exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset"),
+    p = Plot(Expression("exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset"),
     {
         color = col,
         domain = "-3*$σ:3*$σ",
@@ -54,9 +45,9 @@ Using a colormap
 
 ```@example pgf
 using Colors
-pgf.@pgf begin
-p = pgf.Plot3(
-    pgf.Expression("cos(deg(x)) * sin(deg(y))"),
+@pgf begin
+p = Plot3(
+    Expression("cos(deg(x)) * sin(deg(y))"),
     {
         surf,
         point_meta = "y",
@@ -65,14 +56,14 @@ p = pgf.Plot3(
     incremental = false
 )
 colormaps = ["Blues", "Greens", "Oranges", "Purples"]
-td = pgf.TikzDocument()
+td = TikzDocument()
 for cmap in colormaps
-    pgf.push_preamble!(td, (cmap, Colors.colormap(cmap)))
+    push_preamble!(td, (cmap, Colors.colormap(cmap)))
 end
 
-tp = pgf.TikzPicture("scale" => 0.5)
+tp = TikzPicture("scale" => 0.5)
 push!(td, tp)
-gp = pgf.GroupPlot({ group_style = {group_size = "2 by 2"}})
+gp = GroupPlot({ group_style = {group_size = "2 by 2"}})
 push!(tp, gp)
 
 for cmap in colormaps
@@ -95,13 +86,13 @@ Creating a `Table` from a `DataFrame` will write it as expected.
 using RDatasets
 df = dataset("datasets", "iris") # load the dataset
 
-pgf.@pgf pgf.Axis(
+@pgf Axis(
     {
         legend_pos = "south east",
         xlabel = "Sepal length",
         ylabel = "Sepal width",
     },
-    [pgf.Plot(
+    [Plot(
         {
             scatter,
             "only marks",
@@ -113,7 +104,7 @@ pgf.@pgf pgf.Axis(
                 virginica  = {mark = "o",         "black"},
             }
         },
-        pgf.Table(
+        Table(
             {
                 x = "SepalLength",
                 y = "SepalWidth",
@@ -121,7 +112,7 @@ pgf.@pgf pgf.Axis(
             df, # <--- Creating a Table from a DataFrame
         )
     ),
-    pgf.Legend(["Setosa", "Versicolor", "Virginica"])
+    Legend(["Setosa", "Versicolor", "Virginica"])
     ]
 )
 savefigs("dataframes", ans) # hide
@@ -141,11 +132,11 @@ using Contour
 x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -> sin(x)*sin(y)
-pgf.@pgf pgf.Plot({
+@pgf Plot({
                       contour_prepared,
                       very_thick
                   },
-                  pgf.Table(contours(x, y, f.(x, y'), 6));
+                  Table(contours(x, y, f.(x, y'), 6));
                   incremental = false)
 savefigs("contour", ans) # hide
 ```
@@ -160,9 +151,9 @@ savefigs("contour", ans) # hide
 
 ```@example pgf
 using StatsBase: Histogram, fit
-pgf.Axis(pgf.Plot(pgf.Table(fit(Histogram, randn(100), closed = :left));
+Axis(Plot(Table(fit(Histogram, randn(100), closed = :left));
                   incremental = false),
-         pgf.@pgf {
+         @pgf {
              "ybar interval",
              "xticklabel interval boundaries",
              xticklabel = raw"$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$",
@@ -181,19 +172,19 @@ savefigs("histogram-1d", ans) # hide
 ```@example pgf
 using StatsBase: Histogram, fit
 h = fit(Histogram, (randn(1000), randn(1000)), closed = :left)
-@pgf.pgf pgf.Axis(
+@pgf Axis(
     {
         view = (0, 90),
         colorbar,
         "colormap/jet"
     },
-    pgf.Plot3(
+    Plot3(
         {
             surf,
             shader = "flat",
 
         },
-        pgf.Table(h);
+        Table(h);
         incremental = false
     )
 )

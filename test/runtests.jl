@@ -8,14 +8,12 @@ using DataStructures: OrderedDict
 using LaTeXStrings
 using RDatasets
 
-const pgf = PGFPlotsX
-
 if get(ENV, "CI", false) == true
-    pgf.latexengine!(pgf.PDFLATEX)
+    PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 end
 
-@show pgf.latexengine
-pgf.latexengine!(pgf.PDFLATEX)
+@show PGFPlotsX.latexengine
+PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
 include("test_macros.jl")
 

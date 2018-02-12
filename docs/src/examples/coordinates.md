@@ -1,19 +1,11 @@
 # Coordinates
 
-```jl
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
-```
-
 ```@setup pgf
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
+using PGFPlotsX
 savefigs = (figname, obj) -> begin
-    pgf.save(figname * ".pdf", obj)
+    PGFPlotsX.save(figname * ".pdf", obj)
     run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
-    pgf.save(figname * ".tex", obj);
+    PGFPlotsX.save(figname * ".tex", obj);
     return nothing
 end
 ```
@@ -24,16 +16,16 @@ For basic usage, consider `AbstractVectors` and iterables. Notice how non-finite
 
 ```@example pgf
 x = linspace(-1, 1, 51) # so that it contains 1/0
-pgf.@pgf pgf.Axis(
+@pgf Axis(
     {
         xmajorgrids,
         ymajorgrids,
     },
-    pgf.Plot(
+    Plot(
         {
             no_marks,
         },
-        pgf.Coordinates(x, 1 ./ x)
+        Coordinates(x, 1 ./ x)
     )
 )
 savefigs("coordinates-simple", ans) # hide
@@ -46,13 +38,13 @@ savefigs("coordinates-simple", ans) # hide
 Use `xerror`, `xerrorplus`, `xerrorminus`, `yerror` etc for error bars.
 ```@example pgf
 x = linspace(0, 2π, 20)
-pgf.@pgf pgf.Plot(
+@pgf Plot(
     {
         "no marks",
         "error bars/y dir=both",
         "error bars/y explicit",
     },
-    pgf.Coordinates(x, sin.(x); yerror = 0.2*cos.(x))
+    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))
 )
 savefigs("coordinates-errorbars", ans) # hide
 ```
@@ -65,11 +57,11 @@ Use three vectors to construct 3D coordinates.
 
 ```@example pgf
 t = linspace(0, 6*π, 100)
-pgf.@pgf pgf.Plot3(
+@pgf Plot3(
     {
         no_marks,
     },
-    pgf.Coordinates(t .* sin.(t), t .* cos.(t), .-t)
+    Coordinates(t .* sin.(t), t .* cos.(t), .-t)
 )
 savefigs("coordinates-3d", ans) # hide
 ```
@@ -84,11 +76,11 @@ A convenience constructor is available for plotting a matrix of values calculate
 x = linspace(-2, 2, 20)
 y = linspace(-0.5, 3, 25)
 f(x, y) = (1 - x)^2 + 100*(y - x^2)^2
-pgf.@pgf pgf.Plot3(
+@pgf Plot3(
     {
         surf,
     },
-    pgf.Coordinates(x, y, f.(x, y'));
+    Coordinates(x, y, f.(x, y'));
     incremental = false
 )
 savefigs("coordinates-3d-matrix", ans) # hide
@@ -101,18 +93,18 @@ savefigs("coordinates-3d-matrix", ans) # hide
 ```@example pgf
 x = linspace(-2, 2, 40)
 y = linspace(-0.5, 3, 50)
-pgf.@pgf pgf.Axis(
+@pgf Axis(
     {
         view = (0, 90),
         colorbar,
         "colormap/jet",
     },
-    pgf.Plot3(
+    Plot3(
         {
             surf,
             shader = "flat",
         },
-        pgf.Coordinates(x, y, @. √(f(x, y')));
+        Coordinates(x, y, @. √(f(x, y')));
         incremental = false
     )
 )

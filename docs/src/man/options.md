@@ -25,11 +25,11 @@ where a string represents a key without a value (e.g. `"very thick"`) and a pair
 This works well when the options are few and there is only one level of options in the object.
 
 ```julia-repl
-julia> c = pgf.Coordinates([1,2,3], [2, 4, 8]);
+julia> c = Coordinates([1,2,3], [2, 4, 8]);
 
-julia> p = pgf.Plot(c, "very thick", "mark" => "halfcircle")
+julia> p = Plot(c, "very thick", "mark" => "halfcircle")
 
-julia> pgf.print_tex(p); # print_tex is typically not called from user code
+julia> print_tex(p); # print_tex is typically not called from user code
 \addplot+[very thick, mark={halfcircle}]
         coordinates {
         (1, 2)
@@ -47,7 +47,7 @@ Instead, we provide a macro `@pgf` so that options can be entered similarly to h
 The previous example is then written as
 
 ```julia-repl
-pgf.@pgf pgf.Plot(c,
+@pgf Plot(c,
     {
         very_thick,
         mark = "halfcircle"
@@ -57,7 +57,7 @@ pgf.@pgf pgf.Plot(c,
 A more complicated example is:
 
 ```julia-repl
-pgf.@pgf a = pgf.Axis(pgf.Plot(c),
+@pgf a = Axis(Plot(c),
     {
         "axis background/.style" =
         {
@@ -73,7 +73,7 @@ pgf.@pgf a = pgf.Axis(pgf.Plot(c),
 which is printed as
 
 ```julia-repl
-julia> pgf.print_tex(a)
+julia> print_tex(a)
     \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
         \addplot+[]
             coordinates {
@@ -105,16 +105,16 @@ The following transformations of keys/values are done when the options are writt
 It is sometimes convenient to set and get options after an object has been created.
 
 ```julia-repl
-julia> c = pgf.Coordinates([1,2,3], [2, 4, 8]);
+julia> c = Coordinates([1,2,3], [2, 4, 8]);
 
-julia> p = pgf.Plot(c)
+julia> p = Plot(c)
 
 julia> p["fill"] = "blue";
 
 julia> p["fill"];
 "blue"
 
-julia> pgf.@pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
+julia> @pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
 
 julia> p["axis background/.style"]["top_color"];
 "gray"
@@ -125,7 +125,7 @@ julia> delete!(p, "fill");
 
 julia> p
 
-julia> pgf.print_tex(p)
+julia> print_tex(p)
     \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very tick]
         coordinates {
         (1, 2)
@@ -138,13 +138,13 @@ julia> pgf.print_tex(p)
 You can also merge in options that have been separately created using `merge!`
 
 ```julia-repl
-julia> a = pgf.Axis();
+julia> a = Axis();
 
-julia> pgf.@pgf opts =  {xmin = 0, ymax = 1, ybar};
+julia> @pgf opts =  {xmin = 0, ymax = 1, ybar};
 
 julia> merge!(a, opts)
 
-julia> pgf.print_tex(a)
+julia> print_tex(a)
     \begin{axis}[xmin={0}, ymax={1}, ybar]
     \end{axis}
 ```

@@ -32,20 +32,20 @@ is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
                 test_preamble_env = "test preamble env"
                 test_preamble_var = "test preamble var"
 
-                push!(pgf.CUSTOM_PREAMBLE, test_preamble_var)
+                push!(CUSTOM_PREAMBLE, test_preamble_var)
                 print(f, test_preamble_env)
                 close(f)
 
-                td = pgf.TikzDocument()
+                td = TikzDocument()
 
                 io = IOBuffer()
-                pgf.savetex(io, td)
+                PGFPlotsX.savetex(io, td)
 
                 texstring = String(take!(io))
                 @test contains(texstring, test_preamble_env)
                 @test contains(texstring, test_preamble_var)
             finally
-                empty!(pgf.CUSTOM_PREAMBLE)
+                empty!(CUSTOM_PREAMBLE)
             end
         end
     end
@@ -55,17 +55,17 @@ end
     tmp = tempname()
     mktempdir() do dir
         cd(dir) do
-            a = pgf.Axis(pgf.Plot(pgf.Expression("x^2")))
-            pgf.save("$tmp.tex", a)
+            a = Axis(Plot(Expression("x^2")))
+            PGFPlotsX.save("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(readstring("$tmp.tex"))
-            pgf.save("$tmp.png", a)
+            PGFPlotsX.save("$tmp.png", a)
             @test is_png_file("$tmp.png")
-            pgf.save("$tmp.pdf", a)
+            PGFPlotsX.save("$tmp.pdf", a)
             @test is_pdf_file("$tmp.pdf")
-            pgf.save("$tmp.svg", a)
+            PGFPlotsX.save("$tmp.svg", a)
             @test is_svg_file("$tmp.svg")
-            pgf.save("$tmp.tikz", a)
+            PGFPlotsX.save("$tmp.tikz", a)
             @test is_tikz_standalone("$tmp.tikz")
 
             let tikz_lines = readlines("$tmp.tikz")
@@ -82,8 +82,8 @@ end
     expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
     mktempdir() do dir
         cd(dir) do
-            pgf.@pgf p =
-                pgf.Axis(pgf.Plot3(pgf.Expression(expr),
+            @pgf p =
+                Axis(Plot3(Expression(expr),
                                    {
                                        contour_gnuplot = {
                                            number = 30,
@@ -99,7 +99,7 @@ end
                              y_domain = "74:87.9",
                              view = (0, 90),
                          })
-            pgf.save(tmp_pdf, p)
+            PGFPlotsX.save(tmp_pdf, p)
             @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)
         end
