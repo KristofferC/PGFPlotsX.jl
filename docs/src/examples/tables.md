@@ -2,20 +2,13 @@
 
 `Table`s are coordinates in a tabular format (essentially a matrix), optionally with named columns. They have various constructors, for direct construction and also for conversion from other types.
 
-```jl
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
-```
 
 ```@setup pgf
-import PGFPlotsX
-const pgf = PGFPlotsX
-using LaTeXStrings
+using PGFPlotsX
 savefigs = (figname, obj) -> begin
-    pgf.save(figname * ".pdf", obj)
+    PGFPlotsX.save(figname * ".pdf", obj)
     run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
-    pgf.save(figname * ".tex", obj);
+    PGFPlotsX.save(figname * ".tex", obj);
     return nothing
 end
 ```
@@ -34,7 +27,7 @@ y = sin.(x)
 You can pass these coordinates in unnamed columns:
 
 ```@example pgf
-pgf.Plot(pgf.Table([x, y]); incremental = false)
+Plot(Table([x, y]); incremental = false)
 savefigs("table-unnamed-columns", ans) # hide
 ```
 
@@ -45,7 +38,7 @@ savefigs("table-unnamed-columns", ans) # hide
 or named columns:
 
 ```@example pgf
-pgf.Plot(pgf.Table([:x => x, :y => y]); incremental = false)
+Plot(Table([:x => x, :y => y]); incremental = false)
 savefigs("table-named-columns", ans) # hide
 ```
 
@@ -56,12 +49,12 @@ savefigs("table-named-columns", ans) # hide
 or rename using options:
 
 ```@example pgf
-pgf.@pgf pgf.Plot(
+@pgf Plot(
     {
         x = "a",
         y = "b",
     },
-    pgf.Table([:a => x, :b => y]);
+    Table([:a => x, :b => y]);
     incremental = false)
 savefigs("table-dict-rename", ans) # hide
 ```
@@ -75,18 +68,18 @@ In the example below, we use a matrix of values with edge vectors, and omit the 
 x = linspace(-1, 1, 20)
 z = @. 1 - √(abs2(x) + abs2(x'))
 z[z .≤ 0] .= -Inf
-@pgf.pgf pgf.Axis(
+@pgf Axis(
     {
         colorbar,
         "colormap/jet",
         "unbounded coords" = "jump"
     },
-    pgf.Plot3(
+    Plot3(
         {
             surf,
             shader = "flat",
         },
-        pgf.Table(x, x, z);
+        Table(x, x, z);
         incremental = false
     )
 )

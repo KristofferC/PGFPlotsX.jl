@@ -18,10 +18,10 @@ od(args...) =  OrderedDict{Any, Any}(args...)
 @testset "pgf tests" begin
     a = 1
     b = 2
-    @test pgf.@pgf { xmax = a + b, title = "42", justkey } ==
+    @test @pgf { xmax = a + b, title = "42", justkey } ==
         od("xmax" => 3, "title" => "42", "justkey" => nothing)
     f(x...) = tuple(x...)
-    @test pgf.@pgf f({ look, we, are = f(1, 2, 3),
+    @test @pgf f({ look, we, are = f(1, 2, 3),
                        nesting = {
                            stuff = 9
                        }}) == (od("look" => nothing,

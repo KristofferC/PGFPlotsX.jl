@@ -23,9 +23,3 @@ For saving (or showing) png figures you need `pdftoppm` which should be installe
 
 !!! note
     If you installed a new latex engine, `pdf2svg` or `pdftoppm` after you installed *PGFPlotsX* you need to run `Pkg.build("PGFPlotsX")` for this to be reflected.
-
-## Manual Outline
-
-!!! note
-    `PGFPlotsX` does not export anything. In the manual we assume that the command
-    `import PGFPlotsX; const pgf = PGFPlotsX` has been run

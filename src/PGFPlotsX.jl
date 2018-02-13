@@ -12,6 +12,12 @@ using DocStringExtensions
 using Parameters
 using Requires
 
+export TikzDocument, TikzPicture
+export Axis, GroupPlot, PolarAxis
+export Plot, Plot3, Expression, EmptyLine, Coordinates,
+        Table, Graphics, Legend
+export @pgf, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE, push_preamble!
+
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
 const PGFOption = Union{Pair, String, OrderedDict}
