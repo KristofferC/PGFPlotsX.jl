@@ -269,11 +269,11 @@ if HAVE_PDFTOPPM
         rm(filename; force = true)
     end
 end
-
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
-_is_juno() = isdefined(Main, :Juno) && Main.Juno.isactive()
+_is_juno()   = isdefined(Main, :Juno) && Main.Juno.isactive()
+_is_vscode() = isdefined(Main, :_vscodeserver)
 
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)

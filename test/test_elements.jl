@@ -1,7 +1,7 @@
 "Invoke print_tex with the given arguments, collect the results in a string."
 function repr_tex(args...)
     io = IOBuffer()
-    pgf.print_tex(io, args...)
+    print_tex(io, args...)
     String(take!(io))
 end
 
@@ -43,86 +43,86 @@ end
 end
 
 @testset "coordinate" begin
-    @test_throws ArgumentError pgf.Coordinate((1, ))    # dimension not 2 or 3
-    @test_throws ArgumentError pgf.Coordinate((NaN, 1)) # not finite
-    @test_throws ArgumentError pgf.Coordinate((1, 2);   # can't specify both
+    @test_throws ArgumentError PGFPlotsX.Coordinate((1, ))    # dimension not 2 or 3
+    @test_throws ArgumentError PGFPlotsX.Coordinate((NaN, 1)) # not finite
+    @test_throws ArgumentError PGFPlotsX.Coordinate((1, 2);   # can't specify both
                                               error = (0, 0), errorplus = (0, 0))
-    @test_throws MethodError pgf.Coordinates((1, 2); error = (3, )) # incompatible dims
-    @test squashed_repr_tex(pgf.Coordinate((1, 2))) == "(1, 2)"
-    @test squashed_repr_tex(pgf.Coordinate((1, 2); error = (3, 4))) == "(1, 2) +- (3, 4)"
-    @test squashed_repr_tex(pgf.Coordinate((1, 2); errorminus = (3, 4))) ==
+    @test_throws MethodError Coordinates((1, 2); error = (3, )) # incompatible dims
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1, 2)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1, 2) +- (3, 4)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); errorminus = (3, 4))) ==
         "(1, 2) -= (3, 4)"
-    @test squashed_repr_tex(pgf.Coordinate((1, 2);
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2);
                                            errorminus = (3, 4),
                                            errorplus = (5, 6))) ==
                                                "(1, 2) += (5, 6) -= (3, 4)"
-    @test squashed_repr_tex(pgf.Coordinate((1, 2); meta = "blue")) == "(1, 2) [blue]"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1, 2) [blue]"
 end
 
 @testset "coordinates and convenience constructors" begin
-    @test_throws ArgumentError pgf.Coordinates([(1, 2), (1, 2, 3)]) # incompatible dims
-    @test_throws ArgumentError pgf.Coordinates([(1, 2), "invalid"]) # invalid value
+    @test_throws ArgumentError Coordinates([(1, 2), (1, 2, 3)]) # incompatible dims
+    @test_throws ArgumentError Coordinates([(1, 2), "invalid"]) # invalid value
 
     # from Vectors and AbstractVectors
-    @test pgf.Coordinates([1, 2], [3.0, 4.0]).data == pgf.Coordinate.([(1, 3.0), (2, 4.0)])
-    @test pgf.Coordinates(1:2, 3:4).data == pgf.Coordinate.([(1, 3), (2, 4)])
+    @test Coordinates([1, 2], [3.0, 4.0]).data == PGFPlotsX.Coordinate.([(1, 3.0), (2, 4.0)])
+    @test Coordinates(1:2, 3:4).data == PGFPlotsX.Coordinate.([(1, 3), (2, 4)])
     # skip empty
-    @test pgf.Coordinates([(2, 3), (), nothing]).data ==
-        [pgf.Coordinate((2, 3)), pgf.EmptyLine(), pgf.EmptyLine()]
-    @test pgf.Coordinates(1:2, 3:4, (1:2)./((3:4)')).data ==
-        pgf.Coordinates(Any[1, 2, NaN, 1, 2, NaN],
+    @test Coordinates([(2, 3), (), nothing]).data ==
+        [PGFPlotsX.Coordinate((2, 3)), EmptyLine(), EmptyLine()]
+    @test Coordinates(1:2, 3:4, (1:2)./((3:4)')).data ==
+        Coordinates(Any[1, 2, NaN, 1, 2, NaN],
                         Any[3, 3, NaN, 4, 4, NaN],
                         Any[1/3, 2/3, NaN, 1/4, 2/4, NaN]).data
     # from iterables
-    @test pgf.Coordinates(enumerate(3:4)).data == pgf.Coordinate.([(1, 3), (2, 4)])
-    @test pgf.Coordinates((x, 1/x) for x in -1:1).data ==
-        [pgf.Coordinate((-1, -1.0)), pgf.EmptyLine(), pgf.Coordinate((1, 1.0))]
+    @test Coordinates(enumerate(3:4)).data == PGFPlotsX.Coordinate.([(1, 3), (2, 4)])
+    @test Coordinates((x, 1/x) for x in -1:1).data ==
+        [PGFPlotsX.Coordinate((-1, -1.0)), EmptyLine(), PGFPlotsX.Coordinate((1, 1.0))]
     let x = 1:3,
         y = -1:1,
         z = x ./ y
-        @test pgf.Coordinates(x, y, z).data ==
-            pgf.Coordinates((x, y, x / y) for (x,y) in zip(x, y)).data
+        @test Coordinates(x, y, z).data ==
+            Coordinates((x, y, x / y) for (x,y) in zip(x, y)).data
     end
 end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = pgf.Table(pgf.Options(), hcat(1:10, 11:20), ["a", "b"], Int[])
-    table_unnamed_noopt = pgf.Table(pgf.Options(), hcat(1:10, 11:20), nothing, Int[])
-    opt = pgf.@pgf { meaningless = "option" }
-    table_named_opt = pgf.Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_named_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_unnamed_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), nothing, Int[])
+    opt = @pgf { meaningless = "option" }
+    table_named_opt = Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
 
     # named columns, without options
-    @test pgf.Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
-    @test pgf.Table(; a = 1:10, b = 11:20) ≅ table_named_noopt
-    @test pgf.Table([:a => 1:10, :b => 11:20]) ≅ table_named_noopt
-    @test pgf.Table(hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_noopt
+    @test Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
+    @test Table(; a = 1:10, b = 11:20) ≅ table_named_noopt
+    @test Table([:a => 1:10, :b => 11:20]) ≅ table_named_noopt
+    @test Table(hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_noopt
 
     # named columns, with options
-    @test pgf.Table(opt, :a => 1:10, :b => 11:20) ≅ table_named_opt
-    @test pgf.Table(opt, [:a => 1:10, :b => 11:20]) ≅ table_named_opt
-    @test pgf.Table(opt, hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_opt
+    @test Table(opt, :a => 1:10, :b => 11:20) ≅ table_named_opt
+    @test Table(opt, [:a => 1:10, :b => 11:20]) ≅ table_named_opt
+    @test Table(opt, hcat(1:10, 11:20); colnames = [:a, :b]) ≅ table_named_opt
 
     # unnamed columns, without options
-    @test pgf.Table(1:10, 11:20) ≅ table_unnamed_noopt
-    @test pgf.Table([1:10, 11:20]) ≅ table_unnamed_noopt
-    @test pgf.Table(hcat(1:10, 11:20)) ≅ table_unnamed_noopt
+    @test Table(1:10, 11:20) ≅ table_unnamed_noopt
+    @test Table([1:10, 11:20]) ≅ table_unnamed_noopt
+    @test Table(hcat(1:10, 11:20)) ≅ table_unnamed_noopt
 
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
-        @test pgf.Table(x, y, z) ≅ pgf.Table(pgf.Options(),
-                                             hcat(pgf.matrix_xyz(x, y, z)...),
+        @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
+                                             hcat(PGFPlotsX..matrix_xyz(x, y, z)...),
                                              ["x", "y", "z"], 10)
     end
 
     # dataframe
-    @test pgf.Table(DataFrame(a = 1:5, b = 6:10)) ≅
-        pgf.Table(pgf.Options(), hcat(1:5, 6:10), ["a", "b"], 0)
+    @test Table(DataFrame(a = 1:5, b = 6:10)) ≅
+        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), ["a", "b"], 0)
 
     # can't determine if it is named or unnamed
-    @test_throws ArgumentError pgf.Table([1:10, :a => 11:20])
+    @test_throws ArgumentError Table([1:10, :a => 11:20])
 
-    @test squashed_repr_tex(pgf.Table(pgf.Options(),
+    @test squashed_repr_tex(Table(PGFPlotsX.Options(),
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
@@ -132,7 +132,7 @@ end
 @testset "tablefile" begin
     path = "somefile.dat"
     _abspath = abspath(path)
-    @test squashed_repr_tex(pgf.Table(pgf.@pgf({x = "a", y = "b"}), path)) ==
+    @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
                                               "table [x={a}, y={b}]\n{$(_abspath)}"
-    @test squashed_repr_tex(pgf.Table("somefile.dat")) == "table []\n{$(_abspath)}"
+    @test squashed_repr_tex(Table("somefile.dat")) == "table []\n{$(_abspath)}"
 end

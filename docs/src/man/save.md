@@ -20,7 +20,7 @@ If you wish to disable this, run `pgf.enable_interactive(false)`.
 Figures can be exported to files using
 
 ```jlcon
-pgf.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)
+PGFPlotsX.save(filename::String, figure; include_preamble::Bool = true, dpi = 150)
 ```
 
 where the file extension of `filename` determines the file type (can be `.pdf`, `.svg` or `.tex`, or the standalone `tikz` file extensions below), `include_preamble` sets if the preamble should be included in the output (only relevant for `tex` export) and `dpi` determines the dpi of the figure (only relevant for `png` export).
