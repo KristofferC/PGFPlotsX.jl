@@ -3,21 +3,21 @@
 * `xerrorplus` `yerrorplus` for positive errors
 * `xerrorminus` `yerrorminus` for positive errors</code></pre><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];
 
-julia&gt; pgf.print_tex(pgf.Coordinates(x, y))
+julia&gt; print_tex(Coordinates(x, y))
     coordinates {
     (1, 2)
     (2, 4)
     (3, 8)
     }
 
-julia&gt; pgf.print_tex(pgf.Coordinates(x, y, z))
+julia&gt; print_tex(Coordinates(x, y, z))
     coordinates {
     (1, 2, -1)
     (2, 4, -2)
     (3, 8, -3)
     }
 
-julia&gt; pgf.print_tex(pgf.Coordinates(x, x -&gt; x^3))
+julia&gt; print_tex(Coordinates(x, x -&gt; x^3))
 
     coordinates {
     (1, 1)
@@ -25,47 +25,47 @@ julia&gt; pgf.print_tex(pgf.Coordinates(x, x -&gt; x^3))
     (3, 27)
     }
 
-julia&gt; pgf.print_tex(pgf.Coordinates([(1.0, 2.0), (2.0, 4.0)]))
+julia&gt; print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))
     coordinates {
     (1.0, 2.0)
     (2.0, 4.0)
     }
 
-julia&gt; c = pgf.Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);
+julia&gt; c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);
 
-julia&gt; pgf.print_tex(c)
+julia&gt; print_tex(c)
     coordinates {
     (1, 2)+-(0.2, 0.2)
     (2, 4)+-(0.3, 0.1)
     (3, 8)+-(0.5, 0.5)
-    }</code></pre><h3><a class="nav-anchor" id="Expression-1" href="#Expression-1"><code>Expression</code></a></h3><p>An <code>Expression</code> is a string, representing a function and is written in a way LaTeX understands.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; ex = pgf.Expression(&quot;exp(-x^2)&quot;);
+    }</code></pre><h3><a class="nav-anchor" id="Expression-1" href="#Expression-1"><code>Expression</code></a></h3><p>An <code>Expression</code> is a string, representing a function and is written in a way LaTeX understands.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; ex = Expression(&quot;exp(-x^2)&quot;);
 
-julia&gt; pgf.print_tex(ex)
-    {exp(-x^2)}</code></pre><h3><a class="nav-anchor" id="Table-X-1" href="#Table-X-1"><code>Table</code> - <code>X</code></a></h3><p>A table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the .tex file.</p><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; t = pgf.Table(&quot;data.dat&quot;, &quot;x&quot; =&gt; &quot;Dof&quot;);
+julia&gt; print_tex(ex)
+    {exp(-x^2)}</code></pre><h3><a class="nav-anchor" id="Table-X-1" href="#Table-X-1"><code>Table</code> - <code>X</code></a></h3><p>A table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the .tex file.</p><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; t = Table(&quot;data.dat&quot;, &quot;x&quot; =&gt; &quot;Dof&quot;);
 
-julia&gt; pgf.print_tex(t)
+julia&gt; print_tex(t)
     table [x={Dof}]
-    {data.dat}</code></pre><p>Inline data is constructed using a keyword constructor:</p><pre><code class="language-julia-repl">julia&gt; t = pgf.Table(&quot;x&quot; =&gt; &quot;Dof&quot;, &quot;y&quot; =&gt; &quot;Err&quot;; Dof = rand(3), Err = rand(3));
+    {data.dat}</code></pre><p>Inline data is constructed using a keyword constructor:</p><pre><code class="language-julia-repl">julia&gt; t = Table(&quot;x&quot; =&gt; &quot;Dof&quot;, &quot;y&quot; =&gt; &quot;Err&quot;; Dof = rand(3), Err = rand(3));
 
-julia&gt; pgf.print_tex(t)
+julia&gt; print_tex(t)
     table [x={Dof}, y={Err}]
     {Dof    Err
     0.6073590230719768    0.36281513247882136
     0.7285438246638971    0.11629575623266741
     0.29590973933842424    0.9782972101143201
-    }</code></pre><p>If you load the DataFrames package, you can also create tables from data frames, see the TODO</p><h3><a class="nav-anchor" id="Graphics-X-1" href="#Graphics-X-1">Graphics - <code>X</code></a></h3><p><code>Graphics</code> data simply wraps an image like a .png. It is constructed as <code>Graphics(filepath)</code> where <code>filepath</code> is the path to the image.</p><p>Example:</p><pre><code class="language-juliadoctest">julia&gt; pgf.print_tex(pgf.Graphics(&quot;img.png&quot;))
+    }</code></pre><p>If you load the DataFrames package, you can also create tables from data frames, see the TODO</p><h3><a class="nav-anchor" id="Graphics-X-1" href="#Graphics-X-1">Graphics - <code>X</code></a></h3><p><code>Graphics</code> data simply wraps an image like a .png. It is constructed as <code>Graphics(filepath)</code> where <code>filepath</code> is the path to the image.</p><p>Example:</p><pre><code class="language-juliadoctest">julia&gt; print_tex(Graphics(&quot;img.png&quot;))
     graphics []
-    {img.png}</code></pre><h2><a class="nav-anchor" id="Plots-1" href="#Plots-1">Plots</a></h2><p>A plot is an element inside an axis. It could be a simple line or a 3d surface etc. A plot is created by wrapping one of the structs shown above.</p><h3><a class="nav-anchor" id="Plot-X-1" href="#Plot-X-1"><code>Plot</code> - <code>X</code></a></h3><p>A keyword argument <code>incremental::Bool</code> is used to determine if <code>\addplot+</code> (default) should be used or <code>\addplot</code>.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; p = pgf.@pgf pgf.Plot(pgf.Table(&quot;plotdata/invcum.dat&quot;), { blue }; incremental = false);
+    {img.png}</code></pre><h2><a class="nav-anchor" id="Plots-1" href="#Plots-1">Plots</a></h2><p>A plot is an element inside an axis. It could be a simple line or a 3d surface etc. A plot is created by wrapping one of the structs shown above.</p><h3><a class="nav-anchor" id="Plot-X-1" href="#Plot-X-1"><code>Plot</code> - <code>X</code></a></h3><p>A keyword argument <code>incremental::Bool</code> is used to determine if <code>\addplot+</code> (default) should be used or <code>\addplot</code>.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; p = @pgf Plot(Table(&quot;plotdata/invcum.dat&quot;), { blue }; incremental = false);
 
-julia&gt; pgf.print_tex(p)
+julia&gt; print_tex(p)
     \addplot[blue]
         table []
         {plotdata/invcum.dat}
     ;</code></pre><h3><a class="nav-anchor" id="Plot3-X-1" href="#Plot3-X-1"><code>Plot3</code> - <code>X</code></a></h3><p><code>Plot3</code> will use the <code>\addplot3</code> command instead of <code>\addplot</code> to draw 3d graphics. Otherwise it works the same as <code>Plot</code>.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; x, y, z = rand(3), rand(3), rand(3);
 
-julia&gt; p = pgf.@pgf pgf.Plot3(pgf.Coordinates(x,y,z), { very_thick })
+julia&gt; p = @pgf Plot3(Coordinates(x,y,z), { very_thick })
 
-julia&gt; pgf.print_tex(p)
+julia&gt; print_tex(p)
     \addplot3+[very thick]
         coordinates {
         (0.7399041050338018, 0.4333342656950161, 0.31102760595379864)
@@ -74,22 +74,22 @@ julia&gt; pgf.print_tex(p)
         }
     ;</code></pre><h2><a class="nav-anchor" id="Axis-like-1" href="#Axis-like-1">Axis-like</a></h2><h3><a class="nav-anchor" id="Axis-X-1" href="#Axis-X-1"><code>Axis</code> - <code>X</code></a></h3><p><code>Axis</code> make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as</p><pre><code class="language-tex">\begin{axis}[...]
     ...
-\end{axis}</code></pre><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; pgf.@pgf a = pgf.Axis( pgf.Plot( pgf.Expression(&quot;x^2&quot;)), {
+\end{axis}</code></pre><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis( Plot( Expression(&quot;x^2&quot;)), {
               xlabel = &quot;x&quot;
               ylabel = &quot;y&quot;
               title = &quot;Figure&quot;
           })
 
-julia&gt; pgf.print_tex(a)
+julia&gt; print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
         \addplot+[]
             {x^2}
         ;
     \end{axis}
 
-julia&gt; push!(a, pgf.Plot( pgf.Table(&quot;data.dat&quot;)));
+julia&gt; push!(a, Plot( Table(&quot;data.dat&quot;)));
 
-julia&gt; pgf.print_tex(a)
+julia&gt; print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
         \addplot+[]
             {x^2}
@@ -98,13 +98,13 @@ julia&gt; pgf.print_tex(a)
             table []
             {data.dat}
         ;
-    \end{axis}</code></pre><p>Any struct can be pushed in to an <code>Axis</code>. What will be printed is the result of <code>PGFPlotsX.print_tex(io::IO, t::T, ::Axis)</code> where <code>T</code> is the type of the struct. Pushed strings are written out verbatim.</p><h3><a class="nav-anchor" id="GroupPlot-X-1" href="#GroupPlot-X-1"><code>GroupPlot</code> - <code>X</code></a></h3><p>A <code>GroupPlot</code> is a way of grouping multiple plots in one figure.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.@pgf gp = pgf.GroupPlot({group_style = { group_size = &quot;2 by 1&quot;,}, height = &quot;6cm&quot;, width = &quot;6cm&quot;});
+    \end{axis}</code></pre><p>Any struct can be pushed in to an <code>Axis</code>. What will be printed is the result of <code>PGFPlotsX.print_tex(io::IO, t::T, ::Axis)</code> where <code>T</code> is the type of the struct. Pushed strings are written out verbatim.</p><h3><a class="nav-anchor" id="GroupPlot-X-1" href="#GroupPlot-X-1"><code>GroupPlot</code> - <code>X</code></a></h3><p>A <code>GroupPlot</code> is a way of grouping multiple plots in one figure.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; @pgf gp = GroupPlot({group_style = { group_size = &quot;2 by 1&quot;,}, height = &quot;6cm&quot;, width = &quot;6cm&quot;});
 
 julia&gt; for (expr, data) in zip([&quot;x^2&quot;, &quot;exp(x)&quot;], [&quot;data1.dat&quot;, &quot;data2.dat&quot;])
-           push!(gp, [pgf.Plot(pgf.Expression(expr)),  pgf.Plot(pgf.Table(data))])
+           push!(gp, [Plot(Expression(expr)),  Plot(Table(data))])
        end;
 
-julia&gt; pgf.print_tex(gp)
+julia&gt; print_tex(gp)
     \begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]
         \nextgroupplot[]
 
@@ -124,13 +124,13 @@ julia&gt; pgf.print_tex(gp)
             table []
             {data2.dat}
         ;
-    \end{groupplot}</code></pre><p>In order to add options to the <code>\nextgroupplot</code> call simply add arguments in an &quot;option like way&quot; (using strings / pairs / <code>@pgf</code>) when you <code>push!</code></p><pre><code class="language-julia-repl">julia&gt; pgf.@pgf gp = pgf.GroupPlot({group_style = { group_size = &quot;1 by 1&quot;,}, height = &quot;6cm&quot;, width = &quot;6cm&quot;});
+    \end{groupplot}</code></pre><p>In order to add options to the <code>\nextgroupplot</code> call simply add arguments in an &quot;option like way&quot; (using strings / pairs / <code>@pgf</code>) when you <code>push!</code></p><pre><code class="language-julia-repl">julia&gt; @pgf gp = GroupPlot({group_style = { group_size = &quot;1 by 1&quot;,}, height = &quot;6cm&quot;, width = &quot;6cm&quot;});
 
-julia&gt; pgf.@pgf for (expr, data) in zip([&quot;x^2&quot;], [&quot;data2.dat&quot;])
-           push!(gp, [pgf.Plot(pgf.Expression(expr)),  pgf.Plot(pgf.Table(data))], {title = &quot;Data $data&quot;})
+julia&gt; @pgf for (expr, data) in zip([&quot;x^2&quot;], [&quot;data2.dat&quot;])
+           push!(gp, [Plot(Expression(expr)),  Plot(Table(data))], {title = &quot;Data $data&quot;})
        end;
 
-julia&gt; pgf.print_tex(gp)
+julia&gt; print_tex(gp)
     \begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]
         \nextgroupplot[title={Data data2.dat}]
 
@@ -141,10 +141,10 @@ julia&gt; pgf.print_tex(gp)
             table []
             {data2.dat}
         ;
-    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.PolarAxis( pgf.Plot( pgf.Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))</code></pre><h3><a class="nav-anchor" id="Legend-1" href="#Legend-1"><code>Legend</code></a></h3><p>A <code>Legend</code> can be used to add legends to plots.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; pgf.print_tex(pgf.Legend([&quot;Plot A&quot;, &quot;Plot B&quot;]))
-\legend{Plot A, Plot B}</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = pgf.TikzPicture( pgf.Axis( pgf.Plot( pgf.Coordinates(rand(5), rand(5)))), &quot;scale&quot; =&gt; 1.5)
+    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))</code></pre><h3><a class="nav-anchor" id="Legend-1" href="#Legend-1"><code>Legend</code></a></h3><p>A <code>Legend</code> can be used to add legends to plots.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; print_tex(Legend([&quot;Plot A&quot;, &quot;Plot B&quot;]))
+\legend{Plot A, Plot B}</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = TikzPicture( Axis( Plot( Coordinates(rand(5), rand(5)))), &quot;scale&quot; =&gt; 1.5)
 
-julia&gt; pgf.print_tex(tp)
+julia&gt; print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
     \begin{axis}[]
         \addplot+[]
@@ -157,6 +157,6 @@ julia&gt; pgf.print_tex(tp)
             }
         ;
     \end{axis}
-\end{tikzpicture}</code></pre><h2><a class="nav-anchor" id="TikzDocument-1" href="#TikzDocument-1"><code>TikzDocument</code></a></h2><p>A <code>TikzDocument</code> is the highest level object and represents a whole .tex file. It includes a list of objects that will sit between <code>\begin{document}</code> and <code>\end{document}</code>.</p><p>A very simple example where we simply create a <code>TikzDocument</code> with a string in is shown below. Normally you would also push <code>Axis</code>&#39;s that contain plots.</p><pre><code class="language-julia-repl">julia&gt; td = pgf.TikzDocument();
+\end{tikzpicture}</code></pre><h2><a class="nav-anchor" id="TikzDocument-1" href="#TikzDocument-1"><code>TikzDocument</code></a></h2><p>A <code>TikzDocument</code> is the highest level object and represents a whole .tex file. It includes a list of objects that will sit between <code>\begin{document}</code> and <code>\end{document}</code>.</p><p>A very simple example where we simply create a <code>TikzDocument</code> with a string in is shown below. Normally you would also push <code>Axis</code>&#39;s that contain plots.</p><pre><code class="language-julia-repl">julia&gt; td = TikzDocument();
 
 julia&gt; push!(td, &quot;Hello World&quot;)</code></pre><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>There is usually no need to explicitly create a <code>TikzDocument</code> or <code>TikzPicture</code>. Only do this if you want to give special options to them. It is possible to show or save an <code>Axis</code> or e.g. a <code>Plot</code> directly, and they will then be wrapped in the default &quot;higher level&quot; objects.</p></div></div><footer><hr/><a class="previous" href="options.html"><span class="direction">Previous</span><span class="title">Defining options</span></a><a class="next" href="save.html"><span class="direction">Next</span><span class="title">Showing / Exporting figures</span></a></footer></article></body></html>
