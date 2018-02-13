@@ -9,7 +9,7 @@ function (T::Type{<:AxisLike})(plots::AbstractVector, args::Vararg{PGFOption})
 end
 
 (T::Type{<:AxisLike})(plot, args::Vararg{PGFOption}) = T([plot], dictify(args))
-(T::Type{<:AxisLike})(options::OrderedDict, element) = T(element, options)
+(T::Type{<:AxisLike})(options::Options, element) = T(element, options)
 
 function (T::Type{<:AxisLike})(args::Vararg{PGFOption})
     T([], args...)
@@ -42,10 +42,10 @@ _in_between(::Any, ::Any) = ""
 
 struct Axis <: AxisLike
     plots::Vector{Any}
-    options::OrderedDict{Any, Any}
+    options::Options
 
     # get rid of default constructor or ambiguities
-    Axis(v::Vector, o::OrderedDict{Any, Any}) = new(v, o)
+    Axis(v::Vector, o::Options) = new(v, o)
 end
 
 _tex_name(::Axis) = "axis"
@@ -56,12 +56,12 @@ _tex_name(::Axis) = "axis"
 
 struct GroupPlot <: AxisLike
     plots::Vector{Any}
-    axisoptions::Vector{OrderedDict{Any, Any}}
-    options::OrderedDict{Any, Any}
-    # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
+    axisoptions::Vector{Options}
+    options::Options
+    # nextgroupplot::Vector{Options} # options for \nextgroupplot
     # get rid of default constructor or ambiguities
-    GroupPlot(v::Vector, o::OrderedDict{Any, Any}) = new(convert(Vector{Any}, v), [OrderedDict() for i in 1:length(v)], o)
-    GroupPlot(o::OrderedDict{Any, Any}) = new(Any[], OrderedDict{Any, Any}[], o)
+    GroupPlot(v::Vector, o::Options) = new(convert(Vector{Any}, v), [Options() for i in 1:length(v)], o)
+    GroupPlot(o::Options) = new(Any[], Options[], o)
 end
 
 function print_tex(io::IO, v::Vector, gp::GroupPlot)
@@ -70,7 +70,7 @@ function print_tex(io::IO, v::Vector, gp::GroupPlot)
     end
 end
 
-Base.push!(gp::GroupPlot, plot) = (push!(gp.plots, plot); push!(gp.axisoptions, OrderedDict()); gp)
+Base.push!(gp::GroupPlot, plot) = (push!(gp.plots, plot); push!(gp.axisoptions, Options()); gp)
 Base.push!(gp::GroupPlot, plot, args...) = (push!(gp.plots, plot); push!(gp.axisoptions, dictify(args)); gp)
 
 _tex_name(::GroupPlot) = "groupplot"
@@ -88,10 +88,10 @@ end
 
 struct PolarAxis <: AxisLike
     plots::Vector{Any}
-    options::OrderedDict{Any, Any}
-    # nextgroupplot::Vector{OrderedDict{Any, Any}} # options for \nextgroupplot
+    options::Options
+    # nextgroupplot::Vector{Options} # options for \nextgroupplot
     # get rid of default constructor or ambiguities
-    PolarAxis(v::Vector, o::OrderedDict{Any, Any}) = new(convert(Vector{Any}, v), o)
+    PolarAxis(v::Vector, o::Options) = new(convert(Vector{Any}, v), o)
 end
 
 _tex_name(::PolarAxis) = "polaraxis"

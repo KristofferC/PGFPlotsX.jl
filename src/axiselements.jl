@@ -4,7 +4,7 @@
 
 struct Plot <: AxisElement
     elements::AbstractVector{Any}
-    options::OrderedDict{Any, Any}
+    options::Options
     label
     incremental::Bool
     _3d::Bool
@@ -21,10 +21,10 @@ function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, lab
     Plot(element, dictify(args), label, incremental, true)
 end
 
-Plot(options::OrderedDict, element; kwargs...) = Plot(element, options; kwargs...)
+Plot(options::Options, element; kwargs...) = Plot(element, options; kwargs...)
 Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
 Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
-Plot3(options::OrderedDict, element; kwargs...) = Plot3(element, options; kwargs...)
+Plot3(options::Options, element; kwargs...) = Plot3(element, options; kwargs...)
 
 function save(filename::String, plot::Plot; kwargs...)
     save(filename, Axis(plot); kwargs...)
@@ -325,11 +325,11 @@ expand_scanlines(v::Vector{Int}, _) = v
 expand_scanlines(itr, _) = collect(Int, itr)
 
 struct Table <: OptionType
-    options::OrderedDict{Any, Any}
+    options::Options
     data::AbstractMatrix
     colnames::Union{Void, Vector{String}}
     scanlines::AbstractVector{Int}
-    function Table(options::OrderedDict{Any, Any}, data::AbstractMatrix,
+    function Table(options::Options, data::AbstractMatrix,
                    colnames::Union{Void, Vector{String}},
                    scanlines::AbstractVector{Int})
         nrow, ncol = size(data)
@@ -356,8 +356,7 @@ this can be used for skipping coordinates or implicitly defining the dimensions
 of a matrix for `surf` and `mesh` plots. They are expanded using
 [`expand_scanlines`](@ref).
 """
-function Table(options::OrderedDict{Any, Any}, data::AbstractMatrix,
-               colnames, scanlines)
+function Table(options::Options, data::AbstractMatrix, colnames, scanlines)
     Table(options, data,
           colnames ≡ nothing ? colnames : collect(String, colnames),
           expand_scanlines(scanlines, size(data, 1)))
@@ -444,11 +443,11 @@ end
 [`table_fields`](@ref) is used to convert the arguments after options. See its
 methods for possible conversions.
 """
-Table(options::OrderedDict{Any, Any}, args...; kwargs...) =
+Table(options::Options, args...; kwargs...) =
     Table(options, table_fields(args...; kwargs...)...)
 
 Table(args...; kwargs...) =
-    Table(OrderedDict{Any, Any}(), table_fields(args...; kwargs...)...)
+    Table(Options(), table_fields(args...; kwargs...)...)
 
 function print_tex(io_main::IO, table::Table)
     @unpack options, data, colnames, scanlines = table
@@ -489,7 +488,7 @@ Placeholder for a table for which data is read directly from a file. Use the
 [`Table`](@ref) constructor.
 """
 struct TableFile <: OptionType
-    options::OrderedDict{Any, Any}
+    options::Options
     path::AbstractString
 end
 
@@ -501,10 +500,9 @@ accepted format.
 
 If you don't use an absolute path, it will be converted to one.
 """
-Table(options::OrderedDict{Any, Any}, path::AbstractString) =
-    TableFile(options, abspath(path))
+Table(options::Options, path::AbstractString) = TableFile(options, abspath(path))
 
-Table(path::AbstractString) = Table(OrderedDict{Any, Any}(), path)
+Table(path::AbstractString) = Table(Options(), path)
 
 function print_tex(io_main::IO, tablefile::TableFile)
     @unpack options, path = tablefile
@@ -521,7 +519,7 @@ end
 
 struct Graphics <: OptionType
     filename::String
-    options::OrderedDict{Any, Any}
+    options::Options
 end
 
 function Graphics(filename::String, args::Vararg{PGFOption})

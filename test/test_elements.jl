@@ -87,10 +87,8 @@ end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = Table(OrderedDict{Any, Any}(), hcat(1:10, 11:20),
-                                  ["a", "b"], Int[])
-    table_unnamed_noopt = Table(OrderedDict{Any, Any}(), hcat(1:10, 11:20),
-                                    nothing, Int[])
+    table_named_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_unnamed_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), nothing, Int[])
     opt = @pgf { meaningless = "option" }
     table_named_opt = Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
 
@@ -112,19 +110,19 @@ end
 
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
-        @test Table(x, y, z) ≅ Table(OrderedDict{Any, Any}(),
+        @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
                                              hcat(PGFPlotsX.matrix_xyz(x, y, z)...),
                                              ["x", "y", "z"], 10)
     end
 
     # dataframe
     @test Table(DataFrame(a = 1:5, b = 6:10)) ≅
-        Table(OrderedDict{Any, Any}(), hcat(1:5, 6:10), ["a", "b"], 0)
+        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), ["a", "b"], 0)
 
     # can't determine if it is named or unnamed
     @test_throws ArgumentError Table([1:10, :a => 11:20])
 
-    @test squashed_repr_tex(Table(OrderedDict{Any, Any}(),
+    @test squashed_repr_tex(Table(PGFPlotsX.Options(),
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
