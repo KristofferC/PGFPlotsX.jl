@@ -111,7 +111,7 @@ end
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
         @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
-                                             hcat(PGFPlotsX..matrix_xyz(x, y, z)...),
+                                             hcat(PGFPlotsX.matrix_xyz(x, y, z)...),
                                              ["x", "y", "z"], 10)
     end
 
