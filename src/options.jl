@@ -4,7 +4,7 @@ Options passed to `pgfplots` for various structures (`table`, `plot`, etc).
 Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Also
 see the [`@pgf`](@ref) convenience macro.
 """
-const Options = OrderedDict
+const Options = OrderedDict{Any, Any}
 
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
