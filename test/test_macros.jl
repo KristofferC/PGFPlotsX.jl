@@ -13,7 +13,7 @@ end
 
 # test the @pgf macro
 
-od(args...) =  pgf.Options(args...)
+od(args...) =  PGFPlotsX.Options(args...)
 
 @testset "pgf tests" begin
     a = 1
