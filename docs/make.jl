@@ -19,6 +19,7 @@ makedocs(
         "Examples" => [
             "examples/coordinates.md",
             "examples/tables.md",
+            "examples/axislike.md",
             "examples/gallery.md",
             "examples/juliatypes.md"
         ]

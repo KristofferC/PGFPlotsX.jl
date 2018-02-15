@@ -80,8 +80,7 @@ f(x, y) = (1 - x)^2 + 100*(y - x^2)^2
     {
         surf,
     },
-    Coordinates(x, y, f.(x, y'));
-    incremental = false
+    Coordinates(x, y, f.(x, y'))
 )
 savefigs("coordinates-3d-matrix", ans) # hide
 ```
@@ -104,8 +103,7 @@ y = linspace(-0.5, 3, 50)
             surf,
             shader = "flat",
         },
-        Coordinates(x, y, @. √(f(x, y')));
-        incremental = false
+        Coordinates(x, y, @. √(f(x, y')))
     )
 )
 savefigs("coordinates-3d-matrix-heatmap", ans) # hide

@@ -1,55 +1,3 @@
-########
-# Plot #
-########
-
-struct Plot <: AxisElement
-    elements::AbstractVector{Any}
-    options::Options
-    label
-    incremental::Bool
-    _3d::Bool
-end
-
-Base.push!(plot::Plot, element) = (push!(plot.elements, element); plot)
-Base.append!(plot::Plot, element) = (append!(plot.elements, element); plot)
-
-function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(elements, dictify(args), label, incremental, false)
-end
-
-function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(element, dictify(args), label, incremental, true)
-end
-
-Plot(options::Options, element; kwargs...) = Plot(element, options; kwargs...)
-Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
-Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
-Plot3(options::Options, element; kwargs...) = Plot3(element, options; kwargs...)
-
-function save(filename::String, plot::Plot; kwargs...)
-    save(filename, Axis(plot); kwargs...)
-end
-
-function print_tex(io_main::IO, p::Plot)
-    print_indent(io_main) do io
-        print(io, "\\addplot")
-        if p._3d
-            print(io, "3")
-        end
-        if p.incremental
-            print(io, "+")
-        end
-        print_options(io, p.options)
-        for element in p.elements
-            print_tex(io, element, p)
-        end
-        print(io, ";")
-        if p.label != nothing
-            print(io, "\n\\addlegendentry{$(p.label)}")
-        end
-    end
-end
-
 ##############
 # Expression #
 ##############
@@ -531,6 +479,101 @@ function print_tex(io_main::IO, t::Graphics)
         print(io, "graphics ")
         print_options(io, t.options)
         print(io, "{", t.filename, "}")
+    end
+end
+
+########
+# Plot #
+########
+
+"""
+Default setting for the `incremental` flag of `Plot` and `Plot3`.
+"""
+const INCREMENTAL = false
+
+"Types accepted by `Plot` for the field `data`."
+const PlotData = Union{Coordinates, Table, TableFile, Expression, Graphics}
+
+"""
+$(TYPEDEF)
+
+Corresponds to the `\\addplot[3][+]` family of `pgfplot` commands.
+
+The 1-4+ argument outer constructors `Plot` and `Plot3` should be used in user
+code.
+"""
+struct Plot <: OptionType
+    is3d::Bool
+    incremental::Bool
+    options::Options
+    data::PlotData
+    trailing::AbstractVector{Any} # FIXME can/should we be more specific?
+end
+
+Plot(is3d::Bool, incremental::Bool, options::Options, data::PlotData,
+     trailing::Tuple) = Plot(is3d, incremental, options, data, collect(trailing))
+
+Base.push!(plot::Plot, element) = (push!(plot.trailing, element); plot)
+Base.append!(plot::Plot, element) = (append!(plot.trailing, element); plot)
+
+"""
+    Plot([incremental::Bool], [options::Options], data, trailing...)
+
+A plot with the given `data` (eg [`Coordinates`](@ref), [`Table`](@ref),
+[`Expression`](@ref), …) and `options`, which is empty by default.
+
+When `incremental` (defaults to $(INCREMENTAL)), use the `\\addplot+` form, which
+takes styles from the `cycle list` of `pgfplots`, otherwise `\\addplot`.
+
+`trailing` can be used to provide *trailing path commands* (eg `\\closedcycle`,
+see the `pgfplots` manual), which are emitted using `print_tex`, before the
+terminating `;`.
+"""
+Plot(incremental::Bool, options::Options, data::PlotData, trailing...) =
+    Plot(false, incremental, options, data, trailing)
+
+Plot(options::Options, data::PlotData, trailing...) =
+    Plot(false, INCREMENTAL, options, data, trailing)
+
+Plot(incremental::Bool, data::PlotData, trailing...) =
+    Plot(false, incremental, Options(), data, trailing)
+
+Plot(data::PlotData, trailing...) =
+    Plot(false, INCREMENTAL, Options(), data, trailing)
+
+"""
+    Plot3([incremental::Bool], [options::Options], data, trailing...)
+
+Same as [`Plot(::Bool, ::Options, ::PlotData, ...)`](@ref), but for 3D plots.
+"""
+Plot3(incremental::Bool, options::Options, data::PlotData, trailing...) =
+    Plot(true, incremental, options, data, trailing)
+
+Plot3(options::Options, data::PlotData, trailing...) =
+    Plot(true, INCREMENTAL, options, data, trailing)
+
+Plot3(incremental::Bool, data::PlotData, trailing...) =
+    Plot(true, incremental, Options(), data, trailing)
+
+Plot3(data::PlotData, trailing...) =
+    Plot(true, INCREMENTAL, Options(), data, trailing)
+
+function save(filename::String, plot::Plot; kwargs...)
+    save(filename, Axis(plot); kwargs...)
+end
+
+function print_tex(io_main::IO, plot::Plot)
+    print_indent(io_main) do io
+        @unpack is3d, incremental, options, data, trailing = plot
+        print(io, "\\addplot")
+        is3d && print(io, "3")
+        incremental && print(io, "+")
+        print_options(io, options)
+        print_tex(io, data)
+        for t in trailing
+            print_tex(io, t)
+        end
+        print(io, ";")
     end
 end
 

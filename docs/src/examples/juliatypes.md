@@ -24,13 +24,14 @@ using Colors
 axis = Axis()
 @pgf for (i, col) in enumerate(distinguishable_colors(10))
     offset = i * 50
-    p = Plot(Expression("exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset"),
-    {
-        color = col,
-        domain = "-3*$σ:3*$σ",
-        style = { ultra_thick },
-        samples = 50
-    }; incremental = false)
+    p = Plot(
+        {
+            color = col,
+            domain = "-3*$σ:3*$σ",
+            style = { ultra_thick },
+            samples = 50
+        },
+        Expression("exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset"))
     push!(axis, p)
 end
 axis
@@ -45,15 +46,13 @@ Using a colormap
 
 ```@example pgf
 using Colors
-@pgf begin
-p = Plot3(
-    Expression("cos(deg(x)) * sin(deg(y))"),
+p = @pgf Plot3(
     {
         surf,
         point_meta = "y",
         samples = 13
-    };
-    incremental = false
+    },
+    Expression("cos(deg(x)) * sin(deg(y))")
 )
 colormaps = ["Blues", "Greens", "Oranges", "Purples"]
 td = TikzDocument()
@@ -63,13 +62,11 @@ end
 
 tp = TikzPicture("scale" => 0.5)
 push!(td, tp)
-gp = GroupPlot({ group_style = {group_size = "2 by 2"}})
+gp = @pgf GroupPlot({ group_style = {group_size = "2 by 2"}})
 push!(tp, gp)
 
 for cmap in colormaps
-    push!(gp, p, { colormap_name = cmap })
-end
-
+    @pgf push!(gp, { colormap_name = cmap }, p)
 end
 savefigs("colormap", td) # hide
 ```
@@ -108,12 +105,13 @@ df = dataset("datasets", "iris") # load the dataset
             {
                 x = "SepalLength",
                 y = "SepalWidth",
-                meta = "Species" },
+                meta = "Species"
+            },
             df, # <--- Creating a Table from a DataFrame
         )
     ),
-    Legend(["Setosa", "Versicolor", "Virginica"])
-    ]
+     Legend(["Setosa", "Versicolor", "Virginica"])
+     ]
 )
 savefigs("dataframes", ans) # hide
 ```
@@ -133,11 +131,10 @@ x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -> sin(x)*sin(y)
 @pgf Plot({
-                      contour_prepared,
-                      very_thick
-                  },
-                  Table(contours(x, y, f.(x, y'), 6));
-                  incremental = false)
+        contour_prepared,
+        very_thick
+    },
+    Table(contours(x, y, f.(x, y'), 6)))
 savefigs("contour", ans) # hide
 ```
 
@@ -151,17 +148,18 @@ savefigs("contour", ans) # hide
 
 ```@example pgf
 using StatsBase: Histogram, fit
-Axis(Plot(Table(fit(Histogram, randn(100), closed = :left));
-                  incremental = false),
-         @pgf {
-             "ybar interval",
-             "xticklabel interval boundaries",
-             xticklabel = raw"$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$",
-             "xticklabel style" =
-             {
-                 font = raw"\tiny"
-             }
-         })
+@pgf Axis(
+    {
+        "ybar interval",
+        "xticklabel interval boundaries",
+        xmajorgrids = false,
+        xticklabel = raw"$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$",
+        "xticklabel style" =
+        {
+            font = raw"\tiny"
+        },
+    },
+    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))
 savefigs("histogram-1d", ans) # hide
 ```
 
@@ -171,7 +169,9 @@ savefigs("histogram-1d", ans) # hide
 
 ```@example pgf
 using StatsBase: Histogram, fit
-h = fit(Histogram, (randn(1000), randn(1000)), closed = :left)
+w = linspace(-1, 1, 100) .^ 3
+xy = vec(tuple.(w, w'))
+h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
 @pgf Axis(
     {
         view = (0, 90),
@@ -184,9 +184,7 @@ h = fit(Histogram, (randn(1000), randn(1000)), closed = :left)
             shader = "flat",
 
         },
-        Table(h);
-        incremental = false
-    )
+        Table(h))
 )
 savefigs("histogram-2d", ans) # hide
 ```
