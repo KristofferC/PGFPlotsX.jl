@@ -1,6 +1,12 @@
 # Building up figures
 
-This section presents the structs used in PGFPlotsX to build up figures. An `X` after the struct name means that it supports option as described in
+```@meta
+DocTestSetup = quote
+    using PGFPlotsX
+end
+```
+
+This section presents the structs used in PGFPlotsX to build up figures. An `X` after the struct name means that it supports option as described in the section on defining options.
 
 ## Data
 
@@ -12,10 +18,9 @@ Coordinates a are a list of points `(x,y)` or `(x,y,z)`. They can be created as:
 
 * `Coordinates(x, y, [z])` where `x` and `y` (and optionally `z`) are lists.
 
-* `Coordinates(x, f2)` or `Coordinates(x, y, f3)` where `x` and `y` are lists and `f2`, `f3` are functions taking one and two arguments respectively.
 * `Coordinates(points)` where `points` is a list of tuples, e.g. `x = [(1.0, 2.0), (2.0, 4.0)]`.
 
-For two dimensional coordinates, errors can be added to `Coordinates` with the keywords:
+For two-dimensional coordinates, errors can be added to `Coordinates` with the keywords:
 
     * `xerror`, `yerror` for symmetric errors
     * `xerrorplus` `yerrorplus` for positive errors
@@ -40,7 +45,7 @@ julia> print_tex(Coordinates(x, y, z))
     (3, 8, -3)
     }
 
-julia> print_tex(Coordinates(x, x -> x^3))
+julia> print_tex(Coordinates(x, x.^3))
 
     coordinates {
     (1, 1)
@@ -58,12 +63,11 @@ julia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5])
 
 julia> print_tex(c)
     coordinates {
-    (1, 2)+-(0.2, 0.2)
-    (2, 4)+-(0.3, 0.1)
-    (3, 8)+-(0.5, 0.5)
+    (1, 2) +- (0.2, 0.2)
+    (2, 4) +- (0.3, 0.1)
+    (3, 8) +- (0.5, 0.5)
     }
 ```
-
 
 ### `Expression`
 
@@ -84,30 +88,29 @@ A table represents a matrix of data where each column is labeled. It can simply 
 
 Examples:
 
-```jldoctest
-julia> t = Table("data.dat", "x" => "Dof");
+```julia-repl make_into_doctest
+julia> t = @pgf Table({x = "Dof"}, "data.dat");
 
 julia> print_tex(t)
     table [x={Dof}]
-    {data.dat}
+    {<ABSPATH>/data.dat}
 ```
 
 Inline data is constructed using a keyword constructor:
 
 ```jldoctest
-julia> t = Table("x" => "Dof", "y" => "Err"; Dof = rand(3), Err = rand(3));
+julia> t = @pgf Table({x => "Dof", y => "Err"}, [:Dof => [1, 2, 4], :Err => [2.0, 1.0, 0.1]]);
 
 julia> print_tex(t)
     table [x={Dof}, y={Err}]
-    {Dof    Err
-    0.6073590230719768    0.36281513247882136
-    0.7285438246638971    0.11629575623266741
-    0.29590973933842424    0.9782972101143201
+    {Dof  Err
+    1.0  2.0
+    2.0  1.0
+    4.0  0.1
     }
 ```
 
-If you load the DataFrames package, you can also create tables from data frames, see the TODO
-
+If you load the DataFrames package, you can also create tables from data frames, see the examples in [Julia types](@ref).
 
 ### Graphics - `X`
 
@@ -115,7 +118,7 @@ If you load the DataFrames package, you can also create tables from data frames,
 
 Example:
 
-```juliadoctest
+```jldoctest
 julia> print_tex(Graphics("img.png"))
     graphics []
     {img.png}
@@ -131,13 +134,13 @@ A keyword argument `incremental::Bool` is used to determine if `\addplot+` (defa
 
 Example:
 
-```jldoctest
+```julia-repl make_into_doctest
 julia> p = @pgf Plot(Table("plotdata/invcum.dat"), { blue }; incremental = false);
 
 julia> print_tex(p)
     \addplot[blue]
         table []
-        {plotdata/invcum.dat}
+        {<ABSPATH>/plotdata/invcum.dat}
     ;
 ```
 
@@ -149,16 +152,16 @@ Otherwise it works the same as `Plot`.
 Example:
 
 ```jldoctest
-julia> x, y, z = rand(3), rand(3), rand(3);
+julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];
 
-julia> p = @pgf Plot3(Coordinates(x,y,z), { very_thick })
+julia> p = @pgf Plot3(Coordinates(x, y, z), { very_thick });
 
 julia> print_tex(p)
     \addplot3+[very thick]
         coordinates {
-        (0.7399041050338018, 0.4333342656950161, 0.31102760595379864)
-        (0.8533903392895954, 0.4437618168514108, 0.05325494618659876)
-        (0.4871968750637172, 0.09021596022672318, 0.817385325577578)
+        (1, 2, 3)
+        (2, 4, 9)
+        (3, 8, 27)
         }
     ;
 ```
@@ -182,7 +185,7 @@ julia> @pgf a = Axis( Plot( Expression("x^2")), {
               xlabel = "x"
               ylabel = "y"
               title = "Figure"
-          })
+          });
 
 julia> print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
@@ -191,7 +194,8 @@ julia> print_tex(a)
         ;
     \end{axis}
 
-julia> push!(a, Plot( Table("data.dat")));
+julia> push!(a, Plot(Coordinates([1,2], [3,4])));
+
 
 julia> print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
@@ -199,8 +203,10 @@ julia> print_tex(a)
             {x^2}
         ;
         \addplot+[]
-            table []
-            {data.dat}
+            coordinates {
+            (1, 3)
+            (2, 4)
+            }
         ;
     \end{axis}
 ```
@@ -214,7 +220,7 @@ A `GroupPlot` is a way of grouping multiple plots in one figure.
 
 Example:
 
-```jldoctest
+```julia-repl make_into_doctest
 julia> @pgf gp = GroupPlot({group_style = { group_size = "2 by 1",}, height = "6cm", width = "6cm"});
 
 julia> for (expr, data) in zip(["x^2", "exp(x)"], ["data1.dat", "data2.dat"])
@@ -247,7 +253,7 @@ julia> print_tex(gp)
 In order to add options to the `\nextgroupplot` call simply add arguments in
 an "option like way" (using strings / pairs / `@pgf`) when you `push!`
 
-```jldoctest
+```julia-repl make_into_doctest2
 julia> @pgf gp = GroupPlot({group_style = { group_size = "1 by 1",}, height = "6cm", width = "6cm"});
 
 julia> @pgf for (expr, data) in zip(["x^2"], ["data2.dat"])
@@ -275,7 +281,19 @@ A `PolarAxis` plot data on a polar grid.
 Example:
 
 ```jldoctest
-julia> PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])))
+julia> p = PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
+
+julia> print_tex(p)
+    \begin{polaraxis}[]
+        \addplot+[]
+            coordinates {
+            (0, 1)
+            (90, 1)
+            (180, 1)
+            (270, 1)
+            }
+        ;
+    \end{polaraxis}
 ```
 
 ### `Legend`
@@ -296,18 +314,15 @@ A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 Example:
 
 ```jldoctest
-julia> tp = TikzPicture( Axis( Plot( Coordinates(rand(5), rand(5)))), "scale" => 1.5)
+julia> tp = TikzPicture(Axis(Plot(Coordinates([1, 2], [2, 4]))), "scale" => 1.5);
 
 julia> print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
     \begin{axis}[]
         \addplot+[]
             coordinates {
-            (0.019179024805588307, 0.2501519456458139)
-            (0.05113231216989789, 0.9221777779905538)
-            (0.5648080180343429, 0.9586784922834994)
-            (0.5248828812399753, 0.8642592693396507)
-            (0.02943482346303017, 0.7327568460567329)
+            (1, 2)
+            (2, 4)
             }
         ;
     \end{axis}
@@ -325,7 +340,21 @@ Normally you would also push `Axis`'s that contain plots.
 ```julia-repl
 julia> td = TikzDocument();
 
-julia> push!(td, "Hello World")
+julia> push!(td, "Hello World");
+
+julia> print_tex(td)
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+    % Default preamble
+    \usepackage{pgfplots}
+    \pgfplotsset{compat=newest}
+    \usepgfplotslibrary{groupplots}
+    \usepgfplotslibrary{polar}
+    \usepgfplotslibrary{statistics}
+\begin{document}
+    Hello World
+
+\end{document}
 ```
 
 !!! note

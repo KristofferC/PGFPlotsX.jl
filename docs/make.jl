@@ -6,7 +6,7 @@ makedocs(
     modules = [PGFPlotsX],
     format = :html,
     sitename = "PGFPlotsX.jl",
-    doctest = false,
+    doctest = true,
     strict = false,
     pages = Any[
         "Home" => "index.md",
@@ -14,7 +14,6 @@ makedocs(
             "man/options.md",
             "man/structs.md",
             "man/save.md",
-            "man/custom_types.md",
             ],
         "Examples" => [
             "examples/coordinates.md",

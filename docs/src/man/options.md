@@ -1,7 +1,12 @@
 # Defining options
 
+```@meta
+DocTestSetup = quote
+    using PGFPlotsX
+end
+```
 
-In PGFPlots, options are given as a list of keys that might have corresponding values
+In PGFPlots, options are given as a list of keys, that might have corresponding values,
 inside of two square brackets e.g.
 
 ```tex
@@ -10,11 +15,7 @@ inside of two square brackets e.g.
 \end{axis}
 ```
 
-This section shows the method for which to set and retrieve such options.
-
-!!! note
-    Sometimes examples are more telling than documentation so please check out [the examples](https://github.com/KristofferC/PGFPlotsXExamples).
-
+This section shows the method for which to set and retrieve such options in Julia.
 
 ## Setting options when constructing an object
 
@@ -24,12 +25,12 @@ When constructing an object (like a `Plot`), options to that object can be enter
 where a string represents a key without a value (e.g. `"very thick"`) and a pair represents a key/value option, (e.g. `"samples" => 50`).
 This works well when the options are few and there is only one level of options in the object.
 
-```julia-repl
-julia> c = Coordinates([1,2,3], [2, 4, 8]);
+```jldoctest p1
+julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia> p = Plot(c, "very thick", "mark" => "halfcircle")
+julia> p = Plot(c, "very thick", "mark" => "halfcircle");
 
-julia> print_tex(p); # print_tex is typically not called from user code
+julia> print_tex(p); # print_tex can be used to preview the generated .tex
 \addplot+[very thick, mark={halfcircle}]
         coordinates {
         (1, 2)
@@ -46,33 +47,34 @@ Instead, we provide a macro `@pgf` so that options can be entered similarly to h
 
 The previous example is then written as
 
-```julia-repl
-@pgf Plot(c,
-    {
-        very_thick,
-        mark = "halfcircle"
-    })
+```jldoctest p1
+julia> @pgf Plot(
+           {
+               very_thick,
+               mark = "halfcircle"
+           },
+           c);
 ```
 
 A more complicated example is:
 
-```julia-repl
-@pgf a = Axis(Plot(c),
-    {
-        "axis background/.style" =
-        {
-            shade,
-            top_color = "gray",
-            bottom_color = "white",
-        },
-        ymode = "log"
-    }
-)
+```jldoctest p1
+julia> @pgf a = Axis(Plot(c),
+           {
+               "axis background/.style" =
+               {
+                   shade,
+                   top_color = "gray",
+                   bottom_color = "white",
+               },
+               ymode = "log"
+           }
+       );
 ```
 
 which is printed as
 
-```julia-repl
+```jldoctest p1
 julia> print_tex(a)
     \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
         \addplot+[]
@@ -89,7 +91,7 @@ The macro can be applied to any type of expression and will be applied to everyt
 that is of the form `{ expr }`.
 
 !!!note
-    * Keys that contain symbols that in Julia are operators (e.g the key `"axis background/.style"`) has to be entered
+    * Keys that contain symbols that in Julia are operators (e.g the key `"axis background/.style"`) have to be entered
       as strings, as in the example above.
 
 ### Transformations
@@ -104,29 +106,26 @@ The following transformations of keys/values are done when the options are writt
 
 It is sometimes convenient to set and get options after an object has been created.
 
-```julia-repl
-julia> c = Coordinates([1,2,3], [2, 4, 8]);
+```jldoctest
+julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia> p = Plot(c)
+julia> p = Plot(c);
 
 julia> p["fill"] = "blue";
 
-julia> p["fill"];
+julia> p["fill"]
 "blue"
 
 julia> @pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
 
 julia> p["axis background/.style"]["top_color"];
-"gray"
 
-julia> p["very thick"] = nothing # Set a value less options;
+julia> p["very thick"] = nothing # Set a value-less options;
 
 julia> delete!(p, "fill");
 
-julia> p
-
 julia> print_tex(p)
-    \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very tick]
+    \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
         coordinates {
         (1, 2)
         (2, 4)
@@ -137,12 +136,12 @@ julia> print_tex(p)
 
 You can also merge in options that have been separately created using `merge!`
 
-```julia-repl
+```jldoctest
 julia> a = Axis();
 
 julia> @pgf opts =  {xmin = 0, ymax = 1, ybar};
 
-julia> merge!(a, opts)
+julia> merge!(a, opts);
 
 julia> print_tex(a)
     \begin{axis}[xmin={0}, ymax={1}, ybar]
@@ -150,3 +149,4 @@ julia> print_tex(a)
 ```
 
 It is then easy to apply for example a "theme" to an axis where the themed is a set of options already saved.
+Just `merge!` the theme into an `Axis`.
