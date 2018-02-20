@@ -140,17 +140,18 @@ end
 @testset "plot" begin
     # sanity checks for constructors and printing, 2D
     data2 = Table(x = 1:2, y = 3:4)
-    p2 = Plot(false, PGFPlotsX.INCREMENTAL, PGFPlotsX.Options(), data2,
-              [raw"\closedcycle"])
+    p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
         "\\addplot[]\ntable []\n{x y\n1 3\n2 4\n}\n\\closedcycle\n;"
-    @test Plot(PGFPlotsX.INCREMENTAL, @pgf({}), data2, raw"\closedcycle") ≅ p2
     @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
-    @test Plot(PGFPlotsX.INCREMENTAL, data2, raw"\closedcycle") ≅ p2
+    @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
+        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    @test PlotInc(data2, raw"\closedcycle") ≅
+        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test Plot(data2, raw"\closedcycle") ≅ p2
     # printing incremental w/ options, 2D and 3D
-    @test squashed_repr_tex(Plot(true, data2)) ==
+    @test squashed_repr_tex(PlotInc(data2)) ==
         "\\addplot+[]\ntable []\n{x y\n1 3\n2 4\n}\n;"
-    @test squashed_repr_tex(Plot3(true, Table(x = 1:2, y = 3:4, z = 5:6))) ==
+    @test squashed_repr_tex(Plot3Inc(Table(x = 1:2, y = 3:4, z = 5:6))) ==
         "\\addplot3+[]\ntable []\n{x y z\n1 3 5\n2 4 6\n}\n;"
 end

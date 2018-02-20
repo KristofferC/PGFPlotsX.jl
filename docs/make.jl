@@ -8,6 +8,7 @@ makedocs(
     sitename = "PGFPlotsX.jl",
     doctest = false,
     strict = false,
+    checkdocs = :none,
     pages = Any[
         "Home" => "index.md",
         "Manual" => [

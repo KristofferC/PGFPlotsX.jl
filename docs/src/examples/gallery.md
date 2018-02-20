@@ -77,9 +77,9 @@ savefigs("simple-expression", ans) # hide
         grid = "major",
     },
     [
-        Plot(true, Expression("-x^5 - 242")),
-        raw"\addlegendentry{model}",
-        Plot(true, Coordinates(
+        PlotInc(Expression("-x^5 - 242")),
+        LegendEntry("model"),
+        PlotInc(Coordinates(
             [
                 (-4.77778,2027.60977),
                 (-3.55556,347.84069),
@@ -92,7 +92,7 @@ savefigs("simple-expression", ans) # hide
                 (5.00000,-3269.56775),
             ]
         )),
-        raw"\addlegendentry{estimate}"
+        LegendEntry("estimate")
     ]
 )
 savefigs("cost-gain", ans) # hide

@@ -24,11 +24,11 @@ x = linspace(0, 2*pi, 100)
         no_markers
     },
     {},
-    Plot(true, Table(x, sin.(x))),
-    Plot(true, Table(x, sin.(x .+ 0.5))),
+    PlotInc(Table(x, sin.(x))),
+    PlotInc(Table(x, sin.(x .+ 0.5))),
     {},
-    Plot(true, Table(x, cos.(x))),
-    Plot(true, Table(x, cos.(x .+ 0.5))))
+    PlotInc(Table(x, cos.(x))),
+    PlotInc(Table(x, cos.(x .+ 0.5))))
 savefigs("groupplot-multiple", ans) # hide
 ```
 
