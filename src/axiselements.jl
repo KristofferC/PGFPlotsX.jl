@@ -556,7 +556,7 @@ Plot3(data::PlotData, trailing...) =
     Plot(true, false, Options(), data, trailing)
 
 """
-    Plot3([options::Options], data, trailing...)
+    Plot3Inc([options::Options], data, trailing...)
 
 Corresponds to the `\\addplot3+` form in `pgfplots`.
 
