@@ -416,23 +416,19 @@ rgb=(0.23694263026978052,0.01667791951185743,0.40704749910083193)
 \begin{document}
 \begin{tikzpicture}[scale={0.5}]
     \begin{groupplot}[group style={group size={2 by 2}}]
-        \nextgroupplot[colormap name={Blues}]
-        
+    \nextgroupplot[colormap name={Blues}]
         \addplot3[surf, point meta={y}, samples={13}]
             {cos(deg(x)) * sin(deg(y))}
         ;
-        \nextgroupplot[colormap name={Greens}]
-        
+    \nextgroupplot[colormap name={Greens}]
         \addplot3[surf, point meta={y}, samples={13}]
             {cos(deg(x)) * sin(deg(y))}
         ;
-        \nextgroupplot[colormap name={Oranges}]
-        
+    \nextgroupplot[colormap name={Oranges}]
         \addplot3[surf, point meta={y}, samples={13}]
             {cos(deg(x)) * sin(deg(y))}
         ;
-        \nextgroupplot[colormap name={Purples}]
-        
+    \nextgroupplot[colormap name={Purples}]
         \addplot3[surf, point meta={y}, samples={13}]
             {cos(deg(x)) * sin(deg(y))}
         ;

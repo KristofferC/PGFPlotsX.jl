@@ -8,7 +8,7 @@
 \begin{document}
 \begin{tikzpicture}[]
     \begin{axis}[scatter/classes={a={mark={square*}, blue}, b={mark={triangle*}, red}, c={mark={o}, draw={black}}}]
-        \addplot+[scatter, only marks, scatter src={explicit symbolic}]
+        \addplot[scatter, only marks, scatter src={explicit symbolic}]
             table [meta={label}]
             {x  y  label  
             0.1  0.15      a

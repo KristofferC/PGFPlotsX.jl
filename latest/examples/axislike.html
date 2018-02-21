@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Axis-like objects · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../man/options.html">Defining options</a></li><li><a class="toctext" href="../man/structs.html">Building up figures</a></li><li><a class="toctext" href="../man/save.html">Showing / Exporting figures</a></li></ul></li><li><span class="toctext">Examples</span><ul><li><a class="toctext" href="coordinates.html">Coordinates</a></li><li><a class="toctext" href="tables.html">Tables</a></li><li class="current"><a class="toctext" href="axislike.html">Axis-like objects</a><ul class="internal"></ul></li><li><a class="toctext" href="gallery.html">PGFPlots manual gallery</a></li><li><a class="toctext" href="juliatypes.html">Julia types</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Examples</li><li><a href="axislike.html">Axis-like objects</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/axislike.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Axis-like objects</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Axis-like-objects-1" href="#Axis-like-objects-1">Axis-like objects</a></h1><div></div><hr/><div><pre><code class="language-julia">x = linspace(0, 2*pi, 100)
+@pgf GroupPlot(
+    {
+        group_style =
+        {
+            group_size=&quot;2 by 1&quot;,
+            xticklabels_at=&quot;edge bottom&quot;,
+            yticklabels_at=&quot;edge left&quot;
+        },
+        no_markers
+    },
+    {},
+    PlotInc(Table(x, sin.(x))),
+    PlotInc(Table(x, sin.(x .+ 0.5))),
+    {},
+    PlotInc(Table(x, cos.(x))),
+    PlotInc(Table(x, cos.(x .+ 0.5))))</code></pre></div><p><a href="groupplot-multiple.pdf">[.pdf]</a>, <a href="groupplot-multiple.tex">[generated .tex]</a></p><p><img src="groupplot-multiple.svg" alt/></p><footer><hr/><a class="previous" href="tables.html"><span class="direction">Previous</span><span class="title">Tables</span></a><a class="next" href="gallery.html"><span class="direction">Next</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>
