@@ -27,7 +27,7 @@ y = sin.(x)
 You can pass these coordinates in unnamed columns:
 
 ```@example pgf
-Plot(Table([x, y]); incremental = false)
+Plot(Table([x, y]))
 savefigs("table-unnamed-columns", ans) # hide
 ```
 
@@ -38,7 +38,7 @@ savefigs("table-unnamed-columns", ans) # hide
 or named columns:
 
 ```@example pgf
-Plot(Table([:x => x, :y => y]); incremental = false)
+Plot(Table([:x => x, :y => y]))
 savefigs("table-named-columns", ans) # hide
 ```
 
@@ -54,8 +54,7 @@ or rename using options:
         x = "a",
         y = "b",
     },
-    Table([:a => x, :b => y]);
-    incremental = false)
+    Table([:a => x, :b => y]))
 savefigs("table-dict-rename", ans) # hide
 ```
 
@@ -79,8 +78,7 @@ z[z .≤ 0] .= -Inf
             surf,
             shader = "flat",
         },
-        Table(x, x, z);
-        incremental = false
+        Table(x, x, z)
     )
 )
 savefigs("table-jump-3d", ans) # hide

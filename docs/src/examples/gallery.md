@@ -77,8 +77,9 @@ savefigs("simple-expression", ans) # hide
         grid = "major",
     },
     [
-        Plot(Expression("-x^5 - 242"); label = "model")
-        Plot(Coordinates(
+        PlotInc(Expression("-x^5 - 242")),
+        LegendEntry("model"),
+        PlotInc(Coordinates(
             [
                 (-4.77778,2027.60977),
                 (-3.55556,347.84069),
@@ -89,8 +90,9 @@ savefigs("simple-expression", ans) # hide
                 (2.55556,-341.40638),
                 (3.77778,-1169.24780),
                 (5.00000,-3269.56775),
-            ];
-        ); label = "estimate")
+            ]
+        )),
+        LegendEntry("estimate")
     ]
 )
 savefigs("cost-gain", ans) # hide
@@ -305,3 +307,37 @@ savefigs("mesh-scatter", ans) # hide
 
 ![](mesh-scatter.svg)
 
+------------------------
+
+```@example pgf
+# this is an imitation of the figure in the manual, as we generate the data
+x = linspace(0, 10, 100)
+@pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))
+@pgf GroupPlot(
+    {
+        group_style =
+        {
+            group_size="2 by 2",
+            horizontal_sep="0pt",
+            vertical_sep="0pt",
+            xticklabels_at="edge bottom"
+        },
+        xmin = 0,
+        ymin = 0,
+        height = "3.7cm",
+        width = "4cm",
+        no_markers
+    },
+    nothing,
+    {xmin=5, xmax=10, ymin=50, ymax=100},
+    plot,
+    {xmax=5, ymax=50},
+    plot,
+    {xmin=5, xmax=10, ymax=50, yticklabels={}},
+    plot)
+savefigs("groupplot-nested", ans) # hide
+```
+
+[\[.pdf\]](groupplot-nested.pdf), [\[generated .tex\]](groupplot-nested.tex)
+
+![](groupplot-nested.svg)

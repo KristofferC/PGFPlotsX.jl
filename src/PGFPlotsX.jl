@@ -14,8 +14,8 @@ using Requires
 
 export TikzDocument, TikzPicture
 export Axis, GroupPlot, PolarAxis
-export Plot, Plot3, Expression, EmptyLine, Coordinates,
-        Table, Graphics, Legend
+export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
+    Table, Graphics, Legend, LegendEntry
 export @pgf, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE, push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")

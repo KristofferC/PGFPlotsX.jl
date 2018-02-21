@@ -83,22 +83,24 @@ end
     mktempdir() do dir
         cd(dir) do
             @pgf p =
-                Axis(Plot3(Expression(expr),
-                                   {
-                                       contour_gnuplot = {
-                                           number = 30,
-                                           labels = false},
-                                       thick,
-                                       samples = 40,
-                                   }; incremental = false),
-                         {
-                             colorbar,
-                             xlabel = "x",
-                             ylabel = "y",
-                             domain = 1:2,
-                             y_domain = "74:87.9",
-                             view = (0, 90),
-                         })
+                Axis(
+                    {
+                        colorbar,
+                        xlabel = "x",
+                        ylabel = "y",
+                        domain = 1:2,
+                        y_domain = "74:87.9",
+                        view = (0, 90),
+                    },
+                    Plot3(
+                        {
+                            contour_gnuplot = {
+                                number = 30,
+                                labels = false},
+                            thick,
+                            samples = 40,
+                        },
+                        Expression(expr)))
             PGFPlotsX.save(tmp_pdf, p)
             @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)

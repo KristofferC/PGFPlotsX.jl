@@ -8,6 +8,7 @@ makedocs(
     sitename = "PGFPlotsX.jl",
     doctest = true,
     strict = false,
+    checkdocs = :none,
     pages = Any[
         "Home" => "index.md",
         "Manual" => [
@@ -18,6 +19,7 @@ makedocs(
         "Examples" => [
             "examples/coordinates.md",
             "examples/tables.md",
+            "examples/axislike.md",
             "examples/gallery.md",
             "examples/juliatypes.md"
         ]

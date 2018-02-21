@@ -1,55 +1,3 @@
-########
-# Plot #
-########
-
-struct Plot <: AxisElement
-    elements::AbstractVector{Any}
-    options::Options
-    label
-    incremental::Bool
-    _3d::Bool
-end
-
-Base.push!(plot::Plot, element) = (push!(plot.elements, element); plot)
-Base.append!(plot::Plot, element) = (append!(plot.elements, element); plot)
-
-function Plot(elements::AbstractVector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(elements, dictify(args), label, incremental, false)
-end
-
-function Plot3(element::Vector, args::Vararg{PGFOption}; incremental = true, label = nothing)
-    Plot(element, dictify(args), label, incremental, true)
-end
-
-Plot(options::Options, element; kwargs...) = Plot(element, options; kwargs...)
-Plot(element, args...; kwargs...) = Plot([element], args...; kwargs...)
-Plot3(element, args...; kwargs...) = Plot3([element], args...; kwargs...)
-Plot3(options::Options, element; kwargs...) = Plot3(element, options; kwargs...)
-
-function save(filename::String, plot::Plot; kwargs...)
-    save(filename, Axis(plot); kwargs...)
-end
-
-function print_tex(io_main::IO, p::Plot)
-    print_indent(io_main) do io
-        print(io, "\\addplot")
-        if p._3d
-            print(io, "3")
-        end
-        if p.incremental
-            print(io, "+")
-        end
-        print_options(io, p.options)
-        for element in p.elements
-            print_tex(io, element, p)
-        end
-        print(io, ";")
-        if p.label != nothing
-            print(io, "\n\\addlegendentry{$(p.label)}")
-        end
-    end
-end
-
 ##############
 # Expression #
 ##############
@@ -534,8 +482,146 @@ function print_tex(io_main::IO, t::Graphics)
     end
 end
 
+########
+# Plot #
+########
+
+"Types accepted by `Plot` for the field `data`."
+const PlotData = Union{Coordinates, Table, TableFile, Expression, Graphics}
+
+"""
+$(TYPEDEF)
+
+Corresponds to the `\\addplot[3][+]` family of `pgfplot` commands.
+
+Instead of the default constructor, use `Plot([options], data, trailing...)` and
+similar (`PlotInc`, `Plot3`, `Plot3Inc`) in user code.
+"""
+struct Plot <: OptionType
+    is3d::Bool
+    incremental::Bool
+    options::Options
+    data::PlotData
+    trailing::AbstractVector{Any} # FIXME can/should we be more specific?
+end
+
+Plot(is3d::Bool, incremental::Bool, options::Options, data::PlotData,
+     trailing::Tuple) = Plot(is3d, incremental, options, data, collect(trailing))
+
+Base.push!(plot::Plot, element) = (push!(plot.trailing, element); plot)
+Base.append!(plot::Plot, element) = (append!(plot.trailing, element); plot)
+
+"""
+    Plot([options::Options], data, trailing...)
+
+A plot with the given `data` (eg [`Coordinates`](@ref), [`Table`](@ref),
+[`Expression`](@ref), …) and `options`, which is empty by default.
+
+Corresponds to `\\addplot` in `pgfplots`.
+
+`trailing` can be used to provide *trailing path commands* (eg `\\closedcycle`,
+see the `pgfplots` manual), which are emitted using `print_tex`, before the
+terminating `;`.
+"""
+Plot(options::Options, data::PlotData, trailing...) =
+    Plot(false, false, options, data, trailing)
+
+Plot(data::PlotData, trailing...) =
+    Plot(false, false, Options(), data, trailing)
+
+"""
+    PlotInc([options::Options], data, trailing...)
+
+Corresponds to the `\\addplot+` form in `pgfplots`.
+
+For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
+"""
+PlotInc(options::Options, data::PlotData, trailing...) =
+    Plot(false, true, options, data, trailing)
+
+PlotInc(data::PlotData, trailing...) =
+    Plot(false, true, Options(), data, trailing)
+
+"""
+    Plot3([options::Options], data, trailing...)
+
+Corresponds to the `\\addplot3` form in `pgfplots`.
+
+For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
+"""
+Plot3(options::Options, data::PlotData, trailing...) =
+    Plot(true, false, options, data, trailing)
+
+Plot3(data::PlotData, trailing...) =
+    Plot(true, false, Options(), data, trailing)
+
+"""
+    Plot3Inc([options::Options], data, trailing...)
+
+Corresponds to the `\\addplot3+` form in `pgfplots`.
+
+For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
+"""
+Plot3Inc(options::Options, data::PlotData, trailing...) =
+    Plot(true, true, options, data, trailing)
+
+Plot3Inc(data::PlotData, trailing...) =
+    Plot(true, true, Options(), data, trailing)
+
+function save(filename::String, plot::Plot; kwargs...)
+    save(filename, Axis(plot); kwargs...)
+end
+
+function print_tex(io_main::IO, plot::Plot)
+    print_indent(io_main) do io
+        @unpack is3d, incremental, options, data, trailing = plot
+        print(io, "\\addplot")
+        is3d && print(io, "3")
+        incremental && print(io, "+")
+        print_options(io, options)
+        print_tex(io, data)
+        for t in trailing
+            print_tex(io, t)
+        end
+        print(io, ";")
+    end
+end
+
 struct Legend
     labels::Vector{String}
 end
 
 print_tex(io_main::IO, l::Legend) = print(io_main, "\\legend{", join(l.labels, ", "), "}")
+
+###############
+# LegendEntry #
+###############
+
+struct LegendEntry
+    options::Options
+    name::AbstractString
+    isexpanded::Bool
+end
+
+"""
+    LegendEntry([options::Options], name, [isexpanded])
+
+Corresponds to the `\\addlegendentry` and `\\addlegendentryexpanded` forms of
+`pgfplots`.
+"""
+LegendEntry(options::Options, name::AbstractString, isexpanded = false)
+
+LegendEntry(name::AbstractString, isexpanded = false) =
+    LegendEntry(Options(), name, isexpanded)
+
+function print_tex(io_main::IO, legendentry::LegendEntry)
+    print_indent(io_main) do io
+        @unpack options, name, isexpanded = legendentry
+        print(io, "\\addlegendentry")
+        isexpanded && print(io, "expanded")
+        print_options(io, options)
+        print(io, "{")
+        print(io, name)
+        print(io, "}")
+    end
+end

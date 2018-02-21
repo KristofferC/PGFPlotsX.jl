@@ -26,9 +26,9 @@ squashed_repr_tex(args...) = squash_whitespace(repr_tex(args...))
 "A simple comparison of fields for unit tests."
 ≅(x, y) = x == y
 
-function ≅(x::T, y::T) where T
+function ≅(x::T, y::T) where T <: Union{PGFPlotsX.Coordinate, Coordinates, Table, Plot}
     for f in fieldnames(T)
-        getfield(x, f) == getfield(y, f) || return false
+        getfield(x, f) ≅ getfield(y, f) || return false
     end
     true
 end
@@ -133,6 +133,25 @@ end
     path = "somefile.dat"
     _abspath = abspath(path)
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
-                                              "table [x={a}, y={b}]\n{$(_abspath)}"
+        "table [x={a}, y={b}]\n{$(_abspath)}"
     @test squashed_repr_tex(Table("somefile.dat")) == "table []\n{$(_abspath)}"
+end
+
+@testset "plot" begin
+    # sanity checks for constructors and printing, 2D
+    data2 = Table(x = 1:2, y = 3:4)
+    p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    @test squashed_repr_tex(p2) ==
+        "\\addplot[]\ntable []\n{x y\n1 3\n2 4\n}\n\\closedcycle\n;"
+    @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
+    @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
+        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    @test PlotInc(data2, raw"\closedcycle") ≅
+        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    @test Plot(data2, raw"\closedcycle") ≅ p2
+    # printing incremental w/ options, 2D and 3D
+    @test squashed_repr_tex(PlotInc(data2)) ==
+        "\\addplot+[]\ntable []\n{x y\n1 3\n2 4\n}\n;"
+    @test squashed_repr_tex(Plot3Inc(Table(x = 1:2, y = 3:4, z = 5:6))) ==
+        "\\addplot3+[]\ntable []\n{x y z\n1 3 5\n2 4 6\n}\n;"
 end

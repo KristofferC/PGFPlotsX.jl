@@ -1,32 +1,41 @@
+"""
+$(TYPEDEF)
+
+An axis-like object that has `options` and `contents`. Each subtype `T` has the
+constructor
+
+```julia T([options], contents...) ```
+
+and supports [`axislike_environment(T)`](@ref).
+
+`contents` usually consists of `Plot` objects, but can also contain strings,
+which are printed *as is* (use these for legends etc). Some subtypes have
+special semantics, see their documentation.
+"""
 abstract type AxisLike <: TikzElement end
 
-Base.push!(axislike::AxisLike, plot) = (push!(axislike.plots, plot); axislike)
-Base.append!(axislike::AxisLike, plot) = (append!(axislike.plots, plot); axislike)
+"""
+    axislike_environment(::Type{<: AxisLike})
 
+Return the corresponding LaTeX environment name.
+"""
+function axislike_environment end
 
-function (T::Type{<:AxisLike})(plots::AbstractVector, args::Vararg{PGFOption})
-    T(plots, dictify(args))
-end
+Base.push!(axislike::AxisLike, elt) = (push!(axislike.contents, elt); axislike)
+Base.append!(axislike::AxisLike, elt) = (append!(axislike.contents, elt); axislike)
 
-(T::Type{<:AxisLike})(plot, args::Vararg{PGFOption}) = T([plot], dictify(args))
-(T::Type{<:AxisLike})(options::Options, element) = T(element, options)
+(T::Type{<:AxisLike})(contents...) = T(Options(), contents...)
 
-function (T::Type{<:AxisLike})(args::Vararg{PGFOption})
-    T([], args...)
-end
-
-function print_tex(io_main::IO, axislike::AxisLike)
+function print_tex(io_main::IO, axislike::T) where {T <: AxisLike}
+    @unpack options, contents = axislike
+    name = axislike_environment(T)
     print_indent(io_main) do io
-        print(io, "\\begin{", _tex_name(axislike), "}")
-        print_options(io, axislike.options)
-        for (i, plot) in enumerate(axislike.plots)
-            between = _in_between(axislike, i)
-            if !isempty(between)
-                print_tex(io, between)
-            end
-            print_tex(io, plot, axislike)
+        print(io, "\\begin{", name, "}")
+        print_options(io, options)
+        for elt in contents
+            print_tex(io, elt, axislike)
         end
-        print(io, "\\end{", _tex_name(axislike), "}")
+        print(io, "\\end{", name, "}")
     end
 end
 
@@ -34,64 +43,63 @@ function save(filename::String, axislike::AxisLike; kwargs...)
     save(filename, TikzPicture(axislike); kwargs...)
 end
 
-_in_between(::Any, ::Any) = ""
-
-########
-# Axis #
-########
-
-struct Axis <: AxisLike
-    plots::Vector{Any}
-    options::Options
-
-    # get rid of default constructor or ambiguities
-    Axis(v::Vector, o::Options) = new(v, o)
-end
-
-_tex_name(::Axis) = "axis"
-
-#############
-# GroupPlot #
-#############
-
-struct GroupPlot <: AxisLike
-    plots::Vector{Any}
-    axisoptions::Vector{Options}
-    options::Options
-    # nextgroupplot::Vector{Options} # options for \nextgroupplot
-    # get rid of default constructor or ambiguities
-    GroupPlot(v::Vector, o::Options) = new(convert(Vector{Any}, v), [Options() for i in 1:length(v)], o)
-    GroupPlot(o::Options) = new(Any[], Options[], o)
-end
-
-function print_tex(io::IO, v::Vector, gp::GroupPlot)
-    for p in v
-        print_tex(io, p, gp)
+macro define_axislike(name, latex_environment)
+    @argcheck latex_environment isa String
+    _name = esc(name)
+    quote
+        Base.@__doc__ struct $(_name) <: AxisLike
+            options::Options
+            contents::Vector{Any}
+            function $(_name)(options::Options, contents...)
+                new(options, collect(contents))
+            end
+        end
+        ($(esc(:axislike_environment)))(::Type{$(_name)}) = $(latex_environment)
     end
 end
 
-Base.push!(gp::GroupPlot, plot) = (push!(gp.plots, plot); push!(gp.axisoptions, Options()); gp)
-Base.push!(gp::GroupPlot, plot, args...) = (push!(gp.plots, plot); push!(gp.axisoptions, dictify(args)); gp)
+@define_axislike Axis "axis"
 
-_tex_name(::GroupPlot) = "groupplot"
-#TODO Should these take IO instead?
-function _in_between(gp::GroupPlot, i::Int)
-     io = IOBuffer()
-     print(io, "\\nextgroupplot")
-     print_options(io, gp.axisoptions[i])
-     return String(take!(io))
+@define_axislike SemiLogXAxis "semilogxaxis"
+
+@define_axislike SemiLogYAxis "semilogyaxis"
+
+@define_axislike LogLogAxis "loglogaxis"
+
+@define_axislike PolarAxis "polaraxis"
+
+"""
+    GroupPlot([options], contents...)
+
+A group plot, using the `groupplots` library of `pgfplots`.
+
+The `contents` after the global options are processed as follows:
+
+1. [`Options`](@ref) will emit a ``\\nextgroupplot` with the given options,
+
+2. `nothing` is emitted as a `\\nextgroupplot[group/empty plot]`,
+
+3. other values, eg `Plot` are emitted using [`print_tex`](@ref).
+"""
+@define_axislike GroupPlot "groupplot"
+
+function print_tex(io_main::IO, groupplot::GroupPlot)
+    @unpack options, contents = groupplot
+    print_indent(io_main) do io
+        print(io, "\\begin{groupplot}")
+        print_options(io, options)
+        for elt in contents
+            if elt isa Options
+                print(io, "\\nextgroupplot")
+                print_options(io, elt)
+            elseif elt isa Plot
+                print_tex(io, elt)
+            elseif elt isa Void
+                print(io, raw"\nextgroupplot[group/empty plot]")
+            else
+                print_tex(io, elt)
+            end
+        end
+        print(io, "\\end{groupplot}")
+    end
 end
-
-#############
-# PolarAxis #
-#############
-
-struct PolarAxis <: AxisLike
-    plots::Vector{Any}
-    options::Options
-    # nextgroupplot::Vector{Options} # options for \nextgroupplot
-    # get rid of default constructor or ambiguities
-    PolarAxis(v::Vector, o::Options) = new(convert(Vector{Any}, v), o)
-end
-
-_tex_name(::PolarAxis) = "polaraxis"
