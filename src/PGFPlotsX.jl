@@ -16,7 +16,8 @@ export TikzDocument, TikzPicture
 export Axis, GroupPlot, PolarAxis
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
     Table, Graphics, Legend, LegendEntry
-export @pgf, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE, push_preamble!
+export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
+    push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")

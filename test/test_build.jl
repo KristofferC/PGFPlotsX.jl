@@ -56,16 +56,16 @@ end
     mktempdir() do dir
         cd(dir) do
             a = Axis(Plot(Expression("x^2")))
-            PGFPlotsX.save("$tmp.tex", a)
+            pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(readstring("$tmp.tex"))
-            PGFPlotsX.save("$tmp.png", a)
+            pgfsave("$tmp.png", a)
             @test is_png_file("$tmp.png")
-            PGFPlotsX.save("$tmp.pdf", a)
+            pgfsave("$tmp.pdf", a)
             @test is_pdf_file("$tmp.pdf")
-            PGFPlotsX.save("$tmp.svg", a)
+            pgfsave("$tmp.svg", a)
             @test is_svg_file("$tmp.svg")
-            PGFPlotsX.save("$tmp.tikz", a)
+            pgfsave("$tmp.tikz", a)
             @test is_tikz_standalone("$tmp.tikz")
 
             let tikz_lines = readlines("$tmp.tikz")
@@ -101,7 +101,7 @@ end
                             samples = 40,
                         },
                         Expression(expr)))
-            PGFPlotsX.save(tmp_pdf, p)
+            pgfsave(tmp_pdf, p)
             @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)
         end
