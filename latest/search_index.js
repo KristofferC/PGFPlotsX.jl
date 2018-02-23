@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining options",
     "title": "As arguments to the constructor",
     "category": "section",
-    "text": "When constructing an object (like a Plot), options to that object can be entered in the argument list where a string represents a key without a value (e.g. \"very thick\") and a pair represents a key/value option, (e.g. \"samples\" => 50). This works well when the options are few and there is only one level of options in the object.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = Plot(c, \"very thick\", \"mark\" => \"halfcircle\");\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n        coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n        }\n    ;"
+    "text": "When constructing an object (like a Plot), options to that object can be entered in the argument list where a string represents a key without a value (e.g. \"very thick\") and a pair represents a key/value option, (e.g. \"samples\" => 50). This works well when the options are few and there is only one level of options in the object.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = @pgf PlotInc({ \"very thick\", \"mark\" => \"halfcircle\" }, c);\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n        coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n        }\n    ;"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining options",
     "title": "The @pgf macro",
     "category": "section",
-    "text": "When there are nested options the previous method does not work so well. Instead, we provide a macro @pgf so that options can be entered similarly to how they are in tex.The previous example is then written asjulia> @pgf Plot(\n           {\n               very_thick,\n               mark = \"halfcircle\"\n           },\n           c);A more complicated example is:julia> @pgf a = Axis(Plot(c),\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           }\n       );which is printed asjulia> print_tex(a)\n    \\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n        \\addplot+[]\n            coordinates {\n            (1, 2)\n            (2, 4)\n            (3, 8)\n            }\n        ;\n    \\end{axis}The macro can be applied to any type of expression and will be applied to everything inside that expression that is of the form { expr }.!!!note     * Keys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered       as strings, as in the example above."
+    "text": "When there are nested options the previous method does not work so well. Instead, we provide a macro @pgf so that options can be entered similarly to how they are in tex.The previous example is then written asjulia> @pgf Plot(\n           {\n               very_thick,\n               mark = \"halfcircle\"\n           },\n           c);A more complicated example is:julia> @pgf a = Axis(\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           },\n           PlotInc(c)\n       );which is printed asjulia> print_tex(a)\n    \\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n        \\addplot+[]\n            coordinates {\n            (1, 2)\n            (2, 4)\n            (3, 8)\n            }\n        ;\n    \\end{axis}The macro can be applied to any type of expression and will be applied to everything inside that expression that is of the form { expr }.!!!note     * Keys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered       as strings, as in the example above."
 },
 
 {
@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining options",
     "title": "Modifying options after an object is created",
     "category": "section",
-    "text": "It is sometimes convenient to set and get options after an object has been created.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = Plot(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n    \\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n        coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n        }\n    ;You can also merge in options that have been separately created using merge!julia> a = Axis();\n\njulia> @pgf opts =  {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n    \\begin{axis}[xmin={0}, ymax={1}, ybar]\n    \\end{axis}It is then easy to apply for example a \"theme\" to an axis where the themed is a set of options already saved. Just merge! the theme into an Axis."
+    "text": "It is sometimes convenient to set and get options after an object has been created.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n    \\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n        coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n        }\n    ;You can also merge in options that have been separately created using merge!julia> a = Axis();\n\njulia> @pgf opts =  {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n    \\begin{axis}[xmin={0}, ymax={1}, ybar]\n    \\end{axis}It is then easy to apply for example a \"theme\" to an axis where the themed is a set of options already saved. Just merge! the theme into an Axis."
 },
 
 {
@@ -165,7 +165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Building up figures",
     "title": "Plot3 - X",
     "category": "section",
-    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3d graphics. Otherwise it works the same as Plot.Example:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3(Coordinates(x, y, z), { very_thick });\n\njulia> print_tex(p)\n    \\addplot3+[very thick]\n        coordinates {\n        (1, 2, 3)\n        (2, 4, 9)\n        (3, 8, 27)\n        }\n    ;"
+    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3d graphics. Otherwise it works the same as Plot.Example:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));\n\njulia> print_tex(p)\n    \\addplot3[very thick]\n        coordinates {\n        (1, 2, 3)\n        (2, 4, 9)\n        (3, 8, 27)\n        }\n    ;"
 },
 
 {
@@ -181,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Building up figures",
     "title": "Axis - X",
     "category": "section",
-    "text": "Axis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as\\begin{axis}[...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis( Plot( Expression(\"x^2\")), {\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          });\n\njulia> print_tex(a)\n    \\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n        \\addplot+[]\n            {x^2}\n        ;\n    \\end{axis}\n\njulia> push!(a, Plot(Coordinates([1,2], [3,4])));\n\n\njulia> print_tex(a)\n    \\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n        \\addplot+[]\n            {x^2}\n        ;\n        \\addplot+[]\n            coordinates {\n            (1, 3)\n            (2, 4)\n            }\n        ;\n    \\end{axis}Any struct can be pushed in to an Axis. What will be printed is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis) where T is the type of the struct. Pushed strings are written out verbatim."
+    "text": "Axis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as\\begin{axis}[...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n    \\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n        \\addplot+[]\n            {x^2}\n        ;\n    \\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n    \\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n        \\addplot+[]\n            {x^2}\n        ;\n        \\addplot+[]\n            coordinates {\n            (1, 3)\n            (2, 4)\n            }\n        ;\n    \\end{axis}Any struct can be pushed in to an Axis. What will be printed is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis) where T is the type of the struct. Pushed strings are written out verbatim."
 },
 
 {
@@ -197,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Building up figures",
     "title": "PolarAxis",
     "category": "section",
-    "text": "A PolarAxis plot data on a polar grid.Example:julia> p = PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n    \\begin{polaraxis}[]\n        \\addplot+[]\n            coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n            }\n        ;\n    \\end{polaraxis}"
+    "text": "A PolarAxis plot data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n    \\begin{polaraxis}[]\n        \\addplot+[]\n            coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n            }\n        ;\n    \\end{polaraxis}"
 },
 
 {
@@ -213,7 +213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Building up figures",
     "title": "TikzPicture - X",
     "category": "section",
-    "text": "A TikzPicture can contain multiple Axis\'s or GroupPlot\'s.Example:julia> tp = TikzPicture(Axis(Plot(Coordinates([1, 2], [2, 4]))), \"scale\" => 1.5);\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n    \\begin{axis}[]\n        \\addplot+[]\n            coordinates {\n            (1, 2)\n            (2, 4)\n            }\n        ;\n    \\end{axis}\n\\end{tikzpicture}"
+    "text": "A TikzPicture can contain multiple Axis\'s or GroupPlot\'s.Example:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n    \\begin{axis}[]\n        \\addplot[]\n            coordinates {\n            (1, 2)\n            (2, 4)\n            }\n        ;\n    \\end{axis}\n\\end{tikzpicture}"
 },
 
 {

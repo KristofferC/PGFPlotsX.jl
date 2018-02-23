@@ -63,10 +63,10 @@ julia&gt; print_tex(p)
         {&lt;ABSPATH&gt;/plotdata/invcum.dat}
     ;</code></pre><h3><a class="nav-anchor" id="Plot3-X-1" href="#Plot3-X-1"><code>Plot3</code> - <code>X</code></a></h3><p><code>Plot3</code> will use the <code>\addplot3</code> command instead of <code>\addplot</code> to draw 3d graphics. Otherwise it works the same as <code>Plot</code>.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];
 
-julia&gt; p = @pgf Plot3(Coordinates(x, y, z), { very_thick });
+julia&gt; p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));
 
 julia&gt; print_tex(p)
-    \addplot3+[very thick]
+    \addplot3[very thick]
         coordinates {
         (1, 2, 3)
         (2, 4, 9)
@@ -74,11 +74,12 @@ julia&gt; print_tex(p)
         }
     ;</code></pre><h2><a class="nav-anchor" id="Axis-like-1" href="#Axis-like-1">Axis-like</a></h2><h3><a class="nav-anchor" id="Axis-X-1" href="#Axis-X-1"><code>Axis</code> - <code>X</code></a></h3><p><code>Axis</code> make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as</p><pre><code class="language-tex">\begin{axis}[...]
     ...
-\end{axis}</code></pre><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis( Plot( Expression(&quot;x^2&quot;)), {
+\end{axis}</code></pre><p>Examples:</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis({
               xlabel = &quot;x&quot;
               ylabel = &quot;y&quot;
               title = &quot;Figure&quot;
-          });
+          },
+          PlotInc( Expression(&quot;x^2&quot;)));
 
 julia&gt; print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
@@ -87,7 +88,7 @@ julia&gt; print_tex(a)
         ;
     \end{axis}
 
-julia&gt; push!(a, Plot(Coordinates([1,2], [3,4])));
+julia&gt; push!(a, PlotInc(Coordinates([1, 2], [3, 4])));
 
 
 julia&gt; print_tex(a)
@@ -144,7 +145,7 @@ julia&gt; print_tex(gp)
             table []
             {data2.dat}
         ;
-    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; p = PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
+    \end{groupplot}</code></pre><h3><a class="nav-anchor" id="PolarAxis-1" href="#PolarAxis-1"><code>PolarAxis</code></a></h3><p>A <code>PolarAxis</code> plot data on a polar grid.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
 
 julia&gt; print_tex(p)
     \begin{polaraxis}[]
@@ -157,12 +158,12 @@ julia&gt; print_tex(p)
             }
         ;
     \end{polaraxis}</code></pre><h3><a class="nav-anchor" id="Legend-1" href="#Legend-1"><code>Legend</code></a></h3><p>A <code>Legend</code> can be used to add legends to plots.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; print_tex(Legend([&quot;Plot A&quot;, &quot;Plot B&quot;]))
-\legend{Plot A, Plot B}</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = TikzPicture(Axis(Plot(Coordinates([1, 2], [2, 4]))), &quot;scale&quot; =&gt; 1.5);
+\legend{Plot A, Plot B}</code></pre><h2><a class="nav-anchor" id="TikzPicture-X-1" href="#TikzPicture-X-1"><code>TikzPicture</code> - <code>X</code></a></h2><p>A <code>TikzPicture</code> can contain multiple <code>Axis</code>&#39;s or <code>GroupPlot</code>&#39;s.</p><p>Example:</p><pre><code class="language-julia-repl">julia&gt; tp = @pgf TikzPicture({ &quot;scale&quot; =&gt; 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));
 
 julia&gt; print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
     \begin{axis}[]
-        \addplot+[]
+        \addplot[]
             coordinates {
             (1, 2)
             (2, 4)

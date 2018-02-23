@@ -3,7 +3,7 @@
 ...
 \end{axis}</code></pre><p>This section shows the method for which to set and retrieve such options in Julia.</p><h2><a class="nav-anchor" id="Setting-options-when-constructing-an-object-1" href="#Setting-options-when-constructing-an-object-1">Setting options when constructing an object</a></h2><h3><a class="nav-anchor" id="As-arguments-to-the-constructor-1" href="#As-arguments-to-the-constructor-1">As arguments to the constructor</a></h3><p>When constructing an object (like a <code>Plot</code>), options to that object can be entered in the argument list where a string represents a key without a value (e.g. <code>&quot;very thick&quot;</code>) and a pair represents a key/value option, (e.g. <code>&quot;samples&quot; =&gt; 50</code>). This works well when the options are few and there is only one level of options in the object.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia&gt; p = Plot(c, &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot;);
+julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 
 julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
 \addplot+[very thick, mark={halfcircle}]
@@ -17,7 +17,7 @@ julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
                very_thick,
                mark = &quot;halfcircle&quot;
            },
-           c);</code></pre><p>A more complicated example is:</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis(Plot(c),
+           c);</code></pre><p>A more complicated example is:</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis(
            {
                &quot;axis background/.style&quot; =
                {
@@ -26,7 +26,8 @@ julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
                    bottom_color = &quot;white&quot;,
                },
                ymode = &quot;log&quot;
-           }
+           },
+           PlotInc(c)
        );</code></pre><p>which is printed as</p><pre><code class="language-julia-repl">julia&gt; print_tex(a)
     \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
         \addplot+[]
@@ -38,7 +39,7 @@ julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
         ;
     \end{axis}</code></pre><p>The macro can be applied to any type of expression and will be applied to everything inside that expression that is of the form <code>{ expr }</code>.</p><p>!!!note     * Keys that contain symbols that in Julia are operators (e.g the key <code>&quot;axis background/.style&quot;</code>) have to be entered       as strings, as in the example above.</p><h3><a class="nav-anchor" id="Transformations-1" href="#Transformations-1">Transformations</a></h3><p>The following transformations of keys/values are done when the options are written in .tex style:</p><ul><li><p>Underlines in keys are replaced with spaces e.g. <code>very_thick -&gt; &quot;very thick&quot;</code>.</p></li><li><p>A list as a value is written as &quot;comma joined&quot; e.g. <code>[1, 2, 3] -&gt; &quot;1, 2, 3&quot;</code>.</p></li><li><p>A tuple as a value is written with braces delimiting the elements e.g. <code>(60, 30) -&gt; {60}{30}</code></p></li></ul><h2><a class="nav-anchor" id="Modifying-options-after-an-object-is-created-1" href="#Modifying-options-after-an-object-is-created-1">Modifying options after an object is created</a></h2><p>It is sometimes convenient to set and get options after an object has been created.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia&gt; p = Plot(c);
+julia&gt; p = PlotInc(c);
 
 julia&gt; p[&quot;fill&quot;] = &quot;blue&quot;;
 
