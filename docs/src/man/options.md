@@ -28,7 +28,7 @@ This works well when the options are few and there is only one level of options 
 ```jldoctest p1
 julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia> p = Plot(c, "very thick", "mark" => "halfcircle");
+julia> p = @pgf PlotInc({ "very thick", "mark" => "halfcircle" }, c);
 
 julia> print_tex(p); # print_tex can be used to preview the generated .tex
 \addplot+[very thick, mark={halfcircle}]
@@ -59,7 +59,7 @@ julia> @pgf Plot(
 A more complicated example is:
 
 ```jldoctest p1
-julia> @pgf a = Axis(Plot(c),
+julia> @pgf a = Axis(
            {
                "axis background/.style" =
                {
@@ -68,7 +68,8 @@ julia> @pgf a = Axis(Plot(c),
                    bottom_color = "white",
                },
                ymode = "log"
-           }
+           },
+           PlotInc(c)
        );
 ```
 
@@ -109,7 +110,7 @@ It is sometimes convenient to set and get options after an object has been creat
 ```jldoctest
 julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
 
-julia> p = Plot(c);
+julia> p = PlotInc(c);
 
 julia> p["fill"] = "blue";
 

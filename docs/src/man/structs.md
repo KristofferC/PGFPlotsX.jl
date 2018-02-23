@@ -154,10 +154,10 @@ Example:
 ```jldoctest
 julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];
 
-julia> p = @pgf Plot3(Coordinates(x, y, z), { very_thick });
+julia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));
 
 julia> print_tex(p)
-    \addplot3+[very thick]
+    \addplot3[very thick]
         coordinates {
         (1, 2, 3)
         (2, 4, 9)
@@ -181,11 +181,12 @@ julia> print_tex(p)
 Examples:
 
 ```jldoctest
-julia> @pgf a = Axis( Plot( Expression("x^2")), {
+julia> @pgf a = Axis({
               xlabel = "x"
               ylabel = "y"
               title = "Figure"
-          });
+          },
+          PlotInc( Expression("x^2")));
 
 julia> print_tex(a)
     \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
@@ -194,7 +195,7 @@ julia> print_tex(a)
         ;
     \end{axis}
 
-julia> push!(a, Plot(Coordinates([1,2], [3,4])));
+julia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));
 
 
 julia> print_tex(a)
@@ -281,7 +282,7 @@ A `PolarAxis` plot data on a polar grid.
 Example:
 
 ```jldoctest
-julia> p = PolarAxis( Plot( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
+julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
 
 julia> print_tex(p)
     \begin{polaraxis}[]
@@ -314,12 +315,12 @@ A `TikzPicture` can contain multiple `Axis`'s or `GroupPlot`'s.
 Example:
 
 ```jldoctest
-julia> tp = TikzPicture(Axis(Plot(Coordinates([1, 2], [2, 4]))), "scale" => 1.5);
+julia> tp = @pgf TikzPicture({ "scale" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));
 
 julia> print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
     \begin{axis}[]
-        \addplot+[]
+        \addplot[]
             coordinates {
             (1, 2)
             (2, 4)
