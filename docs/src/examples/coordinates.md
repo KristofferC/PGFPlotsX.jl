@@ -3,9 +3,9 @@
 ```@setup pgf
 using PGFPlotsX
 savefigs = (figname, obj) -> begin
-    PGFPlotsX.save(figname * ".pdf", obj)
+    pgfsave(figname * ".pdf", obj)
     run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
-    PGFPlotsX.save(figname * ".tex", obj);
+    pgfsave(figname * ".tex", obj);
     return nothing
 end
 ```

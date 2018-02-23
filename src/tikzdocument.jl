@@ -32,6 +32,16 @@ extensions should be recognized by `\\includegraphics` when the
 """
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
 
+"""
+    $SIGNATURES
+
+Save the argument (either [`TikzDocument`](@ref), or some other type which is
+wrapped in one automatically, eg [`TikzPicture`](@ref), [`Axis`](@ref), or
+[`Plot`](@ref)) to `filename`, guessing the format from the file extension.
+Keywords specify options, some specific to some output formats.
+
+`pgfsave` is an alias which is exported.
+"""
 function save(filename::String, td::TikzDocument;
               include_preamble::Bool = true,
               latex_engine = latexengine(),
@@ -64,6 +74,8 @@ function save(filename::String, td::TikzDocument;
     end
     return
 end
+
+const pgfsave = save
 
 # TeX
 function savetex(filename::String, td::TikzDocument;
