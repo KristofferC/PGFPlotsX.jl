@@ -103,12 +103,12 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         println(io, "\\documentclass[tikz]{standalone}")
         for pream in td.preamble
             print_tex(io, pream, td)
+            println(io)
         end
         println(io, "\\begin{document}")
     end
     for element in td.elements
         print_tex(io, element, td)
-        println(io)
     end
     if include_preamble
         println(io, "\\end{document}")

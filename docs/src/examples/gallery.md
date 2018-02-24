@@ -296,7 +296,7 @@ savefigs("spline-quadratic", ans) # hide
         mesh,
         scatter,
         samples = 10,
-        domain = 0:1
+        domain = "0:1"
     },
     Expression("x * (1-x) * y * (1-y)")
 )
@@ -341,3 +341,32 @@ savefigs("groupplot-nested", ans) # hide
 [\[.pdf\]](groupplot-nested.pdf), [\[generated .tex\]](groupplot-nested.tex)
 
 ![](groupplot-nested.svg)
+
+------------------------
+
+```@example pgf
+@pgf Axis(Plot(
+    {
+        patch,
+        "table/row sep" = raw"\\",
+        patch_table = TableData([0 1 2;
+                                 1 2 3;
+                                 4 3 5];
+                                rowsep = true)
+    },
+    Table(
+        {
+            row_sep = raw"\\",
+            point_meta = raw"\thisrow{c}"
+        },
+        :x => [0, 1, 2, 3, 2, 4],
+        :y => [0, 1, 0, 1, 0, 0],
+        :c => [0.2, 0, 1, 0, 0.5, 0.5];
+        rowsep = true)))
+
+savefigs("patch-inline", ans) # hide
+```
+
+[\[.pdf\]](patch-inline.pdf), [\[generated .tex\]](patch-inline.tex)
+
+![](patch-inline.svg)

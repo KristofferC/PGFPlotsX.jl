@@ -138,7 +138,7 @@ Example:
 julia> p = @pgf Plot(Table("plotdata/invcum.dat"), { blue }; incremental = false);
 
 julia> print_tex(p)
-    \addplot[blue]
+    \addplot [blue]
         table []
         {<ABSPATH>/plotdata/invcum.dat}
     ;
@@ -157,7 +157,7 @@ julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];
 julia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));
 
 julia> print_tex(p)
-    \addplot3[very thick]
+    \addplot3 [very thick]
         coordinates {
         (1, 2, 3)
         (2, 4, 9)
@@ -173,7 +173,7 @@ julia> print_tex(p)
 `Axis` make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as
 
 ```tex
-\begin{axis}[...]
+\begin{axis} [...]
     ...
 \end{axis}
 ```
@@ -189,8 +189,8 @@ julia> @pgf a = Axis({
           PlotInc( Expression("x^2")));
 
 julia> print_tex(a)
-    \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
-        \addplot+[]
+    \begin{axis} [xlabel={x}, ylabel={y}, title={Figure}]
+        \addplot+ []
             {x^2}
         ;
     \end{axis}
@@ -199,8 +199,8 @@ julia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));
 
 
 julia> print_tex(a)
-    \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
-        \addplot+[]
+    \begin{axis} [xlabel={x}, ylabel={y}, title={Figure}]
+        \addplot+ []
             {x^2}
         ;
         \addplot+[]

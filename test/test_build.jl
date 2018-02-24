@@ -71,7 +71,7 @@ end
             let tikz_lines = readlines("$tmp.tikz")
                 @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
                 last_line = findlast(!isempty, tikz_lines)
-                @test tikz_lines[last_line] == "\\end{tikzpicture}"
+                @test strip(tikz_lines[last_line]) == "\\end{tikzpicture}"
             end
         end
     end
@@ -88,7 +88,7 @@ end
                         colorbar,
                         xlabel = "x",
                         ylabel = "y",
-                        domain = 1:2,
+                        domain = "1:2",
                         y_domain = "74:87.9",
                         view = (0, 90),
                     },

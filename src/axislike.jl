@@ -35,7 +35,7 @@ function print_tex(io_main::IO, axislike::T) where {T <: AxisLike}
         for elt in contents
             print_tex(io, elt, axislike)
         end
-        print(io, "\\end{", name, "}")
+        println(io, "\\end{", name, "}")
     end
 end
 
@@ -100,6 +100,6 @@ function print_tex(io_main::IO, groupplot::GroupPlot)
                 print_tex(io, elt)
             end
         end
-        print(io, "\\end{groupplot}")
+        println(io, "\\end{groupplot}")
     end
 end

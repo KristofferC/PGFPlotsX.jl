@@ -15,7 +15,7 @@ using Requires
 export TikzDocument, TikzPicture
 export Axis, GroupPlot, PolarAxis
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
-    Table, Graphics, Legend, LegendEntry
+    TableData, Table, Graphics, Legend, LegendEntry
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
     push_preamble!
 
@@ -34,20 +34,13 @@ print_tex(a) = print_tex(STDOUT, a)
 include("options.jl")
 include("utilities.jl")
 
-function print_tex(io_main::IO, str::AbstractString)
-    print_indent(io_main) do io
-        print(io, str)
-    end
-end
+print_tex(io::IO, str::AbstractString) = print(io, str)
 
-function print_tex(io_main::IO, vs::Vector)
-    print_indent(io_main) do io
-        for v in vs
-            print_tex(io, v)
-        end
-    end
-end
+"""
+    $SIGNATURES
 
+Real numbers are printed as is, except for non-finite representation.
+"""
 function print_tex(io::IO, x::Real)
     if isfinite(x)
         print(io, x)
@@ -61,10 +54,24 @@ function print_tex(io::IO, x::Real)
     end
 end
 
+"""
+    $SIGNATURES
+
+Print vectors as comma-delimited lists between `{}`s. Useful for eg
+`/pgfplots/xtick`.
+"""
+function print_tex(io::IO, vs::AbstractVector)
+    print(io, "{")
+    for (i, elt) in enumerate(vs)
+        i == 1 || print(io, ", ")
+        print_tex(io, elt)
+    end
+    print(io, "}")
+end
+
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",
                                                   "where T is the type of the data to dispatch on.")))
-
 
 
 """

@@ -10,7 +10,7 @@ In PGFPlots, options are given as a list of keys, that might have corresponding 
 inside of two square brackets e.g.
 
 ```tex
-\begin{axis}[ybar, width = 4.5cm]
+\begin{axis} [ybar, width = 4.5cm]
 ...
 \end{axis}
 ```
@@ -31,7 +31,7 @@ julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
 julia> p = @pgf PlotInc({ "very thick", "mark" => "halfcircle" }, c);
 
 julia> print_tex(p); # print_tex can be used to preview the generated .tex
-\addplot+[very thick, mark={halfcircle}]
+\addplot+ [very thick, mark={halfcircle}]
         coordinates {
         (1, 2)
         (2, 4)
@@ -77,8 +77,8 @@ which is printed as
 
 ```jldoctest p1
 julia> print_tex(a)
-    \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
-        \addplot+[]
+    \begin{axis} [axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
+        \addplot+ []
             coordinates {
             (1, 2)
             (2, 4)
@@ -126,7 +126,7 @@ julia> p["very thick"] = nothing # Set a value-less options;
 julia> delete!(p, "fill");
 
 julia> print_tex(p)
-    \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
+    \addplot+ [axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
         coordinates {
         (1, 2)
         (2, 4)
@@ -140,12 +140,12 @@ You can also merge in options that have been separately created using `merge!`
 ```jldoctest
 julia> a = Axis();
 
-julia> @pgf opts =  {xmin = 0, ymax = 1, ybar};
+julia> @pgf opts = {xmin = 0, ymax = 1, ybar};
 
 julia> merge!(a, opts);
 
 julia> print_tex(a)
-    \begin{axis}[xmin={0}, ymax={1}, ybar]
+    \begin{axis} [xmin={0}, ymax={1}, ybar]
     \end{axis}
 ```
 

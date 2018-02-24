@@ -1,9 +1,16 @@
-function print_indent(io::IO, str::String)
-    for line in split(str, "\n")
-        println(io, "    ", line)
-    end
-end
+"""
+    $SIGNATURES
 
+Print `str` to `io`, appending four spaces before each line.
+"""
+print_indent(io::IO, str::String) = join(io, "    " .* split(str, '\n'), "\n")
+
+"""
+    $SIGNATURES
+
+Call the `f` with an IO buffer, capture the output, print it to `io_main`
+indended with four spaces.
+"""
 function print_indent(f, io_main::IO)
     io = IOBuffer()
     f(io)

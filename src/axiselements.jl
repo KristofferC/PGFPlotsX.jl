@@ -252,7 +252,7 @@ function print_tex(io::IO, coordinates::Coordinates)
         for coordinate in coordinates.data
             print_tex(io, coordinate)
         end
-        print(io, "}")
+        println(io, "}")
     end
 end
 
@@ -272,64 +272,100 @@ expand_scanlines(v::Vector{Int}, _) = v
 
 expand_scanlines(itr, _) = collect(Int, itr)
 
-struct Table <: OptionType
-    options::Options
+
+"Default for additional row separator `\\`."
+const ROWSEP = false
+
+"""
+Tabular data with optional column names.
+
+This corresponds to the part of tables between `{}`'s in `pgfplots`, without the
+options or `table`, so that it can also be used for “inline” tables.
+[`Table`](@ref) will call the constructor for this type to convert arguments
+after `options`.
+
+`data` is a matrix, which contains the contents of the table, which will be
+printed using `print_tex`. `colnames` is a vector of column names (converted to
+string), or `nothing` for a table with no column names.
+
+When `rowsep` is `true`, an additional `\\` is used as a row separator.
+
+After each index in `scanlines`, extra row separators are inserted. This can be
+used for skipping coordinates or implicitly defining the dimensions of a matrix
+for `surf` and `mesh` plots. They are expanded using [`expand_scanlines`](@ref).
+"""
+struct TableData
     data::AbstractMatrix
-    colnames::Union{Void, Vector{String}}
+    colnames::Union{Void, Vector{<: AbstractString}}
     scanlines::AbstractVector{Int}
-    function Table(options::Options, data::AbstractMatrix,
-                   colnames::Union{Void, Vector{String}},
-                   scanlines::AbstractVector{Int})
-        nrow, ncol = size(data)
+    rowsep::Bool
+    function TableData(data::AbstractMatrix,
+                       colnames::Union{Void, Vector{<: AbstractString}},
+                       scanlines::AbstractVector{Int},
+                       rowsep::Bool = ROWSEP)
         if colnames ≠ nothing
             @argcheck allunique(colnames) "Column names are not unique."
-            @argcheck length(colnames) == ncol
+            @argcheck length(colnames) == size(data, 2)
         end
-        new(options, data, colnames, scanlines)
+        new(data, colnames, scanlines, rowsep)
+    end
+end
+
+function TableData(data::AbstractMatrix, colnames, scanlines, rowsep = ROWSEP)
+    TableData(data,
+              colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
+              expand_scanlines(scanlines, size(data, 1)), rowsep)
+end
+
+function print_tex(io_main::IO, tabledata::TableData)
+    @unpack data, colnames, scanlines, rowsep = tabledata
+    print_indent(io_main) do io
+        println(io)
+        _colsep() = print(io, "  ")
+        _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
+        if colnames ≠ nothing
+            for colname in colnames
+                print(io, colname)
+                _colsep()
+            end
+        end
+        _rowsep()
+        for row_index in indices(data, 1)
+            for col_index in indices(data, 2)
+                print_tex(io, data[row_index, col_index])
+                _colsep()
+            end
+            _rowsep()
+            if row_index ∈ scanlines
+                _rowsep()
+            end
+        end
     end
 end
 
 """
     $SIGNATURES
 
-Data structure for emitting coordinates as a `table` in `pgfplots`.
+Columns, given as vectors.
 
-`options` stores the options. `data` is a matrix, which contains the contents of
-the table, which will be printed using `print_tex`. `colnames` is a vector of
-column names (converted to string), or `nothing` for a table with no column
-names.
-
-`scanlines` specifies the row indexes after which a newline will be insterted,
-this can be used for skipping coordinates or implicitly defining the dimensions
-of a matrix for `surf` and `mesh` plots. They are expanded using
-[`expand_scanlines`](@ref).
+Use of this constructor is encouraged for conversion, passing on keyword
+arguments.
 """
-function Table(options::Options, data::AbstractMatrix, colnames, scanlines)
-    Table(options, data,
-          colnames ≡ nothing ? colnames : collect(String, colnames),
-          expand_scanlines(scanlines, size(data, 1)))
+TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
+          rowsep::Bool = ROWSEP) =
+    TableData(hcat(columns...), nothing, 0, rowsep)
+
+TableData(itr; kwargs...) = TableData(collect(itr); kwargs...) # fallback
+
+"""
+    $SIGNATURES
+
+`data` provided directly as a matrix.
+"""
+function TableData(data::AbstractMatrix;
+                   colnames = nothing, scanlines = 0, rowsep = ROWSEP)
+    TableData(data, colnames, scanlines, rowsep)
 end
-
-"""
-    $SIGNATURES
-
-Convert the arguments to `data`, `colnames`, `scanlines` suitable for use in
-`Table`, and return these in a tuple.
-
-This method should be defined for conversion into `Table`s, with wrapper methods
-handing options.
-"""
-table_fields(rest...) = table_fields(collect(rest)) # fallback
-
-table_fields(itr) = table_fields(collect(itr))
-
-"""
-    $SIGNATURES
-
-`data` provided directly as a matrix, `colnames` and `scanlines` are optional.
-"""
-table_fields(data::AbstractMatrix; colnames = nothing, scanlines = 0) =
-    data, colnames, scanlines
 
 """
     $SIGNATURES
@@ -337,28 +373,33 @@ table_fields(data::AbstractMatrix; colnames = nothing, scanlines = 0) =
 Named columns provided as a vector of pairs, eg `[:x => 1:10, :y => 11:20]`.
 Symbols or strings are accepted as column names.
 """
-table_fields(name_column_pairs::Vector{<: Pair}) =
-    hcat(last.(name_column_pairs)...), first.(name_column_pairs), 0
+function TableData(name_column_pairs::Vector{<: Pair};
+                   scanlines = 0, rowsep::Bool = ROWSEP)
+    TableData(hcat(last.(name_column_pairs)...), first.(name_column_pairs),
+              scanlines, rowsep)
+end
 
-"""
-    $SIGNATURES
+TableData(rest::AbstractVector...; kwargs...) = TableData(collect(rest); kwargs...)
 
-Unnamed columns, given as vectors.
-"""
-table_fields(columns::Vector{<: AbstractVector}) = hcat(columns...), nothing, 0
+TableData(name_column_pairs::Pair...; kwargs...) =
+    TableData(collect(name_column_pairs); kwargs...)
 
 """
     $SIGNATURES
 
 Use the keyword arguments as columns.
-"""
-table_fields(; named_columns...) = table_fields(Pair(nc...) for nc in named_columns)
 
-table_fields(::AbstractVector) =
+Note that this precludes the possibily of providing other keywords; see the
+other constructors.
+"""
+TableData(; named_columns...) = TableData(Pair(nc...) for nc in named_columns)
+
+TableData(::AbstractVector; kwargs...) =
     throw(ArgumentError("Could not determine whether columns are named from the element type."))
 
-function table_fields(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
-                      meta::Union{Void, AbstractMatrix} = nothing)
+function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
+                   meta::Union{Void, AbstractMatrix} = nothing,
+                   rowsep::Bool = ROWSEP)
     colnames = ["x", "y", "z"]
     columns = hcat(matrix_xyz(x, y, z)...)
     if meta ≠ nothing
@@ -366,13 +407,27 @@ function table_fields(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
         push!(colnames, "meta")
         columns = hcat(columns, vec(meta))
     end
-    columns, colnames, length(x)
+    TableData(columns, colnames, length(x), rowsep)
+end
+
+struct Table <: OptionType
+    options::Options
+    content::Union{TableData, AbstractString}
+    Table(options::Options, content::Union{TableData, AbstractString}) =
+        new(options, content)
 end
 
 """
-    Table([options], args...)
+    Table([options], ...; ...)
 
-Construct a table from the given arguments. Examples:
+Tabular data with options, corresponding to `table[options] { ... }` in
+`pgfplots`.
+
+`options` stores the options. If that is followed by an `AbstractString`, that
+will be used as a filename to read data from, otherwise all the arguments are
+passed on to `TableData`.
+
+ Examples:
 
 ```julia
 Table(["x" => 1:10, "y" => 11:20])        # from a vector
@@ -387,77 +442,20 @@ let x = linspace(0, 1, 10), y = linspace(-2, 3, 15)
     Table(x, y, sin.(x + y'))             # edges & matrix
 end
 ```
-
-[`table_fields`](@ref) is used to convert the arguments after options. See its
-methods for possible conversions.
 """
 Table(options::Options, args...; kwargs...) =
-    Table(options, table_fields(args...; kwargs...)...)
+    Table(options, TableData(args...; kwargs...))
 
-Table(args...; kwargs...) =
-    Table(Options(), table_fields(args...; kwargs...)...)
+Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 
 function print_tex(io_main::IO, table::Table)
-    @unpack options, data, colnames, scanlines = table
+    @unpack options, content = table
     print_indent(io_main) do io
-        print(io, "table ")
+        print(io, "table")
         print_options(io, options)
         print(io, "{")
-        _sep() = print(io, "  ")
-        if colnames ≠ nothing
-            for colname in colnames
-                print(io, colname)
-                _sep()
-            end
-        end
-        println(io)
-        for row_index in indices(data, 1)
-            for col_index in indices(data, 2)
-                print_tex(io, data[row_index, col_index])
-                _sep()
-            end
-            println(io)
-            if row_index ∈ scanlines
-                println(io)
-            end
-        end
-        print(io, "}")
-    end
-end
-
-#############
-# TableFile #
-#############
-
-"""
-$(TYPEDEF)
-
-Placeholder for a table for which data is read directly from a file. Use the
-[`Table`](@ref) constructor.
-"""
-struct TableFile <: OptionType
-    options::Options
-    path::AbstractString
-end
-
-"""
-    $SIGNATURES
-
-For reading tables directly from files. See the `pgfplots` manual for the
-accepted format.
-
-If you don't use an absolute path, it will be converted to one.
-"""
-Table(options::Options, path::AbstractString) = TableFile(options, abspath(path))
-
-Table(path::AbstractString) = Table(Options(), path)
-
-function print_tex(io_main::IO, tablefile::TableFile)
-    @unpack options, path = tablefile
-    print_indent(io_main) do io
-        print(io, "table ")
-        print_options(io, options)
-        print(io, "{$(path)}")
+        print_tex(io, content)
+        println(io, "}")
     end
 end
 
@@ -476,9 +474,9 @@ end
 
 function print_tex(io_main::IO, t::Graphics)
     print_indent(io_main) do io
-        print(io, "graphics ")
+        print(io, "graphics")
         print_options(io, t.options)
-        print(io, "{", t.filename, "}")
+        println(io, "{", t.filename, "}")
     end
 end
 
@@ -487,7 +485,7 @@ end
 ########
 
 "Types accepted by `Plot` for the field `data`."
-const PlotData = Union{Coordinates, Table, TableFile, Expression, Graphics}
+const PlotData = Union{Coordinates, Table, Expression, Graphics}
 
 """
 $(TYPEDEF)
@@ -583,7 +581,7 @@ function print_tex(io_main::IO, plot::Plot)
         for t in trailing
             print_tex(io, t)
         end
-        print(io, ";")
+        println(io, ";")
     end
 end
 
@@ -591,7 +589,7 @@ struct Legend
     labels::Vector{String}
 end
 
-print_tex(io_main::IO, l::Legend) = print(io_main, "\\legend{", join(l.labels, ", "), "}")
+print_tex(io_main::IO, l::Legend) = println(io_main, "\\legend{", join(l.labels, ", "), "}")
 
 ###############
 # LegendEntry #
@@ -622,6 +620,6 @@ function print_tex(io_main::IO, legendentry::LegendEntry)
         print_options(io, options)
         print(io, "{")
         print(io, name)
-        print(io, "}")
+        println(io, "}")
     end
 end
