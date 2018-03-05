@@ -36,7 +36,6 @@ end
 
 @testset "printing Julia types to TeX" begin
     @test squashed_repr_tex("something") == "something"
-    @test squashed_repr_tex(string.([2, 3, 4])) == "{2, 3, 4}"
     @test squashed_repr_tex(4) == "4"
     @test squashed_repr_tex(NaN) == "nan"
     @test squashed_repr_tex(Inf) == "+inf"
@@ -152,6 +151,7 @@ end
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
         "\\addplot+[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n;"
-    @test squashed_repr_tex(Plot3Inc(Table(x = 1:2, y = 3:4, z = 5:6))) ==
-        "\\addplot3+[]\ntable[]\n{\nx y z\n1 3 5\n2 4 6\n}\n;"
+    @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
+                                          Table(x = 1:2, y = 3:4, z = 5:6))) ==
+        "\\addplot3+[xtick={1,2,3}]\ntable[]\n{\nx y z\n1 3 5\n2 4 6\n}\n;"
 end

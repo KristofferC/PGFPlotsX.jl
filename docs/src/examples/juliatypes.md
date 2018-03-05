@@ -89,7 +89,7 @@ df = dataset("datasets", "iris") # load the dataset
         xlabel = "Sepal length",
         ylabel = "Sepal width",
     },
-    [Plot(
+    Plot(
         {
             scatter,
             "only marks",
@@ -110,8 +110,7 @@ df = dataset("datasets", "iris") # load the dataset
             df, # <--- Creating a Table from a DataFrame
         )
     ),
-     Legend(["Setosa", "Versicolor", "Virginica"])
-     ]
+    Legend(["Setosa", "Versicolor", "Virginica"])
 )
 savefigs("dataframes", ans) # hide
 ```

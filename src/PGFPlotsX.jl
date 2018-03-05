@@ -54,21 +54,6 @@ function print_tex(io::IO, x::Real)
     end
 end
 
-"""
-    $SIGNATURES
-
-Print vectors as comma-delimited lists between `{}`s. Useful for eg
-`/pgfplots/xtick`.
-"""
-function print_tex(io::IO, vs::AbstractVector)
-    print(io, "{")
-    for (i, elt) in enumerate(vs)
-        i == 1 || print(io, ", ")
-        print_tex(io, elt)
-    end
-    print(io, "}")
-end
-
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",
                                                   "where T is the type of the data to dispatch on.")))
