@@ -73,7 +73,7 @@ function Base.merge!(a::OptionType, d::Options)
 end
 
 function print_options(io::IO, options::Options)
-    print(io, " [")
+    print(io, "[")
     print_opt(io, options)
     println(io, "]")
 end
