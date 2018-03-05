@@ -28,13 +28,34 @@ if !isfile(joinpath(@__DIR__, "..", "deps", "deps.jl"))
 end
 include("../deps/deps.jl")
 
+"""
+    print_tex(io, elt, [container])
+
+Print `elt` to `io` as LaTeX code. The optional third argument allows methods to
+work differently depending on the container.
+
+This method should indent as if at the top level, containers indent their
+contents as necessary. See [`print_indent`](@ref).
+"""
 print_tex(io::IO, a, b) = print_tex(io, a)
 print_tex(a) = print_tex(STDOUT, a)
 
 include("options.jl")
 include("utilities.jl")
 
-print_tex(io::IO, str::AbstractString) = print(io, str)
+"""
+    $SIGNATURES
+
+Print a string *as is*, terminated with a newline.
+
+!!! note
+
+    This is used as a workaround for LaTeX code that does not have a
+    corresponding type, eg as elements in [`Axis`](@ref). `raw` or
+    `LaTeXStrings` are useful to avoid piling up backslashes. The newline is
+    added to separate tokens.
+"""
+print_tex(io::IO, str::AbstractString) = println(io, str)
 
 """
     $SIGNATURES

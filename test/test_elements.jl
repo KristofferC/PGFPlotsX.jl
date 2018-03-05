@@ -132,8 +132,8 @@ end
 @testset "table file" begin
     path = "somefile.dat"
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
-        "table[x={a}, y={b}]\n{$(path)}"
-    @test squashed_repr_tex(Table(path)) == "table[]\n{$(path)}"
+        "table[x={a}, y={b}]\n{\n$(path)\n}"
+    @test squashed_repr_tex(Table(path)) == "table[]\n{\n$(path)\n}"
 end
 
 @testset "plot" begin
@@ -141,7 +141,7 @@ end
     data2 = Table(x = 1:2, y = 3:4)
     p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
-        "\\addplot[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n\\closedcycle;"
+        "\\addplot[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n\\closedcycle\n;"
     @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
     @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
@@ -154,4 +154,38 @@ end
     @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
                                           Table(x = 1:2, y = 3:4, z = 5:6))) ==
         "\\addplot3+[xtick={1,2,3}]\ntable[]\n{\nx y z\n1 3 5\n2 4 6\n}\n;"
+end
+
+@testset "printing and indentation" begin
+    # adding indent, with corner cases for newlines
+    @test PGFPlotsX.add_indent("foo") == "    foo"
+    @test PGFPlotsX.add_indent("foo\n") == "    foo\n"
+    @test PGFPlotsX.add_indent("foo\nbar") == "    foo\n    bar"
+    @test PGFPlotsX.add_indent("foo\n\nbar\n") == "    foo\n\n    bar\n"
+    @test PGFPlotsX.add_indent("\nfoo\n\nbar\n") == "\n    foo\n\n    bar\n"
+    # expression
+    @test repr_tex(Expression("x^2")) == "{x^2}"
+    @test repr_tex(Expression(["x^2", "y^2"])) == "(\n{x^2},\n{y^2})"
+    # graphics
+    @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
+        "graphics[testopt={1}] {filename}\n"
+    # coordinates, tables, and plot
+    c = Coordinates([(1, 2), (3, 4)])
+    @test repr_tex(c) == "coordinates {\n    (1, 2)\n    (3, 4)\n}\n"
+    t = Table(x = 1:2, y = 3:4)
+    @test repr_tex(t) == "table[]\n{\n    x  y  \n    1  3  \n    2  4  \n}\n"
+    @test repr_tex(@pgf Plot({ no_marks }, c)) ==
+        "\\addplot[no marks]\n    coordinates {\n        (1, 2)\n        (3, 4)\n    }\n    ;\n"
+    @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
+        "\\addplot[no marks]\n    table[]\n    {\n        x  y  \n" *
+        "        1  3  \n        2  4  \n    }\n    trailing\n    ;\n"
+    # legend
+    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{a, b, c}\n"
+    l = LegendEntry("a")
+    @test repr_tex(l) == "\\addlegendentry[] {a}\n"
+    # axis
+    @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
+        "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
+        "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
+        "        ;\n    \\addlegendentry[] {a}\n\\end{axis}\n"
 end

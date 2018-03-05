@@ -8,18 +8,17 @@ end
 
 Expression(str::String) = Expression([str])
 
-function print_tex(io_main::IO, f::Expression)
+function print_tex(io::IO, f::Expression)
     multiple_f = length(f.fs) != 1
-    print_indent(io_main) do io
-        multiple_f && print(io, "(\n")
-        for (i, fstr) in enumerate(f.fs)
-            print(io, "{", fstr, "}")
-            if i != length(f.fs)
-                print(io, ",\n")
-            end
+    multiple_f && println(io, "(")
+    for (i, fstr) in enumerate(f.fs)
+        print(io, "{", fstr, "}")
+        if i != length(f.fs)
+            println(io, ",")
         end
-        multiple_f && print(io, ")")
     end
+    multiple_f && print(io, ")")
+    nothing
 end
 
 ##############
@@ -247,13 +246,13 @@ function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
 end
 
 function print_tex(io::IO, coordinates::Coordinates)
+    println(io, "coordinates {")
     print_indent(io) do io
-        println(io, "coordinates {")
         for coordinate in coordinates.data
             print_tex(io, coordinate)
         end
-        println(io, "}")
     end
+    println(io, "}")
 end
 
 #########
@@ -317,28 +316,25 @@ function TableData(data::AbstractMatrix, colnames, scanlines, rowsep = ROWSEP)
               expand_scanlines(scanlines, size(data, 1)), rowsep)
 end
 
-function print_tex(io_main::IO, tabledata::TableData)
+function print_tex(io::IO, tabledata::TableData)
     @unpack data, colnames, scanlines, rowsep = tabledata
-    print_indent(io_main) do io
-        println(io)
-        _colsep() = print(io, "  ")
-        _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
-        if colnames ≠ nothing
-            for colname in colnames
-                print(io, colname)
-                _colsep()
-            end
+    _colsep() = print(io, "  ")
+    _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
+    if colnames ≠ nothing
+        for colname in colnames
+            print(io, colname)
+            _colsep()
+        end
+    end
+    _rowsep()
+    for row_index in indices(data, 1)
+        for col_index in indices(data, 2)
+            print_tex(io, data[row_index, col_index])
+            _colsep()
         end
         _rowsep()
-        for row_index in indices(data, 1)
-            for col_index in indices(data, 2)
-                print_tex(io, data[row_index, col_index])
-                _colsep()
-            end
+        if row_index ∈ scanlines
             _rowsep()
-            if row_index ∈ scanlines
-                _rowsep()
-            end
         end
     end
 end
@@ -448,15 +444,13 @@ Table(options::Options, args...; kwargs...) =
 
 Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 
-function print_tex(io_main::IO, table::Table)
+function print_tex(io::IO, table::Table)
     @unpack options, content = table
-    print_indent(io_main) do io
-        print(io, "table")
-        print_options(io, options)
-        print(io, "{")
-        print_tex(io, content)
-        println(io, "}")
-    end
+    print(io, "table")
+    print_options(io, options)
+    println(io, "{")
+    print_indent(io, content)
+    println(io, "}")
 end
 
 ############
@@ -464,20 +458,18 @@ end
 ############
 
 struct Graphics <: OptionType
-    filename::String
     options::Options
+    filename::String
 end
 
 function Graphics(filename::String, args::Vararg{PGFOption})
-    Graphics(filename, dictify(args))
+    Graphics(dictify(args), filename)
 end
 
-function print_tex(io_main::IO, t::Graphics)
-    print_indent(io_main) do io
-        print(io, "graphics")
-        print_options(io, t.options)
-        println(io, "{", t.filename, "}")
-    end
+function print_tex(io::IO, t::Graphics)
+    print(io, "graphics")
+    print_options(io, t.options; newline = false)
+    println(io, "{", t.filename, "}")
 end
 
 ########
@@ -570,13 +562,13 @@ function save(filename::String, plot::Plot; kwargs...)
     save(filename, Axis(plot); kwargs...)
 end
 
-function print_tex(io_main::IO, plot::Plot)
-    print_indent(io_main) do io
-        @unpack is3d, incremental, options, data, trailing = plot
-        print(io, "\\addplot")
-        is3d && print(io, "3")
-        incremental && print(io, "+")
-        print_options(io, options)
+function print_tex(io::IO, plot::Plot)
+    @unpack is3d, incremental, options, data, trailing = plot
+    print(io, "\\addplot")
+    is3d && print(io, "3")
+    incremental && print(io, "+")
+    print_options(io, options)
+    print_indent(io) do io
         print_tex(io, data)
         for t in trailing
             print_tex(io, t)
@@ -589,7 +581,7 @@ struct Legend
     labels::Vector{String}
 end
 
-print_tex(io_main::IO, l::Legend) = println(io_main, "\\legend{", join(l.labels, ", "), "}")
+print_tex(io::IO, l::Legend) = println(io, "\\legend{", join(l.labels, ", "), "}")
 
 ###############
 # LegendEntry #
@@ -612,14 +604,12 @@ LegendEntry(options::Options, name::AbstractString, isexpanded = false)
 LegendEntry(name::AbstractString, isexpanded = false) =
     LegendEntry(Options(), name, isexpanded)
 
-function print_tex(io_main::IO, legendentry::LegendEntry)
-    print_indent(io_main) do io
-        @unpack options, name, isexpanded = legendentry
-        print(io, "\\addlegendentry")
-        isexpanded && print(io, "expanded")
-        print_options(io, options)
-        print(io, "{")
-        print(io, name)
-        println(io, "}")
-    end
+function print_tex(io::IO, legendentry::LegendEntry)
+    @unpack options, name, isexpanded = legendentry
+    print(io, "\\addlegendentry")
+    isexpanded && print(io, "expanded")
+    print_options(io, options; newline = false)
+    print(io, "{")
+    print(io, name)
+    println(io, "}")
 end

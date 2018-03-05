@@ -1,9 +1,22 @@
 """
     $SIGNATURES
 
-Print `str` to `io`, appending four spaces before each line.
+Add 4 spaces before each line in `str`. It is recommended (but not required)
+that the argument is terminated with a newline.
 """
-print_indent(io::IO, str::String) = join(io, "    " .* split(str, '\n'), "\n")
+function add_indent(str::AbstractString)
+    isterminated = endswith(str, "\n")
+    lines = split(str, '\n')
+    if isterminated
+        lines = lines[1:(end-1)]
+    end
+    indent = (str) -> isempty(strip(str)) ? str : "    " * str
+    result = join(indent.(lines), '\n')
+    if isterminated
+        result *= "\n"
+    end
+    result
+end
 
 """
     $SIGNATURES
@@ -14,7 +27,19 @@ indended with four spaces.
 function print_indent(f, io_main::IO)
     io = IOBuffer()
     f(io)
-    print_indent(io_main, String(take!(io)))
+    print(io_main, add_indent(String(take!(io))))
+end
+
+"""
+    $SIGNATURES
+
+Print `elt` to `io` with indentation. Shortcut for the function wrapper of
+`print_indent` for a single element.
+"""
+function print_indent(io_main::IO, elt)
+    print_indent(io_main) do io
+        print_tex(io, elt)
+    end
 end
 
 """

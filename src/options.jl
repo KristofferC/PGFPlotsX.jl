@@ -76,12 +76,14 @@ end
     $SIGNATURES
 
 Print options between `[]`. For each option, the value is printed using
-[`print_opt`](@ref).
+[`print_opt`](@ref). Unless `newline == true` (the default), a newline follows
+the `]`, otherwise a space.
 """
-function print_options(io::IO, options::Options)
+function print_options(io::IO, options::Options; newline = true)
     print(io, "[")
     print_opt(io, options)
-    println(io, "]")
+    print(io, "]")
+    newline ? println(io) : print(io, " ")
 end
 
 accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
@@ -127,3 +129,5 @@ function print_opt(io::IO, t::Tuple)
         i != length(t) && print(io, "}")
     end
 end
+
+print_opt(io::IO, str::AbstractString) = print(io, str)
