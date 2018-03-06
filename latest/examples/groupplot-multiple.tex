@@ -1,17 +1,18 @@
 \documentclass[tikz]{standalone}
-    % Default preamble
-    \usepackage{pgfplots}
-    \pgfplotsset{compat=newest}
-    \usepgfplotslibrary{groupplots}
-    \usepgfplotslibrary{polar}
-    \usepgfplotslibrary{statistics}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}[]
-    \begin{groupplot}[group style={group size={2 by 1}, xticklabels at={edge bottom}, yticklabels at={edge left}}, no markers]
+\begin{groupplot}[group style={group size={2 by 1}, xticklabels at={edge bottom}, yticklabels at={edge left}}, no markers]
     \nextgroupplot[]
-        \addplot+[]
-            table []
-            {
+    \addplot+[]
+        table[]
+        {
+
             0.0  0.0  
             0.06346651825433926  0.0634239196565645  
             0.12693303650867852  0.12659245357374926  
@@ -112,11 +113,12 @@
             6.156252270670907  -0.12659245357374993  
             6.219718788925247  -0.06342391965656452  
             6.283185307179586  -2.4492935982947064e-16  
-            }
+        }
         ;
-        \addplot+[]
-            table []
-            {
+    \addplot+[]
+        table[]
+        {
+
             0.0  0.479425538604203  
             0.06346651825433926  0.5341200257846886  
             0.12693303650867852  0.5866638001356743  
@@ -217,12 +219,13 @@
             6.156252270670907  0.36447314068919584  
             6.219718788925247  0.4228005739900146  
             6.283185307179586  0.4794255386042028  
-            }
+        }
         ;
     \nextgroupplot[]
-        \addplot+[]
-            table []
-            {
+    \addplot+[]
+        table[]
+        {
+
             0.0  1.0  
             0.06346651825433926  0.9979866764718844  
             0.12693303650867852  0.9919548128307953  
@@ -323,11 +326,12 @@
             6.156252270670907  0.9919548128307952  
             6.219718788925247  0.9979866764718844  
             6.283185307179586  1.0  
-            }
+        }
         ;
-        \addplot+[]
-            table []
-            {
+    \addplot+[]
+        table[]
+        {
+
             0.0  0.8775825618903728  
             0.06346651825433926  0.8454086574289167  
             0.12693303650867852  0.8098305906857122  
@@ -428,9 +432,8 @@
             6.156252270670907  0.931213901161357  
             6.219718788925247  0.906222751112393  
             6.283185307179586  0.8775825618903729  
-            }
+        }
         ;
-    \end{groupplot}
+\end{groupplot}
 \end{tikzpicture}
-
 \end{document}

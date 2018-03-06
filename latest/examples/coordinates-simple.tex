@@ -1,15 +1,15 @@
 \documentclass[tikz]{standalone}
-    % Default preamble
-    \usepackage{pgfplots}
-    \pgfplotsset{compat=newest}
-    \usepgfplotslibrary{groupplots}
-    \usepgfplotslibrary{polar}
-    \usepgfplotslibrary{statistics}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}[]
-    \begin{axis}[xmajorgrids, ymajorgrids]
-        \addplot[no marks]
-            coordinates {
+\begin{axis}[xmajorgrids, ymajorgrids]
+    \addplot[no marks]
+        coordinates {
             (-1.0, -1.0)
             (-0.96, -1.0416666666666667)
             (-0.92, -1.0869565217391304)
@@ -35,7 +35,7 @@
             (-0.12, -8.333333333333334)
             (-0.08, -12.5)
             (-0.04, -25.0)
-            
+
             (0.04, 25.0)
             (0.08, 12.5)
             (0.12, 8.333333333333334)
@@ -61,9 +61,8 @@
             (0.92, 1.0869565217391304)
             (0.96, 1.0416666666666667)
             (1.0, 1.0)
-            }
+        }
         ;
-    \end{axis}
+\end{axis}
 \end{tikzpicture}
-
 \end{document}

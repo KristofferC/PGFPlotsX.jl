@@ -1,16 +1,17 @@
 \documentclass[tikz]{standalone}
-    % Default preamble
-    \usepackage{pgfplots}
-    \pgfplotsset{compat=newest}
-    \usepgfplotslibrary{groupplots}
-    \usepgfplotslibrary{polar}
-    \usepgfplotslibrary{statistics}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}[]
-    \begin{axis}[]
-        \addplot[x={a}, y={b}]
-            table []
-            {a  b  
+\begin{axis}[]
+    \addplot[x={a}, y={b}]
+        table[]
+        {
+            a  b  
             0.0  0.0  
             0.06346651825433926  0.0634239196565645  
             0.12693303650867852  0.12659245357374926  
@@ -111,9 +112,8 @@
             6.156252270670907  -0.12659245357374993  
             6.219718788925247  -0.06342391965656452  
             6.283185307179586  -2.4492935982947064e-16  
-            }
+        }
         ;
-    \end{axis}
+\end{axis}
 \end{tikzpicture}
-
 \end{document}

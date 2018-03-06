@@ -1,17 +1,18 @@
 \documentclass[tikz]{standalone}
-    % Default preamble
-    \usepackage{pgfplots}
-    \pgfplotsset{compat=newest}
-    \usepgfplotslibrary{groupplots}
-    \usepgfplotslibrary{polar}
-    \usepgfplotslibrary{statistics}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}[]
-    \begin{groupplot}[group style={group size={2 by 2}, horizontal sep={0pt}, vertical sep={0pt}, xticklabels at={edge bottom}}, xmin={0}, ymin={0}, height={3.7cm}, width={4cm}, no markers]
+\begin{groupplot}[group style={group size={2 by 2}, horizontal sep={0pt}, vertical sep={0pt}, xticklabels at={edge bottom}}, xmin={0}, ymin={0}, height={3.7cm}, width={4cm}, no markers]
     \nextgroupplot[group/empty plot]\nextgroupplot[xmin={5}, xmax={10}, ymin={50}, ymax={100}]
-        \addplot[very thick]
-            table []
-            {x  y  
+    \addplot[very thick]
+        table[]
+        {
+            x  y  
             0.0  0.0  
             0.10101010101010101  0.6961464894866507  
             0.20202020202020202  1.61533023977645  
@@ -112,12 +113,13 @@
             9.797979797979798  45.280237144006335  
             9.8989898989899  15.566790677716929  
             10.0  0.24445384306499118  
-            }
+        }
         ;
     \nextgroupplot[xmax={5}, ymax={50}]
-        \addplot[very thick]
-            table []
-            {x  y  
+    \addplot[very thick]
+        table[]
+        {
+            x  y  
             0.0  0.0  
             0.10101010101010101  0.6961464894866507  
             0.20202020202020202  1.61533023977645  
@@ -218,12 +220,13 @@
             9.797979797979798  45.280237144006335  
             9.8989898989899  15.566790677716929  
             10.0  0.24445384306499118  
-            }
+        }
         ;
     \nextgroupplot[xmin={5}, xmax={10}, ymax={50}, yticklabels={}]
-        \addplot[very thick]
-            table []
-            {x  y  
+    \addplot[very thick]
+        table[]
+        {
+            x  y  
             0.0  0.0  
             0.10101010101010101  0.6961464894866507  
             0.20202020202020202  1.61533023977645  
@@ -324,9 +327,8 @@
             9.797979797979798  45.280237144006335  
             9.8989898989899  15.566790677716929  
             10.0  0.24445384306499118  
-            }
+        }
         ;
-    \end{groupplot}
+\end{groupplot}
 \end{tikzpicture}
-
 \end{document}
