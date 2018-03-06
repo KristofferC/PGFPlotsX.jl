@@ -1,27 +1,29 @@
 const TikzElementOrStr = Union{TikzElement, String}
 
+"""
+    TikzPicture([options], contents...)
+
+Corredponds to a `tikzpicture` block in `pgfplots`.
+
+Elements can also be added with `push!` after contruction.
+"""
 struct TikzPicture <: OptionType
-    elements::Vector{TikzElementOrStr} # Plots, nodes etc
     options::Options
+    elements::Vector{TikzElementOrStr} # Plots, nodes etc
+    function TikzPicture(options::Options, elements::TikzElementOrStr...)
+        new(options, collect(TikzElementOrStr, elements))
+    end
 end
 
-function TikzPicture(options::Vararg{PGFOption})
-    TikzPicture(TikzElementOrStr[], dictify(options))
-end
-
-TikzPicture(element::TikzElementOrStr, args...) = TikzPicture([element], args...)
-TikzPicture(options::Options, element::TikzElementOrStr) = TikzPicture(element, options)
-
-function TikzPicture(elements::Vector, options::Vararg{PGFOption})
-    TikzPicture(convert(Vector{TikzElementOrStr}, elements), dictify(options))
-end
+TikzPicture(elements::TikzElementOrStr...) = TikzPicture(Options(), elements...)
 
 Base.push!(tp::TikzPicture, element::TikzElementOrStr) = push!(tp.elements, element)
 
 function print_tex(io::IO, tp::TikzPicture)
+    @unpack options, elements = tp
     print(io, "\\begin{tikzpicture}")
-    print_options(io, tp.options)
-    for element in tp.elements
+    print_options(io, options)
+    for element in elements
         print_tex(io, element, tp)
     end
     println(io, "\\end{tikzpicture}")

@@ -355,6 +355,8 @@ Hello World
 \end{document}
 ```
 
+A `TikzDocument` uses global variables to construct a preamble, and allows the user to add extra lines to this (eg in case you want to add `\usepackage` lines), or disable it altogether.
+
 !!! note
 
     There is usually no need to explicitly create a `TikzDocument` or `TikzPicture`.
