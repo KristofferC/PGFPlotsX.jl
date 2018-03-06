@@ -1,23 +1,35 @@
-const TikzPictureOrStr = Union{TikzPicture, String}
+"""
+    TikzDocument(elements...; use_default_preamble = true, preamble = [])
 
-struct TikzDocument <: OptionType
-    elements::Vector # Plots, nodes etc
-    preamble::Vector
+Corresponds to a LaTeX document, usually wrapping `TikzPicture`s.
 
-    function TikzDocument(elements::Vector, preamble)
-        new(elements, vcat(preamble, _default_preamble()))
+`use_default_preamble` determines whether a preamble is added from the global
+variables (see [`CUSTOM_PREAMBLE`](@ref) and [`CUSTOM_PREAMBLE_PATH`](@ref).
+
+`preamble` is appended after the default one (if any).
+
+`push!` can be used to append elements after construction, and similarly
+`push_preamble!` for the preamble.
+"""
+struct TikzDocument
+    elements::Vector{Any}
+    "Flag for adding the default preamble before `preamble`."
+    use_default_preamble::Bool
+    "Add to the preamble."
+    preamble::Vector{Any}
+    function TikzDocument(elements...; use_default_preamble = true, preamble = [])
+        new(collect(Any, elements), use_default_preamble, preamble)
     end
-
 end
 
-TikzDocument(; preamble = String[]) = TikzDocument([], preamble)
-TikzDocument(element::Vector) = TikzDocument(element, String[])
-TikzDocument(element, args...) = TikzDocument([element], args...)
-TikzDocument(options::Options, element) = TikzDocument(element, options)
-
 Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
-push_preamble!(td::TikzDocument, v) = (push!(td.preamble, v); td)
 
+"""
+    $SIGNATURES
+
+Works like `push!`, but places `items` in the preamble.
+"""
+push_preamble!(td::TikzDocument, items...) = (push!(td.preamble, items...); td)
 
 ##########
 # Output #
@@ -92,6 +104,7 @@ savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
 
 function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
+    @unpack elements, use_default_preamble, preamble = td
     if isempty(td.elements)
         warn("Tikz document is empty")
     end
@@ -101,8 +114,11 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         end
         # Temp workaround for CI
         println(io, "\\documentclass[tikz]{standalone}")
-        for pream in td.preamble
-            print_tex(io, pream, td)
+        if use_default_preamble
+            preamble = vcat(_default_preamble(), preamble)
+        end
+        for preamble_line in preamble
+            print_tex(io, preamble_line, td)
         end
         println(io, "\\begin{document}")
     end
@@ -113,7 +129,6 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         println(io, "\\end{document}")
     end
 end
-
 
 _HAS_WARNED_SHELL_ESCAPE = false
 
