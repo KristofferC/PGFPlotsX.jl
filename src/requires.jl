@@ -27,12 +27,17 @@
 end
 
 @require DataFrames begin
-    PGFPlotsX.table_fields(df::DataFrames.DataFrame) =
-        hcat(DataFrames.columns(df)...), string.(names(df)), 0
+    """
+    $SIGNATURES
+
+Construct table data from a `DataFrame`.
+    """
+    PGFPlotsX.TableData(df::DataFrames.DataFrame; rowsep = ROWSEP) =
+        TableData(hcat(DataFrames.columns(df)...), string.(names(df)), 0, rowsep)
 end
 
 @require Contour begin
-    function PGFPlotsX.table_fields(c::Contour.ContourCollection)
+    function PGFPlotsX.TableData(c::Contour.ContourCollection; rowsep = ROWSEP)
         colx = Any[]
         coly = Any[]
         colz = Any[]
@@ -48,7 +53,7 @@ end
                 push!(ns, n)
             end
         end
-        hcat(colx, coly, colz), ["x", "y", "z"], cumsum(ns)
+        TableData(hcat(colx, coly, colz), ["x", "y", "z"], cumsum(ns), rowsep)
     end
 end
 
@@ -56,14 +61,14 @@ end
     # workaround for https://github.com/JuliaStats/StatsBase.jl/issues/344
     const _midpoints = x -> middle.(x[2:end], x[1:(end-1)])
 
-    function PGFPlotsX.table_fields(h::StatsBase.Histogram{T, 1}) where T
-        hcat(h.edges[1], vcat(h.weights, 0)), nothing, 0
+    function PGFPlotsX.TableData(h::StatsBase.Histogram{T, 1}; kwargs...) where T
+        PGFPlotsX.TableData(hcat(h.edges[1], vcat(h.weights, 0)), nothing, 0; kwargs...)
     end
 
-    function PGFPlotsX.table_fields(histogram::StatsBase.Histogram{T, 2}) where T
-        PGFPlotsX.table_fields(_midpoints(histogram.edges[1]),
-                               _midpoints(histogram.edges[2]),
-                               histogram.weights)
+    function PGFPlotsX.TableData(histogram::StatsBase.Histogram{T, 2}; kwargs...) where T
+        PGFPlotsX.TableData(_midpoints(histogram.edges[1]),
+                            _midpoints(histogram.edges[2]),
+                            histogram.weights; kwargs...)
     end
 
     function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T

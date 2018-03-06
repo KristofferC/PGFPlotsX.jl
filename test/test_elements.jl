@@ -26,7 +26,8 @@ squashed_repr_tex(args...) = squash_whitespace(repr_tex(args...))
 "A simple comparison of fields for unit tests."
 ≅(x, y) = x == y
 
-function ≅(x::T, y::T) where T <: Union{PGFPlotsX.Coordinate, Coordinates, Table, Plot}
+function ≅(x::T, y::T) where T <: Union{PGFPlotsX.Coordinate, Coordinates,
+                                        Table, TableData, Plot}
     for f in fieldnames(T)
         getfield(x, f) ≅ getfield(y, f) || return false
     end
@@ -35,7 +36,6 @@ end
 
 @testset "printing Julia types to TeX" begin
     @test squashed_repr_tex("something") == "something"
-    @test squashed_repr_tex(string.([2, 3, 4])) == "2\n3\n4"
     @test squashed_repr_tex(4) == "4"
     @test squashed_repr_tex(NaN) == "nan"
     @test squashed_repr_tex(Inf) == "+inf"
@@ -126,15 +126,14 @@ end
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
-                                      [1])) == "table []\n{xx yy\n1.0 nan\n\n-inf 4.0\n}"
+                                      [1])) == "table[]\n{\nxx yy\n1.0 nan\n\n-inf 4.0\n}"
 end
 
-@testset "tablefile" begin
+@testset "table file" begin
     path = "somefile.dat"
-    _abspath = abspath(path)
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
-        "table [x={a}, y={b}]\n{$(_abspath)}"
-    @test squashed_repr_tex(Table("somefile.dat")) == "table []\n{$(_abspath)}"
+        "table[x={a}, y={b}]\n{\n$(path)\n}"
+    @test squashed_repr_tex(Table(path)) == "table[]\n{\n$(path)\n}"
 end
 
 @testset "plot" begin
@@ -142,7 +141,7 @@ end
     data2 = Table(x = 1:2, y = 3:4)
     p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
-        "\\addplot[]\ntable []\n{x y\n1 3\n2 4\n}\n\\closedcycle\n;"
+        "\\addplot[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n\\closedcycle\n;"
     @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
     @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
@@ -151,7 +150,42 @@ end
     @test Plot(data2, raw"\closedcycle") ≅ p2
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
-        "\\addplot+[]\ntable []\n{x y\n1 3\n2 4\n}\n;"
-    @test squashed_repr_tex(Plot3Inc(Table(x = 1:2, y = 3:4, z = 5:6))) ==
-        "\\addplot3+[]\ntable []\n{x y z\n1 3 5\n2 4 6\n}\n;"
+        "\\addplot+[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n;"
+    @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
+                                          Table(x = 1:2, y = 3:4, z = 5:6))) ==
+        "\\addplot3+[xtick={1,2,3}]\ntable[]\n{\nx y z\n1 3 5\n2 4 6\n}\n;"
+end
+
+@testset "printing and indentation" begin
+    # adding indent, with corner cases for newlines
+    @test PGFPlotsX.add_indent("foo") == "    foo"
+    @test PGFPlotsX.add_indent("foo\n") == "    foo\n"
+    @test PGFPlotsX.add_indent("foo\nbar") == "    foo\n    bar"
+    @test PGFPlotsX.add_indent("foo\n\nbar\n") == "    foo\n\n    bar\n"
+    @test PGFPlotsX.add_indent("\nfoo\n\nbar\n") == "\n    foo\n\n    bar\n"
+    # expression
+    @test repr_tex(Expression("x^2")) == "{x^2}"
+    @test repr_tex(Expression(["x^2", "y^2"])) == "(\n{x^2},\n{y^2})"
+    # graphics
+    @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
+        "graphics[testopt={1}] {filename}\n"
+    # coordinates, tables, and plot
+    c = Coordinates([(1, 2), (3, 4)])
+    @test repr_tex(c) == "coordinates {\n    (1, 2)\n    (3, 4)\n}\n"
+    t = Table(x = 1:2, y = 3:4)
+    @test repr_tex(t) == "table[]\n{\n    x  y  \n    1  3  \n    2  4  \n}\n"
+    @test repr_tex(@pgf Plot({ no_marks }, c)) ==
+        "\\addplot[no marks]\n    coordinates {\n        (1, 2)\n        (3, 4)\n    }\n    ;\n"
+    @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
+        "\\addplot[no marks]\n    table[]\n    {\n        x  y  \n" *
+        "        1  3  \n        2  4  \n    }\n    trailing\n    ;\n"
+    # legend
+    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{a, b, c}\n"
+    l = LegendEntry("a")
+    @test repr_tex(l) == "\\addlegendentry[] {a}\n"
+    # axis
+    @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
+        "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
+        "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
+        "        ;\n    \\addlegendentry[] {a}\n\\end{axis}\n"
 end

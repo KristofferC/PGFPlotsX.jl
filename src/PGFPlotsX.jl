@@ -15,7 +15,7 @@ using Requires
 export TikzDocument, TikzPicture
 export Axis, GroupPlot, PolarAxis
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
-    Table, Graphics, Legend, LegendEntry
+    TableData, Table, Graphics, Legend, LegendEntry
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
     push_preamble!
 
@@ -28,26 +28,40 @@ if !isfile(joinpath(@__DIR__, "..", "deps", "deps.jl"))
 end
 include("../deps/deps.jl")
 
+"""
+    print_tex(io, elt, [container])
+
+Print `elt` to `io` as LaTeX code. The optional third argument allows methods to
+work differently depending on the container.
+
+This method should indent as if at the top level, containers indent their
+contents as necessary. See [`print_indent`](@ref).
+"""
 print_tex(io::IO, a, b) = print_tex(io, a)
 print_tex(a) = print_tex(STDOUT, a)
 
 include("options.jl")
 include("utilities.jl")
 
-function print_tex(io_main::IO, str::AbstractString)
-    print_indent(io_main) do io
-        print(io, str)
-    end
-end
+"""
+    $SIGNATURES
 
-function print_tex(io_main::IO, vs::Vector)
-    print_indent(io_main) do io
-        for v in vs
-            print_tex(io, v)
-        end
-    end
-end
+Print a string *as is*, terminated with a newline.
 
+!!! note
+
+    This is used as a workaround for LaTeX code that does not have a
+    corresponding type, eg as elements in [`Axis`](@ref). `raw` or
+    `LaTeXStrings` are useful to avoid piling up backslashes. The newline is
+    added to separate tokens.
+"""
+print_tex(io::IO, str::AbstractString) = println(io, str)
+
+"""
+    $SIGNATURES
+
+Real numbers are printed as is, except for non-finite representation.
+"""
 function print_tex(io::IO, x::Real)
     if isfinite(x)
         print(io, x)
@@ -64,7 +78,6 @@ end
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",
                                                   "where T is the type of the data to dispatch on.")))
-
 
 
 """

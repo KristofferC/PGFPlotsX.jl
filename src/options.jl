@@ -72,10 +72,18 @@ function Base.merge!(a::OptionType, d::Options)
     return a
 end
 
-function print_options(io::IO, options::Options)
+"""
+    $SIGNATURES
+
+Print options between `[]`. For each option, the value is printed using
+[`print_opt`](@ref). Unless `newline == true` (the default), a newline follows
+the `]`, otherwise a space.
+"""
+function print_options(io::IO, options::Options; newline = true)
     print(io, "[")
     print_opt(io, options)
-    print(io, "]\n")
+    print(io, "]")
+    newline ? println(io) : print(io, " ")
 end
 
 accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
@@ -110,8 +118,8 @@ function print_opt(io::IO, d::AbstractDict)
     end
 end
 
-print_opt(io::IO, s) = print(io, s)
-print_opt(io::IO, v::Vector) = print(io, join(v, ","))
+print_opt(io::IO, s) = print_tex(io, s)
+print_opt(io::IO, v::AbstractVector) = print(io, join(v, ","))
 
 function print_opt(io::IO, t::Tuple)
     length(t) == 0 && return
@@ -121,3 +129,5 @@ function print_opt(io::IO, t::Tuple)
         i != length(t) && print(io, "}")
     end
 end
+
+print_opt(io::IO, str::AbstractString) = print(io, str)

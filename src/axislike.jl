@@ -26,17 +26,17 @@ Base.append!(axislike::AxisLike, elt) = (append!(axislike.contents, elt); axisli
 
 (T::Type{<:AxisLike})(contents...) = T(Options(), contents...)
 
-function print_tex(io_main::IO, axislike::T) where {T <: AxisLike}
+function print_tex(io::IO, axislike::T) where {T <: AxisLike}
     @unpack options, contents = axislike
     name = axislike_environment(T)
-    print_indent(io_main) do io
-        print(io, "\\begin{", name, "}")
-        print_options(io, options)
+    print(io, "\\begin{", name, "}")
+    print_options(io, options)
+    print_indent(io) do io
         for elt in contents
             print_tex(io, elt, axislike)
         end
-        print(io, "\\end{", name, "}")
     end
+    println(io, "\\end{", name, "}")
 end
 
 function save(filename::String, axislike::AxisLike; kwargs...)
@@ -83,11 +83,11 @@ The `contents` after the global options are processed as follows:
 """
 @define_axislike GroupPlot "groupplot"
 
-function print_tex(io_main::IO, groupplot::GroupPlot)
+function print_tex(io::IO, groupplot::GroupPlot)
     @unpack options, contents = groupplot
-    print_indent(io_main) do io
-        print(io, "\\begin{groupplot}")
-        print_options(io, options)
+    print(io, "\\begin{groupplot}")
+    print_options(io, options)
+    print_indent(io) do io
         for elt in contents
             if elt isa Options
                 print(io, "\\nextgroupplot")
@@ -100,6 +100,6 @@ function print_tex(io_main::IO, groupplot::GroupPlot)
                 print_tex(io, elt)
             end
         end
-        print(io, "\\end{groupplot}")
     end
+    println(io, "\\end{groupplot}")
 end
