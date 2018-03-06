@@ -31,7 +31,7 @@ for cmap in colormaps
     push_preamble!(td, (cmap, Colors.colormap(cmap)))
 end
 
-tp = TikzPicture(&quot;scale&quot; =&gt; 0.5)
+tp = @pgf TikzPicture({ &quot;scale&quot; =&gt; 0.5 })
 push!(td, tp)
 gp = @pgf GroupPlot({ group_style = {group_size = &quot;2 by 2&quot;}})
 push!(tp, gp)
