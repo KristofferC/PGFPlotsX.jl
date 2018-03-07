@@ -40,6 +40,7 @@ end
     @test squashed_repr_tex(NaN) == "nan"
     @test squashed_repr_tex(Inf) == "+inf"
     @test squashed_repr_tex(-Inf) == "-inf"
+    @test squashed_repr_tex(missing) == "nan"
 end
 
 @testset "coordinate" begin

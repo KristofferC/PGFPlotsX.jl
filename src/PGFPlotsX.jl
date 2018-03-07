@@ -9,6 +9,7 @@ using Compat
 using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions
+using Missings
 using Parameters
 using Requires
 
@@ -74,6 +75,8 @@ function print_tex(io::IO, x::Real)
         throw(ArgumentError("Don't know how to print $x for LaTeX."))
     end
 end
+
+print_tex(io::IO, ::Missing) = print(io, "nan")
 
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",

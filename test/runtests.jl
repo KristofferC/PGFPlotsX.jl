@@ -6,6 +6,7 @@ using Contour
 using DataFrames
 using LaTeXStrings
 using RDatasets
+using Missings
 
 if get(ENV, "CI", false) == true
     PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
