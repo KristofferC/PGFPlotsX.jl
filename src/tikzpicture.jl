@@ -17,7 +17,8 @@ end
 
 TikzPicture(elements::TikzElementOrStr...) = TikzPicture(Options(), elements...)
 
-Base.push!(tp::TikzPicture, element::TikzElementOrStr) = push!(tp.elements, element)
+Base.push!(tp::TikzPicture, items::TikzElementOrStr...) = push!(tp.elements, items...)
+Base.append!(tp::TikzPicture, items::TikzElementOrStr) = append!(tp.elements, items)
 
 function print_tex(io::IO, tp::TikzPicture)
     @unpack options, elements = tp
