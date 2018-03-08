@@ -22,7 +22,8 @@ struct TikzDocument
     end
 end
 
-Base.push!(td::TikzDocument, v) = (push!(td.elements, v); td)
+Base.push!(td::TikzDocument, items...) = (push!(td.elements, items...); td)
+Base.append!(td::TikzDocument, items) = (append!(td.elements, items); td)
 
 """
     $SIGNATURES

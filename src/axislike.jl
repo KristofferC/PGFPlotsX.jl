@@ -21,8 +21,8 @@ Return the corresponding LaTeX environment name.
 """
 function axislike_environment end
 
-Base.push!(axislike::AxisLike, elt) = (push!(axislike.contents, elt); axislike)
-Base.append!(axislike::AxisLike, elt) = (append!(axislike.contents, elt); axislike)
+Base.push!(axislike::AxisLike, items...) = (push!(axislike.contents, items...); axislike)
+Base.append!(axislike::AxisLike, items) = (append!(axislike.contents, items); axislike)
 
 (T::Type{<:AxisLike})(contents...) = T(Options(), contents...)
 
