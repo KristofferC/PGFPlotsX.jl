@@ -8,7 +8,7 @@ DocTestSetup = quote
 end
 ```
 
-In PGFPlots, options are given as a list of keys, that might have corresponding values,
+In `pgfplots`, options are given as a list of keys, that might have corresponding values,
 inside of two square brackets e.g.
 
 ```tex
@@ -20,8 +20,6 @@ inside of two square brackets e.g.
 This section shows the method for which to set and retrieve such options in Julia.
 
 ## Setting options when constructing an object
-
-
 
 When constructing an object (like a `Plot`), options to that object can be entered in the argument list
 where a string represents a key without a value (e.g. `"very thick"`) and a pair represents a key/value option, (e.g. `"samples" => 50`).

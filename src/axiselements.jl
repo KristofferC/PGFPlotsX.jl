@@ -239,7 +239,7 @@ Construct coordinates from a matrix of values and edge vectors, such that
 consistently with the `mesh/ordering=x varies` option of `pgfplots` (the
 default).
 
-```jldoctest
+```julia
 x = linspace(0, 1, 10)
 y = linspace(-1, 2, 13)
 z = sin.(x) + cos.(y')

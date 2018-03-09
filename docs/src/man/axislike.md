@@ -6,11 +6,11 @@ DocTestSetup = quote
 end
 ```
 
-This section documents constructs which are similar to `Axis`. In addition to [options](@ref Options), they accept all [axis elements](@ref Axis elements).
+This section documents constructs which are similar to `Axis`. In addition to [options](@ref Options), they accept all [axis elements](@ref axis_elements).
 
-### `Axis`
+### Axis
 
-```@doc
+```@docs
 Axis
 ```
 
@@ -57,7 +57,7 @@ julia> print_tex(a)
 Any struct can be pushed in to an `Axis`. What will be printed is the result of `PGFPlotsX.print_tex(io::IO, t::T, ::Axis)` where `T` is the type of the struct.
 Pushed strings are written out verbatim.
 
-### `GroupPlot`
+### GroupPlot
 
 ```@docs
 GroupPlot
@@ -119,7 +119,7 @@ julia> print_tex(gp)
 \end{groupplot}
 ```
 
-### `PolarAxis`
+### PolarAxis
 
 A `PolarAxis` plot data on a polar grid.
 
@@ -141,7 +141,7 @@ julia> print_tex(p)
 \end{polaraxis}
 ```
 
-### Semilog and log axes
+### Semilog and log-log axes
 
 ```@docs
 SemiLogXAxis

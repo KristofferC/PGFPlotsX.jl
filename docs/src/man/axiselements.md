@@ -1,4 +1,4 @@
-# Axis elements
+# [Axis elements](@id axis_elements)
 
 This section describes objects which can be elements of an [`Axis`-like object](@ref axislike).
 
@@ -14,7 +14,7 @@ The following types are accepted as elements of `Axis` & friends.
 
 A plot is an element inside an axis. It could be a simple line or a 3D surface etc. A plot is created by wrapping one of the structs shown above.
 
-### `Plot` and `PlotInc`
+### Plot and PlotInc
 
 For `\addplot` and `\addplot+`.
 
@@ -37,7 +37,7 @@ julia> print_tex(p)
     ;
 ```
 
-### `Plot3`
+### Plot3
 
 `Plot3` will use the `\addplot3` command instead of `\addplot` to draw 3D graphics.
 Otherwise it works the same as `Plot`. The incremental variant is `Plot3Inc`.

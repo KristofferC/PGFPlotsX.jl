@@ -58,14 +58,39 @@ macro define_axislike(name, latex_environment)
     end
 end
 
+"""
+    Axis([options], elements...)
+
+Linear axes, corresponds to `axis` in `pgfplots`.
+"""
 @define_axislike Axis "axis"
 
+"""
+    SemiLogXAxis([options], elements...)
+
+Log `x` and linear `y` axes, corresponds to `semilogxaxis` in `pgfplots`.
+"""
 @define_axislike SemiLogXAxis "semilogxaxis"
 
+"""
+    SemiLogYAxis([options], elements...)
+
+Linear `x` and log `y` axes, corresponds to `semilogyaxis` in `pgfplots`.
+"""
 @define_axislike SemiLogYAxis "semilogyaxis"
 
+"""
+    LogLogAxis([options], elements...)
+
+Log-log axes, corresponds to `loglogaxis` in `pgfplots`.
+"""
 @define_axislike LogLogAxis "loglogaxis"
 
+"""
+    PolarAxis([options], elements...)
+
+Polar axes, corresponds to `polaraxis` in `pgfplots`.
+"""
 @define_axislike PolarAxis "polaraxis"
 
 """

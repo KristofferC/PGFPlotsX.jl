@@ -50,8 +50,8 @@ PGFPlotsX allows building up plots from types that correspond very closely to `p
 
 | `pgfplots` (`[]` indicates options) | `PGFPlotsX`                                               | remark                                                      |
 |-------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------|
-| `table[] { ... }`                   | [`Table([options], ...`)](@ref Table)                     | preferred to [`Coordinates`](@ref)                          |
-| `coordinates { ... }`               | [`Coordinates(...)`](@ref Coordinates)                    | useful error bars                                           |
+| `table[] { ... }`                   | [`Table([options], ...`)](@ref table_header)              | preferred to [`Coordinates`](@ref)                          |
+| `coordinates { ... }`               | [`Coordinates(...)`](@ref coordinates_header)             | useful error bars                                           |
 | `\addplot[] { ... }` & friends      | [`Plot([options], ...)` & friends](@ref plotlike)         | also [`PlotInc`](@ref), [`Plot3`](@ref), [`Plot3Inc`](@ref) |
 | `\legend`, `\legendentry[]`         | [`Legend`](@ref), [`Legendentry([options])`](@ref Legend) |                                                             |
 | `{expression}`                      | [`Expression(...)`](@ref Expression)                      | math formulas                                               |

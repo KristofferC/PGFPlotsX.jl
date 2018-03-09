@@ -8,7 +8,7 @@ end
 
 There are multiple ways of representing data in PGFPlots.
 
-## `Table` and `TableData`
+## [Table and TableData](@id table_header)
 
 A `Table` represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the `.tex` file. `Table`s can have options.
 
@@ -48,7 +48,7 @@ table[x={Dof}, y={Err}]
 
 If you load the DataFrames package, you can also create tables from data frames, see the examples in [Julia types](@ref).
 
-## `Coordinates`
+## [Coordinates](@id coordinates_header)
 
 Coordinates a are a list of points `(x,y)` or `(x,y,z)`. They can be created as:
 
@@ -104,7 +104,7 @@ coordinates {
 }
 ```
 
-## `Expression`
+## Expression
 
 ```@docs
 Expression
@@ -119,7 +119,7 @@ julia> print_tex(ex)
 {exp(-x^2)}
 ```
 
-## `Graphics`
+## Graphics
 
 ```@docs
 Graphics

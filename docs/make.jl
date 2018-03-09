@@ -19,6 +19,7 @@ makedocs(
             "man/axislike.md",
             "man/picdoc.md",
             "man/save.md",
+            "man/internals.md",
             ],
         "Examples" => [
             "examples/coordinates.md",

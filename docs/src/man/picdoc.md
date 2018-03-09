@@ -1,4 +1,4 @@
-# `TikzPicture`
+# TikzPicture
 
 ```@meta
 DocTestSetup = quote
@@ -30,7 +30,7 @@ julia> print_tex(tp)
 \end{tikzpicture}
 ```
 
-# `TikzDocument`
+# TikzDocument
 
 A `TikzDocument` is the highest level object and represents a whole .tex file.
 It includes a list of objects that will sit between `\begin{document}` and `\end{document}`.
