@@ -12,8 +12,12 @@ makedocs(
     pages = Any[
         "Home" => "index.md",
         "Manual" => [
-            "man/options.md",
             "man/structs.md",
+            "man/options.md",
+            "man/data.md",
+            "man/axiselements.md",
+            "man/axislike.md",
+            "man/picdoc.md",
             "man/save.md",
             ],
         "Examples" => [

@@ -2,11 +2,19 @@
 # Expression #
 ##############
 
+"""
+    Expression(expressions::Vector{String})
+
+    Expression(strings::String...)
+
+An `Expression` is a string or multiple strings, representing a function, and is
+written in a way LaTeX understands.
+"""
 struct Expression <: OptionType
     fs::Vector{String}
 end
 
-Expression(str::String) = Expression([str])
+Expression(str::String...) = Expression(collect(String, str))
 
 function print_tex(io::IO, f::Expression)
     multiple_f = length(f.fs) != 1
@@ -119,7 +127,7 @@ end
 """
     $SIGNATURES
 
-Convert the argument, which is can be any iterable object, to coordinates.
+Convert the argument, which can be any iterable object, to coordinates.
 
 Specifically,
 
@@ -236,6 +244,7 @@ x = linspace(0, 1, 10)
 y = linspace(-1, 2, 13)
 z = sin.(x) + cos.(y')
 Coordinates(x, y, z)
+```
 """
 function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
                      meta::Union{Void, AbstractMatrix} = nothing)
@@ -287,7 +296,7 @@ after `options`.
 printed using `print_tex`. `colnames` is a vector of column names (converted to
 string), or `nothing` for a table with no column names.
 
-When `rowsep` is `true`, an additional `\\` is used as a row separator.
+When `rowsep` is `true`, an additional `\\\\` is used as a row separator.
 
 After each index in `scanlines`, extra row separators are inserted. This can be
 used for skipping coordinates or implicitly defining the dimensions of a matrix
@@ -421,7 +430,7 @@ Tabular data with options, corresponding to `table[options] { ... }` in
 
 `options` stores the options. If that is followed by an `AbstractString`, that
 will be used as a filename to read data from, otherwise all the arguments are
-passed on to `TableData`.
+passed on to [`TableData`](@ref).
 
  Examples:
 
@@ -432,7 +441,7 @@ Table([1:10, 11:20])                      # same contents, unnamed
 
 Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
 
-Table(@pgf { "x index" = 2, "y index" = 1" }, randn(10, 3))
+@pgf Table({ "x index" = 2, "y index" = 1" }, randn(10, 3))
 
 let x = linspace(0, 1, 10), y = linspace(-2, 3, 15)
     Table(x, y, sin.(x + y'))             # edges & matrix
@@ -457,6 +466,11 @@ end
 # Graphics #
 ############
 
+"""
+    Graphics([options], filename)
+
+`Graphics` data simply wraps an image (eg a `.png` file).
+"""
 struct Graphics <: OptionType
     options::Options
     filename::String
@@ -580,6 +594,14 @@ end
 struct Legend
     labels::Vector{String}
 end
+
+"""
+    $SIGNATURES
+
+Corresponds to `\\legend{ ... }` in `pgfplots`. Specifies multiple legends for
+an axis, its position is irrelevant.
+"""
+Legend(labels::AbstractString...) = Legend(collect(String, labels))
 
 print_tex(io::IO, l::Legend) = println(io, "\\legend{", join(l.labels, ", "), "}")
 

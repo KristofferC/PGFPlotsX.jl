@@ -1,3 +1,5 @@
+# Options
+
 # Defining options
 
 ```@meta
@@ -19,7 +21,7 @@ This section shows the method for which to set and retrieve such options in Juli
 
 ## Setting options when constructing an object
 
-### As arguments to the constructor
+
 
 When constructing an object (like a `Plot`), options to that object can be entered in the argument list
 where a string represents a key without a value (e.g. `"very thick"`) and a pair represents a key/value option, (e.g. `"samples" => 50`).
