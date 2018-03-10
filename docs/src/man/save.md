@@ -10,7 +10,7 @@ Figures are shown in the Juno plot pane as `svg`s by default. If you want to sho
 
 ## REPL
 
-In the REPL, the figure will be exported to a `pdf` and attempted to be opened in the default `pdf` viewing program. If you wish to disable this, run `pgf.enable_interactive(false)`.
+In the REPL, the figure will be exported to a `pdf` and attempted to be opened in the default `pdf` viewing program. If you wish to disable this, run `PGFPlotsX.enable_interactive(false)`.
 
 ## Exporting to files
 
@@ -22,18 +22,25 @@ pgfsave(filename::String, figure; include_preamble::Bool = true, dpi = 150)
 
 where the file extension of `filename` determines the file type (can be `pdf`, `svg` or `tex`, or the standalone `tikz` file extensions below), `include_preamble` sets if the preamble should be included in the output (only relevant for `tex` export) and `dpi` determines the dpi of the figure (only relevant for `png` export).
 
-The standalone file extensions `.tikz`, `.TIKZ`, `.TikZ`, `.pgf`, `.PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
-
 ```@docs
 pgfsave
 ```
+
+The standalone file extensions `.tikz`, `.TIKZ`, `.TikZ`, `.pgf`, `.PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
+
+You can use the externalization feature of `tikz`/`pgfplots`, which caches generated `pdf` files for faster compilation of LaTeX documents. Use
+```tex
+\usepgfplotslibrary{external}
+\tikzexternalize
+```
+in the preamble of the LaTeX document which uses these plots, see the manuals for more details.
 
 ## [Customizing the preamble](@id customizing_the_preamble)
 
 It is common to use a custom preamble to add user-defined macros or use different packages.
 There are a few ways to do this:
 
-* `push!` strings into the global variable `CUSTOM_PREAMBLE`. Each string in that vector will be inserted in the preamble.
+* `push!` strings into the global variable [`PGFPlotsX.CUSTOM_PREAMBLE`](@ref). Each string in that vector will be inserted in the preamble.
 
 * Modify the `custom_preamble.tex` file in the `deps` folder of the directory of the package. This file is directly spliced into the preamble of the output.
 
