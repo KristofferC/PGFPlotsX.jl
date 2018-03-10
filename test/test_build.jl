@@ -32,7 +32,7 @@ is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
                 test_preamble_env = "test preamble env"
                 test_preamble_var = "test preamble var"
 
-                push!(CUSTOM_PREAMBLE, test_preamble_var)
+                push!(PGFPlotsX.CUSTOM_PREAMBLE, test_preamble_var)
                 print(f, test_preamble_env)
                 close(f)
 
@@ -45,7 +45,7 @@ is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
                 @test contains(texstring, test_preamble_env)
                 @test contains(texstring, test_preamble_var)
             finally
-                empty!(CUSTOM_PREAMBLE)
+                empty!(PGFPlotsX.CUSTOM_PREAMBLE)
             end
         end
     end
