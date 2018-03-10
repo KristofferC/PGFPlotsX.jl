@@ -235,7 +235,7 @@ end
     $SIGNATURES
 
 Construct coordinates from a matrix of values and edge vectors, such that
-``z[i,j]`` corresponds to `x[i]` and `y[j]`. Empty scanlines are inserted,
+`z[i,j]` corresponds to `x[i]` and `y[j]`. Empty scanlines are inserted,
 consistently with the `mesh/ordering=x varies` option of `pgfplots` (the
 default).
 

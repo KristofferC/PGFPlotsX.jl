@@ -41,7 +41,6 @@ There are a few ways to do this:
 
 ```@docs
 CUSTOM_PREAMBLE
-PGFPlotsX.CUSTOM_PREAMBLE_PATH
 ```
 
 ## Choosing the LaTeX engine used
@@ -51,8 +50,6 @@ By default, `LUALATEX` is used if it was available during `Pkg.build()`. The act
 
 ## Custom flags
 
-Custom flags to the engine can be used in the latex command by `push!`-ing them into the global variable `CUSTOM_FLAGS`.
-
 ```@docs
-PGFPlotsX.CUSTOM_FLAGS
+CUSTOM_FLAGS
 ```

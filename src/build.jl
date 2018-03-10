@@ -38,14 +38,29 @@ function run_latex_once(filename::String, eng::LaTeXEngine, flags)
 end
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
+
+"""
+Custom flags to the engine can be used in the latex command by `push!`-ing them
+into the global variable `CUSTOM_FLAGS`.
+"""
 CUSTOM_FLAGS = Union{String}[]
 
 ############
 # Preamble #
 ############
 
+"""
+A vector of stings, added after [`DEFAULT_PREAMBLE`](@ref).
+
+Use this for additional definitions `\\usepackage` statements required by the LaTeX
+code you include into plots.
+"""
 CUSTOM_PREAMBLE = String[]
 
+"""
+The default preamble for LaTeX documents. Don't change this, customize
+[`CUSTOM_PREAMBLE`](@ref) instead.
+"""
 DEFAULT_PREAMBLE =
 String[
 "\\usepackage{pgfplots}",

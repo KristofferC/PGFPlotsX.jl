@@ -100,7 +100,7 @@ A group plot, using the `groupplots` library of `pgfplots`.
 
 The `contents` after the global options are processed as follows:
 
-1. [`Options`](@ref) will emit a ``\\nextgroupplot` with the given options,
+1. [`Options`](@ref) (ie from `@pgf {}`) will emit a `\\nextgroupplot` with the given options,
 
 2. `nothing` is emitted as a `\\nextgroupplot[group/empty plot]`,
 

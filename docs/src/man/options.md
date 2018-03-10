@@ -1,4 +1,4 @@
-# Options
+# [Options](@id options_header)
 
 # Defining options
 

@@ -32,7 +32,7 @@ julia> print_tex(tp)
 
 # TikzDocument
 
-A `TikzDocument` is the highest level object and represents a whole .tex file.
+A `TikzDocument` is the highest level object and represents a whole `.tex` file.
 It includes a list of objects that will sit between `\begin{document}` and `\end{document}`.
 
 ```@docs

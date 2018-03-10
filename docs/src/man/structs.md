@@ -44,7 +44,7 @@ The plot is built up from two `Table`s, which are tabular representations of dat
 
 [`TikzPicture`](@ref) wraps the [`Axis`](@ref axislike). If you omit this, this package will do it for you automatically. Similarly, if you have a single `Plot`-like object and don't want to customize the `Axis`, it will also be added automatically.
 
-Finally, [`@pgf`](@ref) is a convenient syntax for specifying options. It is is a macro that traverses its argument recursively, and converts it to a `PGFPlotsX.Options`. It is recommended that you use this macro. We talk about [Options](@ref) in detail later. The convention of this library is to apply `@pgf` to whole expressions to avoid repetition, but this is not required.
+Finally, [`@pgf`](@ref) is a convenient syntax for specifying [options](@ref options_header). It is is a macro that traverses its argument recursively, and converts it to a `PGFPlotsX.Options`. It is recommended that you use this macro. The convention of this library is to apply `@pgf` to whole expressions to avoid repetition, but this is not required.
 
 PGFPlotsX allows building up plots from types that correspond very closely to `pgfplots` counterparts. The table below gives an overview of the types defined by this package. For most `pgfplots` constructs, `[]` can be used to specify options, this corresponds to the `[options]` argument in the table above.
 

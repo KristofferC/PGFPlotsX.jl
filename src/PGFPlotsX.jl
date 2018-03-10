@@ -21,6 +21,11 @@ export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
     push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
+
+"""
+A file which is spliced directly to the preamble. Customize the file at this
+path for site-specific setting that apply for every plot.
+"""
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
 const AbstractDict = Union{Dict, OrderedDict}
 

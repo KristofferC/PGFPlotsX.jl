@@ -6,7 +6,7 @@ DocTestSetup = quote
 end
 ```
 
-This section documents constructs which are similar to `Axis`. In addition to [options](@ref Options), they accept all [axis elements](@ref axis_elements).
+This section documents constructs which are similar to `Axis`. In addition to [options](@ref options_header), they accept all [axis elements](@ref axis_elements).
 
 ### Axis
 
@@ -68,7 +68,8 @@ A `GroupPlot` is a way of grouping multiple plots in one figure.
 Example:
 
 ```jldoctest
-julia> @pgf gp = GroupPlot({group_style = { group_size = "2 by 1",}, height = "6cm", width = "6cm"});
+julia> @pgf gp = GroupPlot({group_style = { group_size = "2 by 1",},
+                                            height = "6cm", width = "6cm"});
 
 julia> for (expr, data) in zip(["x^2", "exp(x)"], ["data1.dat", "data2.dat"])
            push!(gp, Plot(Expression(expr)),  Plot(Table(data)))
