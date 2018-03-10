@@ -8,7 +8,13 @@ DocTestSetup = quote
 end
 ```
 
-The following types are accepted as elements of `Axis` & friends.
+The following types are accepted as elements of `Axis` & friends:
+
+- plot variants: [`Plot`](@ref), [`PlotInc`](@ref), [`Plot3`](@ref), [`Plot3Inc`](@ref),
+
+- legend specifications: [`Legend`](@ref), [`LegendEntry`](@ref),
+
+- [strings](@ref latex_code_strings), which are inserted verbatim.
 
 ## [Plots](@id plotlike)
 
@@ -16,7 +22,7 @@ A plot is an element inside an axis. It could be a simple line or a 3D surface e
 
 ### Plot and PlotInc
 
-For `\addplot` and `\addplot+`.
+For `\addplot` and `\addplot+`, respectively.
 
 ```@docs
 Plot
@@ -71,7 +77,7 @@ Legend
 LegendEntry
 ```
 
-A `Legend` can be used to add legends to plots.
+A [`Legend`](@ref) can be used to add legends to an axis, for multiple plots at the same time. In contrast, [`LegendEntry`](@ref) applies to the preceding plot.
 
 Example:
 
@@ -80,6 +86,6 @@ julia> print_tex(Legend(["Plot A", "Plot B"]))
 \legend{Plot A, Plot B}
 ```
 
-## Using LaTeX code directly
+## [Using LaTeX code directly](@id latex_code_strings)
 
-In case there is no type defined in this package for some construct, you can use a `String` in an axis, and it will be printed as is. [Raw string literals](https://docs.julialang.org/en/latest/manual/strings/#man-raw-string-literals-1) and the package [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) are useful to avoid a lot of escaping.
+In case there is no type defined in this package for some construct, you can use a `String` in an axis, and it is inserted verbatim into the generated LaTeX code. [Raw string literals](https://docs.julialang.org/en/latest/manual/strings/#man-raw-string-literals-1) and the package [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) are useful to avoid a lot of escaping.

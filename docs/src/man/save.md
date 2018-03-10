@@ -28,7 +28,7 @@ The standalone file extensions `.tikz`, `.TIKZ`, `.TikZ`, `.pgf`, `.PGF` save La
 pgfsave
 ```
 
-## Customizing the preamble
+## [Customizing the preamble](@id customizing_the_preamble)
 
 It is common to use a custom preamble to add user-defined macros or use different packages.
 There are a few ways to do this:

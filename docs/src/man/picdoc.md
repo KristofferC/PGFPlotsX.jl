@@ -61,7 +61,7 @@ Hello World
 \end{document}
 ```
 
-A `TikzDocument` uses global variables to construct a preamble, and allows the user to add extra lines to this (eg in case you want to add `\usepackage` lines), or disable it altogether.
+A `TikzDocument` uses [global variables](@ref customizing_the_preamble) to construct a preamble, and allows the user to add extra lines to this (eg in case you want to add `\usepackage` lines), or disable it altogether.
 
 !!! note
 

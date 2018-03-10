@@ -54,7 +54,7 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-Any struct can be pushed in to an `Axis`. What will be printed is the result of `PGFPlotsX.print_tex(io::IO, t::T, ::Axis)` where `T` is the type of the struct.
+Any struct can be pushed into an `Axis`. The LaTeX code that is generated is the result of `PGFPlotsX.print_tex(io::IO, t::T, ::Axis)`, where `T` is the type of the struct.
 Pushed strings are written out verbatim.
 
 ### GroupPlot
@@ -96,8 +96,8 @@ julia> print_tex(gp)
 \end{groupplot}
 ```
 
-In order to add options to the `\nextgroupplot` call simply add arguments in
-an "option like way" (using strings / pairs / `@pgf`) when you `push!`
+In order to add options to the `\nextgroupplot` call, simply add arguments in
+an “option like way” (using `@pgf`) when you `push!`
 
 ```jldoctest
 julia> @pgf gp = GroupPlot({group_style = { group_size = "1 by 1",}, height = "6cm", width = "6cm"});
@@ -122,7 +122,7 @@ julia> print_tex(gp)
 
 ### PolarAxis
 
-A `PolarAxis` plot data on a polar grid.
+A `PolarAxis` plots data on a polar grid.
 
 Example:
 

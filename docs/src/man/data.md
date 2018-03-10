@@ -12,7 +12,7 @@ There are multiple ways of representing data in PGFPlots.
 
 A `Table` represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the `.tex` file. `Table`s can have options.
 
-`TableData` is the representation of just the data, without the `table[options]` part. It is useful for inline tables in specials cases. Also, calls to `Table` use `TableData` to convert the arguments.
+`TableData` is the representation of just the data, without the `table[options]` part. It is useful for inline tables in specials cases. Also, calls to `Table` use `TableData` to convert the arguments, so if you want to learn about all the ways to construct a `Table`, see the methods of [`TableData`](@ref).
 
 ```@docs
 Table
