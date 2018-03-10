@@ -1,6 +1,6 @@
 # [Options](@id options_header)
 
-# Defining options
+Options, which usually occur between brackets (`[]`) after commands like `\addplot`, `table`, or beginnings of environments like `\begin{axis}` in LaTeX code, are key to most of the functionality of `pgfplots`.
 
 ```@meta
 DocTestSetup = quote
@@ -8,22 +8,15 @@ DocTestSetup = quote
 end
 ```
 
-In `pgfplots`, options are given as a list of keys, that might have corresponding values,
-inside of two square brackets e.g.
+## The `@pgf` macro
 
-```tex
-\begin{axis}[ybar, width = 4.5cm]
-...
-\end{axis}
+This package suggests the use of the `@pgf {}` macro to define options.
+
+```@docs
+@pgf
 ```
 
-This section shows the method for which to set and retrieve such options in Julia.
-
-## Setting options when constructing an object
-
-When constructing an object (like a `Plot`), options to that object can be entered in the argument list
-where a string represents a key without a value (e.g. `"very thick"`) and a pair represents a key/value option, (e.g. `"samples" => 50`).
-This works well when the options are few and there is only one level of options in the object.
+For constructors that accept options, they always come *first*. When omitted, there are assumed to be no options.
 
 ```jldoctest p1
 julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
@@ -40,23 +33,7 @@ julia> print_tex(p); # print_tex can be used to preview the generated .tex
     ;
 ```
 
-### The `@pgf` macro
-
-When there are nested options the previous method does not work so well.
-Instead, we provide a macro `@pgf` so that options can be entered similarly to how they are in tex.
-
-The previous example is then written as
-
-```jldoctest p1
-julia> @pgf Plot(
-           {
-               very_thick,
-               mark = "halfcircle"
-           },
-           c);
-```
-
-A more complicated example is:
+Inside the expression following `@pgf`, `{}` expressions can be nested, and can also occur in multiple places.
 
 ```jldoctest p1
 julia> @pgf a = Axis(
@@ -69,7 +46,11 @@ julia> @pgf a = Axis(
                },
                ymode = "log"
            },
-           PlotInc(c)
+           PlotInc(
+           {
+               smooth
+           },
+           c)
        );
 ```
 
@@ -78,7 +59,7 @@ which is printed as
 ```jldoctest p1
 julia> print_tex(a)
 \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
-    \addplot+[]
+    \addplot+[smooth]
         coordinates {
             (1, 2)
             (2, 4)
@@ -88,24 +69,42 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-The macro can be applied to any type of expression and will be applied to everything inside that expression
-that is of the form `{ expr }`.
+Each option is either a standalone *keyword* (without value, modifying the plot by itself), or a *keyword-value pair*. Keywords can be entered
 
-!!!note
-    * Keys that contain symbols that in Julia are operators (e.g the key `"axis background/.style"`) have to be entered
-      as strings, as in the example above.
+1. as Julia identifiers, which is useful for keywords with no spaces (eg `smooth`),
+
+2. separated by underscores, which are replaced by spaces (eg `only_marks` will appear in LaTeX code as `only marks`),
+
+3. or quoted as strings, eg `"very thick"`.
+
+*Values* are provided after a `=`, `:`, or `=>`, so the following are equivalent:
+
+1. `@pgf { draw = "black" }`,
+
+2. `@pgf { draw : "black" }`,
+
+3. `@pgf { draw => "black" }`.
+
+Values should be valid Julia expressions, as they are evaluated, so you can't use `@pgf { draw = black }` unless `black` has meaning in thats context.
+
+!!! note
+
+    Keys that contain symbols that in Julia are operators (e.g the key `"axis background/.style"`) have to be entered as strings.
 
 ### Transformations
 
-The following transformations of keys/values are done when the options are written in .tex style:
+In addition to replacing underscrores in keys, the following transformations of values are done when the options are written in `.tex` style:
 
-* Underlines in keys are replaced with spaces e.g. `very_thick -> "very thick"`.
 * A list as a value is written as "comma joined" e.g. `[1, 2, 3] -> "1, 2, 3"`.
+
 * A tuple as a value is written with braces delimiting the elements e.g. `(60, 30) -> {60}{30}`
+
 
 ## Modifying options after an object is created
 
 It is sometimes convenient to set and get options after an object has been created.
+
+You can use `getindex`, `setindex!` (ie `obj["option"]` or `obj["option"] = value`, respectively), and `delete!` just like you would for modifiable associative collections (eg a `Dict`).
 
 ```jldoctest
 julia> c = Coordinates([1, 2, 3], [2, 4, 8]);
@@ -149,5 +148,4 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-It is then easy to apply for example a "theme" to an axis where the themed is a set of options already saved.
-Just `merge!` the theme into an `Axis`.
+It is then easy to apply for example a "theme" to an axis where the themed is a set of options already saved. Just `merge!` the theme into an `Axis`.
