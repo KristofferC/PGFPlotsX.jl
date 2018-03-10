@@ -40,7 +40,7 @@ There are a few ways to do this:
 * Define the environment variable `PGFPLOTSX_PREAMBLE_PATH` to a path pointing to a preamble file. The content of that will be inserted into the preamble.
 
 ```@docs
-CUSTOM_PREAMBLE
+PGFPlotsX.CUSTOM_PREAMBLE
 ```
 
 ## Choosing the LaTeX engine used
@@ -51,5 +51,5 @@ By default, `LUALATEX` is used if it was available during `Pkg.build()`. The act
 ## Custom flags
 
 ```@docs
-CUSTOM_FLAGS
+PGFPlotsX.CUSTOM_FLAGS
 ```

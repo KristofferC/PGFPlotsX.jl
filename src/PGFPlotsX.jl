@@ -17,8 +17,7 @@ export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, GroupPlot
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry
-export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
-    push_preamble!
+export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 
