@@ -61,42 +61,42 @@ end
 """
     Axis([options], elements...)
 
-Linear axes, corresponds to `axis` in `pgfplots`.
+Linear axes, corresponds to `axis` in PGFPlots.
 """
 @define_axislike Axis "axis"
 
 """
     SemiLogXAxis([options], elements...)
 
-Log `x` and linear `y` axes, corresponds to `semilogxaxis` in `pgfplots`.
+Log `x` and linear `y` axes, corresponds to `semilogxaxis` in PGFPlots.
 """
 @define_axislike SemiLogXAxis "semilogxaxis"
 
 """
     SemiLogYAxis([options], elements...)
 
-Linear `x` and log `y` axes, corresponds to `semilogyaxis` in `pgfplots`.
+Linear `x` and log `y` axes, corresponds to `semilogyaxis` in PGFPlots.
 """
 @define_axislike SemiLogYAxis "semilogyaxis"
 
 """
     LogLogAxis([options], elements...)
 
-Log-log axes, corresponds to `loglogaxis` in `pgfplots`.
+Log-log axes, corresponds to `loglogaxis` in PGFPlots.
 """
 @define_axislike LogLogAxis "loglogaxis"
 
 """
     PolarAxis([options], elements...)
 
-Polar axes, corresponds to `polaraxis` in `pgfplots`.
+Polar axes, corresponds to `polaraxis` in PGFPlots.
 """
 @define_axislike PolarAxis "polaraxis"
 
 """
     GroupPlot([options], contents...)
 
-A group plot, using the `groupplots` library of `pgfplots`.
+A group plot, using the `groupplots` library of PGFPlots.
 
 The `contents` after the global options are processed as follows:
 

@@ -38,7 +38,7 @@ end
 
 Placeholder for an empty line.
 
-In 2D plots, `pgfplots` treats empty lines as *jumps* by default.
+In 2D plots, PGFPlots treats empty lines as *jumps* by default.
 
 In 3D plots (eg `surf` and similar), it is used as a scanline separator to
 establish the dimensions of the matrix.
@@ -236,7 +236,7 @@ end
 
 Construct coordinates from a matrix of values and edge vectors, such that
 `z[i,j]` corresponds to `x[i]` and `y[j]`. Empty scanlines are inserted,
-consistently with the `mesh/ordering=x varies` option of `pgfplots` (the
+consistently with the `mesh/ordering=x varies` option of PGFPlots (the
 default).
 
 ```julia
@@ -287,7 +287,7 @@ const ROWSEP = false
 """
 Tabular data with optional column names.
 
-This corresponds to the part of tables between `{}`'s in `pgfplots`, without the
+This corresponds to the part of tables between `{}`'s in PGFPlots, without the
 options or `table`, so that it can also be used for “inline” tables.
 [`Table`](@ref) will call the constructor for this type to convert arguments
 after `options`.
@@ -426,7 +426,7 @@ end
     Table([options], ...; ...)
 
 Tabular data with options, corresponding to `table[options] { ... }` in
-`pgfplots`.
+PGFPlots.
 
 `options` stores the options. If that is followed by an `AbstractString`, that
 will be used as a filename to read data from, otherwise all the arguments are
@@ -521,10 +521,10 @@ Base.append!(plot::Plot, element) = (append!(plot.trailing, element); plot)
 A plot with the given `data` (eg [`Coordinates`](@ref), [`Table`](@ref),
 [`Expression`](@ref), …) and `options`, which is empty by default.
 
-Corresponds to `\\addplot` in `pgfplots`.
+Corresponds to `\\addplot` in PGFPlots.
 
 `trailing` can be used to provide *trailing path commands* (eg `\\closedcycle`,
-see the `pgfplots` manual), which are emitted using `print_tex`, before the
+see the PGFPlots manual), which are emitted using `print_tex`, before the
 terminating `;`.
 """
 Plot(options::Options, data::PlotData, trailing...) =
@@ -536,7 +536,7 @@ Plot(data::PlotData, trailing...) =
 """
     PlotInc([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot+` form in `pgfplots`.
+Corresponds to the `\\addplot+` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -549,7 +549,7 @@ PlotInc(data::PlotData, trailing...) =
 """
     Plot3([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot3` form in `pgfplots`.
+Corresponds to the `\\addplot3` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -562,7 +562,7 @@ Plot3(data::PlotData, trailing...) =
 """
     Plot3Inc([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot3+` form in `pgfplots`.
+Corresponds to the `\\addplot3+` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -598,7 +598,7 @@ end
 """
     $SIGNATURES
 
-Corresponds to `\\legend{ ... }` in `pgfplots`. Specifies multiple legends for
+Corresponds to `\\legend{ ... }` in PGFPlots. Specifies multiple legends for
 an axis, its position is irrelevant.
 """
 Legend(labels::AbstractString...) = Legend(collect(String, labels))
@@ -619,7 +619,7 @@ end
     LegendEntry([options::Options], name, [isexpanded])
 
 Corresponds to the `\\addlegendentry` and `\\addlegendentryexpanded` forms of
-`pgfplots`.
+PGFPlots.
 """
 LegendEntry(options::Options, name::AbstractString, isexpanded = false)
 

@@ -3,7 +3,7 @@ const TikzElementOrStr = Union{TikzElement, String}
 """
     TikzPicture([options], contents...)
 
-Corredponds to a `tikzpicture` block in `pgfplots`.
+Corredponds to a `tikzpicture` block in PGFPlots.
 
 Elements can also be added with `push!` after contruction.
 """

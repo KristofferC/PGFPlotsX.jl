@@ -1,14 +1,12 @@
 # [Axis elements](@id axis_elements)
 
-This section describes objects which can be elements of an [`Axis`-like object](@ref axislike).
-
 ```@meta
 DocTestSetup = quote
     using PGFPlotsX
 end
 ```
 
-The following types are accepted as elements of `Axis` & friends:
+The following types are accepted as elements of [`Axis` & friends](@ref axislike):
 
 - plot variants: [`Plot`](@ref), [`PlotInc`](@ref), [`Plot3`](@ref), [`Plot3Inc`](@ref),
 
@@ -16,9 +14,15 @@ The following types are accepted as elements of `Axis` & friends:
 
 - [strings](@ref latex_code_strings), which are inserted verbatim.
 
+This section documents these.
+
 ## [Plots](@id plotlike)
 
-A plot is an element inside an axis. It could be a simple line or a 3D surface etc. A plot is created by wrapping one of the structs shown above.
+A plot is an element inside an axis. It can be a wide range of constructs, from a simple line to a 3D surface. A plot is created by wrapping one of the [data structures](@ref Data).
+
+!!! note
+
+    PGFPlots uses `\addplot` & friends for visualization that uses a single data source, in most cases drawn using the same style. If you want to plot multiple sources of data that share axes, eg two time series, your axis will have multiple “plots” in the terminology of PGFPlots.
 
 ### Plot and PlotInc
 

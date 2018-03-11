@@ -1,6 +1,6 @@
 # [Options](@id options_header)
 
-Options, which usually occur between brackets (`[]`) after commands like `\addplot`, `table`, or beginnings of environments like `\begin{axis}` in LaTeX code, are key to most of the functionality of `pgfplots`.
+Options, which usually occur between brackets (`[]`) after commands like `\addplot`, `table`, or beginnings of environments like `\begin{axis}` in LaTeX code, are key to most of the functionality of PGFPlots.
 
 ```@meta
 DocTestSetup = quote
@@ -10,7 +10,7 @@ end
 
 ## The `@pgf` macro
 
-This package suggests the use of the `@pgf {}` macro to define options.
+Use the `@pgf {}` macro to define options.
 
 ```@docs
 @pgf
@@ -54,7 +54,7 @@ julia> @pgf a = Axis(
        );
 ```
 
-which is printed as
+which is converted to LaTeX as
 
 ```jldoctest p1
 julia> print_tex(a)
@@ -68,6 +68,14 @@ julia> print_tex(a)
         ;
 \end{axis}
 ```
+
+!!! note
+
+    If you use `@pgf` inside argument lists, make sure you wrap its argument in parentheses, eg
+    ```julia
+    Plot(@pgf({ scatter }), some_table)
+    ```
+    Otherwise Julia will also pass the subsequent arguments through `@pgf`, which results in an error since they are combined into a tuple.
 
 Each option is either a standalone *keyword* (without value, modifying the plot by itself), or a *keyword-value pair*. Keywords can be entered
 
@@ -85,7 +93,7 @@ Each option is either a standalone *keyword* (without value, modifying the plot 
 
 3. `@pgf { draw => "black" }`.
 
-Values should be valid Julia expressions, as they are evaluated, so you can't use `@pgf { draw = black }` unless `black` has meaning in thats context.
+Values should be valid Julia expressions, as they are evaluated, so you can't use `@pgf { draw = black }` unless `black` has meaning in that context.
 
 !!! note
 
@@ -93,7 +101,7 @@ Values should be valid Julia expressions, as they are evaluated, so you can't us
 
 ### Transformations
 
-In addition to replacing underscrores in keys, the following transformations of values are done when the options are written in `.tex` style:
+In addition to replacing underscores in keys, the following transformations of values are done when the options are written in `.tex` style:
 
 * A list as a value is written as "comma joined" e.g. `[1, 2, 3] -> "1, 2, 3"`.
 
@@ -134,7 +142,7 @@ julia> print_tex(p)
     ;
 ```
 
-You can also merge in options that have been separately created using `merge!`
+You can also merge in options that have been created separately, using `merge!`:
 
 ```jldoctest
 julia> a = Axis();
@@ -148,4 +156,4 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-It is then easy to apply for example a "theme" to an axis where the themed is a set of options already saved. Just `merge!` the theme into an `Axis`.
+It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved. Just `merge!` the theme into an `Axis`.

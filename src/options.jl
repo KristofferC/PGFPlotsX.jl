@@ -1,5 +1,5 @@
 """
-Options passed to `pgfplots` for various structures (`table`, `plot`, etc).
+Options passed to PGFPlots for various structures (`table`, `plot`, etc).
 
 Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Also
 see the [`@pgf`](@ref) convenience macro.

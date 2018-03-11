@@ -59,11 +59,11 @@ Pushed strings are written out verbatim.
 
 ### GroupPlot
 
+A `GroupPlot` is a way of grouping multiple plots in one figure.
+
 ```@docs
 GroupPlot
 ```
-
-A `GroupPlot` is a way of grouping multiple plots in one figure.
 
 Example:
 

@@ -26,14 +26,16 @@ where the file extension of `filename` determines the file type (can be `pdf`, `
 pgfsave
 ```
 
-The standalone file extensions `.tikz`, `.TIKZ`, `.TikZ`, `.pgf`, `.PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
+The standalone file extensions `tikz`, `TIKZ`, `TikZ`, `pgf`, `PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
 
-You can use the externalization feature of `tikz`/`pgfplots`, which caches generated `pdf` files for faster compilation of LaTeX documents. Use
-```tex
-\usepgfplotslibrary{external}
-\tikzexternalize
-```
-in the preamble of the LaTeX document which uses these plots, see the manuals for more details.
+!!! hint
+
+    You can use the externalization feature of `tikz`/`pgfplots`, which caches generated `pdf` files for faster compilation of LaTeX documents. Use
+    ```tex
+    \usepgfplotslibrary{external}
+    \tikzexternalize
+    ```
+    in the preamble of the LaTeX document which uses these plots, see the manuals for more details.
 
 ## [Customizing the preamble](@id customizing_the_preamble)
 

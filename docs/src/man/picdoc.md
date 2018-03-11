@@ -32,15 +32,15 @@ julia> print_tex(tp)
 
 # TikzDocument
 
-A `TikzDocument` is the highest level object and represents a whole `.tex` file.
-It includes a list of objects that will sit between `\begin{document}` and `\end{document}`.
+A `TikzDocument` is the highest level object and represents a whole `tex` file.
+It includes a list of objects between `\begin{document}` and `\end{document}`.
 
 ```@docs
 TikzDocument
 ```
 
-A very simple example where we simply create a `TikzDocument` with a string in is shown below.
-Normally you would also push `Axis`'s that contain plots.
+A very simple example where we simply create a `TikzDocument` with a string is shown below.
+Normally you would also push `Axis`-like objects that contain plots.
 
 ```julia-repl
 julia> td = TikzDocument();
