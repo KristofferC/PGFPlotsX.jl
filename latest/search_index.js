@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Introduction",
     "category": "section",
-    "text": "PGFPlotsX is a Julia package for creating publication quality figures using the LaTeX library PGFPlots as the backend. PGFPlots has extensive documentation (pdf) and a rich database of answered questions on places like stack overflow and tex.stackexchange. In order to take advantage of this, the syntax in PGFPlotsX is similar to the one written in .tex. It is therefore, usually, easy to translate a PGFPlots example written in .tex to PGFPlotsX Julia code. The advantage of using PGFPlotsX.jl over writing raw latex code is that it is possible to use Julia objects directly in the figures. Furthermore, the figures can be previewed in notebooks and IDE\'s, like julia-vscode and Atom-Juno. It is for example possible to directly use a DataFrame from DataFrames.jl as a PGFPlots table."
+    "text": "PGFPlotsX is a Julia package for creating publication quality figures using the LaTeX library PGFPlots as the backend. PGFPlots has extensive documentation (pdf) and a rich database of answered questions on places like stack overflow and tex.stackexchange. In order to take advantage of this, the syntax in PGFPlotsX is similar to the one written in tex. It is therefore, usually, easy to translate a PGFPlots example written in tex to PGFPlotsX Julia code. The advantage of using PGFPlotsX.jl over writing raw LaTeX code is that it is possible to use Julia objects directly in the figures. Furthermore, the figures can be previewed in notebooks and IDE\'s, like julia-vscode and Atom-Juno. It is, for example, possible to directly use a DataFrame from DataFrames.jl as a PGFPlots table.note: Note\nIn this manual, “PGFPlots” refers to the LaTeX package, its constructs and syntax."
 },
 
 {
@@ -29,199 +29,391 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Installation",
     "category": "section",
-    "text": "Pkg.add(\"PGFPlotsX\")PGFPlots.jl requires a latex installation with the PGFPlots package installed. We recommend using a latex installation with access to lualatex since it can have significantly better performance than pdflatex.To generate or preview figures in svg (like is done by default in Jupyter notebooks) pdf2svg is required. This can obtained by, on Ubuntu, running sudo apt-get install pdf2svg, on RHEL/Fedora sudo dnf install pdf2svg and on macOS e.g. brew install pdf2svg. On Windows, the binary can be downloaded from here; be sure to add pdf2svg to the PATH.For png figures pdftoppm is required. This should by default on Linux and on macOS should be available after running brew install poppler. It is also available in the Xpdf tools archive which can be downloaded here.note: Note\nIf you installed a new latex engine, pdf2svg or pdftoppm after you installed PGFPlotsX you need to run Pkg.build(\"PGFPlotsX\") for this to be reflected. The output from Pkg.build should tell you what latex engines and figure converters it finds."
-},
-
-{
-    "location": "man/options.html#",
-    "page": "Defining options",
-    "title": "Defining options",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/options.html#Defining-options-1",
-    "page": "Defining options",
-    "title": "Defining options",
-    "category": "section",
-    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendIn PGFPlots, options are given as a list of keys, that might have corresponding values, inside of two square brackets e.g.\\begin{axis}[ybar, width = 4.5cm]\n...\n\\end{axis}This section shows the method for which to set and retrieve such options in Julia."
-},
-
-{
-    "location": "man/options.html#Setting-options-when-constructing-an-object-1",
-    "page": "Defining options",
-    "title": "Setting options when constructing an object",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "man/options.html#As-arguments-to-the-constructor-1",
-    "page": "Defining options",
-    "title": "As arguments to the constructor",
-    "category": "section",
-    "text": "When constructing an object (like a Plot), options to that object can be entered in the argument list where a string represents a key without a value (e.g. \"very thick\") and a pair represents a key/value option, (e.g. \"samples\" => 50). This works well when the options are few and there is only one level of options in the object.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = @pgf PlotInc({ \"very thick\", \"mark\" => \"halfcircle\" }, c);\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;"
-},
-
-{
-    "location": "man/options.html#The-@pgf-macro-1",
-    "page": "Defining options",
-    "title": "The @pgf macro",
-    "category": "section",
-    "text": "When there are nested options the previous method does not work so well. Instead, we provide a macro @pgf so that options can be entered similarly to how they are in tex.The previous example is then written asjulia> @pgf Plot(\n           {\n               very_thick,\n               mark = \"halfcircle\"\n           },\n           c);A more complicated example is:julia> @pgf a = Axis(\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           },\n           PlotInc(c)\n       );which is printed asjulia> print_tex(a)\n\\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n    \\addplot+[]\n        coordinates {\n            (1, 2)\n            (2, 4)\n            (3, 8)\n        }\n        ;\n\\end{axis}The macro can be applied to any type of expression and will be applied to everything inside that expression that is of the form { expr }.!!!note     * Keys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered       as strings, as in the example above."
-},
-
-{
-    "location": "man/options.html#Transformations-1",
-    "page": "Defining options",
-    "title": "Transformations",
-    "category": "section",
-    "text": "The following transformations of keys/values are done when the options are written in .tex style:Underlines in keys are replaced with spaces e.g. very_thick -> \"very thick\".\nA list as a value is written as \"comma joined\" e.g. [1, 2, 3] -> \"1, 2, 3\".\nA tuple as a value is written with braces delimiting the elements e.g. (60, 30) -> {60}{30}"
-},
-
-{
-    "location": "man/options.html#Modifying-options-after-an-object-is-created-1",
-    "page": "Defining options",
-    "title": "Modifying options after an object is created",
-    "category": "section",
-    "text": "It is sometimes convenient to set and get options after an object has been created.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been separately created using merge!julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}It is then easy to apply for example a \"theme\" to an axis where the themed is a set of options already saved. Just merge! the theme into an Axis."
+    "text": "Pkg.add(\"PGFPlotsX\")PGFPlots.jl requires a LaTeX installation with the PGFPlots package installed. We recommend using a LaTeX installation with access to lualatex since it can have significantly better performance than pdflatex.To generate or preview figures in svg (like is done by default in Jupyter notebooks) pdf2svg is required. This can obtained by, on Ubuntu, running sudo apt-get install pdf2svg, on RHEL/Fedora sudo dnf install pdf2svg and on macOS e.g. brew install pdf2svg. On Windows, the binary can be downloaded from here; be sure to add pdf2svg to the PATH.For png figures pdftoppm is required. This should by default on Linux and on macOS should be available after running brew install poppler. It is also available in the Xpdf tools archive.note: Note\nIf you installed a new LaTeX engine, pdf2svg or pdftoppm after you installed PGFPlotsX you need to run Pkg.build(\"PGFPlotsX\") for this to be reflected. The output from Pkg.build should tell you what LaTeX engines and figure converters it finds."
 },
 
 {
     "location": "man/structs.html#",
-    "page": "Building up figures",
-    "title": "Building up figures",
+    "page": "Overview",
+    "title": "Overview",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "man/structs.html#Building-up-figures-1",
-    "page": "Building up figures",
-    "title": "Building up figures",
+    "location": "man/structs.html#Overview-1",
+    "page": "Overview",
+    "title": "Overview",
     "category": "section",
-    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThis section presents the structs used in PGFPlotsX to build up figures. An X after the struct name means that it supports option as described in the section on defining options."
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThis package is a collection of functions and types which make it convenient to generate LaTeX output, which can in turn be compiled by PGFPlots to produce vector or bitmap images like pdf, svg or png, or used directly in LaTeX documents.PGFPlots has a very detailed manual (a local copy should be available in TeXLive and MikTeX installations) which should be your primary source of documentation, and its contents are not repeated here. It is assumed that you read the relevant parts of this manual, and look for solutions there first.Instead, this manual describes a way to generate what LaTeX output conveniently from Julia, using the types introduced in this package, other packages, and Julia\'s built-in constructs. When working with this package, it is frequently convenient to examine the LaTeX representation of objects. print_tex is a method that prints LaTeX code that is written out when saving plots; we use it extensively in this manual for demonstrations, while in practice one would use it for debugging.As an example, consider the following trivial plot:\\begin{tikzpicture}[]\n\\begin{axis}\n    \\addplot+[only marks] table {\n            x  y\n            1  3\n            2  4\n        };\n    \\addplot+ table {\n            x  y\n            5  1\n            6  2\n        };\n\\end{axis}\n\\end{tikzpicture}which can be produced by this package with the code@pgf TikzPicture(\n        Axis(\n            PlotInc({ only_marks }\n                Table(; x = 1:2, y = 3:4)),\n            PlotInc(\n                Table(; x = 5:6, y = 1:2))))(The unconventional use linebreaks in Julia is for emphasizing the structural similarities between the two pieces of code).The plot is built up from two Tables, which are tabular representations of data with (usually) named columns. These provide data for Plots, here using the PlotInc constructor which corresponds to the \\addplot+ command: the + tells PGFPlots to use a default style that varies with each plot. Each plot can have a single source of data.Plots are grouped together into an Axis, which corresponds to what most other libraries would call a “plot” (we use the term flexibly, too). Besides grouping plots, Axis allows the customization of ticks, labels, axis styles, legends, and related objects.TikzPicture wraps the Axis. If you omit this, this package will do it for you automatically. Similarly, if you have a single Plot-like object and don\'t want to customize the Axis, it will also be added automatically.Finally, @pgf is a convenient syntax for specifying options. It is is a macro that traverses its argument recursively, and converts it to a PGFPlotsX.Options object. It is recommended that you use this macro. The convention of this library is to apply @pgf to whole expressions to avoid repetition, but this is not required.PGFPlotsX allows building up plots from types that correspond very closely to PGFPlots counterparts. The table below gives an overview of the types defined by this package. For most PGFPlots constructs, [] can be used to specify options, this corresponds to the [options] argument in the table above.PGFPlots ([] indicates options) PGFPlotsX remark\ntable[] { ... } Table([options], ...) preferred to Coordinates\ncoordinates { ... } Coordinates(...) useful error bars\n\\addplot[] { ... } & friends Plot([options], ...) & friends also PlotInc, Plot3, Plot3Inc\n\\legend, \\legendentry[] Legend, Legendentry([options]) \n{expression} Expression(...) math formulas\ngraphics[] { ... } Graphics([options], ...) bitmaps\n\\axis[] { ... } & friends Axis([options], ...) & friends can have multiple Plots & similar\n\\begin{tikzpicture} ... TikzPicture([options], ...) rarely used directly\n\\begin{document} ... TikzDocument(...; ...) rarely used directlyThe following sections document these."
 },
 
 {
-    "location": "man/structs.html#Data-1",
-    "page": "Building up figures",
-    "title": "Data",
-    "category": "section",
-    "text": "There are multiple ways of representing data in PGFPlots:"
-},
-
-{
-    "location": "man/structs.html#Coordinates-1",
-    "page": "Building up figures",
-    "title": "Coordinates",
-    "category": "section",
-    "text": "Coordinates a are a list of points (x,y) or (x,y,z). They can be created as:Coordinates(x, y, [z]) where x and y (and optionally z) are lists.\nCoordinates(points) where points is a list of tuples, e.g. x = [(1.0, 2.0), (2.0, 4.0)].For two-dimensional coordinates, errors can be added to Coordinates with the keywords:* `xerror`, `yerror` for symmetric errors\n* `xerrorplus` `yerrorplus` for positive errors\n* `xerrorminus` `yerrorminus` for positive errorsExamples:julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];\n\njulia> print_tex(Coordinates(x, y))\ncoordinates {\n    (1, 2)\n    (2, 4)\n    (3, 8)\n}\n\njulia> print_tex(Coordinates(x, y, z))\ncoordinates {\n    (1, 2, -1)\n    (2, 4, -2)\n    (3, 8, -3)\n}\n\njulia> print_tex(Coordinates(x, x.^3))\ncoordinates {\n    (1, 1)\n    (2, 8)\n    (3, 27)\n}\n\njulia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))\ncoordinates {\n    (1.0, 2.0)\n    (2.0, 4.0)\n}\n\njulia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);\n\njulia> print_tex(c)\ncoordinates {\n    (1, 2) +- (0.2, 0.2)\n    (2, 4) +- (0.3, 0.1)\n    (3, 8) +- (0.5, 0.5)\n}"
-},
-
-{
-    "location": "man/structs.html#Expression-1",
-    "page": "Building up figures",
-    "title": "Expression",
-    "category": "section",
-    "text": "An Expression is a string, representing a function and is written in a way LaTeX understands.Example:julia> ex = Expression(\"exp(-x^2)\");\n\njulia> print_tex(ex)\n{exp(-x^2)}"
-},
-
-{
-    "location": "man/structs.html#Table-X-1",
-    "page": "Building up figures",
-    "title": "Table - X",
-    "category": "section",
-    "text": "A table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the .tex file.Examples:julia> t = @pgf Table({x = \"Dof\"}, \"data.dat\");\n\njulia> print_tex(t)\ntable [x={Dof}] {\n    <ABSPATH>/data.dat\n}Inline data is constructed using a keyword constructor:julia> t = @pgf Table({x => \"Dof\", y => \"Err\"}, [:Dof => [1, 2, 4], :Err => [2.0, 1.0, 0.1]]);\n\njulia> print_tex(t)\ntable[x={Dof}, y={Err}]\n{\n    Dof  Err\n    1.0  2.0\n    2.0  1.0\n    4.0  0.1\n}If you load the DataFrames package, you can also create tables from data frames, see the examples in Julia types."
-},
-
-{
-    "location": "man/structs.html#Graphics-X-1",
-    "page": "Building up figures",
-    "title": "Graphics - X",
-    "category": "section",
-    "text": "Graphics data simply wraps an image like a .png. It is constructed as Graphics(filepath) where filepath is the path to the image.Example:julia> print_tex(Graphics(\"img.png\"))\ngraphics[] {img.png}"
-},
-
-{
-    "location": "man/structs.html#Plots-1",
-    "page": "Building up figures",
-    "title": "Plots",
-    "category": "section",
-    "text": "A plot is an element inside an axis. It could be a simple line or a 3d surface etc. A plot is created by wrapping one of the structs shown above."
-},
-
-{
-    "location": "man/structs.html#Plot-X-1",
-    "page": "Building up figures",
-    "title": "Plot - X",
-    "category": "section",
-    "text": "A keyword argument incremental::Bool is used to determine if \\addplot+ (default) should be used or \\addplot.Example:julia> p = @pgf PlotInc({ blue }, Table(\"plotdata/invcum.dat\"));\n\njulia> print_tex(p)\n\\addplot+[blue]\n    table[]\n    {\n        plotdata/invcum.dat\n    }\n    ;"
-},
-
-{
-    "location": "man/structs.html#Plot3-X-1",
-    "page": "Building up figures",
-    "title": "Plot3 - X",
-    "category": "section",
-    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3d graphics. Otherwise it works the same as Plot.Example:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));\n\njulia> print_tex(p)\n\\addplot3[very thick]\n    coordinates {\n        (1, 2, 3)\n        (2, 4, 9)\n        (3, 8, 27)\n    }\n    ;"
-},
-
-{
-    "location": "man/structs.html#Axis-like-1",
-    "page": "Building up figures",
-    "title": "Axis-like",
-    "category": "section",
+    "location": "man/options.html#",
+    "page": "Options",
+    "title": "Options",
+    "category": "page",
     "text": ""
 },
 
 {
-    "location": "man/structs.html#Axis-X-1",
-    "page": "Building up figures",
-    "title": "Axis - X",
+    "location": "man/options.html#options_header-1",
+    "page": "Options",
+    "title": "Options",
     "category": "section",
-    "text": "Axis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in tex as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n    \\addplot+[]\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed in to an Axis. What will be printed is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis) where T is the type of the struct. Pushed strings are written out verbatim."
+    "text": "Options, which usually occur between brackets ([]) after commands like \\addplot, table, or beginnings of environments like \\begin{axis} in LaTeX code, are key to most of the functionality of PGFPlots.DocTestSetup = quote\n    using PGFPlotsX\nend"
 },
 
 {
-    "location": "man/structs.html#GroupPlot-X-1",
-    "page": "Building up figures",
-    "title": "GroupPlot - X",
-    "category": "section",
-    "text": "A GroupPlot is a way of grouping multiple plots in one figure.Example:julia> @pgf gp = GroupPlot({group_style = { group_size = \"2 by 1\",}, height = \"6cm\", width = \"6cm\"});\n\njulia> for (expr, data) in zip([\"x^2\", \"exp(x)\"], [\"data1.dat\", \"data2.dat\"])\n           push!(gp, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data1.dat\n        }\n        ;\n    \\addplot[]\n        {exp(x)};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}In order to add options to the \\nextgroupplot call simply add arguments in an \"option like way\" (using strings / pairs / @pgf) when you push!julia> @pgf gp = GroupPlot({group_style = { group_size = \"1 by 1\",}, height = \"6cm\", width = \"6cm\"});\n\njulia> @pgf for (expr, data) in zip([\"x^2\"], [\"data2.dat\"])\n           push!(gp, {title = \"Data $data\"}, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]\n    \\nextgroupplot[title={Data data2.dat}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}"
+    "location": "man/options.html#PGFPlotsX.@pgf",
+    "page": "Options",
+    "title": "PGFPlotsX.@pgf",
+    "category": "macro",
+    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\n\n\n"
 },
 
 {
-    "location": "man/structs.html#PolarAxis-1",
-    "page": "Building up figures",
+    "location": "man/options.html#The-@pgf-macro-1",
+    "page": "Options",
+    "title": "The @pgf macro",
+    "category": "section",
+    "text": "Use the @pgf {} macro to define options.@pgfFor constructors that accept options, they always come first. When omitted, there are assumed to be no options.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = @pgf PlotInc({ \"very thick\", \"mark\" => \"halfcircle\" }, c);\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;Inside the expression following @pgf, {} expressions can be nested, and can also occur in multiple places.julia> @pgf a = Axis(\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           },\n           PlotInc(\n           {\n               smooth\n           },\n           c)\n       );which is converted to LaTeX asjulia> print_tex(a)\n\\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n    \\addplot+[smooth]\n        coordinates {\n            (1, 2)\n            (2, 4)\n            (3, 8)\n        }\n        ;\n\\end{axis}note: Note\nIf you use @pgf inside argument lists, make sure you wrap its argument in parentheses, egPlot(@pgf({ scatter }), some_table)Otherwise Julia will also pass the subsequent arguments through @pgf, which results in an error since they are combined into a tuple.Each option is either a standalone keyword (without value, modifying the plot by itself), or a keyword-value pair. Keywords can be enteredas Julia identifiers, which is useful for keywords with no spaces (eg smooth),\nseparated by underscores, which are replaced by spaces (eg only_marks will appear in LaTeX code as only marks),\nor quoted as strings, eg \"very thick\".Values are provided after a =, :, or =>, so the following are equivalent:@pgf { draw = \"black\" },\n@pgf { draw : \"black\" },\n@pgf { draw => \"black\" }.Values should be valid Julia expressions, as they are evaluated, so you can\'t use @pgf { draw = black } unless black has meaning in that context.note: Note\nKeys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered as strings."
+},
+
+{
+    "location": "man/options.html#Transformations-1",
+    "page": "Options",
+    "title": "Transformations",
+    "category": "section",
+    "text": "In addition to replacing underscores in keys, the following transformations of values are done when the options are written in .tex style:A list as a value is written as \"comma joined\" e.g. [1, 2, 3] -> \"1, 2, 3\".\nA tuple as a value is written with braces delimiting the elements e.g. (60, 30) -> {60}{30}"
+},
+
+{
+    "location": "man/options.html#Modifying-options-after-an-object-is-created-1",
+    "page": "Options",
+    "title": "Modifying options after an object is created",
+    "category": "section",
+    "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved. Just merge! the theme into an Axis."
+},
+
+{
+    "location": "man/data.html#",
+    "page": "Data",
+    "title": "Data",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/data.html#Data-1",
+    "page": "Data",
+    "title": "Data",
+    "category": "section",
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThere are multiple ways of representing data in PGFPlots."
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.Table",
+    "page": "Data",
+    "title": "PGFPlotsX.Table",
+    "category": "type",
+    "text": "Table([options], ...; ...)\n\nTabular data with options, corresponding to table[options] { ... } in PGFPlots.\n\noptions stores the options. If that is followed by an AbstractString, that will be used as a filename to read data from, otherwise all the arguments are passed on to TableData.\n\nExamples:\n\nTable([\"x\" => 1:10, \"y\" => 11:20])        # from a vector\n\nTable([1:10, 11:20])                      # same contents, unnamed\n\nTable(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols\n\n@pgf Table({ \"x index\" = 2, \"y index\" = 1\" }, randn(10, 3))\n\nlet x = linspace(0, 1, 10), y = linspace(-2, 3, 15)\n    Table(x, y, sin.(x + y\'))             # edges & matrix\nend\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.TableData",
+    "page": "Data",
+    "title": "PGFPlotsX.TableData",
+    "category": "type",
+    "text": "Tabular data with optional column names.\n\nThis corresponds to the part of tables between {}\'s in PGFPlots, without the options or table, so that it can also be used for “inline” tables. Table will call the constructor for this type to convert arguments after options.\n\ndata is a matrix, which contains the contents of the table, which will be printed using print_tex. colnames is a vector of column names (converted to string), or nothing for a table with no column names.\n\nWhen rowsep is true, an additional \\\\ is used as a row separator.\n\nAfter each index in scanlines, extra row separators are inserted. This can be used for skipping coordinates or implicitly defining the dimensions of a matrix for surf and mesh plots. They are expanded using expand_scanlines.\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#table_header-1",
+    "page": "Data",
+    "title": "Table and TableData",
+    "category": "section",
+    "text": "A Table represents a matrix of data where each column is labeled. It can simply point to an external data file or store the data inline in the tex file. Tables can have options.TableData is the representation of just the data, without the table[options] part. It is useful for inline tables in specials cases. Also, calls to Table use TableData to convert the arguments, so if you want to learn about all the ways to construct a Table, see the methods of TableData.Table\nTableDataExamples:julia> t = @pgf Table({x = \"Dof\"}, \"data.dat\");\n\njulia> print_tex(t)\ntable [x={Dof}] {\n    <ABSPATH>/data.dat\n}Inline data is constructed using a keyword constructor:julia> t = @pgf Table({x => \"Dof\", y => \"Err\"},\n                      [:Dof => [1, 2, 4], :Err => [2.0, 1.0, 0.1]]);\n\njulia> print_tex(t)\ntable[x={Dof}, y={Err}]\n{\n    Dof  Err\n    1.0  2.0\n    2.0  1.0\n    4.0  0.1\n}If you load the DataFrames package, you can also create tables from data frames, see the examples in Julia types."
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.Coordinates",
+    "page": "Data",
+    "title": "PGFPlotsX.Coordinates",
+    "category": "type",
+    "text": "Coordinates(itr)\n\n\nConvert the argument, which can be any iterable object, to coordinates.\n\nSpecifically,\n\nCoordinate and EmptyLine are passed through as is,\n2- or 3-element tuples of finite real numbers are interpreted as coordinates,\nnothing, (), and coordinates with non-finite numbers become empty lines.\n\nThe resulting coordinates are checked for dimension consistency.\n\nExamples\n\nThe following are equivalent:\n\nCoordinates((x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? () : (x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? EmptyLine() : Coordinate((x, 1/x)) for x in -5:5)\n\n\n\nCoordinates(x, y; xerror, yerror, xerrorplus, yerrorplus, xerrorminus, yerrorminus, meta)\n\n\nTwo dimensional coordinates from two vectors, with error bars.\n\n\n\nCoordinates(x, y, z; xerror, yerror, zerror, xerrorplus, yerrorplus, zerrorplus, xerrorminus, yerrorminus, zerrorminus, meta)\n\n\nThree dimensional coordinates from two vectors, with error bars.\n\n\n\nCoordinates(x, y, z; meta)\n\n\nConstruct coordinates from a matrix of values and edge vectors, such that z[i,j] corresponds to x[i] and y[j]. Empty scanlines are inserted, consistently with the mesh/ordering=x varies option of PGFPlots (the default).\n\nx = linspace(0, 1, 10)\ny = linspace(-1, 2, 13)\nz = sin.(x) + cos.(y\')\nCoordinates(x, y, z)\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#coordinates_header-1",
+    "page": "Data",
+    "title": "Coordinates",
+    "category": "section",
+    "text": "Coordinates are a list of points (x,y) or (x,y,z). They can be created as:Coordinates(x, y, [z]) where x and y (and optionally z) are lists.\nCoordinates(points) where points is a list of tuples, e.g. x = [(1.0, 2.0), (2.0, 4.0)].Errors can be added to Coordinates with keywords.CoordinatesExamples:julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];\n\njulia> print_tex(Coordinates(x, y))\ncoordinates {\n    (1, 2)\n    (2, 4)\n    (3, 8)\n}\n\njulia> print_tex(Coordinates(x, y, z))\ncoordinates {\n    (1, 2, -1)\n    (2, 4, -2)\n    (3, 8, -3)\n}\n\njulia> print_tex(Coordinates(x, x.^3))\ncoordinates {\n    (1, 1)\n    (2, 8)\n    (3, 27)\n}\n\njulia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))\ncoordinates {\n    (1.0, 2.0)\n    (2.0, 4.0)\n}\n\njulia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);\n\njulia> print_tex(c)\ncoordinates {\n    (1, 2) +- (0.2, 0.2)\n    (2, 4) +- (0.3, 0.1)\n    (3, 8) +- (0.5, 0.5)\n}"
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.Expression",
+    "page": "Data",
+    "title": "PGFPlotsX.Expression",
+    "category": "type",
+    "text": "Expression(expressions::Vector{String})\n\nExpression(strings::String...)\n\nAn Expression is a string or multiple strings, representing a function, and is written in a way LaTeX understands.\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#Expression-1",
+    "page": "Data",
+    "title": "Expression",
+    "category": "section",
+    "text": "ExpressionExample:julia> ex = Expression(\"exp(-x^2)\");\n\njulia> print_tex(ex)\n{exp(-x^2)}"
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.Graphics",
+    "page": "Data",
+    "title": "PGFPlotsX.Graphics",
+    "category": "type",
+    "text": "Graphics([options], filename)\n\nGraphics data simply wraps an image (eg a .png file).\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#Graphics-1",
+    "page": "Data",
+    "title": "Graphics",
+    "category": "section",
+    "text": "GraphicsExample:julia> print_tex(Graphics(\"img.png\"))\ngraphics[] {img.png}"
+},
+
+{
+    "location": "man/axiselements.html#",
+    "page": "Axis elements",
+    "title": "Axis elements",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/axiselements.html#axis_elements-1",
+    "page": "Axis elements",
+    "title": "Axis elements",
+    "category": "section",
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThe following types are accepted as elements of Axis & friends:plot variants: Plot, PlotInc, Plot3, Plot3Inc,\nlegend specifications: Legend, LegendEntry,\nstrings, which are inserted verbatim.This section documents these."
+},
+
+{
+    "location": "man/axiselements.html#plotlike-1",
+    "page": "Axis elements",
+    "title": "Plots",
+    "category": "section",
+    "text": "A plot is an element inside an axis. It can be a wide range of constructs, from a simple line to a 3D surface. A plot is created by wrapping one of the data structures.note: Note\nPGFPlots uses \\addplot & friends for visualization that uses a single data source, in most cases drawn using the same style. If you want to plot multiple sources of data that share axes, eg two time series, your axis will have multiple “plots” in the terminology of PGFPlots."
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.Plot",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.Plot",
+    "category": "type",
+    "text": "struct Plot <: PGFPlotsX.OptionType\n\nCorresponds to the \\addplot[3][+] family of pgfplot commands.\n\nInstead of the default constructor, use Plot([options], data, trailing...) and similar (PlotInc, Plot3, Plot3Inc) in user code.\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.PlotInc",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.PlotInc",
+    "category": "function",
+    "text": "PlotInc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#Plot-and-PlotInc-1",
+    "page": "Axis elements",
+    "title": "Plot and PlotInc",
+    "category": "section",
+    "text": "For \\addplot and \\addplot+, respectively.Plot\nPlotIncExample:julia> p = @pgf PlotInc({ blue }, Table(\"plotdata/invcum.dat\"));\n\njulia> print_tex(p)\n\\addplot+[blue]\n    table[]\n    {\n        plotdata/invcum.dat\n    }\n    ;"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.Plot3",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.Plot3",
+    "category": "function",
+    "text": "Plot3([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3 form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.Plot3Inc",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.Plot3Inc",
+    "category": "function",
+    "text": "Plot3Inc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#Plot3-1",
+    "page": "Axis elements",
+    "title": "Plot3",
+    "category": "section",
+    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3D graphics. Otherwise it works the same as Plot. The incremental variant is Plot3Inc.Plot3\nPlot3IncExample:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));\n\njulia> print_tex(p)\n\\addplot3[very thick]\n    coordinates {\n        (1, 2, 3)\n        (2, 4, 9)\n        (3, 8, 27)\n    }\n    ;"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.Legend",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.Legend",
+    "category": "type",
+    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.LegendEntry",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.LegendEntry",
+    "category": "type",
+    "text": "LegendEntry([options::Options], name, [isexpanded])\n\nCorresponds to the \\addlegendentry and \\addlegendentryexpanded forms of PGFPlots.\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#Legends-1",
+    "page": "Axis elements",
+    "title": "Legends",
+    "category": "section",
+    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{Plot A, Plot B}"
+},
+
+{
+    "location": "man/axiselements.html#latex_code_strings-1",
+    "page": "Axis elements",
+    "title": "Using LaTeX code directly",
+    "category": "section",
+    "text": "In case there is no type defined in this package for some construct, you can use a String in an axis, and it is inserted verbatim into the generated LaTeX code. Raw string literals and the package LaTeXStrings are useful to avoid a lot of escaping."
+},
+
+{
+    "location": "man/axislike.html#",
+    "page": "Axis & friends",
+    "title": "Axis & friends",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/axislike.html#axislike-1",
+    "page": "Axis & friends",
+    "title": "Axis & friends",
+    "category": "section",
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThis section documents constructs which are similar to Axis. In addition to options, they accept all axis elements."
+},
+
+{
+    "location": "man/axislike.html#PGFPlotsX.Axis",
+    "page": "Axis & friends",
+    "title": "PGFPlotsX.Axis",
+    "category": "type",
+    "text": "Axis([options], elements...)\n\nLinear axes, corresponds to axis in PGFPlots.\n\n\n\n"
+},
+
+{
+    "location": "man/axislike.html#Axis-1",
+    "page": "Axis & friends",
+    "title": "Axis",
+    "category": "section",
+    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n    \\addplot+[]\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
+},
+
+{
+    "location": "man/axislike.html#PGFPlotsX.GroupPlot",
+    "page": "Axis & friends",
+    "title": "PGFPlotsX.GroupPlot",
+    "category": "type",
+    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nother values, eg Plot are emitted using print_tex.\n\n\n\n"
+},
+
+{
+    "location": "man/axislike.html#GroupPlot-1",
+    "page": "Axis & friends",
+    "title": "GroupPlot",
+    "category": "section",
+    "text": "A GroupPlot is a way of grouping multiple plots in one figure.GroupPlotExample:julia> @pgf gp = GroupPlot({group_style = { group_size = \"2 by 1\",},\n                                            height = \"6cm\", width = \"6cm\"});\n\njulia> for (expr, data) in zip([\"x^2\", \"exp(x)\"], [\"data1.dat\", \"data2.dat\"])\n           push!(gp, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data1.dat\n        }\n        ;\n    \\addplot[]\n        {exp(x)};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}In order to add options to the \\nextgroupplot call, simply add arguments in an “option like way” (using @pgf) when you push!julia> @pgf gp = GroupPlot({group_style = { group_size = \"1 by 1\",}, height = \"6cm\", width = \"6cm\"});\n\njulia> @pgf for (expr, data) in zip([\"x^2\"], [\"data2.dat\"])\n           push!(gp, {title = \"Data $data\"}, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]\n    \\nextgroupplot[title={Data data2.dat}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}"
+},
+
+{
+    "location": "man/axislike.html#PolarAxis-1",
+    "page": "Axis & friends",
     "title": "PolarAxis",
     "category": "section",
-    "text": "A PolarAxis plot data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}[]\n    \\addplot+[]\n        coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n        }\n        ;\n\\end{polaraxis}"
+    "text": "A PolarAxis plots data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}[]\n    \\addplot+[]\n        coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n        }\n        ;\n\\end{polaraxis}"
 },
 
 {
-    "location": "man/structs.html#Legend-1",
-    "page": "Building up figures",
-    "title": "Legend",
+    "location": "man/axislike.html#PGFPlotsX.SemiLogXAxis",
+    "page": "Axis & friends",
+    "title": "PGFPlotsX.SemiLogXAxis",
+    "category": "type",
+    "text": "SemiLogXAxis([options], elements...)\n\nLog x and linear y axes, corresponds to semilogxaxis in PGFPlots.\n\n\n\n"
+},
+
+{
+    "location": "man/axislike.html#PGFPlotsX.SemiLogYAxis",
+    "page": "Axis & friends",
+    "title": "PGFPlotsX.SemiLogYAxis",
+    "category": "type",
+    "text": "SemiLogYAxis([options], elements...)\n\nLinear x and log y axes, corresponds to semilogyaxis in PGFPlots.\n\n\n\n"
+},
+
+{
+    "location": "man/axislike.html#PGFPlotsX.LogLogAxis",
+    "page": "Axis & friends",
+    "title": "PGFPlotsX.LogLogAxis",
+    "category": "type",
+    "text": "LogLogAxis([options], elements...)\n\nLog-log axes, corresponds to loglogaxis in PGFPlots.\n\n\n\n"
+},
+
+{
+    "location": "man/axislike.html#Semilog-and-log-log-axes-1",
+    "page": "Axis & friends",
+    "title": "Semilog and log-log axes",
     "category": "section",
-    "text": "A Legend can be used to add legends to plots.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{Plot A, Plot B}"
+    "text": "SemiLogXAxis\nSemiLogYAxis\nLogLogAxis"
 },
 
 {
-    "location": "man/structs.html#TikzPicture-X-1",
-    "page": "Building up figures",
-    "title": "TikzPicture - X",
+    "location": "man/picdoc.html#",
+    "page": "TikzPicture",
+    "title": "TikzPicture",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/picdoc.html#PGFPlotsX.TikzPicture",
+    "page": "TikzPicture",
+    "title": "PGFPlotsX.TikzPicture",
+    "category": "type",
+    "text": "TikzPicture([options], contents...)\n\nCorredponds to a tikzpicture block in PGFPlots.\n\nElements can also be added with push! after contruction.\n\n\n\n"
+},
+
+{
+    "location": "man/picdoc.html#TikzPicture-1",
+    "page": "TikzPicture",
+    "title": "TikzPicture",
     "category": "section",
-    "text": "A TikzPicture can contain multiple Axis\'s or GroupPlot\'s.Example:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}[]\n    \\addplot[]\n        coordinates {\n            (1, 2)\n            (2, 4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendA TikzPicture can contain multiple Axis-like objects.TikzPictureExample:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}[]\n    \\addplot[]\n        coordinates {\n            (1, 2)\n            (2, 4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
 },
 
 {
-    "location": "man/structs.html#TikzDocument-1",
-    "page": "Building up figures",
+    "location": "man/picdoc.html#PGFPlotsX.TikzDocument",
+    "page": "TikzPicture",
+    "title": "PGFPlotsX.TikzDocument",
+    "category": "type",
+    "text": "TikzDocument(elements...; use_default_preamble = true, preamble = [])\n\nCorresponds to a LaTeX document, usually wrapping TikzPictures.\n\nuse_default_preamble determines whether a preamble is added from the global variables (see CUSTOM_PREAMBLE and CUSTOM_PREAMBLE_PATH.\n\npreamble is appended after the default one (if any).\n\npush! can be used to append elements after construction, and similarly push_preamble! for the preamble.\n\n\n\n"
+},
+
+{
+    "location": "man/picdoc.html#TikzDocument-1",
+    "page": "TikzPicture",
     "title": "TikzDocument",
     "category": "section",
-    "text": "A TikzDocument is the highest level object and represents a whole .tex file. It includes a list of objects that will sit between \\begin{document} and \\end{document}.A very simple example where we simply create a TikzDocument with a string in is shown below. Normally you would also push Axis\'s that contain plots.julia> td = TikzDocument();\n\njulia> push!(td, \"Hello World\");\n\njulia> print_tex(td)\n\\RequirePackage{luatex85}\n\\documentclass[tikz]{standalone}\n% Default preamble\n\\usepackage{pgfplots}\n\\pgfplotsset{compat=newest}\n\\usepgfplotslibrary{groupplots}\n\\usepgfplotslibrary{polar}\n\\usepgfplotslibrary{statistics}\n\\begin{document}\nHello World\n\\end{document}A TikzDocument uses global variables to construct a preamble, and allows the user to add extra lines to this (eg in case you want to add \\usepackage lines), or disable it altogether.note: Note\nThere is usually no need to explicitly create a TikzDocument or TikzPicture. Only do this if you want to give special options to them. It is possible to show or save an Axis or e.g. a Plot directly, and they will then be wrapped in the default \"higher level\" objects."
+    "text": "A TikzDocument is the highest level object and represents a whole tex file. It includes a list of objects between \\begin{document} and \\end{document}.TikzDocumentA very simple example where we simply create a TikzDocument with a string is shown below. Normally you would also push Axis-like objects that contain plots.julia> td = TikzDocument();\n\njulia> push!(td, \"Hello World\");\n\njulia> print_tex(td)\n\\RequirePackage{luatex85}\n\\documentclass[tikz]{standalone}\n% Default preamble\n\\usepackage{pgfplots}\n\\pgfplotsset{compat=newest}\n\\usepgfplotslibrary{groupplots}\n\\usepgfplotslibrary{polar}\n\\usepgfplotslibrary{statistics}\n\\begin{document}\nHello World\n\\end{document}A TikzDocument uses global variables to construct a preamble, and allows the user to add extra lines to this (eg in case you want to add \\usepackage lines), or disable it altogether.note: Note\nThere is usually no need to explicitly create a TikzDocument or TikzPicture. Only do this if you want to give special options to them. It is possible to show or save an Axis or e.g. a Plot directly, and they will then be wrapped in the default \"higher level\" objects."
 },
 
 {
@@ -261,7 +453,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "REPL",
     "category": "section",
-    "text": "In the REPL, the figure will be exported to a pdf and attempted to be opened in the default pdf viewing program. If you wish to disable this, run pgf.enable_interactive(false)."
+    "text": "In the REPL, the figure will be exported to a pdf and attempted to be opened in the default pdf viewing program. If you wish to disable this, run PGFPlotsX.enable_interactive(false)."
+},
+
+{
+    "location": "man/save.html#PGFPlotsX.pgfsave",
+    "page": "Showing / Exporting figures",
+    "title": "PGFPlotsX.pgfsave",
+    "category": "function",
+    "text": "save(filename, td; include_preamble, latex_engine, buildflags, dpi)\n\n\nSave the argument (either TikzDocument, or some other type which is wrapped in one automatically, eg TikzPicture, Axis, or Plot) to filename, guessing the format from the file extension. Keywords specify options, some specific to some output formats.\n\npgfsave is an alias which is exported.\n\n\n\n"
 },
 
 {
@@ -269,15 +469,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "Exporting to files",
     "category": "section",
-    "text": "Figures can be exported to files usingpgfsave(filename::String, figure; include_preamble::Bool = true, dpi = 150)where the file extension of filename determines the file type (can be pdf, svg or tex, or the standalone tikz file extensions below), include_preamble sets if the preamble should be included in the output (only relevant for tex export) and dpi determines the dpi of the figure (only relevant for png export).The standalone file extensions .tikz, .TIKZ, .TikZ, .pgf, .PGF save LaTeX code for a tikzpicture environment without a preamble. You can \\input them directly into a LaTeX document, or use the the tikzscale LaTeX package for using \\includegraphics with possible size adjustments."
+    "text": "Figures can be exported to files usingpgfsave(filename::String, figure; include_preamble::Bool = true, dpi = 150)where the file extension of filename determines the file type (can be pdf, svg or tex, or the standalone tikz file extensions below), include_preamble sets if the preamble should be included in the output (only relevant for tex export) and dpi determines the dpi of the figure (only relevant for png export).pgfsaveThe standalone file extensions tikz, TIKZ, TikZ, pgf, PGF save LaTeX code for a tikzpicture environment without a preamble. You can \\input them directly into a LaTeX document, or use the the tikzscale LaTeX package for using \\includegraphics with possible size adjustments.hint: Hint\nYou can use the externalization feature of tikz/pgfplots, which caches generated pdf files for faster compilation of LaTeX documents. Use\\usepgfplotslibrary{external}\n\\tikzexternalizein the preamble of the LaTeX document which uses these plots, see the manuals for more details."
 },
 
 {
-    "location": "man/save.html#Customizing-the-preamble-1",
+    "location": "man/save.html#PGFPlotsX.CUSTOM_PREAMBLE",
+    "page": "Showing / Exporting figures",
+    "title": "PGFPlotsX.CUSTOM_PREAMBLE",
+    "category": "constant",
+    "text": "A vector of stings, added after DEFAULT_PREAMBLE.\n\nUse this for additional definitions \\usepackage statements required by the LaTeX code you include into plots.\n\n\n\n"
+},
+
+{
+    "location": "man/save.html#customizing_the_preamble-1",
     "page": "Showing / Exporting figures",
     "title": "Customizing the preamble",
     "category": "section",
-    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_premble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble."
+    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable PGFPlotsX.CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_preamble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble.PGFPlotsX.CUSTOM_PREAMBLE"
 },
 
 {
@@ -289,11 +497,83 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/save.html#PGFPlotsX.CUSTOM_FLAGS",
+    "page": "Showing / Exporting figures",
+    "title": "PGFPlotsX.CUSTOM_FLAGS",
+    "category": "constant",
+    "text": "Custom flags to the engine can be used in the latex command by push!-ing them into the global variable CUSTOM_FLAGS.\n\n\n\n"
+},
+
+{
     "location": "man/save.html#Custom-flags-1",
     "page": "Showing / Exporting figures",
     "title": "Custom flags",
     "category": "section",
-    "text": "Custom flags to the engine can be used in the latex command by push!-ing them into the global variable CUSTOM_FLAGS."
+    "text": "PGFPlotsX.CUSTOM_FLAGS"
+},
+
+{
+    "location": "man/internals.html#",
+    "page": "Internals",
+    "title": "Internals",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.print_tex",
+    "page": "Internals",
+    "title": "PGFPlotsX.print_tex",
+    "category": "function",
+    "text": "print_tex(io, elt, [container])\n\nPrint elt to io as LaTeX code. The optional third argument allows methods to work differently depending on the container.\n\nThis method should indent as if at the top level, containers indent their contents as necessary. See print_indent.\n\n\n\nprint_tex(io, str)\n\n\nPrint a string as is, terminated with a newline.\n\nnote: Note\nThis is used as a workaround for LaTeX code that does not have a corresponding type, eg as elements in Axis. raw or LaTeXStrings are useful to avoid piling up backslashes. The newline is added to separate tokens.\n\n\n\nprint_tex(io, x)\n\n\nReal numbers are printed as is, except for non-finite representation.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.print_indent",
+    "page": "Internals",
+    "title": "PGFPlotsX.print_indent",
+    "category": "function",
+    "text": "print_indent(f, io_main)\n\n\nCall the f with an IO buffer, capture the output, print it to io_main indended with four spaces.\n\n\n\nprint_indent(io_main, elt)\n\n\nPrint elt to io with indentation. Shortcut for the function wrapper of print_indent for a single element.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.expand_scanlines",
+    "page": "Internals",
+    "title": "PGFPlotsX.expand_scanlines",
+    "category": "function",
+    "text": "expand_scanlines(n, nrow)\n\n\nExpand scanlines, which is a vector of scanline positions or an integer for repeated scanlines, into a Vector{Int}.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.Options",
+    "page": "Internals",
+    "title": "PGFPlotsX.Options",
+    "category": "type",
+    "text": "Options passed to PGFPlots for various structures (table, plot, etc).\n\nContents emitted in key = value form, or key when value ≡ nothing. Also see the @pgf convenience macro.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.CUSTOM_PREAMBLE_PATH",
+    "page": "Internals",
+    "title": "PGFPlotsX.CUSTOM_PREAMBLE_PATH",
+    "category": "constant",
+    "text": "A file which is spliced directly to the preamble. Customize the file at this path for site-specific setting that apply for every plot.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#PGFPlotsX.DEFAULT_PREAMBLE",
+    "page": "Internals",
+    "title": "PGFPlotsX.DEFAULT_PREAMBLE",
+    "category": "constant",
+    "text": "The default preamble for LaTeX documents. Don\'t change this, customize CUSTOM_PREAMBLE instead.\n\n\n\n"
+},
+
+{
+    "location": "man/internals.html#Internals-1",
+    "page": "Internals",
+    "title": "Internals",
+    "category": "section",
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendprint_tex\nPGFPlotsX.print_indent\nPGFPlotsX.expand_scanlines\nPGFPlotsX.Options\nPGFPlotsX.CUSTOM_PREAMBLE_PATH\nPGFPlotsX.DEFAULT_PREAMBLE"
 },
 
 {
