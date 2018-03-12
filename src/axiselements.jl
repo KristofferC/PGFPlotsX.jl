@@ -282,7 +282,7 @@ expand_scanlines(itr, _) = collect(Int, itr)
 
 
 "Default for additional row separator `\\`."
-const ROWSEP = false
+const ROWSEP = true
 
 """
 Tabular data with optional column names.
@@ -296,7 +296,15 @@ after `options`.
 printed using `print_tex`. `colnames` is a vector of column names (converted to
 string), or `nothing` for a table with no column names.
 
-When `rowsep` is `true`, an additional `\\\\` is used as a row separator.
+When `rowsep` is `true`, an additional `\\\\` is used as a row separator. The
+default is `true`, this is recommended to avoid “fragility” issues with inline
+tables.
+
+!!! note
+
+    `Table` queries `TableData` for its `rowsep`, and adds the relevant option
+    accordingly. When using “inline” tables, eg in options, you have to specify
+    this manually for the container. See the gallery for examples.
 
 After each index in `scanlines`, extra row separators are inserted. This can be
 used for skipping coordinates or implicitly defining the dimensions of a matrix
@@ -453,10 +461,20 @@ Table(options::Options, args...; kwargs...) =
 
 Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 
+"""
+    $SIGNATURES
+
+Options to mix in for the container. Currently used for `TableData` and `Table`.
+"""
+container_options(tabledata::TableData, ::Table) =
+    Options("row sep" => tabledata.rowsep ? raw"\\" : "newline")
+
+container_options(::AbstractString, ::Table) = Options() # included from file
+
 function print_tex(io::IO, table::Table)
     @unpack options, content = table
     print(io, "table")
-    print_options(io, options)
+    print_options(io, merge(container_options(content, table), options))
     println(io, "{")
     print_indent(io, content)
     println(io, "}")
