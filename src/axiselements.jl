@@ -2,11 +2,19 @@
 # Expression #
 ##############
 
+"""
+    Expression(expressions::Vector{String})
+
+    Expression(strings::String...)
+
+An `Expression` is a string or multiple strings, representing a function, and is
+written in a way LaTeX understands.
+"""
 struct Expression <: OptionType
     fs::Vector{String}
 end
 
-Expression(str::String) = Expression([str])
+Expression(str::String...) = Expression(collect(String, str))
 
 function print_tex(io::IO, f::Expression)
     multiple_f = length(f.fs) != 1
@@ -30,7 +38,7 @@ end
 
 Placeholder for an empty line.
 
-In 2D plots, `pgfplots` treats empty lines as *jumps* by default.
+In 2D plots, PGFPlots treats empty lines as *jumps* by default.
 
 In 3D plots (eg `surf` and similar), it is used as a scanline separator to
 establish the dimensions of the matrix.
@@ -119,7 +127,7 @@ end
 """
     $SIGNATURES
 
-Convert the argument, which is can be any iterable object, to coordinates.
+Convert the argument, which can be any iterable object, to coordinates.
 
 Specifically,
 
@@ -227,15 +235,16 @@ end
     $SIGNATURES
 
 Construct coordinates from a matrix of values and edge vectors, such that
-``z[i,j]`` corresponds to `x[i]` and `y[j]`. Empty scanlines are inserted,
-consistently with the `mesh/ordering=x varies` option of `pgfplots` (the
+`z[i,j]` corresponds to `x[i]` and `y[j]`. Empty scanlines are inserted,
+consistently with the `mesh/ordering=x varies` option of PGFPlots (the
 default).
 
-```jldoctest
+```julia
 x = linspace(0, 1, 10)
 y = linspace(-1, 2, 13)
 z = sin.(x) + cos.(y')
 Coordinates(x, y, z)
+```
 """
 function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
                      meta::Union{Void, AbstractMatrix} = nothing)
@@ -278,7 +287,7 @@ const ROWSEP = false
 """
 Tabular data with optional column names.
 
-This corresponds to the part of tables between `{}`'s in `pgfplots`, without the
+This corresponds to the part of tables between `{}`'s in PGFPlots, without the
 options or `table`, so that it can also be used for “inline” tables.
 [`Table`](@ref) will call the constructor for this type to convert arguments
 after `options`.
@@ -287,7 +296,7 @@ after `options`.
 printed using `print_tex`. `colnames` is a vector of column names (converted to
 string), or `nothing` for a table with no column names.
 
-When `rowsep` is `true`, an additional `\\` is used as a row separator.
+When `rowsep` is `true`, an additional `\\\\` is used as a row separator.
 
 After each index in `scanlines`, extra row separators are inserted. This can be
 used for skipping coordinates or implicitly defining the dimensions of a matrix
@@ -417,11 +426,11 @@ end
     Table([options], ...; ...)
 
 Tabular data with options, corresponding to `table[options] { ... }` in
-`pgfplots`.
+PGFPlots.
 
 `options` stores the options. If that is followed by an `AbstractString`, that
 will be used as a filename to read data from, otherwise all the arguments are
-passed on to `TableData`.
+passed on to [`TableData`](@ref).
 
  Examples:
 
@@ -432,7 +441,7 @@ Table([1:10, 11:20])                      # same contents, unnamed
 
 Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
 
-Table(@pgf { "x index" = 2, "y index" = 1" }, randn(10, 3))
+@pgf Table({ "x index" = 2, "y index" = 1" }, randn(10, 3))
 
 let x = linspace(0, 1, 10), y = linspace(-2, 3, 15)
     Table(x, y, sin.(x + y'))             # edges & matrix
@@ -457,6 +466,11 @@ end
 # Graphics #
 ############
 
+"""
+    Graphics([options], filename)
+
+`Graphics` data simply wraps an image (eg a `.png` file).
+"""
 struct Graphics <: OptionType
     options::Options
     filename::String
@@ -507,10 +521,10 @@ Base.append!(plot::Plot, items) = (append!(plot.trailing, items); plot)
 A plot with the given `data` (eg [`Coordinates`](@ref), [`Table`](@ref),
 [`Expression`](@ref), …) and `options`, which is empty by default.
 
-Corresponds to `\\addplot` in `pgfplots`.
+Corresponds to `\\addplot` in PGFPlots.
 
 `trailing` can be used to provide *trailing path commands* (eg `\\closedcycle`,
-see the `pgfplots` manual), which are emitted using `print_tex`, before the
+see the PGFPlots manual), which are emitted using `print_tex`, before the
 terminating `;`.
 """
 Plot(options::Options, data::PlotData, trailing...) =
@@ -522,7 +536,7 @@ Plot(data::PlotData, trailing...) =
 """
     PlotInc([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot+` form in `pgfplots`.
+Corresponds to the `\\addplot+` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -535,7 +549,7 @@ PlotInc(data::PlotData, trailing...) =
 """
     Plot3([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot3` form in `pgfplots`.
+Corresponds to the `\\addplot3` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -548,7 +562,7 @@ Plot3(data::PlotData, trailing...) =
 """
     Plot3Inc([options::Options], data, trailing...)
 
-Corresponds to the `\\addplot3+` form in `pgfplots`.
+Corresponds to the `\\addplot3+` form in PGFPlots.
 
 For the interpretation of the other arguments, see `Plot(::Options, ::PlotData, ...)`.
 """
@@ -581,6 +595,14 @@ struct Legend
     labels::Vector{String}
 end
 
+"""
+    $SIGNATURES
+
+Corresponds to `\\legend{ ... }` in PGFPlots. Specifies multiple legends for
+an axis, its position is irrelevant.
+"""
+Legend(labels::AbstractString...) = Legend(collect(String, labels))
+
 print_tex(io::IO, l::Legend) = println(io, "\\legend{", join(l.labels, ", "), "}")
 
 ###############
@@ -597,7 +619,7 @@ end
     LegendEntry([options::Options], name, [isexpanded])
 
 Corresponds to the `\\addlegendentry` and `\\addlegendentryexpanded` forms of
-`pgfplots`.
+PGFPlots.
 """
 LegendEntry(options::Options, name::AbstractString, isexpanded = false)
 

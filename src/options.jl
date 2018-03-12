@@ -1,5 +1,5 @@
 """
-Options passed to `pgfplots` for various structures (`table`, `plot`, etc).
+Options passed to PGFPlots for various structures (`table`, `plot`, etc).
 
 Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Also
 see the [`@pgf`](@ref) convenience macro.
@@ -28,11 +28,15 @@ end
 """
     @pgf { ... }
 
-    @pgf some(nested(form({ ... })))
+    @pgf some(nested(form({ ... })),
+              with_multiple_options({ ... }))
 
 Construct [`Options`](@ref) from comma-delimited `key` (without value),
 `key = value`, `key : value`, or `key => value` pairs enclosed in `{ ... }`,
 anywhere in the expression.
+
+The argument is traversed recursively, allowing `{ ... }` expressions in
+multiple places.
 
 Multi-word keys need to be either quoted, or written with underscores replacing
 spaces.

@@ -14,13 +14,17 @@ using Parameters
 using Requires
 
 export TikzDocument, TikzPicture
-export Axis, GroupPlot, PolarAxis
+export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, GroupPlot
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry
-export @pgf, pgfsave, print_tex, latexengine, latexengine!, CUSTOM_PREAMBLE,
-    push_preamble!
+export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
+
+"""
+A file which is spliced directly to the preamble. Customize the file at this
+path for site-specific setting that apply for every plot.
+"""
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
 const AbstractDict = Union{Dict, OrderedDict}
 
