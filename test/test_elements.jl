@@ -127,7 +127,7 @@ end
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
-                                      [1])) == "table[]\n{\nxx yy\n1.0 nan\n\n-inf 4.0\n}"
+                                      [1])) == "table[row sep={\\\\}]\n{\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
 end
 
 @testset "table file" begin
@@ -142,7 +142,7 @@ end
     data2 = Table(x = 1:2, y = 3:4)
     p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
-        "\\addplot[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n\\closedcycle\n;"
+        "\\addplot[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
     @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
     @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
@@ -151,10 +151,10 @@ end
     @test Plot(data2, raw"\closedcycle") ≅ p2
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
-        "\\addplot+[]\ntable[]\n{\nx y\n1 3\n2 4\n}\n;"
+        "\\addplot+[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
     @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
                                           Table(x = 1:2, y = 3:4, z = 5:6))) ==
-        "\\addplot3+[xtick={1,2,3}]\ntable[]\n{\nx y z\n1 3 5\n2 4 6\n}\n;"
+        "\\addplot3+[xtick={1,2,3}]\ntable[row sep={\\\\}]\n{\nx y z \\\\\n1 3 5 \\\\\n2 4 6 \\\\\n}\n;"
 end
 
 @testset "printing and indentation" begin
@@ -174,12 +174,12 @@ end
     c = Coordinates([(1, 2), (3, 4)])
     @test repr_tex(c) == "coordinates {\n    (1, 2)\n    (3, 4)\n}\n"
     t = Table(x = 1:2, y = 3:4)
-    @test repr_tex(t) == "table[]\n{\n    x  y  \n    1  3  \n    2  4  \n}\n"
+    @test repr_tex(t) == "table[row sep={\\\\}]\n{\n    x  y  \\\\\n    1  3  \\\\\n    2  4  \\\\\n}\n"
     @test repr_tex(@pgf Plot({ no_marks }, c)) ==
         "\\addplot[no marks]\n    coordinates {\n        (1, 2)\n        (3, 4)\n    }\n    ;\n"
     @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
-        "\\addplot[no marks]\n    table[]\n    {\n        x  y  \n" *
-        "        1  3  \n        2  4  \n    }\n    trailing\n    ;\n"
+        "\\addplot[no marks]\n    table[row sep={\\\\}]\n    {\n        x  y  \\\\\n" *
+        "        1  3  \\\\\n        2  4  \\\\\n    }\n    trailing\n    ;\n"
     # legend
     @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{a, b, c}\n"
     l = LegendEntry("a")

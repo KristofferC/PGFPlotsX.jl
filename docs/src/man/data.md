@@ -37,16 +37,20 @@ julia> t = @pgf Table({x => "Dof", y => "Err"},
                       [:Dof => [1, 2, 4], :Err => [2.0, 1.0, 0.1]]);
 
 julia> print_tex(t)
-table[x={Dof}, y={Err}]
+table[row sep={\\}, x={Dof}, y={Err}]
 {
-    Dof  Err
-    1.0  2.0
-    2.0  1.0
-    4.0  0.1
+    Dof  Err  \\
+    1.0  2.0  \\
+    2.0  1.0  \\
+    4.0  0.1  \\
 }
 ```
 
 If you load the DataFrames package, you can also create tables from data frames, see the examples in [Julia types](@ref).
+
+!!! note
+
+    By default, PGFPlots expects rows to be separated in a table with a newline. This can be “fragile” in LaTeX, in the sense that linebreaks may be merged with other whitespace within certain constructs, eg macros. In order to prevent this, this package uses the option `rowsep=\\` by default. This is taken care of automatically, except for inline tables where you have to specify it manually. See the `patch` plot in the [gallery](@ref manual_gallery).
 
 ## [Coordinates](@id coordinates_header)
 

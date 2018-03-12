@@ -1,4 +1,4 @@
-# PGFPlots manual gallery
+# [PGFPlots manual gallery](@id manual_gallery)
 
 Examples converted from [the PGFPlots manual gallery](http://pgfplots.sourceforge.net/gallery.html).
 This is a work in progress.
@@ -343,18 +343,15 @@ savefigs("groupplot-nested", ans) # hide
         "table/row sep" = raw"\\",
         patch_table = TableData([0 1 2;
                                  1 2 3;
-                                 4 3 5];
-                                rowsep = true)
+                                 4 3 5])
     },
     Table(
         {
-            row_sep = raw"\\",
             point_meta = raw"\thisrow{c}"
         },
         :x => [0, 1, 2, 3, 2, 4],
         :y => [0, 1, 0, 1, 0, 0],
-        :c => [0.2, 0, 1, 0, 0.5, 0.5];
-        rowsep = true)))
+        :c => [0.2, 0, 1, 0, 0.5, 0.5])))
 
 savefigs("patch-inline", ans) # hide
 ```
