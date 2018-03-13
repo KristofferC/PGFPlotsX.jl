@@ -19,9 +19,9 @@ include("test_macros.jl")
 
 include("test_elements.jl")
 
-cd(tempdir()) do
+mktempdir() do tmp; cd(tmp) do
     include("test_build.jl")
-end
+end end
 
 include("../docs/make.jl")
 
