@@ -4,7 +4,7 @@
 Corresponds to a LaTeX document, usually wrapping `TikzPicture`s.
 
 `use_default_preamble` determines whether a preamble is added from the global
-variables (see [`CUSTOM_PREAMBLE`](@ref) and [`CUSTOM_PREAMBLE_PATH`](@ref).
+variables (see [`CUSTOM_PREAMBLE`](@ref) and [`CUSTOM_PREAMBLE_PATH`](@ref)).
 
 `preamble` is appended after the default one (if any).
 
@@ -59,8 +59,14 @@ function save(filename::String, td::TikzDocument;
               include_preamble::Bool = true,
               latex_engine = latexengine(),
               buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-              dpi = 150)
+              dpi = 150,
+              showing_ide = false)
     filebase, fileext = splitext(filename)
+    if showing_ide
+        td = deepcopy(td)
+        pushfirst!(td.preamble, "\\usepackage{pagecolor}")
+        pushfirst!(td.elements, "\\pagecolor{white}")
+    end
     if fileext == ".tex"
         savetex(filename, td; include_preamble = include_preamble)
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
@@ -261,7 +267,7 @@ if HAVE_PDFTOSVG
         global _tikzid
         filename = tempname() * ".svg"
         global showing_Ijulia = true
-        try save(filename, td)
+        try save(filename, td; showing_ide=_is_ide())
         finally
             global showing_Ijulia = false
         end
@@ -291,9 +297,8 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
     Media.media(_SHOWABLE, Media.Plot)
     function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
         f = tempname() * ((!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png")
-        save(f, p; dpi = _JUNO_DPI)
-        Media.render(pane, Hiccup.div(style="background-color:#ffffff",
-                           Hiccup.img(src = f)))
+        save(f, p; dpi = _JUNO_DPI, showing_ide=true)
+        Media.render(pane, Hiccup.div(Hiccup.img(src = f)))
     end
 end
 
@@ -329,7 +334,7 @@ if HAVE_PDFTOPPM
     function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
         filename = tempname() * ".png"
         global showing_Ijulia = true
-        try save(filename, p)
+        try save(filename, p; showing_ide=_is_ide())
         finally
             global showing_Ijulia = false
         end
@@ -342,7 +347,7 @@ enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_juno()   = isdefined(Main, :Juno) && Main.Juno.isactive()
 _is_vscode() = isdefined(Main, :_vscodeserver)
-
+_is_ide()    = _is_ijulia() || _is_juno() || _is_vscode()
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
     if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
