@@ -183,7 +183,7 @@ function savepdf(filename::String, td::TikzDocument;
         error("ran latex 5 times without converging, log is:\n$log")
     end
     if run_again
-        savepdf(filename, td; latex_engine=latex_engine, buildflag=buildflags, run_count=run_count+1)
+        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags, run_count=run_count+1)
         return
     end
     mv(tmp_pdf, filename; remove_destination = true)
@@ -212,22 +212,36 @@ end
 
 global _tikzid = round(UInt64, time() * 1e6)
 
+# The purpose of this is to not have IJulia call latex twice every time
+# we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
+# As a workaround, We therefore maintain a cache which should work in most
+# cases, The cache is the hash of the tex output and a copy of the pdf when
+# the svg is showed. The PNG shower looks for the existence of these and uses
+# the pdf if the hash is the same
+const Ijulia_cache = Any[nothing, nothing]
+global showing_Ijulia = false
 if HAVE_PDFTOSVG
     """
     $SIGNATURES
 
-Save `td` in `filename` using the SVG format.
+    Save `td` in `filename` using the SVG format.
 
-Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
-`filename` with the extension (if any) replaced by `".pdf"`. This overwrites
-an existing PDF file with the same name.
-"""
+    Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
+    `filename` with the extension (if any) replaced by `".pdf"`. This overwrites
+    an existing PDF file with the same name.
+    """
     function savesvg(filename::String, td::TikzDocument;
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      keep_pdf = false)
         tmp_pdf = tempname() * ".pdf"
         savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
+        if _is_ijulia() && showing_Ijulia
+            tmp_ijulia_pdf = tempname() * ".pdf"
+            hsh = hash(sprint(print_tex, td))
+            cp(tmp_pdf, tmp_ijulia_pdf)
+            Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
+        end
         # TODO Better error
         svg_cmd = `pdf2svg $tmp_pdf $filename`
         svg_success = success(svg_cmd)
@@ -246,7 +260,11 @@ an existing PDF file with the same name.
     function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
         global _tikzid
         filename = tempname() * ".svg"
-        save(filename, td)
+        global showing_Ijulia = true
+        try save(filename, td)
+        finally
+            global showing_Ijulia = false
+        end
         s = readstring(filename)
         s = replace(s, "glyph", "glyph-$(_tikzid)-")
         s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
@@ -284,11 +302,25 @@ if HAVE_PDFTOPPM
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
-        tmp = tempname() * ".pdf"
+        found_ijulia_cache_matching = false
+        local tmp
+        if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
+            hsh = hash(sprint(print_tex, td))
+            if Ijulia_cache[1] == hsh
+                tmp = Ijulia_cache[2]
+                found_ijulia_cache_matching = true
+            end
+            fill!(Ijulia_cache, nothing)
+        end
+
+        if !found_ijulia_cache_matching
+            tmp = tempname() * ".pdf"
+            savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+        end
         filebase = splitext(filename)[1]
-        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
         png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp $filebase`
         png_success = success(png_cmd)
+        found_ijulia_cache_matching && rm(tmp; force=true)
         if !png_success
             error("Error when saving to png")
         end
@@ -296,7 +328,11 @@ if HAVE_PDFTOPPM
 
     function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
         filename = tempname() * ".png"
-        save(filename, p)
+        global showing_Ijulia = true
+        try save(filename, p)
+        finally
+            global showing_Ijulia = false
+        end
         write(io, read(filename))
         rm(filename; force = true)
     end
