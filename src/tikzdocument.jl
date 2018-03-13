@@ -4,7 +4,7 @@
 Corresponds to a LaTeX document, usually wrapping `TikzPicture`s.
 
 `use_default_preamble` determines whether a preamble is added from the global
-variables (see [`CUSTOM_PREAMBLE`](@ref) and [`CUSTOM_PREAMBLE_PATH`](@ref).
+variables (see [`CUSTOM_PREAMBLE`](@ref) and [`CUSTOM_PREAMBLE_PATH`](@ref)).
 
 `preamble` is appended after the default one (if any).
 
@@ -59,8 +59,14 @@ function save(filename::String, td::TikzDocument;
               include_preamble::Bool = true,
               latex_engine = latexengine(),
               buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-              dpi = 150)
+              dpi = 150,
+              showing_ide = false)
     filebase, fileext = splitext(filename)
+    if showing_ide
+        td = deepcopy(td)
+        pushfirst!(td.preamble, "\\usepackage{pagecolor}")
+        pushfirst!(td.elements, "\\pagecolor{white}")
+    end
     if fileext == ".tex"
         savetex(filename, td; include_preamble = include_preamble)
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
@@ -135,7 +141,8 @@ _HAS_WARNED_SHELL_ESCAPE = false
 
 function savepdf(filename::String, td::TikzDocument;
                  latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                 run_count = 0)
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
@@ -177,8 +184,12 @@ function savepdf(filename::String, td::TikzDocument;
             error("The latex command $latexcmd failed")
         end
     end
+    run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
+    if run_again && run_count == 4
+        error("ran latex 5 times without converging, log is:\n$log")
+    end
     if run_again
-        savepdf(filename, td)
+        savepdf(filename, td; latex_engine=latex_engine, buildflag=buildflags, run_count=run_count+1)
         return
     end
     mv(tmp_pdf, filename; remove_destination = true)
@@ -207,22 +218,36 @@ end
 
 global _tikzid = round(UInt64, time() * 1e6)
 
+# The purpose of this is to not have IJulia call latex twice every time
+# we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
+# As a workaround, We therefore maintain a cache which should work in most
+# cases, The cache is the hash of the tex output and a copy of the pdf when
+# the svg is showed. The PNG shower looks for the existence of these and uses
+# the pdf if the hash is the same
+const Ijulia_cache = Any[nothing, nothing]
+global showing_Ijulia = false
 if HAVE_PDFTOSVG
     """
     $SIGNATURES
 
-Save `td` in `filename` using the SVG format.
+    Save `td` in `filename` using the SVG format.
 
-Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
-`filename` with the extension (if any) replaced by `".pdf"`. This overwrites
-an existing PDF file with the same name.
-"""
+    Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
+    `filename` with the extension (if any) replaced by `".pdf"`. This overwrites
+    an existing PDF file with the same name.
+    """
     function savesvg(filename::String, td::TikzDocument;
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      keep_pdf = false)
         tmp_pdf = tempname() * ".pdf"
         savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
+        if _is_ijulia() && showing_Ijulia
+            tmp_ijulia_pdf = tempname() * ".pdf"
+            hsh = hash(sprint(print_tex, td))
+            cp(tmp_pdf, tmp_ijulia_pdf)
+            Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
+        end
         # TODO Better error
         svg_cmd = `pdf2svg $tmp_pdf $filename`
         svg_success = success(svg_cmd)
@@ -241,7 +266,11 @@ an existing PDF file with the same name.
     function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
         global _tikzid
         filename = tempname() * ".svg"
-        save(filename, td)
+        global showing_Ijulia = true
+        try save(filename, td; showing_ide=_is_ide())
+        finally
+            global showing_Ijulia = false
+        end
         s = readstring(filename)
         s = replace(s, "glyph", "glyph-$(_tikzid)-")
         s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
@@ -268,9 +297,8 @@ dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
     Media.media(_SHOWABLE, Media.Plot)
     function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
         f = tempname() * ((!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png")
-        save(f, p; dpi = _JUNO_DPI)
-        Media.render(pane, Hiccup.div(style="background-color:#ffffff",
-                           Hiccup.img(src = f)))
+        save(f, p; dpi = _JUNO_DPI, showing_ide=true)
+        Media.render(pane, Hiccup.div(Hiccup.img(src = f)))
     end
 end
 
@@ -279,11 +307,25 @@ if HAVE_PDFTOPPM
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
-        tmp = tempname() * ".pdf"
+        found_ijulia_cache_matching = false
+        local tmp
+        if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
+            hsh = hash(sprint(print_tex, td))
+            if Ijulia_cache[1] == hsh
+                tmp = Ijulia_cache[2]
+                found_ijulia_cache_matching = true
+            end
+            fill!(Ijulia_cache, nothing)
+        end
+
+        if !found_ijulia_cache_matching
+            tmp = tempname() * ".pdf"
+            savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+        end
         filebase = splitext(filename)[1]
-        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
         png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp $filebase`
         png_success = success(png_cmd)
+        found_ijulia_cache_matching && rm(tmp; force=true)
         if !png_success
             error("Error when saving to png")
         end
@@ -291,7 +333,11 @@ if HAVE_PDFTOPPM
 
     function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
         filename = tempname() * ".png"
-        save(filename, p)
+        global showing_Ijulia = true
+        try save(filename, p; showing_ide=_is_ide())
+        finally
+            global showing_Ijulia = false
+        end
         write(io, read(filename))
         rm(filename; force = true)
     end
@@ -301,7 +347,7 @@ enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_juno()   = isdefined(Main, :Juno) && Main.Juno.isactive()
 _is_vscode() = isdefined(Main, :_vscodeserver)
-
+_is_ide()    = _is_ijulia() || _is_juno() || _is_vscode()
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
     if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
