@@ -135,7 +135,8 @@ _HAS_WARNED_SHELL_ESCAPE = false
 
 function savepdf(filename::String, td::TikzDocument;
                  latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS))
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                 run_count = 0)
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
@@ -177,8 +178,12 @@ function savepdf(filename::String, td::TikzDocument;
             error("The latex command $latexcmd failed")
         end
     end
+    run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
+    if run_again && run_count == 4
+        error("ran latex 5 times without converging, log is:\n$log")
+    end
     if run_again
-        savepdf(filename, td)
+        savepdf(filename, td; latex_engine=latex_engine, buildflag=buildflags, run_count=run_count+1)
         return
     end
     mv(tmp_pdf, filename; remove_destination = true)
