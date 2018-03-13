@@ -172,6 +172,7 @@ function savepdf(filename::String, td::TikzDocument;
                 DEBUG && println("Adding shell-escape and trying to save pdf again")
                 # Try again with enabling shell_escape
                 push!(DEFAULT_FLAGS, shell_escape)
+                push!(buildflags, shell_escape)
                 run_again = true
             else
                 latexerrormsg(log)
