@@ -12,6 +12,33 @@ end
 ------------------------
 
 ```@example pgf
+cs = [[(0,0), (1,1), (2,2)],
+      [(0,2), (1,1), (2,0)],
+      [(0,2), (1,1), (2,1)],
+      [(0,2), (1,1), (1,0)]]
+
+@pgf gp = GroupPlot(
+    {
+        group_style = { group_size = "2 by 2",},
+        height = "4cm",
+        width = "4cm"
+    }
+)
+
+@pgf for (i, coords) in enumerate(cs)
+    push!(gp, {title = i})
+    push!(gp, PlotInc(Coordinates(coords)))
+end
+gp
+savefigs("groupplot-simple", ans) # hide
+```
+
+[\[.pdf\]](groupplot-simple.pdf), [\[generated .tex\]](groupplot-simple.tex)
+
+![](groupplot-simple.svg)
+
+
+```@example pgf
 x = linspace(0, 2*pi, 100)
 @pgf GroupPlot(
     {
@@ -35,3 +62,15 @@ savefigs("groupplot-multiple", ans) # hide
 [\[.pdf\]](groupplot-multiple.pdf), [\[generated .tex\]](groupplot-multiple.tex)
 
 ![](groupplot-multiple.svg)
+
+
+```@example pgf
+angles = [e/50*360*i for i in 1:500]
+radius = [1/(sqrt(i)) for i in linspace(1, 10, 500)]
+PolarAxis(PlotInc(Coordinates(angles, radius)))
+savefigs("polar", ans) # hide
+```
+
+[\[.pdf\]](polar.pdf), [\[generated .tex\]](polar.tex)
+
+![](polar.svg)

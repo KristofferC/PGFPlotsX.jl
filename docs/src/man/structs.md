@@ -10,9 +10,10 @@ This package is a collection of functions and types which make it convenient to 
 
 PGFPlots has a very detailed [manual](http://pgfplots.sourceforge.net/pgfplots.pdf) (a local copy should be available in TeXLive and MikTeX installations) **which should be your primary source of documentation, and its contents are not repeated here**. It is assumed that you read the relevant parts of this manual, and look for solutions there first.
 
-Instead, this manual describes a way to generate what LaTeX output conveniently from Julia, using the types introduced in this package, other packages, and Julia's built-in constructs. When working with this package, it is frequently convenient to examine the LaTeX representation of objects. [`print_tex`](@ref) is a method that prints LaTeX code that is written out when saving plots; we use it extensively in this manual for demonstrations, while in practice one would use it for debugging.
+Instead, this manual describes a way to conveniently generate what LaTeX output from Julia, using the types introduced in this package, other packages, and Julia's built-in constructs. When working with this package, it is frequently convenient to examine the LaTeX representation of objects. [`print_tex`](@ref) is a method that prints LaTeX code that is written out when saving plots; we use it extensively in this manual for demonstrations, while in practice one would use it for debugging.
 
 As an example, consider the following trivial plot:
+
 ```tex
 \begin{tikzpicture}[]
 \begin{axis}
@@ -29,7 +30,9 @@ As an example, consider the following trivial plot:
 \end{axis}
 \end{tikzpicture}
 ```
+
 which can be produced by this package with the code
+
 ```julia
 @pgf TikzPicture(
         Axis(
@@ -38,7 +41,7 @@ which can be produced by this package with the code
             PlotInc(
                 Table(; x = 5:6, y = 1:2))))
 ```
-(The unconventional use linebreaks in Julia is for emphasizing the structural similarities between the two pieces of code).
+(The unconventional use of linebreaks in the Julia code is to emphasize the structural similarities between the two pieces of code).
 
 The plot is built up from two `Table`s, which are tabular representations of data with (usually) named columns. These provide data for `Plot`s, here using the `PlotInc` constructor which corresponds to the `\addplot+` command: the `+` tells PGFPlots to use a default style that varies with each plot. *Each plot can have a single source of data.*
 

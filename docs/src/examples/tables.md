@@ -87,3 +87,41 @@ savefigs("table-jump-3d", ans) # hide
 [\[.pdf\]](table-jump-3d.pdf), [\[generated .tex\]](table-jump-3d.tex)
 
 ![](table-jump-3d.svg)
+
+A quiver plot can be created as:
+
+```@example pgf
+x = -2pi:0.2:2*pi
+y = sin.(x)
+
+u = ones(length(x))
+v = cos.(x)
+
+@pgf Axis(
+    {
+        title = "Quiver plot"
+        grid = "both"
+    },
+    Plot(
+        {
+            quiver = {u = "\\thisrow{u}", v = "\\thisrow{v}"},
+            "-stealth"
+        },
+        Table(x = x, y = y, u = u, v = v)
+    ),
+    LegendEntry("\$\\cos(x)\$"),
+    Plot(
+        {
+            color = "red",
+            very_thick
+        },
+        Coordinates(x, y)
+    ),
+    LegendEntry("\$\\sin(x)\$")
+)
+savefigs("quiver", ans) # hide
+```
+
+[\[.pdf\]](quiver.pdf), [\[generated .tex\]](quiver.tex)
+
+![](quiver.svg)
