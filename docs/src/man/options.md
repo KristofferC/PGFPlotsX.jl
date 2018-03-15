@@ -93,7 +93,7 @@ Each option is either a standalone *keyword* (without value, modifying the plot 
 
 3. `@pgf { draw => "black" }`.
 
-Values should be valid Julia expressions, as they are evaluated, so you can't use `@pgf { draw = black }` unless `black` has meaning in that context.
+Values should be valid Julia expressions, as they are evaluated, so you cannot use `@pgf { draw = black }` unless `black` is assigned to some Julia value in that context.
 
 !!! note
 

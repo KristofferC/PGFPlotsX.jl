@@ -14,7 +14,7 @@
 Pkg.add("PGFPlotsX")
 ```
 
-*PGFPlots.jl* requires a LaTeX installation with the PGFPlots package installed. We recommend using a LaTeX installation with access to `lualatex` since it can have significantly better performance than `pdflatex`.
+*PGFPlots.jl* requires a LaTeX installation with the PGFPlots package installed. We recommend using a LaTeX installation with access to `lualatex` since it can have significantly better performance over `pdflatex`.
 
 To generate or preview figures in `svg` (like is done by default in Jupyter notebooks) `pdf2svg` is required. This can obtained by, on Ubuntu, running `sudo apt-get install pdf2svg`, on RHEL/Fedora `sudo dnf install pdf2svg` and on macOS e.g. `brew install pdf2svg`. On Windows, the binary can be downloaded from [here](http://www.cityinthesky.co.uk/opensource/pdf2svg/); be sure to add `pdf2svg` to the `PATH`.
 
@@ -22,4 +22,4 @@ For `png` figures `pdftoppm` is required. This should by default on Linux and on
 
 !!! note
 
-    If you installed a new LaTeX engine, `pdf2svg` or `pdftoppm` after you installed *PGFPlotsX* you need to run `Pkg.build("PGFPlotsX")` for this to be reflected. The output from `Pkg.build` should tell you what LaTeX engines and figure converters it finds.
+    If you installed a new LaTeX engine, `pdf2svg` or `pdftoppm` after you installed *PGFPlotsX* you need to run `Pkg.build("PGFPlotsX")` for this to be reflected. The output from `Pkg.build` should tell you what LaTeX engines and figure-converters it finds.

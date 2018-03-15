@@ -113,3 +113,32 @@ savefigs("coordinates-3d-matrix-heatmap", ans) # hide
 [\[.pdf\]](coordinates-3d-matrix-heatmap.pdf), [\[generated .tex\]](coordinates-3d-matrix-heatmap.tex)
 
 ![](coordinates-3d-matrix-heatmap.svg)
+
+
+```@example pgf
+x = repeat(0:2, outer = 3)
+y = repeat(0:2, inner = 3)
+meta = ["color=$c" for c in ["red", "blue", "yellow", "black", "brown", "magenta", "green", "red", "white"]]
+c = Coordinates(x, y; meta = meta)
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xtick = [0, 1, 2]
+    },
+    PlotInc(
+        {
+            matrix_plot,
+            mark = "*",
+            nodes_near_coords = raw"\coordindex",
+            "mesh/color input" = "explicit",
+            "mesh/cols" = 3
+        },
+        c,
+    )
+)
+savefigs("matrix-plot", ans) # hide
+```
+
+[\[.pdf\]](matrix-plot.pdf), [\[generated .tex\]](matrix-plot.tex)
+
+![](matrix-plot.svg)
