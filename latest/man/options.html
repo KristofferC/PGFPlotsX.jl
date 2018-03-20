@@ -7,7 +7,7 @@
     mark_size = &quot;0.6pt&quot;,
     mark = &quot;o&quot;,
     color =&gt; &quot;black&quot;,
-}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/61eb41a270b78272fbe39346b2f78f51a0a1a014/src/options.jl#L28-L52">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/3e98c009db640826ee863063fbfccb289dcad6a7/src/options.jl#L28-L52">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 

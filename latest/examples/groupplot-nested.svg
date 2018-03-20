@@ -84,7 +84,7 @@
 <path style="fill:none;stroke-width:0.19925;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(50%,50%,50%);stroke-opacity:1;stroke-miterlimit:10;" d="M 68.552469 -0.00190625 L 72.806375 -0.00190625 M 68.552469 24.017625 L 72.806375 24.017625 M 68.552469 48.037156 L 72.806375 48.037156 M 137.107156 -0.00190625 L 132.857156 -0.00190625 M 137.107156 24.017625 L 132.857156 24.017625 M 137.107156 48.037156 L 132.857156 48.037156 " transform="matrix(1,0,0,-1,16.803,126.627)"/>
 <path style="fill:none;stroke-width:0.3985;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 68.552469 -0.00190625 L 68.552469 60.048875 L 137.107156 60.048875 L 137.107156 -0.00190625 Z M 68.552469 -0.00190625 " transform="matrix(1,0,0,-1,16.803,126.627)"/>
 <g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
-  <use xlink:href="#glyph0-1" x="96.576" y="136.567"/>
+  <use xlink:href="#glyph0-1" x="96.577" y="136.567"/>
 </g>
 <g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
   <use xlink:href="#glyph0-3" x="123.998" y="136.567"/>
