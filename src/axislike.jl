@@ -102,9 +102,7 @@ The `contents` after the global options are processed as follows:
 
 1. [`Options`](@ref) (ie from `@pgf {}`) will emit a `\\nextgroupplot` with the given options,
 
-2. `nothing` is emitted as a `\\nextgroupplot[group/empty plot]`,
-
-3. other values, eg `Plot` are emitted using [`print_tex`](@ref).
+2. other values, eg `Plot` are emitted using [`print_tex`](@ref).
 """
 @define_axislike GroupPlot "groupplot"
 
@@ -119,8 +117,6 @@ function print_tex(io::IO, groupplot::GroupPlot)
                 print_options(io, elt)
             elseif elt isa Plot
                 print_tex(io, elt)
-            elseif elt isa Void
-                print(io, raw"\nextgroupplot[group/empty plot]")
             else
                 print_tex(io, elt)
             end

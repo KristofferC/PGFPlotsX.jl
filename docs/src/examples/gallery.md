@@ -320,7 +320,7 @@ x = linspace(0, 10, 100)
         width = "4cm",
         no_markers
     },
-    nothing,
+    {"group/empty plot"},
     {xmin=5, xmax=10, ymin=50, ymax=100},
     plot,
     {xmax=5, ymax=50},
