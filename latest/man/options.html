@@ -7,7 +7,7 @@
     mark_size = &quot;0.6pt&quot;,
     mark = &quot;o&quot;,
     color =&gt; &quot;black&quot;,
-}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/3e98c009db640826ee863063fbfccb289dcad6a7/src/options.jl#L28-L52">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+}</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><p>``` theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;,}</p><p>axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</p></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/6db4a828acb0b459a64e5089bfd36481a3b59c52/src/options.jl#L30-L61">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 
@@ -74,4 +74,12 @@ julia&gt; merge!(a, opts);
 
 julia&gt; print_tex(a)
 \begin{axis}[xmin={0}, ymax={1}, ybar]
-\end{axis}</code></pre><p>It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved. Just <code>merge!</code> the theme into an <code>Axis</code>.</p><footer><hr/><a class="previous" href="structs.html"><span class="direction">Previous</span><span class="title">Overview</span></a><a class="next" href="data.html"><span class="direction">Next</span><span class="title">Data</span></a></footer></article></body></html>
+\end{axis}</code></pre><p>An alternative to using <code>merge!</code> is using  <code>...</code> to splice an option into another one, e.g.</p><pre><code class="language-julia-repl">julia&gt; theme = @pgf {xmajorgrids, ymajorgrids};
+
+julia&gt; a = Axis(
+           @pgf {theme..., title = &quot;Foo&quot;}
+       );
+
+julia&gt; print_tex(a)
+\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]
+\end{axis}</code></pre><p>It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.</p><footer><hr/><a class="previous" href="structs.html"><span class="direction">Previous</span><span class="title">Overview</span></a><a class="next" href="data.html"><span class="direction">Next</span><span class="title">Data</span></a></footer></article></body></html>

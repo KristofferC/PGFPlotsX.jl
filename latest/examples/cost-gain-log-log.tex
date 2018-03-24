@@ -7,7 +7,7 @@
 \usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}[]
-\begin{axis}[xlabel={Cost}, ylabel={Gain}, xmode={log}, ymode={log}]
+\begin{loglogaxis}[xlabel={Cost}, ylabel={Gain}]
     \addplot[color={red}, mark={x}]
         coordinates {
             (10, 100)
@@ -19,6 +19,6 @@
             (640, 1150)
         }
         ;
-\end{axis}
+\end{loglogaxis}
 \end{tikzpicture}
 \end{document}

@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "PGFPlotsX.@pgf",
     "category": "macro",
-    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\n\n\n"
+    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\n``` theme = @pgf {xmajorgrids, x_grid_style = \"white\",}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\n\n\n"
 },
 
 {
@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "Modifying options after an object is created",
     "category": "section",
-    "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved. Just merge! the theme into an Axis."
+    "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}An alternative to using merge! is using  ... to splice an option into another one, e.g.julia> theme = @pgf {xmajorgrids, ymajorgrids};\n\njulia> a = Axis(\n           @pgf {theme..., title = \"Foo\"}\n       );\n\njulia> print_tex(a)\n\\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved."
 },
 
 {
@@ -589,7 +589,55 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "Coordinates",
     "category": "section",
-    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nendUse Coordinates to construct the pgfplots construct coordinates. Various constructors are available.For basic usage, consider AbstractVectors and iterables. Notice how non-finite values are skipped. You can also use () or nothing for jumps in functions.x = linspace(-1, 1, 51) # so that it contains 1/0\n@pgf Axis(\n    {\n        xmajorgrids,\n        ymajorgrids,\n    },\n    Plot(\n        {\n            no_marks,\n        },\n        Coordinates(x, 1 ./ x)\n    )\n)\nsavefigs(\"coordinates-simple\", ans) # hide[.pdf], [generated .tex](Image: )Use xerror, xerrorplus, xerrorminus, yerror etc. for error bars.x = linspace(0, 2π, 20)\n@pgf Plot(\n    {\n        \"no marks\",\n        \"error bars/y dir=both\",\n        \"error bars/y explicit\",\n    },\n    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))\n)\nsavefigs(\"coordinates-errorbars\", ans) # hide[.pdf], [generated .tex](Image: )Use three vectors to construct 3D coordinates.t = linspace(0, 6*π, 100)\n@pgf Plot3(\n    {\n        no_marks,\n    },\n    Coordinates(t .* sin.(t), t .* cos.(t), .-t)\n)\nsavefigs(\"coordinates-3d\", ans) # hide[.pdf], [generated .tex](Image: )A convenience constructor is available for plotting a matrix of values calculated from edge vectors.x = linspace(-2, 2, 20)\ny = linspace(-0.5, 3, 25)\nf(x, y) = (1 - x)^2 + 100*(y - x^2)^2\n@pgf Plot3(\n    {\n        surf,\n    },\n    Coordinates(x, y, f.(x, y\'))\n)\nsavefigs(\"coordinates-3d-matrix\", ans) # hide[.pdf], [generated .tex](Image: )x = linspace(-2, 2, 40)\ny = linspace(-0.5, 3, 50)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\",\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Coordinates(x, y, @. √(f(x, y\')))\n    )\n)\nsavefigs(\"coordinates-3d-matrix-heatmap\", ans) # hide[.pdf], [generated .tex](Image: )x = repeat(0:2, outer = 3)\ny = repeat(0:2, inner = 3)\nmeta = [\"color=$c\" for c in [\"red\", \"blue\", \"yellow\", \"black\", \"brown\", \"magenta\", \"green\", \"red\", \"white\"]]\nc = Coordinates(x, y; meta = meta)\n@pgf Axis(\n    {\n        enlargelimits = false,\n        xtick = [0, 1, 2]\n    },\n    PlotInc(\n        {\n            matrix_plot,\n            mark = \"*\",\n            nodes_near_coords = raw\"\\coordindex\",\n            \"mesh/color input\" = \"explicit\",\n            \"mesh/cols\" = 3\n        },\n        c,\n    )\n)\nsavefigs(\"matrix-plot\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nendUse Coordinates to construct the pgfplots construct coordinates. Various constructors are available."
+},
+
+{
+    "location": "examples/coordinates.html#Basic-usage-1",
+    "page": "Coordinates",
+    "title": "Basic usage",
+    "category": "section",
+    "text": "For basic usage, consider AbstractVectors and iterables. Notice how non-finite values are skipped. You can also use () or nothing for jumps in functions.x = linspace(-1, 1, 51) # so that it contains 1/0\n@pgf Axis(\n    {\n        xmajorgrids,\n        ymajorgrids,\n    },\n    Plot(\n        {\n            no_marks,\n        },\n        Coordinates(x, 1 ./ x)\n    )\n)\nsavefigs(\"coordinates-simple\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#Error-bars-1",
+    "page": "Coordinates",
+    "title": "Error bars",
+    "category": "section",
+    "text": "Use xerror, xerrorplus, xerrorminus, yerror etc. for error bars.x = linspace(0, 2π, 20)\n@pgf Plot(\n    {\n        \"no marks\",\n        \"error bars/y dir=both\",\n        \"error bars/y explicit\",\n    },\n    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))\n)\nsavefigs(\"coordinates-errorbars\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#D-1",
+    "page": "Coordinates",
+    "title": "3D",
+    "category": "section",
+    "text": "Use three vectors to construct 3D coordinates.t = linspace(0, 6*π, 100)\n@pgf Plot3(\n    {\n        no_marks,\n    },\n    Coordinates(t .* sin.(t), t .* cos.(t), .-t)\n)\nsavefigs(\"coordinates-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#Edge-vectors-1",
+    "page": "Coordinates",
+    "title": "Edge vectors",
+    "category": "section",
+    "text": "A convenience constructor is available for plotting a matrix of values calculated from edge vectors.x = linspace(-2, 2, 20)\ny = linspace(-0.5, 3, 25)\nf(x, y) = (1 - x)^2 + 100*(y - x^2)^2\n@pgf Plot3(\n    {\n        surf,\n    },\n    Coordinates(x, y, f.(x, y\'))\n)\nsavefigs(\"coordinates-3d-matrix\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#Heatmap-1",
+    "page": "Coordinates",
+    "title": "Heatmap",
+    "category": "section",
+    "text": "x = linspace(-2, 2, 40)\ny = linspace(-0.5, 3, 50)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\",\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Coordinates(x, y, @. √(f(x, y\')))\n    )\n)\nsavefigs(\"coordinates-3d-matrix-heatmap\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#Matrix-plot-1",
+    "page": "Coordinates",
+    "title": "Matrix plot",
+    "category": "section",
+    "text": "x = repeat(0:2, outer = 3)\ny = repeat(0:2, inner = 3)\nmeta = [\"color=$c\" for c in [\"red\", \"blue\", \"yellow\", \"black\", \"brown\", \"magenta\", \"green\", \"red\", \"white\"]]\nc = Coordinates(x, y; meta = meta)\n@pgf Axis(\n    {\n        enlargelimits = false,\n        xtick = [0, 1, 2]\n    },\n    PlotInc(\n        {\n            matrix_plot,\n            mark = \"*\",\n            nodes_near_coords = raw\"\\coordindex\",\n            \"mesh/color input\" = \"explicit\",\n            \"mesh/cols\" = 3\n        },\n        c,\n    )\n)\nsavefigs(\"matrix-plot\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -605,7 +653,47 @@ var documenterSearchIndex = {"docs": [
     "page": "Tables",
     "title": "Tables",
     "category": "section",
-    "text": "Tables are coordinates in a tabular format (essentially a matrix), optionally with named columns. They have various constructors, for direct construction and also for conversion from other types.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nendLetx = linspace(0, 2*pi, 100)\ny = sin.(x)x = linspace(0, 2*pi, 100)\ny = sin.(x)You can pass these coordinates in unnamed columns:Plot(Table([x, y]))\nsavefigs(\"table-unnamed-columns\", ans) # hide[.pdf], [generated .tex](Image: )or named columns:Plot(Table([:x => x, :y => y]))\nsavefigs(\"table-named-columns\", ans) # hide[.pdf], [generated .tex](Image: )or rename using options:@pgf Plot(\n    {\n        x = \"a\",\n        y = \"b\",\n    },\n    Table([:a => x, :b => y]))\nsavefigs(\"table-dict-rename\", ans) # hide[.pdf], [generated .tex](Image: )In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:x = linspace(-1, 1, 20)\nz = @. 1 - √(abs2(x) + abs2(x\'))\nz[z .≤ 0] .= -Inf\n@pgf Axis(\n    {\n        colorbar,\n        \"colormap/jet\",\n        \"unbounded coords\" = \"jump\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Table(x, x, z)\n    )\n)\nsavefigs(\"table-jump-3d\", ans) # hide[.pdf], [generated .tex](Image: )A quiver plot can be created as:x = -2pi:0.2:2*pi\ny = sin.(x)\n\nu = ones(length(x))\nv = cos.(x)\n\n@pgf Axis(\n    {\n        title = \"Quiver plot\"\n        grid = \"both\"\n    },\n    Plot(\n        {\n            quiver = {u = \"\\\\thisrow{u}\", v = \"\\\\thisrow{v}\"},\n            \"-stealth\"\n        },\n        Table(x = x, y = y, u = u, v = v)\n    ),\n    LegendEntry(\"\\$\\\\cos(x)\\$\"),\n    Plot(\n        {\n            color = \"red\",\n            very_thick\n        },\n        Coordinates(x, y)\n    ),\n    LegendEntry(\"\\$\\\\sin(x)\\$\")\n)\nsavefigs(\"quiver\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Tables are coordinates in a tabular format (essentially a matrix), optionally with named columns. They have various constructors, for direct construction and also for conversion from other types.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/tables.html#Unnamed-columns-1",
+    "page": "Tables",
+    "title": "Unnamed columns",
+    "category": "section",
+    "text": "Letx = linspace(0, 2*pi, 100)\ny = sin.(x)x = linspace(0, 2*pi, 100)\ny = sin.(x)You can pass these coordinates in unnamed columns:Plot(Table([x, y]))\nsavefigs(\"table-unnamed-columns\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/tables.html#Named-columns-1",
+    "page": "Tables",
+    "title": "Named columns",
+    "category": "section",
+    "text": "Or named columns:Plot(Table([:x => x, :y => y]))\nsavefigs(\"table-named-columns\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/tables.html#Rename-options-1",
+    "page": "Tables",
+    "title": "Rename options",
+    "category": "section",
+    "text": "The columns can be renamed using options:@pgf Plot(\n    {\n        x = \"a\",\n        y = \"b\",\n    },\n    Table([:a => x, :b => y]))\nsavefigs(\"table-dict-rename\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/tables.html#Excluding-points-1",
+    "page": "Tables",
+    "title": "Excluding points",
+    "category": "section",
+    "text": "In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:x = linspace(-1, 1, 20)\nz = @. 1 - √(abs2(x) + abs2(x\'))\nz[z .≤ 0] .= -Inf\n@pgf Axis(\n    {\n        colorbar,\n        \"colormap/jet\",\n        \"unbounded coords\" = \"jump\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Table(x, x, z)\n    )\n)\nsavefigs(\"table-jump-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/tables.html#Quiver-plot-1",
+    "page": "Tables",
+    "title": "Quiver plot",
+    "category": "section",
+    "text": "A quiver plot can be created as:x = -2pi:0.2:2*pi\ny = sin.(x)\n\nu = ones(length(x))\nv = cos.(x)\n\n@pgf Axis(\n    {\n        title = \"Quiver plot\"\n        grid = \"both\"\n    },\n    Plot(\n        {\n            quiver = {u = \"\\\\thisrow{u}\", v = \"\\\\thisrow{v}\"},\n            \"-stealth\"\n        },\n        Table(x = x, y = y, u = u, v = v)\n    ),\n    LegendEntry(\"\\$\\\\cos(x)\\$\"),\n    Plot(\n        {\n            color = \"red\",\n            very_thick\n        },\n        Coordinates(x, y)\n    ),\n    LegendEntry(\"\\$\\\\sin(x)\\$\")\n)\nsavefigs(\"quiver\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -621,7 +709,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis-like objects",
     "title": "Axis-like objects",
     "category": "section",
-    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nendcs = [[(0,0), (1,1), (2,2)],\n      [(0,2), (1,1), (2,0)],\n      [(0,2), (1,1), (2,1)],\n      [(0,2), (1,1), (1,0)]]\n\n@pgf gp = GroupPlot(\n    {\n        group_style = { group_size = \"2 by 2\",},\n        height = \"4cm\",\n        width = \"4cm\"\n    }\n)\n\n@pgf for (i, coords) in enumerate(cs)\n    push!(gp, {title = i})\n    push!(gp, PlotInc(Coordinates(coords)))\nend\ngp\nsavefigs(\"groupplot-simple\", ans) # hide[.pdf], [generated .tex](Image: )x = linspace(0, 2*pi, 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )angles = [e/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in linspace(1, 10, 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": ""
+},
+
+{
+    "location": "examples/axislike.html#Simple-group-plot-1",
+    "page": "Axis-like objects",
+    "title": "Simple group plot",
+    "category": "section",
+    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nendcs = [[(0,0), (1,1), (2,2)],\n      [(0,2), (1,1), (2,0)],\n      [(0,2), (1,1), (2,1)],\n      [(0,2), (1,1), (1,0)]]\n\n@pgf gp = GroupPlot(\n    {\n        group_style = { group_size = \"2 by 2\",},\n        height = \"4cm\",\n        width = \"4cm\"\n    }\n)\n\n@pgf for (i, coords) in enumerate(cs)\n    push!(gp, {title = i})\n    push!(gp, PlotInc(Coordinates(coords)))\nend\ngp\nsavefigs(\"groupplot-simple\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/axislike.html#Multiple-group-plots-1",
+    "page": "Axis-like objects",
+    "title": "Multiple group plots",
+    "category": "section",
+    "text": "x = linspace(0, 2*pi, 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/axislike.html#Polar-axis-1",
+    "page": "Axis-like objects",
+    "title": "Polar axis",
+    "category": "section",
+    "text": "angles = [e/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in linspace(1, 10, 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -637,7 +749,95 @@ var documenterSearchIndex = {"docs": [
     "page": "PGFPlots manual gallery",
     "title": "PGFPlots manual gallery",
     "category": "section",
-    "text": "Examples converted from the PGFPlots manual gallery. This is a work in progress.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend@pgf Axis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Error\",\n    },\n    Plot(\n        {\n            color = \"red\",\n            mark  = \"x\"\n        },\n        Coordinates(\n            [\n                (2, -2.8559703),\n                (3, -3.5301677),\n                (4, -4.3050655),\n                (5, -5.1413136),\n                (6, -6.0322865),\n                (7, -6.9675052),\n                (8, -7.9377747),\n            ]\n        ),\n    ),\n)\nsavefigs(\"cost-error\", ans) # hide[.pdf], [generated .tex](Image: )using LaTeXStrings\n@pgf Axis(\n    {\n        xlabel = L\"x\",\n        ylabel = L\"f(x) = x^2 - x + 4\"\n    },\n    Plot(\n        Expression(\"x^2 - x + 4\")\n    )\n)\nsavefigs(\"simple-expression\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(\n    {\n        height = \"9cm\",\n        width = \"9cm\",\n        grid = \"major\",\n    },\n    PlotInc(Expression(\"-x^5 - 242\")),\n    LegendEntry(\"model\"),\n    PlotInc(Coordinates(\n        [\n            (-4.77778,2027.60977),\n            (-3.55556,347.84069),\n            (-2.33333,22.58953),\n            (-1.11111,-493.50066),\n            (0.11111,46.66082),\n            (1.33333,-205.56286),\n            (2.55556,-341.40638),\n            (3.77778,-1169.24780),\n            (5.00000,-3269.56775),\n        ]\n    )),\n    LegendEntry(\"estimate\")\n)\nsavefigs(\"cost-gain\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Gain\",\n        xmode = \"log\",\n        ymode = \"log\",\n    },\n    Plot(\n        {\n            color = \"red\",\n            mark  = \"x\"\n        },\n        Coordinates(\n            [\n                (10, 100),\n                (20, 150),\n                (40, 225),\n                (80, 340),\n                (160, 510),\n                (320, 765),\n                (640, 1150),\n            ]\n        )\n    )\n)\nsavefigs(\"cost-gain-log-log\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Gain\",\n        ymode = \"log\",\n    },\n    Plot(\n        {\n            color = \"blue\",\n            mark  = \"*\"\n        },\n        Coordinates(\n            [\n                (1, 8)\n                (2, 16)\n                (3, 32)\n                (4, 64)\n                (5, 128)\n                (6, 256)\n                (7, 512)\n            ]\n        )\n    )\n)\nsavefigs(\"cost-gain-ylog\", ans) # hide[.pdf], [generated .tex](Image: )using LaTeXStrings\n@pgf Axis(\n    {\n        xlabel = \"Degrees of freedom\",\n        ylabel = L\"$L_2$ Error\",\n        xmode  = \"log\",\n        ymode  = \"log\",\n    },\n    Plot(Coordinates(\n        [(   5, 8.312e-02), (  17, 2.547e-02), (  49, 7.407e-03),\n         ( 129, 2.102e-03), ( 321, 5.874e-04), ( 769, 1.623e-04),\n         (1793, 4.442e-05), (4097, 1.207e-05), (9217, 3.261e-06),]\n    )),\n    Plot(Coordinates(\n        [(   7, 8.472e-02), (   31, 3.044e-02), (111,   1.022e-02),\n         ( 351, 3.303e-03), ( 1023, 1.039e-03), (2815,  3.196e-04),\n         (7423, 9.658e-05), (18943, 2.873e-05), (47103, 8.437e-06),]\n    )),\n    Plot(Coordinates(\n        [(    9, 7.881e-02), (   49, 3.243e-02), (   209, 1.232e-02),\n         (  769, 4.454e-03), ( 2561, 1.551e-03), (  7937, 5.236e-04),\n         (23297, 1.723e-04), (65537, 5.545e-05), (178177, 1.751e-05),]\n    )),\n    Plot(Coordinates(\n        [(   11, 6.887e-02), (    71, 3.177e-02), (   351, 1.341e-02),\n         ( 1471, 5.334e-03), (  5503, 2.027e-03), ( 18943, 7.415e-04),\n         (61183, 2.628e-04), (187903, 9.063e-05), (553983, 3.053e-05),]\n    )),\n    Plot(Coordinates(\n        [(    13, 5.755e-02), (    97, 2.925e-02), (    545, 1.351e-02),\n         (  2561, 5.842e-03), ( 10625, 2.397e-03), (  40193, 9.414e-04),\n         (141569, 3.564e-04), (471041, 1.308e-04), (1496065, 4.670e-05),]\n    ))\n)\nsavefigs(\"dof-error\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(\n    {\n        \"scatter/classes\" = {\n            a = {mark = \"square*\", \"blue\"},\n            b = {mark = \"triangle*\", \"red\"},\n            c = {mark = \"o\", draw = \"black\"},\n        }\n    },\n    Plot(\n        {\n            scatter,\n            \"only marks\",\n            \"scatter src\" = \"explicit symbolic\",\n        },\n        Table(\n            {\n                meta = \"label\"\n            },\n            x = [0.1, 0.45, 0.02, 0.06, 0.9 , 0.5 , 0.85, 0.12, 0.73, 0.53, 0.76, 0.55],\n            y = [0.15, 0.27, 0.17, 0.1, 0.5, 0.3, 0.52, 0.05, 0.45, 0.25, 0.5, 0.32],\n            label = [\"a\", \"c\", \"a\", \"a\", \"b\", \"c\", \"b\", \"a\", \"b\", \"c\", \"b\", \"c\"],\n        )\n    )\n)\nsavefigs(\"table-label\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(\n    {\n        \"nodes near coords\" = raw\"(\\coordindex)\",\n        title = raw\"\\texttt{patch type=quadratic spline}\",\n    },\n    Plot(\n        {\n            mark = \"*\",\n            patch,\n            mesh, # without mesh, pgfplots tries to fill,\n            # \"patch type\" = \"quadratic spline\", <- Should work??\n        },\n        Coordinates(\n            [\n                # left, right, middle-> first segment\n                (0, 0),   (1, 1),   (0.5, 0.5^2),\n                # left, right, middle-> second segment\n                (1.2, 1), (2.2, 1), (1.7, 2),\n            ]\n        )\n    )\n)\nsavefigs(\"spline-quadratic\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Plot3(\n    {\n        mesh,\n        scatter,\n        samples = 10,\n        domain = \"0:1\"\n    },\n    Expression(\"x * (1-x) * y * (1-y)\")\n)\nsavefigs(\"mesh-scatter\", ans) # hide[.pdf], [generated .tex](Image: )# this is an imitation of the figure in the manual, as we generate the data\nx = linspace(0, 10, 100)\n@pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 2\",\n            horizontal_sep=\"0pt\",\n            vertical_sep=\"0pt\",\n            xticklabels_at=\"edge bottom\"\n        },\n        xmin = 0,\n        ymin = 0,\n        height = \"3.7cm\",\n        width = \"4cm\",\n        no_markers\n    },\n    nothing,\n    {xmin=5, xmax=10, ymin=50, ymax=100},\n    plot,\n    {xmax=5, ymax=50},\n    plot,\n    {xmin=5, xmax=10, ymax=50, yticklabels={}},\n    plot)\nsavefigs(\"groupplot-nested\", ans) # hide[.pdf], [generated .tex](Image: )@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = raw\"\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Examples converted from the PGFPlots manual gallery. This is a work in progress.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/gallery.html#Cost-Error-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Cost Error",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Error\",\n    },\n    Plot(\n        {\n            color = \"red\",\n            mark  = \"x\"\n        },\n        Coordinates(\n            [\n                (2, -2.8559703),\n                (3, -3.5301677),\n                (4, -4.3050655),\n                (5, -5.1413136),\n                (6, -6.0322865),\n                (7, -6.9675052),\n                (8, -7.9377747),\n            ]\n        ),\n    ),\n)\nsavefigs(\"cost-error\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Simple-Expression-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Simple Expression",
+    "category": "section",
+    "text": "using LaTeXStrings\n@pgf Axis(\n    {\n        xlabel = L\"x\",\n        ylabel = L\"f(x) = x^2 - x + 4\"\n    },\n    Plot(\n        Expression(\"x^2 - x + 4\")\n    )\n)\nsavefigs(\"simple-expression\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Mixing-expression-and-coordinates-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Mixing expression and coordinates",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        height = \"9cm\",\n        width = \"9cm\",\n        grid = \"major\",\n    },\n    PlotInc(Expression(\"-x^5 - 242\")),\n    LegendEntry(\"model\"),\n    PlotInc(Coordinates(\n        [\n            (-4.77778,2027.60977),\n            (-3.55556,347.84069),\n            (-2.33333,22.58953),\n            (-1.11111,-493.50066),\n            (0.11111,46.66082),\n            (1.33333,-205.56286),\n            (2.55556,-341.40638),\n            (3.77778,-1169.24780),\n            (5.00000,-3269.56775),\n        ]\n    )),\n    LegendEntry(\"estimate\")\n)\nsavefigs(\"cost-gain\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Log-logLog-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Log logLog",
+    "category": "section",
+    "text": "@pgf LogLogAxis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Gain\"\n    },\n    Plot(\n        {\n            color = \"red\",\n            mark  = \"x\"\n        },\n        Coordinates(\n            [\n                (10, 100),\n                (20, 150),\n                (40, 225),\n                (80, 340),\n                (160, 510),\n                (320, 765),\n                (640, 1150),\n            ]\n        )\n    )\n)\nsavefigs(\"cost-gain-log-log\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Yaxis-log-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Yaxis log",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        xlabel = \"Cost\",\n        ylabel = \"Gain\",\n        ymode = \"log\",\n    },\n    Plot(\n        {\n            color = \"blue\",\n            mark  = \"*\"\n        },\n        Coordinates(\n            [\n                (1, 8)\n                (2, 16)\n                (3, 32)\n                (4, 64)\n                (5, 128)\n                (6, 256)\n                (7, 512)\n            ]\n        )\n    )\n)\nsavefigs(\"cost-gain-ylog\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Dof-vs-error-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Dof vs error",
+    "category": "section",
+    "text": "using LaTeXStrings\n@pgf Axis(\n    {\n        xlabel = \"Degrees of freedom\",\n        ylabel = L\"$L_2$ Error\",\n        xmode  = \"log\",\n        ymode  = \"log\",\n    },\n    Plot(Coordinates(\n        [(   5, 8.312e-02), (  17, 2.547e-02), (  49, 7.407e-03),\n         ( 129, 2.102e-03), ( 321, 5.874e-04), ( 769, 1.623e-04),\n         (1793, 4.442e-05), (4097, 1.207e-05), (9217, 3.261e-06),]\n    )),\n    Plot(Coordinates(\n        [(   7, 8.472e-02), (   31, 3.044e-02), (111,   1.022e-02),\n         ( 351, 3.303e-03), ( 1023, 1.039e-03), (2815,  3.196e-04),\n         (7423, 9.658e-05), (18943, 2.873e-05), (47103, 8.437e-06),]\n    )),\n    Plot(Coordinates(\n        [(    9, 7.881e-02), (   49, 3.243e-02), (   209, 1.232e-02),\n         (  769, 4.454e-03), ( 2561, 1.551e-03), (  7937, 5.236e-04),\n         (23297, 1.723e-04), (65537, 5.545e-05), (178177, 1.751e-05),]\n    )),\n    Plot(Coordinates(\n        [(   11, 6.887e-02), (    71, 3.177e-02), (   351, 1.341e-02),\n         ( 1471, 5.334e-03), (  5503, 2.027e-03), ( 18943, 7.415e-04),\n         (61183, 2.628e-04), (187903, 9.063e-05), (553983, 3.053e-05),]\n    )),\n    Plot(Coordinates(\n        [(    13, 5.755e-02), (    97, 2.925e-02), (    545, 1.351e-02),\n         (  2561, 5.842e-03), ( 10625, 2.397e-03), (  40193, 9.414e-04),\n         (141569, 3.564e-04), (471041, 1.308e-04), (1496065, 4.670e-05),]\n    ))\n)\nsavefigs(\"dof-error\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Scatter-classes-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Scatter classes",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        \"scatter/classes\" = {\n            a = {mark = \"square*\", \"blue\"},\n            b = {mark = \"triangle*\", \"red\"},\n            c = {mark = \"o\", draw = \"black\"},\n        }\n    },\n    Plot(\n        {\n            scatter,\n            \"only marks\",\n            \"scatter src\" = \"explicit symbolic\",\n        },\n        Table(\n            {\n                meta = \"label\"\n            },\n            x = [0.1, 0.45, 0.02, 0.06, 0.9 , 0.5 , 0.85, 0.12, 0.73, 0.53, 0.76, 0.55],\n            y = [0.15, 0.27, 0.17, 0.1, 0.5, 0.3, 0.52, 0.05, 0.45, 0.25, 0.5, 0.32],\n            label = [\"a\", \"c\", \"a\", \"a\", \"b\", \"c\", \"b\", \"a\", \"b\", \"c\", \"b\", \"c\"],\n        )\n    )\n)\nsavefigs(\"table-label\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Splines-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Splines",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        \"nodes near coords\" = raw\"(\\coordindex)\",\n        title = raw\"\\texttt{patch type=quadratic spline}\",\n    },\n    Plot(\n        {\n            mark = \"*\",\n            patch,\n            mesh, # without mesh, pgfplots tries to fill,\n            # \"patch type\" = \"quadratic spline\", <- Should work??\n        },\n        Coordinates(\n            [\n                # left, right, middle-> first segment\n                (0, 0),   (1, 1),   (0.5, 0.5^2),\n                # left, right, middle-> second segment\n                (1.2, 1), (2.2, 1), (1.7, 2),\n            ]\n        )\n    )\n)\nsavefigs(\"spline-quadratic\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Mesh-scatter-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Mesh scatter",
+    "category": "section",
+    "text": "@pgf Plot3(\n    {\n        mesh,\n        scatter,\n        samples = 10,\n        domain = \"0:1\"\n    },\n    Expression(\"x * (1-x) * y * (1-y)\")\n)\nsavefigs(\"mesh-scatter\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Group-plot-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Group plot",
+    "category": "section",
+    "text": "# this is an imitation of the figure in the manual, as we generate the data\nx = linspace(0, 10, 100)\n@pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 2\",\n            horizontal_sep=\"0pt\",\n            vertical_sep=\"0pt\",\n            xticklabels_at=\"edge bottom\"\n        },\n        xmin = 0,\n        ymin = 0,\n        height = \"3.7cm\",\n        width = \"4cm\",\n        no_markers\n    },\n    nothing,\n    {xmin=5, xmax=10, ymin=50, ymax=100},\n    plot,\n    {xmax=5, ymax=50},\n    plot,\n    {xmin=5, xmax=10, ymax=50, yticklabels={}},\n    plot)\nsavefigs(\"groupplot-nested\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/gallery.html#Patch-1",
+    "page": "PGFPlots manual gallery",
+    "title": "Patch",
+    "category": "section",
+    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = raw\"\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -661,7 +861,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "Colors.jl",
     "category": "section",
-    "text": "Using a colorant as the line colorusing Colors\nμ = 0\nσ = 1e-3\n\naxis = Axis()\n@pgf for (i, col) in enumerate(distinguishable_colors(10))\n    offset = i * 50\n    p = Plot(\n        {\n            color = col,\n            domain = \"-3*$σ:3*$σ\",\n            style = { ultra_thick },\n            samples = 50\n        },\n        Expression(\"exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset\"))\n    push!(axis, p)\nend\naxis\nsavefigs(\"colors\", ans) # hide[.pdf], [generated .tex](Image: )Using a colormapusing Colors\np = @pgf Plot3(\n    {\n        surf,\n        point_meta = \"y\",\n        samples = 13\n    },\n    Expression(\"cos(deg(x)) * sin(deg(y))\")\n)\ncolormaps = [\"Blues\", \"Greens\", \"Oranges\", \"Purples\"]\ntd = TikzDocument()\nfor cmap in colormaps\n    push_preamble!(td, (cmap, Colors.colormap(cmap)))\nend\n\ntp = @pgf TikzPicture({ \"scale\" => 0.5 })\npush!(td, tp)\ngp = @pgf GroupPlot({ group_style = {group_size = \"2 by 2\"}})\npush!(tp, gp)\n\nfor cmap in colormaps\n    @pgf push!(gp, { colormap_name = cmap }, p)\nend\nsavefigs(\"colormap\", td) # hide[.pdf], [generated .tex](Image: )"
+    "text": ""
+},
+
+{
+    "location": "examples/juliatypes.html#LineColor-1",
+    "page": "Julia types",
+    "title": "LineColor",
+    "category": "section",
+    "text": "Using a colorant as the line colorusing Colors\nμ = 0\nσ = 1e-3\n\naxis = Axis()\n@pgf for (i, col) in enumerate(distinguishable_colors(10))\n    offset = i * 50\n    p = Plot(\n        {\n            color = col,\n            domain = \"-3*$σ:3*$σ\",\n            style = { ultra_thick },\n            samples = 50\n        },\n        Expression(\"exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset\"))\n    push!(axis, p)\nend\naxis\nsavefigs(\"colors\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/juliatypes.html#Colormap-1",
+    "page": "Julia types",
+    "title": "Colormap",
+    "category": "section",
+    "text": "Using a colormapusing Colors\np = @pgf Plot3(\n    {\n        surf,\n        point_meta = \"y\",\n        samples = 13\n    },\n    Expression(\"cos(deg(x)) * sin(deg(y))\")\n)\ncolormaps = [\"Blues\", \"Greens\", \"Oranges\", \"Purples\"]\ntd = TikzDocument()\nfor cmap in colormaps\n    push_preamble!(td, (cmap, Colors.colormap(cmap)))\nend\n\ntp = @pgf TikzPicture({ \"scale\" => 0.5 })\npush!(td, tp)\ngp = @pgf GroupPlot({ group_style = {group_size = \"2 by 2\"}})\npush!(tp, gp)\n\nfor cmap in colormaps\n    @pgf push!(gp, { colormap_name = cmap }, p)\nend\nsavefigs(\"colormap\", td) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/juliatypes.html#ggplot2-1",
+    "page": "Julia types",
+    "title": "ggplot2",
+    "category": "section",
+    "text": "Something that looks a bit like ggplot2.using Colors\nusing LaTeXStrings\n\nggplot2_axis_theme = @pgf {\n    tick_align = \"outside\",\n    tick_pos = \"left\",\n    xmajorgrids,\n    x_grid_style = \"white\",\n    ymajorgrids,\n    y_grid_style = \"white\",\n    axis_line_style = \"white\",\n    \"axis_background/.style\" = {\n        fill = \"white!89.803921568627459!black\"\n    }\n}\n\nggplot2_plot_theme = @pgf {\n    mark=\"*\",\n    mark_size = 3,\n    mark_options = \"solid\",\n    line_width = \"1.64pt\",\n}\n\nx = 0:0.3:2\ny1 = sin.(2x)\ny2 = cos.(2x)\ny3 = cos.(5x)\nys = [y1, y2, y3]\nn = length(ys)\n\n# Evenly spread out colors\ncolors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]\n\n@pgf Axis(\n    {\n         ggplot2_axis_theme...,\n         xmin = -0.095, xmax = 1.995,\n         ymin = -1.1,   ymax =1.1,\n         title = L\"Simple plot $\\frac{\\alpha}{2}$\",\n         xlabel = \"time (s)\",\n         ylabel = \"Voltage (mV)\",\n    },\n    [\n        PlotInc(\n            {\n                ggplot2_plot_theme...,\n                color = colors[i]\n            },\n            Coordinates(x, _y))\n        for (i, _y) in enumerate(ys)]...,\n)\nsavefigs(\"ggplot\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -685,7 +909,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "StatsBase.jl",
     "category": "section",
-    "text": "StatsBase.Histogram can be plotted using Table, both for 1D and 2D histograms.using StatsBase: Histogram, fit\n@pgf Axis(\n    {\n        \"ybar interval\",\n        \"xticklabel interval boundaries\",\n        xmajorgrids = false,\n        xticklabel = raw\"$[\\pgfmathprintnumber\\tick,\\pgfmathprintnumber\\nexttick)$\",\n        \"xticklabel style\" =\n        {\n            font = raw\"\\tiny\"\n        },\n    },\n    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))\nsavefigs(\"histogram-1d\", ans) # hide[.pdf], [generated .tex](Image: )using StatsBase: Histogram, fit\nw = linspace(-1, 1, 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "StatsBase.Histogram can be plotted using Table, both for 1D and 2D histograms."
+},
+
+{
+    "location": "examples/juliatypes.html#D-1",
+    "page": "Julia types",
+    "title": "1D",
+    "category": "section",
+    "text": "using StatsBase: Histogram, fit\n@pgf Axis(\n    {\n        \"ybar interval\",\n        \"xticklabel interval boundaries\",\n        xmajorgrids = false,\n        xticklabel = raw\"$[\\pgfmathprintnumber\\tick,\\pgfmathprintnumber\\nexttick)$\",\n        \"xticklabel style\" =\n        {\n            font = raw\"\\tiny\"\n        },\n    },\n    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))\nsavefigs(\"histogram-1d\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/juliatypes.html#D-2",
+    "page": "Julia types",
+    "title": "2D",
+    "category": "section",
+    "text": "using StatsBase: Histogram, fit\nw = linspace(-1, 1, 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 ]}
