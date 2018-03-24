@@ -156,4 +156,18 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved. Just `merge!` the theme into an `Axis`.
+An alternative to using `merge!` is using  `...` to splice an option into another one, e.g.
+
+```jldoctest
+julia> theme = @pgf {xmajorgrids, ymajorgrids};
+
+julia> a = Axis(
+           @pgf {theme..., title = "Foo"}
+       );
+
+julia> print_tex(a)
+\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]
+\end{axis}
+```
+
+It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.
