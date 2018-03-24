@@ -42,7 +42,7 @@ julia> Pkg.add("PGFPlotsX")
 ## Authors
 
 - Kristoffer Carlsson - [@KristofferC89](https://github.com/KristofferC/)
-- Tamas Pass - [@tpapp](https://github.com/tpapp)
+- Tamas K. Papp - [@tpapp](https://github.com/tpapp)
 
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
