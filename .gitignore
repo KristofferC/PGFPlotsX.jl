@@ -8,3 +8,4 @@ docs/build
 deps/custom_preamble.tex
 deps/deps.jl
 deps/pdf2svg.svg
+deps/showed_warning

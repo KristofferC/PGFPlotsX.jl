@@ -1,6 +1,13 @@
 using Crayons
 using Crayons.Box
 
+if !isfile(joinpath(@__DIR__, "showed_warning"))
+    info("""The new PGFPlotsX-release is a breaking release.
+        If you want your old plot codes to work, you can pin PGFPlotsX to v0.1.5.
+        """)
+    touch(joinpath(@__DIR__, "showed_warning"))
+end
+
 const OK =  GREEN_FG * BOLD("OK")
 const X =  RED_FG * BOLD("X")
 
