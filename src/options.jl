@@ -11,18 +11,20 @@ function prockey(key)
         return :($(string(key)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
         return :($(string(a))=>$b)
+    elseif @capture(key, g_...)
+        return :($g => nothing)
     end
     error("Invalid pgf option $key")
 end
 
 function procmap(d)
-  if @capture(d, f_(xs__))
-      return :($f($(map(procmap, xs)...)))
-  elseif !@capture(d, {xs__})
-      return d
-  else
-      return :($(Options)($(map(prockey, xs)...)))
-  end
+    if @capture(d, f_(xs__))
+        return :($f($(map(procmap, xs)...)))
+    elseif !@capture(d, {xs__})
+        return d
+    else
+        return :($(Options)($(map(prockey, xs)...)))
+    end
 end
 
 """
@@ -49,6 +51,13 @@ spaces.
     color => "black",
 }
 ```
+
+Another `Options` can be spliced into one being created using `...`, e.g.
+
+```
+theme = @pgf {xmajorgrids, x_grid_style = "white",}
+
+axis_opt = @pgf {theme..., title = "My figure"}
 """
 macro pgf(ex)
     esc(prewalk(procmap, ex))
@@ -110,7 +119,7 @@ function print_opt(io::IO, d::AbstractDict)
     replace_underline(x) = x
     replace_underline(x::Union{String, Symbol}) = replace(string(x), "_", " ")
     for (i, (k, v)) in enumerate(d)
-        print(io, replace_underline(k))
+        print_opt(io, replace_underline(k))
         if v != nothing
             print(io, "={")
             print_opt(io, v)

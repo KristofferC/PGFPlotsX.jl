@@ -13,6 +13,8 @@ savefigs = (figname, obj) -> begin
 end
 ```
 
+## Unnamed columns
+
 Let
 ```jl
 x = linspace(0, 2*pi, 100)
@@ -35,7 +37,9 @@ savefigs("table-unnamed-columns", ans) # hide
 
 ![](table-unnamed-columns.svg)
 
-or named columns:
+## Named columns
+
+Or named columns:
 
 ```@example pgf
 Plot(Table([:x => x, :y => y]))
@@ -46,7 +50,9 @@ savefigs("table-named-columns", ans) # hide
 
 ![](table-named-columns.svg)
 
-or rename using options:
+## Rename options
+
+The columns can be renamed using options:
 
 ```@example pgf
 @pgf Plot(
@@ -61,6 +67,8 @@ savefigs("table-dict-rename", ans) # hide
 [\[.pdf\]](table-dict-rename.pdf), [\[generated .tex\]](table-dict-rename.tex)
 
 ![](table-dict-rename.svg)
+
+## Excluding points
 
 In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:
 ```@example pgf
@@ -87,6 +95,8 @@ savefigs("table-jump-3d", ans) # hide
 [\[.pdf\]](table-jump-3d.pdf), [\[generated .tex\]](table-jump-3d.tex)
 
 ![](table-jump-3d.svg)
+
+## Quiver plot
 
 A quiver plot can be created as:
 

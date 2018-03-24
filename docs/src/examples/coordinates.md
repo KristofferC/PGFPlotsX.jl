@@ -12,6 +12,8 @@ end
 
 Use `Coordinates` to construct the `pgfplots` construct `coordinates`. Various constructors are available.
 
+## Basic usage
+
 For basic usage, consider `AbstractVectors` and iterables. Notice how non-finite values are skipped. You can also use `()` or `nothing` for jumps in functions.
 
 ```@example pgf
@@ -35,6 +37,9 @@ savefigs("coordinates-simple", ans) # hide
 
 ![](coordinates-simple.svg)
 
+
+## Error bars
+
 Use `xerror`, `xerrorplus`, `xerrorminus`, `yerror` etc. for error bars.
 
 ```@example pgf
@@ -54,6 +59,8 @@ savefigs("coordinates-errorbars", ans) # hide
 
 ![](coordinates-errorbars.svg)
 
+## 3D
+
 Use three vectors to construct 3D coordinates.
 
 ```@example pgf
@@ -70,6 +77,8 @@ savefigs("coordinates-3d", ans) # hide
 [\[.pdf\]](coordinates-3d.pdf), [\[generated .tex\]](coordinates-3d.tex)
 
 ![](coordinates-3d.svg)
+
+## Edge vectors
 
 A convenience constructor is available for plotting a matrix of values calculated from edge vectors.
 
@@ -89,6 +98,8 @@ savefigs("coordinates-3d-matrix", ans) # hide
 [\[.pdf\]](coordinates-3d-matrix.pdf), [\[generated .tex\]](coordinates-3d-matrix.tex)
 
 ![](coordinates-3d-matrix.svg)
+
+## Heatmap
 
 ```@example pgf
 x = linspace(-2, 2, 40)
@@ -114,6 +125,7 @@ savefigs("coordinates-3d-matrix-heatmap", ans) # hide
 
 ![](coordinates-3d-matrix-heatmap.svg)
 
+## Matrix plot
 
 ```@example pgf
 x = repeat(0:2, outer = 3)
