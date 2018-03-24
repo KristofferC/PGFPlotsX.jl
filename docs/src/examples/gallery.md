@@ -15,6 +15,7 @@ end
 
 ------------------------
 
+## Cost Error
 
 ```@example pgf
 @pgf Axis(
@@ -49,6 +50,8 @@ savefigs("cost-error", ans) # hide
 
 ------------------------
 
+## Simple Expression
+
 ```@example pgf
 using LaTeXStrings
 @pgf Axis(
@@ -68,6 +71,8 @@ savefigs("simple-expression", ans) # hide
 ![](simple-expression.svg)
 
 ------------------------
+
+## Mixing expression and coordinates
 
 ```@example pgf
 @pgf Axis(
@@ -102,13 +107,13 @@ savefigs("cost-gain", ans) # hide
 
 ------------------------
 
+## Log logLog
+
 ```@example pgf
-@pgf Axis(
+@pgf LogLogAxis(
     {
         xlabel = "Cost",
-        ylabel = "Gain",
-        xmode = "log",
-        ymode = "log",
+        ylabel = "Gain"
     },
     Plot(
         {
@@ -136,6 +141,8 @@ savefigs("cost-gain-log-log", ans) # hide
 ![](cost-gain-log-log.svg)
 
 ------------------------
+
+## Yaxis log
 
 ```@example pgf
 @pgf Axis(
@@ -171,6 +178,8 @@ savefigs("cost-gain-ylog", ans) # hide
 
 
 ------------------------
+
+## Dof vs error
 
 ```@example pgf
 using LaTeXStrings
@@ -216,6 +225,8 @@ savefigs("dof-error", ans) # hide
 
 ------------------------
 
+## Scatter classes
+
 ```@example pgf
 @pgf Axis(
     {
@@ -250,6 +261,8 @@ savefigs("table-label", ans) # hide
 
 ------------------------
 
+## Splines
+
 ```@example pgf
 @pgf Axis(
     {
@@ -282,6 +295,8 @@ savefigs("spline-quadratic", ans) # hide
 
 ------------------------
 
+## Mesh scatter
+
 ```@example pgf
 @pgf Plot3(
     {
@@ -300,6 +315,8 @@ savefigs("mesh-scatter", ans) # hide
 ![](mesh-scatter.svg)
 
 ------------------------
+
+## Group plot
 
 ```@example pgf
 # this is an imitation of the figure in the manual, as we generate the data
@@ -335,6 +352,8 @@ savefigs("groupplot-nested", ans) # hide
 ![](groupplot-nested.svg)
 
 ------------------------
+
+## Patch
 
 ```@example pgf
 @pgf Axis(Plot(

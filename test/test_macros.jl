@@ -18,8 +18,9 @@ od(args...) =  PGFPlotsX.Options(args...)
 @testset "pgf tests" begin
     a = 1
     b = 2
-    @test @pgf { xmax = a + b, title = "42", justkey } ==
-        od("xmax" => 3, "title" => "42", "justkey" => nothing)
+    theme = @pgf {color = "white"}
+    @test @pgf { xmax = a + b, title = "42", justkey, theme... } ==
+        od("xmax" => 3, "title" => "42", "justkey" => nothing, @pgf { color="white" } => nothing)
     f(x...) = tuple(x...)
     @test @pgf f({ look, we, are = f(1, 2, 3),
                        nesting = {

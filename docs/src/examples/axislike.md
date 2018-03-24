@@ -1,5 +1,7 @@
 # Axis-like objects
 
+## Simple group plot
+
 ```@setup pgf
 using PGFPlotsX
 savefigs = (figname, obj) -> begin
@@ -37,6 +39,7 @@ savefigs("groupplot-simple", ans) # hide
 
 ![](groupplot-simple.svg)
 
+## Multiple group plots
 
 ```@example pgf
 x = linspace(0, 2*pi, 100)
@@ -63,6 +66,8 @@ savefigs("groupplot-multiple", ans) # hide
 
 ![](groupplot-multiple.svg)
 
+
+## Polar axis
 
 ```@example pgf
 angles = [e/50*360*i for i in 1:500]

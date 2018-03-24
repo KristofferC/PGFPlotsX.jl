@@ -14,6 +14,7 @@ end
 
 ## Colors.jl
 
+### LineColor
 Using a colorant as the line color
 
 ```@example pgf
@@ -41,6 +42,8 @@ savefigs("colors", ans) # hide
 [\[.pdf\]](colors.pdf), [\[generated .tex\]](colors.tex)
 
 ![](colors.svg)
+
+### Colormap
 
 Using a colormap
 
@@ -74,6 +77,69 @@ savefigs("colormap", td) # hide
 [\[.pdf\]](colormap.pdf), [\[generated .tex\]](colormap.tex)
 
 ![](colormap.svg)
+
+### ggplot2
+
+Something that looks a bit like ggplot2.
+
+```@example pgf
+using Colors
+using LaTeXStrings
+
+ggplot2 = @pgf {
+    tick_align = "outside",
+    tick_pos = "left",
+    xmajorgrids,
+    x_grid_style = "white",
+    ymajorgrids,
+    y_grid_style = "white",
+    axis_line_style = "white",
+    "axis_background/.style" = {
+        fill = "white!89.803921568627459!black"
+    }
+}
+
+ggplot2_plot = @pgf {
+    mark="*",
+    mark_size = 3,
+    mark_options = "solid",
+    line_width = "1.64pt",
+}
+
+x = 0:0.3:2
+y1 = sin.(2x)
+y2 = cos.(2x)
+y3 = cos.(5x)
+ys = [y1, y2, y3]
+n = length(ys)
+
+# Evenly spread out colors
+colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
+
+@pgf Axis(
+    {
+         ggplot2...,
+         xmin = -0.095, xmax = 1.995,
+         ymin = -1.1,   ymax =1.1,
+         title = L"Simple plot $\frac{\alpha}{2}$",
+         xlabel = "time (s)",
+         ylabel = "Voltage (mV)",
+    },
+    [
+        PlotInc(
+            {
+                ggplot2_plot...,
+                color = colors[i]
+            },
+            Coordinates(x, _y))
+        for (i, _y) in enumerate(ys)]...,
+)
+savefigs("ggplot", ans) # hide
+```
+
+[\[.pdf\]](ggplot.pdf), [\[generated .tex\]](ggplot.tex)
+
+![](ggplot.svg)
 
 ## DataFrames.jl
 
@@ -145,6 +211,8 @@ savefigs("contour", ans) # hide
 
 `StatsBase.Histogram` can be plotted using `Table`, both for 1D and 2D histograms.
 
+### 1D
+
 ```@example pgf
 using StatsBase: Histogram, fit
 @pgf Axis(
@@ -165,6 +233,8 @@ savefigs("histogram-1d", ans) # hide
 [\[.pdf\]](histogram-1d.pdf), [\[generated .tex\]](histogram-1d.tex)
 
 ![](histogram-1d.svg)
+
+### 2D
 
 ```@example pgf
 using StatsBase: Histogram, fit
