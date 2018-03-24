@@ -39,15 +39,10 @@ julia> Pkg.add("PGFPlotsX")
 - [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
 
 
-## TODO:s / Roadmap
+## Authors
 
-* Add more examples
-* Make the generated LaTeX code pretty printed (more than currently)
-* Add figures to the documentation
-
-## Author
-
-Kristoffer Carlsson - [@KristofferC89](https://github.com/KristofferC/)
+- Kristoffer Carlsson - [@KristofferC89](https://github.com/KristofferC/)
+- Tamas Pass - [@tpapp](https://github.com/tpapp)
 
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
