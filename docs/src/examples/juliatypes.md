@@ -86,7 +86,7 @@ Something that looks a bit like ggplot2.
 using Colors
 using LaTeXStrings
 
-ggplot2 = @pgf {
+ggplot2_axis_theme = @pgf {
     tick_align = "outside",
     tick_pos = "left",
     xmajorgrids,
@@ -99,7 +99,7 @@ ggplot2 = @pgf {
     }
 }
 
-ggplot2_plot = @pgf {
+ggplot2_plot_theme = @pgf {
     mark="*",
     mark_size = 3,
     mark_options = "solid",
@@ -118,7 +118,7 @@ colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
 
 @pgf Axis(
     {
-         ggplot2...,
+         ggplot2_axis_theme...,
          xmin = -0.095, xmax = 1.995,
          ymin = -1.1,   ymax =1.1,
          title = L"Simple plot $\frac{\alpha}{2}$",
@@ -128,7 +128,7 @@ colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
     [
         PlotInc(
             {
-                ggplot2_plot...,
+                ggplot2_plot_theme...,
                 color = colors[i]
             },
             Coordinates(x, _y))
