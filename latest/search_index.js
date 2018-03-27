@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "PGFPlotsX.@pgf",
     "category": "macro",
-    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\n``` theme = @pgf {xmajorgrids, x_grid_style = \"white\",}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\n\n\n"
+    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\ntheme = @pgf {xmajorgrids, x_grid_style = \"white\"}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\n\n\n"
 },
 
 {

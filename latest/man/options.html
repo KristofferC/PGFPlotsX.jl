@@ -7,7 +7,9 @@
     mark_size = &quot;0.6pt&quot;,
     mark = &quot;o&quot;,
     color =&gt; &quot;black&quot;,
-}</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><p>``` theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;,}</p><p>axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</p></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/af202a0a56cda0f477ccfc3a76361bc28fbfd0f2/src/options.jl#L30-L61">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+}</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><pre><code class="language-none">theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;}
+
+axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/1079b3cd750781118d1e0aabd1ac38f1aeda19f6/src/options.jl#L30-L62">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 
