@@ -55,9 +55,10 @@ spaces.
 Another `Options` can be spliced into one being created using `...`, e.g.
 
 ```
-theme = @pgf {xmajorgrids, x_grid_style = "white",}
+theme = @pgf {xmajorgrids, x_grid_style = "white"}
 
 axis_opt = @pgf {theme..., title = "My figure"}
+```
 """
 macro pgf(ex)
     esc(prewalk(procmap, ex))
