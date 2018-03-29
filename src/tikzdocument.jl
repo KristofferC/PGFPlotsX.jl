@@ -142,17 +142,15 @@ _HAS_WARNED_SHELL_ESCAPE = false
 function savepdf(filename::String, td::TikzDocument;
                  latex_engine = latexengine(),
                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 run_count = 0)
+                 run_count = 0, tmp = tempname())
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
-    tmp = tempname()
     tmp_tex = tmp * ".tex"
     tmp_pdf = tmp * ".pdf"
-    savetex(tmp_tex, td)
+    if run_count == 0 savetex(tmp_tex, td) end
     latex_success, log, latexcmd = run_latex_once(tmp_tex,
                                                   latex_engine, buildflags)
-    rm(tmp_tex; force = true)
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
@@ -176,23 +174,28 @@ function savepdf(filename::String, td::TikzDocument;
                 run_again = true
             else
                 latexerrormsg(log)
+                rm_tmpfiles(tmp_tex)
                 error(string("The latex command $latexcmd failed ",
                              "shell-escape feature seemed to not be ",
                              "detected even though it was passed as a flag"))
             end
         else
             latexerrormsg(log)
+            rm_tmpfiles(tmp_tex)
             error("The latex command $latexcmd failed")
         end
     end
     run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
     if run_again && run_count == 4
+        rm_tmpfiles(tmp_tex)
         error("ran latex 5 times without converging, log is:\n$log")
     end
     if run_again
-        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags, run_count=run_count+1)
+        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags, 
+                run_count=run_count+1, tmp = tmp)
         return
     end
+    rm_tmpfiles(tmp_tex)
     mv(tmp_pdf, filename; remove_destination = true)
 end
 
