@@ -148,7 +148,7 @@ function savepdf(filename::String, td::TikzDocument;
 
     tmp_tex = tmp * ".tex"
     tmp_pdf = tmp * ".pdf"
-    if run_count == 0 savetex(tmp_tex, td) end
+    savetex(tmp_tex, td)
     latex_success, log, latexcmd = run_latex_once(tmp_tex,
                                                   latex_engine, buildflags)
 
