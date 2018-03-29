@@ -107,3 +107,23 @@ end
         end
     end
 end
+
+@testset "legend to name; ref" begin
+    tmp_pdf = tempname() * ".pdf"
+    mktempdir() do dir
+        cd(dir) do
+            @pgf a = [Axis({legend_to_name = "named",
+                            title = "k = $k", legend_columns = 2,
+                            legend_entries = {"\$x^k\$", "\$(x + 1)^k\$"}},
+                            PlotInc(Expression("x^$k")),
+                            PlotInc(Expression("(x + 1)^$k")))
+                      for k in 1:3]
+            p = TikzPicture("\\matrix{", a[1], "&", a[2], "&", a[3], raw"\\\\};",
+                            raw"\node at (.5, -4.5) {\ref{named}};")
+            pgfsave(tmp_pdf, p)
+            @test is_pdf_file(tmp_pdf)
+            rm(tmp_pdf)
+        end
+    end
+end
+

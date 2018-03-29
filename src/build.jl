@@ -30,11 +30,16 @@ function run_latex_once(filename::String, eng::LaTeXEngine, flags)
     cmd = `$(_engine_cmd(eng)) $flags $file`
     succ = cd(() -> success(cmd), dir)
     logfile = _replace_fileext(filename, ".log")
-    auxfile = _replace_fileext(filename, ".aux")
     log = readstring(logfile)
+    succ, log, cmd
+end
+
+function rm_tmpfiles(filename::String)
+    logfile = _replace_fileext(filename, ".log")
+    auxfile = _replace_fileext(filename, ".aux")
     rm(logfile; force = true)
     rm(auxfile; force = true)
-    succ, log, cmd
+    rm(filename; force = true)
 end
 
 DEFAULT_FLAGS = Union{String}[] # no default flags currently
