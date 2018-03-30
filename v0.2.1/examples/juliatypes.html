@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Julia types · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><a href="../index.html"><img class="logo" src="../assets/logo.png" alt="PGFPlotsX.jl logo"/></a><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../man/structs.html">Overview</a></li><li><a class="toctext" href="../man/options.html">Options</a></li><li><a class="toctext" href="../man/data.html">Data</a></li><li><a class="toctext" href="../man/axiselements.html">Axis elements</a></li><li><a class="toctext" href="../man/axislike.html"><code>Axis</code> &amp; friends</a></li><li><a class="toctext" href="../man/picdoc.html">TikzPicture</a></li><li><a class="toctext" href="../man/save.html">Showing / Exporting figures</a></li><li><a class="toctext" href="../man/internals.html">Internals</a></li></ul></li><li><span class="toctext">Examples</span><ul><li><a class="toctext" href="coordinates.html">Coordinates</a></li><li><a class="toctext" href="tables.html">Tables</a></li><li><a class="toctext" href="axislike.html">Axis-like objects</a></li><li><a class="toctext" href="gallery.html">PGFPlots manual gallery</a></li><li class="current"><a class="toctext" href="juliatypes.html">Julia types</a><ul class="internal"><li><a class="toctext" href="#Colors.jl-1">Colors.jl</a></li><li><a class="toctext" href="#DataFrames.jl-1">DataFrames.jl</a></li><li><a class="toctext" href="#Countour.jl-1">Countour.jl</a></li><li><a class="toctext" href="#StatsBase.jl-1">StatsBase.jl</a></li></ul></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Examples</li><li><a href="juliatypes.html">Julia types</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/juliatypes.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Julia types</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Julia-types-1" href="#Julia-types-1">Julia types</a></h1><p>There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.</p><div></div><h2><a class="nav-anchor" id="Colors.jl-1" href="#Colors.jl-1">Colors.jl</a></h2><h3><a class="nav-anchor" id="LineColor-1" href="#LineColor-1">LineColor</a></h3><p>Using a colorant as the line color</p><div><pre><code class="language-julia">using Colors
+μ = 0
+σ = 1e-3
+
+axis = Axis()
+@pgf for (i, col) in enumerate(distinguishable_colors(10))
+    offset = i * 50
+    p = Plot(
+        {
+            color = col,
+            domain = &quot;-3*$σ:3*$σ&quot;,
+            style = { ultra_thick },
+            samples = 50
+        },
+        Expression(&quot;exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset&quot;))
+    push!(axis, p)
+end
+axis</code></pre></div><p><a href="colors.pdf">[.pdf]</a>, <a href="colors.tex">[generated .tex]</a></p><p><img src="colors.svg" alt/></p><h3><a class="nav-anchor" id="Colormap-1" href="#Colormap-1">Colormap</a></h3><p>Using a colormap</p><div><pre><code class="language-julia">using Colors
+p = @pgf Plot3(
+    {
+        surf,
+        point_meta = &quot;y&quot;,
+        samples = 13
+    },
+    Expression(&quot;cos(deg(x)) * sin(deg(y))&quot;)
+)
+colormaps = [&quot;Blues&quot;, &quot;Greens&quot;, &quot;Oranges&quot;, &quot;Purples&quot;]
+td = TikzDocument()
+for cmap in colormaps
+    push_preamble!(td, (cmap, Colors.colormap(cmap)))
+end
+
+tp = @pgf TikzPicture({ &quot;scale&quot; =&gt; 0.5 })
+push!(td, tp)
+gp = @pgf GroupPlot({ group_style = {group_size = &quot;2 by 2&quot;}})
+push!(tp, gp)
+
+for cmap in colormaps
+    @pgf push!(gp, { colormap_name = cmap }, p)
+end</code></pre></div><p><a href="colormap.pdf">[.pdf]</a>, <a href="colormap.tex">[generated .tex]</a></p><p><img src="colormap.svg" alt/></p><h3><a class="nav-anchor" id="ggplot2-1" href="#ggplot2-1">ggplot2</a></h3><p>Something that looks a bit like ggplot2.</p><div><pre><code class="language-julia">using Colors
+using LaTeXStrings
+
+ggplot2_axis_theme = @pgf {
+    tick_align = &quot;outside&quot;,
+    tick_pos = &quot;left&quot;,
+    xmajorgrids,
+    x_grid_style = &quot;white&quot;,
+    ymajorgrids,
+    y_grid_style = &quot;white&quot;,
+    axis_line_style = &quot;white&quot;,
+    &quot;axis_background/.style&quot; = {
+        fill = &quot;white!89.803921568627459!black&quot;
+    }
+}
+
+ggplot2_plot_theme = @pgf {
+    mark=&quot;*&quot;,
+    mark_size = 3,
+    mark_options = &quot;solid&quot;,
+    line_width = &quot;1.64pt&quot;,
+}
+
+x = 0:0.3:2
+y1 = sin.(2x)
+y2 = cos.(2x)
+y3 = cos.(5x)
+ys = [y1, y2, y3]
+n = length(ys)
+
+# Evenly spread out colors
+colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
+
+@pgf Axis(
+    {
+         ggplot2_axis_theme...,
+         xmin = -0.095, xmax = 1.995,
+         ymin = -1.1,   ymax =1.1,
+         title = L&quot;Simple plot $\frac{\alpha}{2}$&quot;,
+         xlabel = &quot;time (s)&quot;,
+         ylabel = &quot;Voltage (mV)&quot;,
+    },
+    [
+        PlotInc(
+            {
+                ggplot2_plot_theme...,
+                color = colors[i]
+            },
+            Coordinates(x, _y))
+        for (i, _y) in enumerate(ys)]...,
+)</code></pre></div><p><a href="ggplot.pdf">[.pdf]</a>, <a href="ggplot.tex">[generated .tex]</a></p><p><img src="ggplot.svg" alt/></p><h2><a class="nav-anchor" id="DataFrames.jl-1" href="#DataFrames.jl-1">DataFrames.jl</a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><div><pre><code class="language-julia">using RDatasets
+df = dataset(&quot;datasets&quot;, &quot;iris&quot;) # load the dataset
+
+@pgf Axis(
+    {
+        legend_pos = &quot;south east&quot;,
+        xlabel = &quot;Sepal length&quot;,
+        ylabel = &quot;Sepal width&quot;,
+    },
+    Plot(
+        {
+            scatter,
+            &quot;only marks&quot;,
+            &quot;scatter src&quot;=&quot;explicit symbolic&quot;,
+            &quot;scatter/classes&quot;=
+            {
+                setosa     = {mark = &quot;square*&quot;,   &quot;blue&quot;},
+                versicolor = {mark = &quot;triangle*&quot;, &quot;red&quot;},
+                virginica  = {mark = &quot;o&quot;,         &quot;black&quot;},
+            }
+        },
+        Table(
+            {
+                x = &quot;SepalLength&quot;,
+                y = &quot;SepalWidth&quot;,
+                meta = &quot;Species&quot;
+            },
+            df, # &lt;--- Creating a Table from a DataFrame
+        )
+    ),
+    Legend([&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;])
+)</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
+x = 0.0:0.1:2π
+y = 0.0:0.1:2π
+f = (x,y) -&gt; sin(x)*sin(y)
+@pgf Plot({
+        contour_prepared,
+        very_thick
+    },
+    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre></div><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2><a class="nav-anchor" id="StatsBase.jl-1" href="#StatsBase.jl-1">StatsBase.jl</a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3><a class="nav-anchor" id="D-1" href="#D-1">1D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
+@pgf Axis(
+    {
+        &quot;ybar interval&quot;,
+        &quot;xticklabel interval boundaries&quot;,
+        xmajorgrids = false,
+        xticklabel = raw&quot;$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$&quot;,
+        &quot;xticklabel style&quot; =
+        {
+            font = raw&quot;\tiny&quot;
+        },
+    },
+    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))</code></pre></div><p><a href="histogram-1d.pdf">[.pdf]</a>, <a href="histogram-1d.tex">[generated .tex]</a></p><p><img src="histogram-1d.svg" alt/></p><h3><a class="nav-anchor" id="D-2" href="#D-2">2D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
+w = linspace(-1, 1, 100) .^ 3
+xy = vec(tuple.(w, w&#39;))
+h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
+@pgf Axis(
+    {
+        view = (0, 90),
+        colorbar,
+        &quot;colormap/jet&quot;
+    },
+    Plot3(
+        {
+            surf,
+            shader = &quot;flat&quot;,
+
+        },
+        Table(h))
+)</code></pre></div><p><a href="histogram-2d.pdf">[.pdf]</a>, <a href="histogram-2d.tex">[generated .tex]</a></p><p><img src="histogram-2d.svg" alt/></p><footer><hr/><a class="previous" href="gallery.html"><span class="direction">Previous</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>
