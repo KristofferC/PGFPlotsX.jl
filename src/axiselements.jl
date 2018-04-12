@@ -618,10 +618,13 @@ end
 
 Corresponds to `\\legend{ ... }` in PGFPlots. Specifies multiple legends for
 an axis, its position is irrelevant.
+
+`labels` are wrapped in `{}`s, so they can contain `,`.
 """
 Legend(labels::AbstractString...) = Legend(collect(String, labels))
 
-print_tex(io::IO, l::Legend) = println(io, "\\legend{", join(l.labels, ", "), "}")
+print_tex(io::IO, l::Legend) =
+    println(io, "\\legend{{", join(l.labels, "}, {"), "}}")
 
 ###############
 # LegendEntry #
