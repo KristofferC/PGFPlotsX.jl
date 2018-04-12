@@ -9,7 +9,7 @@
     color =&gt; &quot;black&quot;,
 }</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><pre><code class="language-none">theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;}
 
-axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/435d31cf54a8938a823b952d930bde26a2847413/src/options.jl#L30-L62">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/8bfb94173faf1d2adc564b53b32ad4ea62650375/src/options.jl#L30-L62">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 

@@ -261,7 +261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Legend",
     "category": "type",
-    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\n\n\n"
+    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\nlabels are wrapped in {}s, so they can contain ,.\n\n\n\n"
 },
 
 {
@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Legends",
     "category": "section",
-    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{Plot A, Plot B}"
+    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{{Plot A}, {Plot B}}"
 },
 
 {
