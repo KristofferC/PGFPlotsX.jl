@@ -87,7 +87,7 @@ Example:
 
 ```jldoctest
 julia> print_tex(Legend(["Plot A", "Plot B"]))
-\legend{Plot A, Plot B}
+\legend{{Plot A}, {Plot B}}
 ```
 
 ## [Using LaTeX code directly](@id latex_code_strings)
