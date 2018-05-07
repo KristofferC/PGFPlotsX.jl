@@ -474,7 +474,7 @@ container_options(::AbstractString, ::Table) = Options() # included from file
 function print_tex(io::IO, table::Table)
     @unpack options, content = table
     print(io, "table")
-    print_options(io, merge(container_options(content, table), options))
+    print_options(io, merge(container_options(content, table), options), newline=false)
     if content isa String
         print(io, "{")
         print(io, content)
