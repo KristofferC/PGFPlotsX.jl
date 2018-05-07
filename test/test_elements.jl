@@ -127,14 +127,14 @@ end
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
-                                      [1])) == "table[row sep={\\\\}] {\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
+                                      [1])) == "table[row sep={\\\\}]\n{\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
 end
 
 @testset "table file" begin
     path = "somefile.dat"
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
-        "table[x={a}, y={b}]\n{$(path)}"
-    @test squashed_repr_tex(Table(path)) == "table[]\n{$(path)}"
+        "table[x={a}, y={b}] {$(path)}"
+    @test squashed_repr_tex(Table(path)) == "table[] {$(path)}"
 end
 
 @testset "plot" begin
