@@ -40,11 +40,7 @@ julia> p = @pgf PlotInc({ blue }, Table("plotdata/invcum.dat"));
 
 julia> print_tex(p)
 \addplot+[blue]
-    table[]
-    {
-        plotdata/invcum.dat
-    }
-    ;
+    table[] {plotdata/invcum.dat};
 ```
 
 ### Plot3

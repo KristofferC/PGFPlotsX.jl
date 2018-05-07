@@ -80,19 +80,11 @@ julia> print_tex(gp)
     \addplot[]
         {x^2};
     \addplot[]
-        table[]
-        {
-            data1.dat
-        }
-        ;
+        table[] {data1.dat};
     \addplot[]
         {exp(x)};
     \addplot[]
-        table[]
-        {
-            data2.dat
-        }
-        ;
+        table[] {data2.dat};
 \end{groupplot}
 ```
 
@@ -112,11 +104,7 @@ julia> print_tex(gp)
     \addplot[]
         {x^2};
     \addplot[]
-        table[]
-        {
-            data2.dat
-        }
-        ;
+        table[] {data2.dat};
 \end{groupplot}
 ```
 
