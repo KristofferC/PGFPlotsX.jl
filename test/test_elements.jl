@@ -133,8 +133,8 @@ end
 @testset "table file" begin
     path = "somefile.dat"
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
-        "table[x={a}, y={b}]\n{\n$(path)\n}"
-    @test squashed_repr_tex(Table(path)) == "table[]\n{\n$(path)\n}"
+        "table[x={a}, y={b}]\n{$(path)}"
+    @test squashed_repr_tex(Table(path)) == "table[]\n{$(path)}"
 end
 
 @testset "plot" begin
