@@ -475,9 +475,15 @@ function print_tex(io::IO, table::Table)
     @unpack options, content = table
     print(io, "table")
     print_options(io, merge(container_options(content, table), options))
-    println(io, "{")
-    print_indent(io, content)
-    println(io, "}")
+    if content isa String
+        print(io, "{")
+        print(io, content)
+        print(io, "}")
+    else
+        println(io, "{")
+        print_indent(io, content)
+        println(io, "}")
+    end
 end
 
 ############
