@@ -91,12 +91,14 @@ end
 
 Print options between `[]`. For each option, the value is printed using
 [`print_opt`](@ref). Unless `newline == true` (the default), a newline follows
-the `]`, otherwise a space.
+the `]`, otherwise a space. If `options` is empty, the brackets are not printed.
 """
 function print_options(io::IO, options::Options; newline = true)
-    print(io, "[")
-    print_opt(io, options)
-    print(io, "]")
+    if !isempty(options)
+        print(io, "[")
+        print_opt(io, options)
+        print(io, "]")
+    end
     newline ? println(io) : print(io, " ")
 end
 
