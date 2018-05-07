@@ -127,7 +127,7 @@ end
                                       [1 NaN;
                                        -Inf 4.0],
                                       ["xx", "yy"],
-                                      [1])) == "table[row sep={\\\\}]\n{\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
+                                      [1])) == "table[row sep={\\\\}] {\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
 end
 
 @testset "table file" begin
