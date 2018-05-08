@@ -473,14 +473,15 @@ container_options(::AbstractString, ::Table) = Options() # included from file
 
 function print_tex(io::IO, table::Table)
     @unpack options, content = table
+    all_options = merge(container_options(content, table), options)
     print(io, "table")
     if content isa String
-        print_options(io, merge(container_options(content, table), options), newline=false)
+        print_options(io, all_options, newline = false)
         print(io, "{")
         print(io, content)
         print(io, "}")
     else
-        print_options(io, merge(container_options(content, table), options), newline=true)
+        print_options(io, all_options, newline = true)
         println(io, "{")
         print_indent(io, content)
         println(io, "}")
