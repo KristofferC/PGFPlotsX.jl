@@ -363,7 +363,7 @@ function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
             elseif is_linux() || is_bsd()
                 run(`xdg-open $filename`)
             elseif is_windows()
-                run(`start $filename`)
+                run(`explorer $filename`)
             end
         catch e
             error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))
