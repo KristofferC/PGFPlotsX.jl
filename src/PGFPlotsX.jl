@@ -5,10 +5,12 @@ module PGFPlotsX
 import MacroTools: prewalk, @capture
 
 using ArgCheck
+using AutoHashEquals
 using Compat
 using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions
+using Lazy: @forward
 using Missings
 using Parameters
 using Requires

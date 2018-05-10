@@ -134,7 +134,7 @@ end
     path = "somefile.dat"
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
         "table[x={a}, y={b}] {$(path)}"
-    @test squashed_repr_tex(Table(path)) == "table[] {$(path)}"
+    @test squashed_repr_tex(Table(path)) == "table {$(path)}"
 end
 
 @testset "plot" begin
@@ -142,7 +142,7 @@ end
     data2 = Table(x = 1:2, y = 3:4)
     p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
-        "\\addplot[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
+        "\\addplot\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
     @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
     @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
@@ -151,7 +151,7 @@ end
     @test Plot(data2, raw"\closedcycle") ≅ p2
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
-        "\\addplot+[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
+        "\\addplot+\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
     @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
                                           Table(x = 1:2, y = 3:4, z = 5:6))) ==
         "\\addplot3+[xtick={1,2,3}]\ntable[row sep={\\\\}]\n{\nx y z \\\\\n1 3 5 \\\\\n2 4 6 \\\\\n}\n;"
@@ -183,10 +183,15 @@ end
     # legend
     @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a}, {b}, {c}}\n"
     l = LegendEntry("a")
-    @test repr_tex(l) == "\\addlegendentry[] {a}\n"
+    @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
     @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
         "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
         "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
-        "        ;\n    \\addlegendentry[] {a}\n\\end{axis}\n"
+        "        ;\n    \\addlegendentry {a}\n\\end{axis}\n"
+end
+
+@testset "explicit empty options" begin
+    @test repr_tex(Axis(Options(; print_empty = true))) ==
+        "\\begin{axis}[]\n\\end{axis}\n"
 end

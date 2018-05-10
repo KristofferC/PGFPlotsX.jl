@@ -1,9 +1,11 @@
 julia 0.6
 ArgCheck
+AutoHashEquals
 MacroTools
 Compat
 DataStructures
 DocStringExtensions
+Lazy
 Missings
 Parameters
 Requires
