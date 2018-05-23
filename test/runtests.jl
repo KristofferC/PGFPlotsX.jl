@@ -16,6 +16,8 @@ end
 @show PGFPlotsX.latexengine
 PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
+include("utilities.jl")
+
 include("test_macros.jl")
 
 include("test_elements.jl")

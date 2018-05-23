@@ -1,4 +1,4 @@
-@auto_hash_equals struct Options
+struct Options
     dict::OrderedDict{Any, Any}
     print_empty::Bool
 end

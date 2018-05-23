@@ -14,15 +14,14 @@ end
     a = 1
     b = 2
     theme = @pgf {color = "white"}
-    @test @pgf { xmax = a + b, title = "42", justkey, theme... } ==
-        Options("xmax" => 3, "title" => "42", "justkey" => nothing,
-                @pgf { color="white" } => nothing)
+    @test repr_tex(@pgf { xmax = a + b, title = "42", justkey, theme... }) ==
+        repr_tex(Options("xmax" => 3, "title" => "42", "justkey" => nothing,
+                         @pgf { color="white" } => nothing))
     f(x...) = tuple(x...)
-    @test @pgf f({ look, we, are = f(1, 2, 3),
-                       nesting = {
-                           stuff = 9
-                       }}) == (Options("look" => nothing,
-                                       "we" => nothing,
-                                       "are" => (1, 2, 3),
-                                       "nesting" => Options("stuff" => 9)), )
+    y = @pgf f({ look, we, are = f(1, 2, 3), nesting = { stuff = 9 }})
+    @test length(y) == 1
+    @test repr_tex(y[1]) == repr_tex(Options("look" => nothing,
+                                             "we" => nothing,
+                                             "are" => (1, 2, 3),
+                                             "nesting" => Options("stuff" => 9)))
 end

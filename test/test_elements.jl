@@ -1,39 +1,3 @@
-"Invoke print_tex with the given arguments, collect the results in a string."
-function repr_tex(args...)
-    io = IOBuffer()
-    print_tex(io, args...)
-    String(take!(io))
-end
-
-"""
-Trim lines, merge whitespace to a single space, merge multiple empty lines into
-one, merge beginning and ending newlines.
-
-Useful for unit testing printed representations.
-"""
-function squash_whitespace(str::AbstractString)
-    lines = split(str, '\n')
-    squashed_lines = map(line -> replace(strip(line), r" +", " "), lines)
-    strip(replace(join(squashed_lines, "\n"), r"\n{2,}", "\n\n"), '\n')
-end
-
-@test squash_whitespace("\n\n  a  line  \nsome   other line\n\n\ndone\n") ==
-    "a line\nsome other line\n\ndone"
-
-"Squashed result of `print_tex` with given arguments."
-squashed_repr_tex(args...) = squash_whitespace(repr_tex(args...))
-
-"A simple comparison of fields for unit tests."
-≅(x, y) = x == y
-
-function ≅(x::T, y::T) where T <: Union{PGFPlotsX.Coordinate, Coordinates,
-                                        Table, TableData, Plot}
-    for f in fieldnames(T)
-        getfield(x, f) ≅ getfield(y, f) || return false
-    end
-    true
-end
-
 @testset "printing Julia types to TeX" begin
     @test squashed_repr_tex("something") == "something"
     @test squashed_repr_tex(4) == "4"
@@ -88,8 +52,8 @@ end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), ["a", "b"], Int[])
-    table_unnamed_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), nothing, Int[])
+    table_named_noopt = Table(hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_unnamed_noopt = Table(hcat(1:10, 11:20), nothing, Int[])
     opt = @pgf { meaningless = "option" }
     table_named_opt = Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
 
