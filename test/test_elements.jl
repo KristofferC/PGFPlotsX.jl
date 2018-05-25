@@ -159,3 +159,22 @@ end
     @test repr_tex(Axis(Options(; print_empty = true))) ==
         "\\begin{axis}[]\n\\end{axis}\n"
 end
+
+@testset "push! and append!" begin
+    plot = Plot(Expression("x"))
+    push!(plot, "a")
+    append!(plot, ["b", "c"])
+    @test plot.trailing == ["a", "b", "c"]
+    axis = Axis()
+    push!(axis, plot)
+    append!(axis, ["non", "sense"])
+    @test axis.contents == [plot, "non", "sense"]
+    picture = TikzPicture()
+    push!(picture, axis)
+    append!(picture, ["some", "thing"])
+    @test picture.elements == [axis, "some", "thing"]
+    document = TikzDocument()
+    push!(document, picture)
+    append!(document, ["stuff"])
+    @test document.elements == [picture, "stuff"]
+end

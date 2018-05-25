@@ -22,8 +22,7 @@ struct TikzDocument
     end
 end
 
-Base.push!(td::TikzDocument, items...) = (push!(td.elements, items...); td)
-Base.append!(td::TikzDocument, items) = (append!(td.elements, items); td)
+@forward TikzDocument.elements Base.push!, Base.append!
 
 """
     $SIGNATURES
@@ -191,7 +190,7 @@ function savepdf(filename::String, td::TikzDocument;
         error("ran latex 5 times without converging, log is:\n$log")
     end
     if run_again
-        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags, 
+        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags,
                 run_count=run_count+1, tmp = tmp)
         return
     end
