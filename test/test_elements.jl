@@ -104,12 +104,12 @@ end
 @testset "plot" begin
     # sanity checks for constructors and printing, 2D
     data2 = Table(x = 1:2, y = 3:4)
-    p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    p2 = Plot(false, false, Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
         "\\addplot\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
-    @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
-    @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
-        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    @test Plot(data2, raw"\closedcycle") ≅ p2
+    @test PlotInc(data2, raw"\closedcycle") ≅
+        Plot(false, true, Options(), data2, [raw"\closedcycle"])
     @test PlotInc(data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test Plot(data2, raw"\closedcycle") ≅ p2

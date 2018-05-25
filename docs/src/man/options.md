@@ -174,8 +174,8 @@ It is then easy to apply, for example, a “theme” to an axis where the theme 
 
 ## Empty options
 
-Empty options are not printed by default, but printing `[]` can be useful in some cases, eg when combined with global settings `\pgfplotsset{every axis plot/.append style={...}}` in LaTeX code. In order to force printing empty options, use something like
+Empty options are not printed by default, but printing `[]` can be useful in some cases, eg when combined with global settings `\pgfplotsset{every axis plot/.append style={...}}` in LaTeX code. In order to force printing empty options, it is recommended to use `{}` in expressions like
 
 ```julia
-Axis(Options(; print_empty = true), ...)
+@pgf Plot({}, ...)
 ```

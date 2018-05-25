@@ -41,7 +41,7 @@ function procmap(d)
     elseif !@capture(d, {xs__})
         return d
     else
-        return :($(Options)($(map(prockey, xs)...)))
+        return :($(Options)($(map(prockey, xs)...); print_empty = true))
     end
 end
 
@@ -77,6 +77,8 @@ theme = @pgf {xmajorgrids, x_grid_style = "white"}
 
 axis_opt = @pgf {theme..., title = "My figure"}
 ```
+
+Use `{}` for empty options that print as `[]` in LaTeX.
 """
 macro pgf(ex)
     esc(prewalk(procmap, ex))

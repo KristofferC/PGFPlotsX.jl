@@ -25,3 +25,8 @@ end
                                              "are" => (1, 2, 3),
                                              "nesting" => Options("stuff" => 9)))
 end
+
+@testset "pgf empty" begin
+    @test squashed_repr_tex(@pgf Plot({}, Table([], []))) ==
+        "\\addplot[]\ntable[row sep={\\\\}]\n{\n\\\\\n}\n;" # note []
+end
