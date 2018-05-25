@@ -6,8 +6,8 @@
 \usepgfplotslibrary{polar}
 \usepgfplotslibrary{statistics}
 \begin{document}
-\begin{tikzpicture}[]
-\begin{axis}[]
+\begin{tikzpicture}
+\begin{axis}
     \addplot[color={rgb,1:red,0.0;green,0.0;blue,0.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
         {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 50};
     \addplot[color={rgb,1:red,1.0;green,1.0;blue,0.38431372549019605}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
