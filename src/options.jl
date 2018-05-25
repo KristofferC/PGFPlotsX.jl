@@ -1,10 +1,28 @@
+struct Options
+    dict::OrderedDict{Any, Any}
+    print_empty::Bool
+end
+
 """
+    $SIGNATURES
+
 Options passed to PGFPlots for various structures (`table`, `plot`, etc).
 
 Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Also
 see the [`@pgf`](@ref) convenience macro.
+
+When `print_empty = false` (the default), empty options are not printed. Use
+`print_empty = true` to force printing a `[]` in this case.
 """
-const Options = OrderedDict{Any, Any}
+Options(pairs::Pair...; print_empty::Bool = false) =
+    Options(OrderedDict(pairs), print_empty)
+
+@forward Options.dict Base.getindex, Base.setindex!, Base.delete!
+
+Base.copy(options::Options) = deepcopy(options)
+
+Base.merge(a::Options, b::Options) =
+    Options(merge(a.dict, b.dict), a.print_empty || b.print_empty)
 
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
@@ -23,7 +41,7 @@ function procmap(d)
     elseif !@capture(d, {xs__})
         return d
     else
-        return :($(Options)($(map(prockey, xs)...)))
+        return :($(Options)($(map(prockey, xs)...); print_empty = true))
     end
 end
 
@@ -59,6 +77,8 @@ theme = @pgf {xmajorgrids, x_grid_style = "white"}
 
 axis_opt = @pgf {theme..., title = "My figure"}
 ```
+
+Use `{}` for empty options that print as `[]` in LaTeX.
 """
 macro pgf(ex)
     esc(prewalk(procmap, ex))
@@ -75,12 +95,12 @@ Subtypes have an `options::Options` field.
 """
 abstract type OptionType end
 
-Base.getindex(a::OptionType, s::String) = a.options[s]
-Base.setindex!(a::OptionType, v, s::String) = (a.options[s] = v; a)
-Base.delete!(a::OptionType, s::String) = (delete!(a.options, s); a)
+@forward OptionType.options Base.getindex, Base.setindex!, Base.delete!
+
 Base.copy(a::OptionType) = deepcopy(a)
-function Base.merge!(a::OptionType, d::Options)
-    for (k, v) in d
+
+function Base.merge!(a::OptionType, options::Options)
+    for (k, v) in options.dict
         a[k] = v
     end
     return a
@@ -94,9 +114,14 @@ Print options between `[]`. For each option, the value is printed using
 the `]`, otherwise a space.
 """
 function print_options(io::IO, options::Options; newline = true)
-    print(io, "[")
-    print_opt(io, options)
-    print(io, "]")
+    @unpack dict, print_empty = options
+    if isempty(dict)
+        print_empty && print(io, "[]")
+    else
+        print(io, "[")
+        print_opt(io, options)
+        print(io, "]")
+    end
     newline ? println(io) : print(io, " ")
 end
 
@@ -109,24 +134,25 @@ function accum_opt!(d::AbstractDict, opt::AbstractDict)
 end
 
 function dictify(args)
-    d = Options()
+    options = Options()
     for arg in args
-        accum_opt!(d, arg)
+        accum_opt!(options.dict, arg)
     end
-    return d
+    options
 end
 
-function print_opt(io::IO, d::AbstractDict)
+function print_opt(io::IO, options::Options)
+    @unpack dict = options
     replace_underline(x) = x
     replace_underline(x::Union{String, Symbol}) = replace(string(x), "_", " ")
-    for (i, (k, v)) in enumerate(d)
+    for (i, (k, v)) in enumerate(dict)
         print_opt(io, replace_underline(k))
         if v != nothing
             print(io, "={")
             print_opt(io, v)
             print(io, "}")
         end
-        if i != length(d)
+        if i != length(dict)
           print(io, ", ")
         end
     end

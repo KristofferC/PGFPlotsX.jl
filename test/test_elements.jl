@@ -1,39 +1,3 @@
-"Invoke print_tex with the given arguments, collect the results in a string."
-function repr_tex(args...)
-    io = IOBuffer()
-    print_tex(io, args...)
-    String(take!(io))
-end
-
-"""
-Trim lines, merge whitespace to a single space, merge multiple empty lines into
-one, merge beginning and ending newlines.
-
-Useful for unit testing printed representations.
-"""
-function squash_whitespace(str::AbstractString)
-    lines = split(str, '\n')
-    squashed_lines = map(line -> replace(strip(line), r" +", " "), lines)
-    strip(replace(join(squashed_lines, "\n"), r"\n{2,}", "\n\n"), '\n')
-end
-
-@test squash_whitespace("\n\n  a  line  \nsome   other line\n\n\ndone\n") ==
-    "a line\nsome other line\n\ndone"
-
-"Squashed result of `print_tex` with given arguments."
-squashed_repr_tex(args...) = squash_whitespace(repr_tex(args...))
-
-"A simple comparison of fields for unit tests."
-≅(x, y) = x == y
-
-function ≅(x::T, y::T) where T <: Union{PGFPlotsX.Coordinate, Coordinates,
-                                        Table, TableData, Plot}
-    for f in fieldnames(T)
-        getfield(x, f) ≅ getfield(y, f) || return false
-    end
-    true
-end
-
 @testset "printing Julia types to TeX" begin
     @test squashed_repr_tex("something") == "something"
     @test squashed_repr_tex(4) == "4"
@@ -88,8 +52,8 @@ end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), ["a", "b"], Int[])
-    table_unnamed_noopt = Table(PGFPlotsX.Options(), hcat(1:10, 11:20), nothing, Int[])
+    table_named_noopt = Table(hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_unnamed_noopt = Table(hcat(1:10, 11:20), nothing, Int[])
     opt = @pgf { meaningless = "option" }
     table_named_opt = Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
 
@@ -134,24 +98,24 @@ end
     path = "somefile.dat"
     @test squashed_repr_tex(Table(@pgf({x = "a", y = "b"}), path)) ==
         "table[x={a}, y={b}] {$(path)}"
-    @test squashed_repr_tex(Table(path)) == "table[] {$(path)}"
+    @test squashed_repr_tex(Table(path)) == "table {$(path)}"
 end
 
 @testset "plot" begin
     # sanity checks for constructors and printing, 2D
     data2 = Table(x = 1:2, y = 3:4)
-    p2 = Plot(false, false, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+    p2 = Plot(false, false, Options(), data2, [raw"\closedcycle"])
     @test squashed_repr_tex(p2) ==
-        "\\addplot[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
-    @test Plot(@pgf({}), data2, raw"\closedcycle") ≅ p2
-    @test PlotInc(@pgf({}), data2, raw"\closedcycle") ≅
-        Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
+        "\\addplot\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n\\closedcycle\n;"
+    @test Plot(data2, raw"\closedcycle") ≅ p2
+    @test PlotInc(data2, raw"\closedcycle") ≅
+        Plot(false, true, Options(), data2, [raw"\closedcycle"])
     @test PlotInc(data2, raw"\closedcycle") ≅
         Plot(false, true, PGFPlotsX.Options(), data2, [raw"\closedcycle"])
     @test Plot(data2, raw"\closedcycle") ≅ p2
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
-        "\\addplot+[]\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
+        "\\addplot+\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
     @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
                                           Table(x = 1:2, y = 3:4, z = 5:6))) ==
         "\\addplot3+[xtick={1,2,3}]\ntable[row sep={\\\\}]\n{\nx y z \\\\\n1 3 5 \\\\\n2 4 6 \\\\\n}\n;"
@@ -183,10 +147,15 @@ end
     # legend
     @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a}, {b}, {c}}\n"
     l = LegendEntry("a")
-    @test repr_tex(l) == "\\addlegendentry[] {a}\n"
+    @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
     @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
         "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
         "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
-        "        ;\n    \\addlegendentry[] {a}\n\\end{axis}\n"
+        "        ;\n    \\addlegendentry {a}\n\\end{axis}\n"
+end
+
+@testset "explicit empty options" begin
+    @test repr_tex(Axis(Options(; print_empty = true))) ==
+        "\\begin{axis}[]\n\\end{axis}\n"
 end

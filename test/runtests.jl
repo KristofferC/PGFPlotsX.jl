@@ -1,4 +1,5 @@
 using PGFPlotsX
+using PGFPlotsX: Options
 using Base.Test
 using Colors
 using Compat
@@ -15,7 +16,9 @@ end
 @show PGFPlotsX.latexengine
 PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
-include("test_macros.jl")
+include("utilities.jl")
+
+include("test_options.jl")
 
 include("test_elements.jl")
 

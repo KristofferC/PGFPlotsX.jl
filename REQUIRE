@@ -1,9 +1,9 @@
 julia 0.6
 ArgCheck
-MacroTools
 Compat
 DataStructures
 DocStringExtensions
+MacroTools
 Missings
 Parameters
 Requires

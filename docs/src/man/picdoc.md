@@ -19,8 +19,8 @@ julia> tp = @pgf TikzPicture({ "scale" => 1.5 }, Axis(Plot(Coordinates([1, 2], [
 
 julia> print_tex(tp)
 \begin{tikzpicture}[scale={1.5}]
-\begin{axis}[]
-    \addplot[]
+\begin{axis}
+    \addplot
         coordinates {
             (1, 2)
             (2, 4)

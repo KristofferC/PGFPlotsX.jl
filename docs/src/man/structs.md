@@ -15,7 +15,7 @@ Instead, this manual describes a way to conveniently generate what LaTeX output 
 As an example, consider the following trivial plot:
 
 ```tex
-\begin{tikzpicture}[]
+\begin{tikzpicture}
 \begin{axis}
     \addplot+[only marks] table {
             x  y

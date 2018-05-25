@@ -133,5 +133,5 @@ Example:
 
 ```jldoctest
 julia> print_tex(Graphics("img.png"))
-graphics[] {img.png}
+graphics {img.png}
 ```

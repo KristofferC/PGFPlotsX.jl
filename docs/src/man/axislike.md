@@ -34,7 +34,7 @@ julia> @pgf a = Axis({
 
 julia> print_tex(a)
 \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
-    \addplot+[]
+    \addplot+
         {x^2};
 \end{axis}
 
@@ -43,9 +43,9 @@ julia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));
 
 julia> print_tex(a)
 \begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]
-    \addplot+[]
+    \addplot+
         {x^2};
-    \addplot+[]
+    \addplot+
         coordinates {
             (1, 3)
             (2, 4)
@@ -77,14 +77,14 @@ julia> for (expr, data) in zip(["x^2", "exp(x)"], ["data1.dat", "data2.dat"])
 
 julia> print_tex(gp)
 \begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]
-    \addplot[]
+    \addplot
         {x^2};
-    \addplot[]
-        table[] {data1.dat};
-    \addplot[]
+    \addplot
+        table {data1.dat};
+    \addplot
         {exp(x)};
-    \addplot[]
-        table[] {data2.dat};
+    \addplot
+        table {data2.dat};
 \end{groupplot}
 ```
 
@@ -101,10 +101,10 @@ julia> @pgf for (expr, data) in zip(["x^2"], ["data2.dat"])
 julia> print_tex(gp)
 \begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]
     \nextgroupplot[title={Data data2.dat}]
-    \addplot[]
+    \addplot
         {x^2};
-    \addplot[]
-        table[] {data2.dat};
+    \addplot
+        table {data2.dat};
 \end{groupplot}
 ```
 
@@ -118,8 +118,8 @@ Example:
 julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));
 
 julia> print_tex(p)
-\begin{polaraxis}[]
-    \addplot+[]
+\begin{polaraxis}
+    \addplot+
         coordinates {
             (0, 1)
             (90, 1)
