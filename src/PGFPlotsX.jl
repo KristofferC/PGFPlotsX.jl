@@ -2,14 +2,13 @@ __precompile__()
 
 module PGFPlotsX
 
-import MacroTools: prewalk, @capture
+import MacroTools: prewalk, @capture, @forward
 
 using ArgCheck
 using Compat
 using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions
-using Lazy: @forward
 using Missings
 using Parameters
 using Requires
