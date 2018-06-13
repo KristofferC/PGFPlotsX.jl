@@ -6,6 +6,7 @@ import MacroTools: prewalk, @capture, @forward
 
 using ArgCheck
 using Compat
+using Compat: axes
 using Compat.Unicode            # for lowercase
 using DataStructures
 using DocStringExtensions

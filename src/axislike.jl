@@ -118,7 +118,7 @@ function print_tex(io::IO, groupplot::GroupPlot)
                 print_options(io, elt)
             elseif elt isa Plot
                 print_tex(io, elt)
-            elseif elt isa Void
+            elseif elt isa Nothing
                 println(io, raw"\nextgroupplot[group/empty plot,xmin=0,xmax=1,ymin=0,ymax=1]")
             else
                 print_tex(io, elt)

@@ -1,6 +1,6 @@
+using Compat.Test
 using PGFPlotsX
 using PGFPlotsX: Options
-using Base.Test
 using Colors
 using Compat
 using Contour

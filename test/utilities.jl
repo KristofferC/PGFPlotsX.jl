@@ -21,8 +21,8 @@ Useful for unit testing printed representations.
 """
 function squash_whitespace(str::AbstractString)
     lines = split(str, '\n')
-    squashed_lines = map(line -> replace(strip(line), r" +", " "), lines)
-    strip(replace(join(squashed_lines, "\n"), r"\n{2,}", "\n\n"), '\n')
+    squashed_lines = map(line -> replace(strip(line), r" +" => " "), lines)
+    strip(replace(join(squashed_lines, "\n"), r"\n{2,}" => "\n\n"), '\n')
 end
 
 @test squash_whitespace("\n\n  a  line  \nsome   other line\n\n\ndone\n") ==

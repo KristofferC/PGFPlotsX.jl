@@ -49,14 +49,14 @@ print_tex(io::IO, ::EmptyLine) = println(io)
 
 struct Coordinate{N}
     data::NTuple{N, Real}
-    error::Union{Void, NTuple{N, Real}}
-    errorplus::Union{Void, NTuple{N, Real}}
-    errorminus::Union{Void, NTuple{N, Real}}
+    error::Union{Nothing, NTuple{N, Real}}
+    errorplus::Union{Nothing, NTuple{N, Real}}
+    errorminus::Union{Nothing, NTuple{N, Real}}
     meta::Any
     function Coordinate(data::NTuple{N, Real},
-                        error::Union{Void, NTuple{N, Real}},
-                        errorplus::Union{Void, NTuple{N, Real}},
-                        errorminus::Union{Void, NTuple{N, Real}}, meta) where N
+                        error::Union{Nothing, NTuple{N, Real}},
+                        errorplus::Union{Nothing, NTuple{N, Real}},
+                        errorminus::Union{Nothing, NTuple{N, Real}}, meta) where N
         @argcheck 2 ≤ N ≤ 3 "A Coordinate has to be two- or three dimensional."
         @argcheck all(isfinite, data) "Non-finite coordinate values."
         @argcheck(!(error ≠ nothing &&
@@ -152,7 +152,7 @@ function Coordinates(itr)
     common_N = 0
     check_N(N) = common_N == 0 ? common_N = N :
         @argcheck N == common_N "Incompatible dimensions."
-    ensure_c(::Union{EmptyLine, Void, Tuple{}}) = EmptyLine()
+    ensure_c(::Union{EmptyLine, Nothing, Tuple{}}) = EmptyLine()
     ensure_c(c::Coordinate{N}) where N = (check_N(N); c)
     function ensure_c(data::NTuple{N, Real}) where N
         check_N(N)
@@ -167,9 +167,9 @@ function Coordinates(itr)
     Coordinates{common_N}(data)
 end
 
-expand_errors(_::Void...) = nothing
+expand_errors(_::Nothing...) = nothing
 
-expand_errors(data::Union{Real, Void}...) = map(x -> x isa Void ? 0 : x, data)
+expand_errors(data::Union{Real, Nothing}...) = map(x -> x isa Nothing ? 0 : x, data)
 
 coordinate_or_emptyline(data, args...) =
     all(isfinite, data) ? Coordinate(data, args...) : EmptyLine()
@@ -247,7 +247,7 @@ Coordinates(x, y, z)
 ```
 """
 function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
-                     meta::Union{Void, AbstractMatrix} = nothing)
+                     meta::Union{Nothing, AbstractMatrix} = nothing)
     meta ≠ nothing && @argcheck size(meta) == size(z)
     insert_scanlines(Coordinates(matrix_xyz(x, y, z)...;
                                  meta = meta ≠ nothing ? vec(meta) : meta),
@@ -312,11 +312,11 @@ for `surf` and `mesh` plots. They are expanded using [`expand_scanlines`](@ref).
 """
 struct TableData
     data::AbstractMatrix
-    colnames::Union{Void, Vector{<: AbstractString}}
+    colnames::Union{Nothing, Vector{<: AbstractString}}
     scanlines::AbstractVector{Int}
     rowsep::Bool
     function TableData(data::AbstractMatrix,
-                       colnames::Union{Void, Vector{<: AbstractString}},
+                       colnames::Union{Nothing, Vector{<: AbstractString}},
                        scanlines::AbstractVector{Int},
                        rowsep::Bool = ROWSEP)
         if colnames ≠ nothing
@@ -344,8 +344,8 @@ function print_tex(io::IO, tabledata::TableData)
         end
     end
     _rowsep()
-    for row_index in indices(data, 1)
-        for col_index in indices(data, 2)
+    for row_index in axes(data, 1)
+        for col_index in axes(data, 2)
             print_tex(io, data[row_index, col_index])
             _colsep()
         end
@@ -411,7 +411,7 @@ TableData(::AbstractVector; kwargs...) =
     throw(ArgumentError("Could not determine whether columns are named from the element type."))
 
 function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
-                   meta::Union{Void, AbstractMatrix} = nothing,
+                   meta::Union{Nothing, AbstractMatrix} = nothing,
                    rowsep::Bool = ROWSEP)
     colnames = ["x", "y", "z"]
     columns = hcat(matrix_xyz(x, y, z)...)
@@ -467,7 +467,7 @@ Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 Options to mix in for the container. Currently used for `TableData` and `Table`.
 """
 container_options(tabledata::TableData, ::Table) =
-    Options("row sep" => tabledata.rowsep ? raw"\\" : "newline")
+    Options("row sep" => tabledata.rowsep ? "\\\\" : "newline")
 
 container_options(::AbstractString, ::Table) = Options() # included from file
 

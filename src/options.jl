@@ -144,7 +144,7 @@ end
 function print_opt(io::IO, options::Options)
     @unpack dict = options
     replace_underline(x) = x
-    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_", " ")
+    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_" => " ")
     for (i, (k, v)) in enumerate(dict)
         print_opt(io, replace_underline(k))
         if v != nothing
