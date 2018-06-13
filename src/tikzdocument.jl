@@ -294,7 +294,7 @@ _JUNO_DPI = 150
 show_juno_png(v::Bool) = global _JUNO_PNG = v
 dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
 
-@require Juno begin
+@require Juno="e5e0dc1b-0480-54bc-9374-aad01c23163d" begin
     import Media
     import Hiccup
     Media.media(_SHOWABLE, Media.Plot)

@@ -1,4 +1,4 @@
-@require Colors begin
+@require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" begin
     function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
         rgb = convert(Colors.RGB, c)
         rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
@@ -26,7 +26,7 @@
     end
 end
 
-@require DataFrames begin
+@require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" begin
     """
     $SIGNATURES
 
@@ -36,7 +36,7 @@ Construct table data from a `DataFrame`.
         TableData(hcat(DataFrames.columns(df)...), string.(names(df)), 0, rowsep)
 end
 
-@require Contour begin
+@require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" begin
     function PGFPlotsX.TableData(c::Contour.ContourCollection; rowsep = ROWSEP)
         colx = Any[]
         coly = Any[]
@@ -57,7 +57,7 @@ end
     end
 end
 
-@require StatsBase begin
+@require StatsBase="2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" begin
     # workaround for https://github.com/JuliaStats/StatsBase.jl/issues/344
     const _midpoints = x -> middle.(x[2:end], x[1:(end-1)])
 
