@@ -1,4 +1,4 @@
-using Compat.Test
+using Test
 using PGFPlotsX
 using PGFPlotsX: Options
 using Colors
