@@ -109,6 +109,7 @@ The `contents` after the global options are processed as follows:
 
 function print_tex(io::IO, groupplot::GroupPlot)
     @unpack options, contents = groupplot
+    isempty(contents) && return
     print(io, "\\begin{groupplot}")
     print_options(io, options)
     print_indent(io) do io

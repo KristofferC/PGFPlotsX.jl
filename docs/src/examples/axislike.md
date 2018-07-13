@@ -42,7 +42,7 @@ savefigs("groupplot-simple", ans) # hide
 ## Multiple group plots
 
 ```@example pgf
-x = linspace(0, 2*pi, 100)
+x = range(0; stop =2*pi, length = 100)
 @pgf GroupPlot(
     {
         group_style =
@@ -71,7 +71,7 @@ savefigs("groupplot-multiple", ans) # hide
 
 ```@example pgf
 angles = [e/50*360*i for i in 1:500]
-radius = [1/(sqrt(i)) for i in linspace(1, 10, 500)]
+radius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]
 PolarAxis(PlotInc(Coordinates(angles, radius)))
 savefigs("polar", ans) # hide
 ```

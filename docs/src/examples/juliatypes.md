@@ -114,7 +114,7 @@ ys = [y1, y2, y3]
 n = length(ys)
 
 # Evenly spread out colors
-colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
+colors = [LCHuv(65, 100, h) for h in range(15; stop = 360+15, length = n+1)][1:n]
 
 @pgf Axis(
     {
@@ -226,7 +226,7 @@ using StatsBase: Histogram, fit
             font = raw"\tiny"
         },
     },
-    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))
+    Plot(Table(fit(Histogram, range(0; stop = 1, length = 100).^3, closed = :left))))
 savefigs("histogram-1d", ans) # hide
 ```
 
@@ -238,7 +238,7 @@ savefigs("histogram-1d", ans) # hide
 
 ```@example pgf
 using StatsBase: Histogram, fit
-w = linspace(-1, 1, 100) .^ 3
+w = range(-1; stop = 1, length = 100) .^ 3
 xy = vec(tuple.(w, w'))
 h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
 @pgf Axis(

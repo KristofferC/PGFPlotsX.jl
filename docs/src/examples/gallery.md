@@ -320,7 +320,7 @@ savefigs("mesh-scatter", ans) # hide
 
 ```@example pgf
 # this is an imitation of the figure in the manual, as we generate the data
-x = linspace(0, 10, 100)
+x = range(0; stop = 10, length = 100)
 @pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))
 @pgf GroupPlot(
     {
@@ -359,7 +359,7 @@ savefigs("groupplot-nested", ans) # hide
 @pgf Axis(Plot(
     {
         patch,
-        "table/row sep" = raw"\\",
+        "table/row sep" = "\\\\",
         patch_table = TableData([0 1 2;
                                  1 2 3;
                                  4 3 5])

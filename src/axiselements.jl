@@ -240,8 +240,8 @@ consistently with the `mesh/ordering=x varies` option of PGFPlots (the
 default).
 
 ```julia
-x = linspace(0, 1, 10)
-y = linspace(-1, 2, 13)
+x = range(0; stop = 1, length = 10)
+y = range(-1; stop = 2, length = 13)
 z = sin.(x) + cos.(y')
 Coordinates(x, y, z)
 ```
@@ -451,7 +451,7 @@ Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
 
 @pgf Table({ "x index" = 2, "y index" = 1" }, randn(10, 3))
 
-let x = linspace(0, 1, 10), y = linspace(-2, 3, 15)
+let x = range(0; stop = 1, length = 10), y = range(-2; stop =  3, length = 15)
     Table(x, y, sin.(x + y'))             # edges & matrix
 end
 ```
