@@ -1,13 +1,13 @@
 using Documenter, PGFPlotsX
 
-using Contour, Colors, DataFrames, RDatasets
+using Contour, Colors, DataFrames, CSV
 
 makedocs(
     modules = [PGFPlotsX],
     format = :html,
     sitename = "PGFPlotsX.jl",
     doctest = true,
-    strict = false, # true, # TODO re-enable
+    strict = true,
     checkdocs = :none,
     pages = Any[
         "Home" => "index.md",

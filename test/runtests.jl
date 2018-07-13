@@ -5,7 +5,6 @@ using Colors
 using Contour
 using DataFrames
 using LaTeXStrings
-using RDatasets
 
 if get(ENV, "CI", false) == true
     PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
@@ -26,7 +25,7 @@ end end
 
 include("../docs/make.jl")
 
-# Run doc stuff, turn off dprecations (this doesn't seem to work on .travis)
+# Run doc stuff, turn off deprecations (this doesn't seem to work on .travis)
 # cd(joinpath(@__DIR__, "..", "docs")) do
 #    run(`$(Base.julia_cmd()) --depwarn=no --color=yes -L make.jl`)
 #end

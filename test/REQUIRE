@@ -1,7 +1,7 @@
 Documenter
 LaTeXStrings
+CSV
 Colors
 Contour
 DataFrames
-RDatasets
 StatsBase

@@ -146,8 +146,8 @@ savefigs("ggplot", ans) # hide
 Creating a `Table` from a `DataFrame` will write it as expected.
 
 ```@example pgf
-using RDatasets
-df = dataset("datasets", "iris") # load the dataset
+using DataFrames, CSV
+df = CSV.read(joinpath(Pkg.dir("DataFrames"), "test/data/iris.csv"));
 
 @pgf Axis(
     {
