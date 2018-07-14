@@ -146,14 +146,24 @@ savefigs("ggplot", ans) # hide
 Creating a `Table` from a `DataFrame` will write it as expected.
 
 ```@example pgf
-using DataFrames, CSV
-df = CSV.read(joinpath(Pkg.dir("DataFrames"), "test/data/iris.csv"));
+using DataFrames
+
+function mockdata(n, μ, σ, speed, racer)
+    distance = exp.(μ .+ randn(n).*σ)
+    noise = exp.(randn(n) * 0.1)
+    DataFrame(distance = distance,
+              tracktime = distance ./ (speed .* noise),
+              racer = fill(racer, n))
+end
+
+zenon_measurements = vcat(mockdata(20, 1, 0.2, 0.5, "Tortoise"),
+                          mockdata(20, 1, 0.2, 1, "Achilles"))
 
 @pgf Axis(
     {
-        legend_pos = "south east",
-        xlabel = "Sepal length",
-        ylabel = "Sepal width",
+        legend_pos = "north west",
+        xlabel = "distance",
+        ylabel = "track time",
     },
     Plot(
         {
@@ -162,21 +172,20 @@ df = CSV.read(joinpath(Pkg.dir("DataFrames"), "test/data/iris.csv"));
             "scatter src"="explicit symbolic",
             "scatter/classes"=
             {
-                setosa     = {mark = "square*",   "blue"},
-                versicolor = {mark = "triangle*", "red"},
-                virginica  = {mark = "o",         "black"},
+                Tortoise = {mark = "square*",   "blue"},
+                Achilles = {mark = "triangle*", "red"},
             }
         },
         Table(
             {
-                x = "SepalLength",
-                y = "SepalWidth",
-                meta = "Species"
+                x = "distance",
+                y = "tracktime",
+                meta = "racer"
             },
-            df, # <--- Creating a Table from a DataFrame
+            zenon_measurements, # <--- Creating a Table from a DataFrame
         )
     ),
-    Legend(["Setosa", "Versicolor", "Virginica"])
+    Legend(["Tortoise", "Achilles"])
 )
 savefigs("dataframes", ans) # hide
 ```

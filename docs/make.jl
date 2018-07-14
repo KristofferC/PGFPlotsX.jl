@@ -1,6 +1,6 @@
 using Documenter, PGFPlotsX
 
-using Contour, Colors, DataFrames, CSV
+using Contour, Colors, DataFrames
 
 makedocs(
     modules = [PGFPlotsX],
