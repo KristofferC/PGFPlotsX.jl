@@ -2,7 +2,7 @@ using Crayons
 using Crayons.Box
 
 if !isfile(joinpath(@__DIR__, "showed_warning"))
-    info("""The new PGFPlotsX-release is a breaking release.
+    @info("""The new PGFPlotsX-release is a breaking release.
         If you want your old plot codes to work, you can pin PGFPlotsX to v0.1.5.
         """)
     touch(joinpath(@__DIR__, "showed_warning"))
@@ -11,13 +11,13 @@ end
 const OK =  GREEN_FG * BOLD("OK")
 const X =  RED_FG * BOLD("X")
 
-print(STDERR, "Looking for lualatex...")
+print(stderr, "Looking for lualatex...")
 have_lualatex = try success(`lualatex -v`); catch; false; end
-println(STDERR, "   ", have_lualatex ? OK : X)
+println(stderr, "   ", have_lualatex ? OK : X)
 
-print(STDERR, "Looking for pdflatex...")
+print(stderr, "Looking for pdflatex...")
 have_pdflatex = try success(`pdflatex -v`); catch; false; end
-println(STDERR, "   ", have_pdflatex ? OK : X)
+println(stderr, "   ", have_pdflatex ? OK : X)
 
 
 default_engine = ""
@@ -31,19 +31,19 @@ else
                  "the correct paths are set then run Pkg.build(\"PGFPLotsX\")"))
 end
 
-print(STDERR, "Looking for pdftoppm...")
+print(stderr, "Looking for pdftoppm...")
 have_pdftoppm =  try success(`pdftoppm  -v`); catch; false; end
-println(STDERR, "   ", have_pdftoppm ? OK : X)
+println(stderr, "   ", have_pdftoppm ? OK : X)
 if !have_pdftoppm
     @warn(string("Did not find `pdftoppm`, png output will be disabled. Install `pdftoppm` ",
                 "and run Pkg.build(\"PGFPLotsX\") to enable"))
 end
 
-print(STDERR, "Looking for pdf2svg...")
+print(stderr, "Looking for pdf2svg...")
 pdfpath = joinpath(@__DIR__, "pdf2svg.pdf")
 svgpath = joinpath(@__DIR__, "pdf2svg.svg")
 have_pdf2svg = try success(`pdf2svg $pdfpath $svgpath`); catch; false; end
-println(STDERR, "    ", have_pdf2svg ? OK : X)
+println(stderr, "    ", have_pdf2svg ? OK : X)
 if !have_pdf2svg
     @warn(string("Did not find `pdf2svg`, svg output will be disabled. Install `pdf2svg` ",
                 "and run Pkg.build(\"PGFPLotsX\") to enable"))
