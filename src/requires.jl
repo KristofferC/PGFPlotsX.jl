@@ -63,9 +63,6 @@ function __init__()
     end
 
     @require StatsBase="2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" begin
-        # workaround for https://github.com/JuliaStats/StatsBase.jl/issues/344
-        const _midpoints = x -> middle.(x[2:end], x[1:(end-1)])
-
         function PGFPlotsX.TableData(h::StatsBase.Histogram{T, 1};
                                      kwargs...) where T
             PGFPlotsX.TableData(hcat(h.edges[1], vcat(h.weights, 0)),
@@ -74,14 +71,14 @@ function __init__()
 
         function PGFPlotsX.TableData(histogram::StatsBase.Histogram{T, 2};
                                      kwargs...) where T
-            PGFPlotsX.TableData(_midpoints(histogram.edges[1]),
-                                _midpoints(histogram.edges[2]),
+            PGFPlotsX.TableData(midpoints(histogram.edges[1]),
+                                midpoints(histogram.edges[2]),
                                 histogram.weights; kwargs...)
         end
 
         function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T
-            PGFPlotsX.Coordinates(_midpoints(histogram.edges[1]),
-                                  _midpoints(histogram.edges[2]),
+            PGFPlotsX.Coordinates(midpoints(histogram.edges[1]),
+                                  midpoints(histogram.edges[2]),
                                   histogram.weights)
         end
     end
