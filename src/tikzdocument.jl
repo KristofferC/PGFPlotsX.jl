@@ -112,7 +112,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
     @unpack elements, use_default_preamble, preamble = td
     if isempty(td.elements)
-        warn("Tikz document is empty")
+        @warn("Tikz document is empty")
     end
     if include_preamble
         if !_OLD_LUALATEX
@@ -153,14 +153,14 @@ function savepdf(filename::String, td::TikzDocument;
 
     if !latex_success
         DEBUG && println("LaTeX command $latexcmd failed")
-        if !_OLD_LUALATEX && contains(log, "File `luatex85.sty' not found")
+        if !_OLD_LUALATEX && occursin("File `luatex85.sty' not found", log)
             DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
             _OLD_LUALATEX = true
             run_again = true
-        elseif (contains(log, "Maybe you need to enable the shell-escape feature") ||
-            contains(log, "Package pgfplots Error: sorry, plot file{"))
+        elseif (occursin("Maybe you need to enable the shell-escape feature", log) ||
+                occursin("Package pgfplots Error: sorry, plot file{", log))
             if !_HAS_WARNED_SHELL_ESCAPE
-                warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
+                @warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
                 _HAS_WARNED_SHELL_ESCAPE = true
             end
             DEBUG && println("The log indicates that shell-escape is needed")
@@ -184,7 +184,7 @@ function savepdf(filename::String, td::TikzDocument;
             error("The latex command $latexcmd failed")
         end
     end
-    run_again = run_again || contains(log, "LaTeX Warning: Label(s) may have changed")
+    run_again = run_again || occursin("LaTeX Warning: Label(s) may have changed", log)
     if run_again && run_count == 4
         rm_tmpfiles(tmp_tex)
         error("ran latex 5 times without converging, log is:\n$log")
@@ -195,7 +195,7 @@ function savepdf(filename::String, td::TikzDocument;
         return
     end
     rm_tmpfiles(tmp_tex)
-    mv(tmp_pdf, filename; remove_destination = true)
+    mv(tmp_pdf, filename; force = true)
 end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
@@ -258,8 +258,7 @@ if HAVE_PDFTOSVG
             error("Failed to run $svg_cmd")
         end
         if keep_pdf
-            mv(tmp_pdf, _replace_fileext(filename, ".pdf");
-               remove_destination = true)
+            mv(tmp_pdf, _replace_fileext(filename, ".pdf"); force = true)
         else
             rm(tmp_pdf)
         end
@@ -274,7 +273,7 @@ if HAVE_PDFTOSVG
         finally
             global showing_Ijulia = false
         end
-        s = readstring(filename)
+        s = read(filename, String)
         s = replace(s, "glyph", "glyph-$(_tikzid)-")
         s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
         s = replace(s, "#clip", "#clip-$(_tikzid)-")
@@ -294,7 +293,7 @@ _JUNO_DPI = 150
 show_juno_png(v::Bool) = global _JUNO_PNG = v
 dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
 
-@require Juno begin
+@require Juno="e5e0dc1b-0480-54bc-9374-aad01c23163d" begin
     import Media
     import Hiccup
     Media.media(_SHOWABLE, Media.Plot)
@@ -357,11 +356,11 @@ function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
-            if is_apple()
+            if Sys.isapple()
                 run(`open $filename`)
-            elseif is_linux() || is_bsd()
+            elseif Sys.islinux() || Sys.isbsd()
                 run(`xdg-open $filename`)
-            elseif is_windows()
+            elseif Sys.iswindows()
                 run(`start $filename`)
             end
         catch e

@@ -26,16 +26,16 @@ if have_lualatex
 elseif have_pdflatex
     default_engine = "PDFLATEX"
 else
-    warn(string("No LaTeX installation found, figures will not be generated. ",
-                "Make sure either pdflatex or lualatex are installed and that ",
-                "the correct paths are set then run Pkg.build(\"PGFPLotsX\")"))
+    @warn(string("No LaTeX installation found, figures will not be generated. ",
+                 "Make sure either pdflatex or lualatex are installed and that ",
+                 "the correct paths are set then run Pkg.build(\"PGFPLotsX\")"))
 end
 
 print(STDERR, "Looking for pdftoppm...")
 have_pdftoppm =  try success(`pdftoppm  -v`); catch; false; end
 println(STDERR, "   ", have_pdftoppm ? OK : X)
 if !have_pdftoppm
-    warn(string("Did not find `pdftoppm`, png output will be disabled. Install `pdftoppm` ",
+    @warn(string("Did not find `pdftoppm`, png output will be disabled. Install `pdftoppm` ",
                 "and run Pkg.build(\"PGFPLotsX\") to enable"))
 end
 
@@ -45,12 +45,12 @@ svgpath = joinpath(@__DIR__, "pdf2svg.svg")
 have_pdf2svg = try success(`pdf2svg $pdfpath $svgpath`); catch; false; end
 println(STDERR, "    ", have_pdf2svg ? OK : X)
 if !have_pdf2svg
-    warn(string("Did not find `pdf2svg`, svg output will be disabled. Install `pdf2svg` ",
+    @warn(string("Did not find `pdf2svg`, svg output will be disabled. Install `pdf2svg` ",
                 "and run Pkg.build(\"PGFPLotsX\") to enable"))
 end
 
 if !have_pdf2svg && !have_pdftoppm
-    warn(string("Found neither pdf2svg or pdftoppm, figures will not be viewable in Jupyter or Juno"))
+    @warn(string("Found neither pdf2svg or pdftoppm, figures will not be viewable in Jupyter or Juno"))
 end
 
 

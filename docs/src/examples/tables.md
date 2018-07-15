@@ -17,12 +17,12 @@ end
 
 Let
 ```jl
-x = linspace(0, 2*pi, 100)
+x = range(0; stop = 2*pi, length = 100)
 y = sin.(x)
 ```
 
 ```@setup pgf
-x = linspace(0, 2*pi, 100)
+x = range(0; stop = 2*pi, length = 100)
 y = sin.(x)
 ```
 
@@ -72,7 +72,7 @@ savefigs("table-dict-rename", ans) # hide
 
 In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:
 ```@example pgf
-x = linspace(-1, 1, 20)
+x = range(-1; stop = 1, length = 20)
 z = @. 1 - √(abs2(x) + abs2(x'))
 z[z .≤ 0] .= -Inf
 @pgf Axis(
@@ -109,7 +109,7 @@ v = cos.(x)
 
 @pgf Axis(
     {
-        title = "Quiver plot"
+        title = "Quiver plot",
         grid = "both"
     },
     Plot(

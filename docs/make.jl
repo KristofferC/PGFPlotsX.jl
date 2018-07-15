@@ -1,6 +1,6 @@
 using Documenter, PGFPlotsX
 
-using Contour, Colors, DataFrames, RDatasets
+using Contour, Colors, DataFrames
 
 makedocs(
     modules = [PGFPlotsX],
@@ -34,7 +34,7 @@ makedocs(
 deploydocs(
     repo = "github.com/KristofferC/PGFPlotsX.jl.git",
     target = "build",
-    julia = "0.6",
+    julia = "nightly",
     deps = nothing,
     make = nothing
 )

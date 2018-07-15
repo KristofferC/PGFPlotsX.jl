@@ -26,8 +26,8 @@ Examples:
 
 ```jldoctest
 julia> @pgf a = Axis({
-              xlabel = "x"
-              ylabel = "y"
+              xlabel = "x",
+              ylabel = "y",
               title = "Figure"
           },
           PlotInc( Expression("x^2")));

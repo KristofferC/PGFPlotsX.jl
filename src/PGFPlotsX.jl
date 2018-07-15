@@ -4,14 +4,12 @@ module PGFPlotsX
 
 import MacroTools: prewalk, @capture, @forward
 
-using ArgCheck
-using Compat
-using Compat.Unicode            # for lowercase
-using DataStructures
-using DocStringExtensions
-using Missings
-using Parameters
-using Requires
+using ArgCheck: @argcheck
+using DataStructures: OrderedDict
+using DocStringExtensions: SIGNATURES, TYPEDEF
+using Parameters: @unpack
+using Requires: @require
+using Unicode: lowercase
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, GroupPlot
@@ -43,7 +41,7 @@ This method should indent as if at the top level, containers indent their
 contents as necessary. See [`print_indent`](@ref).
 """
 print_tex(io::IO, a, b) = print_tex(io, a)
-print_tex(a) = print_tex(STDOUT, a)
+print_tex(a) = print_tex(stdout, a)
 
 include("options.jl")
 include("utilities.jl")

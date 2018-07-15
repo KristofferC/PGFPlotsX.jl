@@ -114,7 +114,7 @@ ys = [y1, y2, y3]
 n = length(ys)
 
 # Evenly spread out colors
-colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
+colors = [LCHuv(65, 100, h) for h in range(15; stop = 360+15, length = n+1)][1:n]
 
 @pgf Axis(
     {
@@ -146,14 +146,24 @@ savefigs("ggplot", ans) # hide
 Creating a `Table` from a `DataFrame` will write it as expected.
 
 ```@example pgf
-using RDatasets
-df = dataset("datasets", "iris") # load the dataset
+using DataFrames
+
+function mockdata(n, μ, σ, speed, racer)
+    distance = exp.(μ .+ randn(n).*σ)
+    noise = exp.(randn(n) * 0.1)
+    DataFrame(distance = distance,
+              tracktime = distance ./ (speed .* noise),
+              racer = fill(racer, n))
+end
+
+zenon_measurements = vcat(mockdata(20, 1, 0.2, 0.5, "Tortoise"),
+                          mockdata(20, 1, 0.2, 1, "Achilles"))
 
 @pgf Axis(
     {
-        legend_pos = "south east",
-        xlabel = "Sepal length",
-        ylabel = "Sepal width",
+        legend_pos = "north west",
+        xlabel = "distance",
+        ylabel = "track time",
     },
     Plot(
         {
@@ -162,21 +172,20 @@ df = dataset("datasets", "iris") # load the dataset
             "scatter src"="explicit symbolic",
             "scatter/classes"=
             {
-                setosa     = {mark = "square*",   "blue"},
-                versicolor = {mark = "triangle*", "red"},
-                virginica  = {mark = "o",         "black"},
+                Tortoise = {mark = "square*",   "blue"},
+                Achilles = {mark = "triangle*", "red"},
             }
         },
         Table(
             {
-                x = "SepalLength",
-                y = "SepalWidth",
-                meta = "Species"
+                x = "distance",
+                y = "tracktime",
+                meta = "racer"
             },
-            df, # <--- Creating a Table from a DataFrame
+            zenon_measurements, # <--- Creating a Table from a DataFrame
         )
     ),
-    Legend(["Setosa", "Versicolor", "Virginica"])
+    Legend(["Tortoise", "Achilles"])
 )
 savefigs("dataframes", ans) # hide
 ```
@@ -226,7 +235,7 @@ using StatsBase: Histogram, fit
             font = raw"\tiny"
         },
     },
-    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))
+    Plot(Table(fit(Histogram, range(0; stop = 1, length = 100).^3, closed = :left))))
 savefigs("histogram-1d", ans) # hide
 ```
 
@@ -238,7 +247,7 @@ savefigs("histogram-1d", ans) # hide
 
 ```@example pgf
 using StatsBase: Histogram, fit
-w = linspace(-1, 1, 100) .^ 3
+w = range(-1; stop = 1, length = 100) .^ 3
 xy = vec(tuple.(w, w'))
 h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
 @pgf Axis(

@@ -3,4 +3,4 @@ LaTeXStrings
 Colors
 Contour
 DataFrames
-RDatasets
+StatsBase

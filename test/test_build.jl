@@ -7,10 +7,10 @@ function is_file_starting_with(filename, regex::Regex, nlines = 1)
     content = ""
     open(filename, "r") do io
         for _ in 1:nlines
-            content *= readline(io; chomp = true)
+            content *= readline(io; keep = false)
         end
     end
-    contains(content, regex)
+    occursin(regex, content)
 end
 
 is_png_file(filename) = is_file_starting_with(filename, b"\x89PNG")
@@ -42,8 +42,8 @@ is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
                 PGFPlotsX.savetex(io, td)
 
                 texstring = String(take!(io))
-                @test contains(texstring, test_preamble_env)
-                @test contains(texstring, test_preamble_var)
+                @test occursin(test_preamble_env, texstring)
+                @test occursin(test_preamble_var, texstring)
             finally
                 empty!(PGFPlotsX.CUSTOM_PREAMBLE)
             end
@@ -58,7 +58,7 @@ end
             a = Axis(Plot(Expression("x^2")))
             pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
-            println(readstring("$tmp.tex"))
+            println(read("$tmp.tex", String))
             pgfsave("$tmp.png", a)
             @test is_png_file("$tmp.png")
             pgfsave("$tmp.pdf", a)
@@ -69,7 +69,7 @@ end
             @test is_tikz_standalone("$tmp.tikz")
 
             let tikz_lines = readlines("$tmp.tikz")
-                @test ismatch(r"^\\begin{tikzpicture}.*", tikz_lines[1])
+                @test occursin(r"^\\begin{tikzpicture}.*", tikz_lines[1])
                 last_line = findlast(!isempty, tikz_lines)
                 @test strip(tikz_lines[last_line]) == "\\end{tikzpicture}"
             end

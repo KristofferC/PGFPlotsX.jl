@@ -1,10 +1,9 @@
-julia 0.6
+julia 0.7-beta
 ArgCheck
-Compat
 DataStructures
 DocStringExtensions
 MacroTools
 Missings
 Parameters
-Requires
+Requires 0.5.2
 Crayons

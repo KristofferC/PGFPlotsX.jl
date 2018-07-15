@@ -30,7 +30,7 @@ function run_latex_once(filename::String, eng::LaTeXEngine, flags)
     cmd = `$(_engine_cmd(eng)) $flags $file`
     succ = cd(() -> success(cmd), dir)
     logfile = _replace_fileext(filename, ".log")
-    log = readstring(logfile)
+    log = read(logfile, String)
     succ, log, cmd
 end
 
@@ -88,7 +88,7 @@ function _default_preamble()
     end
 
     if isfile(CUSTOM_PREAMBLE_PATH)
-        str = readstring(CUSTOM_PREAMBLE_PATH)
+        str = read(CUSTOM_PREAMBLE_PATH, String)
         if !isempty(str)
             push!(preamble, "% Custom preamble from custom_preamble.tex:")
             push!(preamble, str, "\n")
@@ -97,7 +97,7 @@ function _default_preamble()
 
     if haskey(ENV, "PGFPLOTSX_PREAMBLE_PATH") && isfile(ENV["PGFPLOTSX_PREAMBLE_PATH"])
         push!(preamble, "% Custom preamble from ENV path:")
-        push!(preamble, readstring(ENV["PGFPLOTSX_PREAMBLE_PATH"]), "\n")
+        push!(preamble, read(ENV["PGFPLOTSX_PREAMBLE_PATH"], String), "\n")
     end
     return preamble
 end

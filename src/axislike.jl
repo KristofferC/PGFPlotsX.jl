@@ -109,6 +109,7 @@ The `contents` after the global options are processed as follows:
 
 function print_tex(io::IO, groupplot::GroupPlot)
     @unpack options, contents = groupplot
+    isempty(contents) && return
     print(io, "\\begin{groupplot}")
     print_options(io, options)
     print_indent(io) do io
@@ -118,7 +119,7 @@ function print_tex(io::IO, groupplot::GroupPlot)
                 print_options(io, elt)
             elseif elt isa Plot
                 print_tex(io, elt)
-            elseif elt isa Void
+            elseif elt isa Nothing
                 println(io, raw"\nextgroupplot[group/empty plot,xmin=0,xmax=1,ymin=0,ymax=1]")
             else
                 print_tex(io, elt)

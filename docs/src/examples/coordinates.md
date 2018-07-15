@@ -17,7 +17,7 @@ Use `Coordinates` to construct the `pgfplots` construct `coordinates`. Various c
 For basic usage, consider `AbstractVectors` and iterables. Notice how non-finite values are skipped. You can also use `()` or `nothing` for jumps in functions.
 
 ```@example pgf
-x = linspace(-1, 1, 51) # so that it contains 1/0
+x = range(-1; stop = 1, length = 51) # so that it contains 1/0
 @pgf Axis(
     {
         xmajorgrids,
@@ -43,7 +43,7 @@ savefigs("coordinates-simple", ans) # hide
 Use `xerror`, `xerrorplus`, `xerrorminus`, `yerror` etc. for error bars.
 
 ```@example pgf
-x = linspace(0, 2π, 20)
+x = range(0; stop = 2π, length = 20)
 @pgf Plot(
     {
         "no marks",
@@ -64,7 +64,7 @@ savefigs("coordinates-errorbars", ans) # hide
 Use three vectors to construct 3D coordinates.
 
 ```@example pgf
-t = linspace(0, 6*π, 100)
+t = range(0; stop = 6*π, length = 100)
 @pgf Plot3(
     {
         no_marks,
@@ -83,8 +83,8 @@ savefigs("coordinates-3d", ans) # hide
 A convenience constructor is available for plotting a matrix of values calculated from edge vectors.
 
 ```@example pgf
-x = linspace(-2, 2, 20)
-y = linspace(-0.5, 3, 25)
+x = range(-2; stop = 2, length = 20)
+y = range(-0.5; stop = 3, length = 25)
 f(x, y) = (1 - x)^2 + 100*(y - x^2)^2
 @pgf Plot3(
     {
@@ -102,8 +102,8 @@ savefigs("coordinates-3d-matrix", ans) # hide
 ## Heatmap
 
 ```@example pgf
-x = linspace(-2, 2, 40)
-y = linspace(-0.5, 3, 50)
+x = range(-2; stop = 2, length = 40)
+y = range(-0.5; stop = 3, length = 50)
 @pgf Axis(
     {
         view = (0, 90),
