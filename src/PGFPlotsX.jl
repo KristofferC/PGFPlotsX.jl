@@ -8,6 +8,7 @@ using ArgCheck: @argcheck
 using DataStructures: OrderedDict
 using DocStringExtensions: SIGNATURES, TYPEDEF
 using Parameters: @unpack
+using StatsBase: midpoints
 using Requires: @require
 using Unicode: lowercase
 

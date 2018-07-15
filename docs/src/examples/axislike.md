@@ -70,7 +70,7 @@ savefigs("groupplot-multiple", ans) # hide
 ## Polar axis
 
 ```@example pgf
-angles = [e/50*360*i for i in 1:500]
+angles = [ℯ/50*360*i for i in 1:500]
 radius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]
 PolarAxis(PlotInc(Coordinates(angles, radius)))
 savefigs("polar", ans) # hide
