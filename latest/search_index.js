@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "PGFPlotsX.@pgf",
     "category": "macro",
-    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\ntheme = @pgf {xmajorgrids, x_grid_style = \"white\"}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\nUse {} for empty options that print as [] in LaTeX.\n\n\n\n"
+    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\ntheme = @pgf {xmajorgrids, x_grid_style = \"white\"}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\nUse {} for empty options that print as [] in LaTeX.\n\n\n\n\n\n"
 },
 
 {
@@ -125,7 +125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "PGFPlotsX.Table",
     "category": "type",
-    "text": "Table([options], ...; ...)\n\nTabular data with options, corresponding to table[options] { ... } in PGFPlots.\n\noptions stores the options. If that is followed by an AbstractString, that will be used as a filename to read data from, otherwise all the arguments are passed on to TableData.\n\nExamples:\n\nTable([\"x\" => 1:10, \"y\" => 11:20])        # from a vector\n\nTable([1:10, 11:20])                      # same contents, unnamed\n\nTable(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols\n\n@pgf Table({ \"x index\" = 2, \"y index\" = 1\" }, randn(10, 3))\n\nlet x = linspace(0, 1, 10), y = linspace(-2, 3, 15)\n    Table(x, y, sin.(x + y\'))             # edges & matrix\nend\n\n\n\n"
+    "text": "Table([options], ...; ...)\n\nTabular data with options, corresponding to table[options] { ... } in PGFPlots.\n\noptions stores the options. If that is followed by an AbstractString, that will be used as a filename to read data from, otherwise all the arguments are passed on to TableData.\n\nExamples:\n\nTable([\"x\" => 1:10, \"y\" => 11:20])        # from a vector\n\nTable([1:10, 11:20])                      # same contents, unnamed\n\nTable(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols\n\n@pgf Table({ \"x index\" = 2, \"y index\" = 1\" }, randn(10, 3))\n\nlet x = range(0; stop = 1, length = 10), y = range(-2; stop =  3, length = 15)\n    Table(x, y, sin.(x + y\'))             # edges & matrix\nend\n\n\n\n\n\n"
 },
 
 {
@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "PGFPlotsX.TableData",
     "category": "type",
-    "text": "Tabular data with optional column names.\n\nThis corresponds to the part of tables between {}\'s in PGFPlots, without the options or table, so that it can also be used for “inline” tables. Table will call the constructor for this type to convert arguments after options.\n\ndata is a matrix, which contains the contents of the table, which will be printed using print_tex. colnames is a vector of column names (converted to string), or nothing for a table with no column names.\n\nWhen rowsep is true, an additional \\\\ is used as a row separator. The default is true, this is recommended to avoid “fragility” issues with inline tables.\n\nnote: Note\nTable queries TableData for its rowsep, and adds the relevant option accordingly. When using “inline” tables, eg in options, you have to specify this manually for the container. See the gallery for examples.\n\nAfter each index in scanlines, extra row separators are inserted. This can be used for skipping coordinates or implicitly defining the dimensions of a matrix for surf and mesh plots. They are expanded using expand_scanlines.\n\n\n\n"
+    "text": "Tabular data with optional column names.\n\nThis corresponds to the part of tables between {}\'s in PGFPlots, without the options or table, so that it can also be used for “inline” tables. Table will call the constructor for this type to convert arguments after options.\n\ndata is a matrix, which contains the contents of the table, which will be printed using print_tex. colnames is a vector of column names (converted to string), or nothing for a table with no column names.\n\nWhen rowsep is true, an additional \\\\ is used as a row separator. The default is true, this is recommended to avoid “fragility” issues with inline tables.\n\nnote: Note\nTable queries TableData for its rowsep, and adds the relevant option accordingly. When using “inline” tables, eg in options, you have to specify this manually for the container. See the gallery for examples.\n\nAfter each index in scanlines, extra row separators are inserted. This can be used for skipping coordinates or implicitly defining the dimensions of a matrix for surf and mesh plots. They are expanded using expand_scanlines.\n\n\n\n\n\n"
 },
 
 {
@@ -149,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "PGFPlotsX.Coordinates",
     "category": "type",
-    "text": "Coordinates(itr)\n\n\nConvert the argument, which can be any iterable object, to coordinates.\n\nSpecifically,\n\nCoordinate and EmptyLine are passed through as is,\n2- or 3-element tuples of finite real numbers are interpreted as coordinates,\nnothing, (), and coordinates with non-finite numbers become empty lines.\n\nThe resulting coordinates are checked for dimension consistency.\n\nExamples\n\nThe following are equivalent:\n\nCoordinates((x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? () : (x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? EmptyLine() : Coordinate((x, 1/x)) for x in -5:5)\n\n\n\nCoordinates(x, y; xerror, yerror, xerrorplus, yerrorplus, xerrorminus, yerrorminus, meta)\n\n\nTwo dimensional coordinates from two vectors, with error bars.\n\n\n\nCoordinates(x, y, z; xerror, yerror, zerror, xerrorplus, yerrorplus, zerrorplus, xerrorminus, yerrorminus, zerrorminus, meta)\n\n\nThree dimensional coordinates from two vectors, with error bars.\n\n\n\nCoordinates(x, y, z; meta)\n\n\nConstruct coordinates from a matrix of values and edge vectors, such that z[i,j] corresponds to x[i] and y[j]. Empty scanlines are inserted, consistently with the mesh/ordering=x varies option of PGFPlots (the default).\n\nx = linspace(0, 1, 10)\ny = linspace(-1, 2, 13)\nz = sin.(x) + cos.(y\')\nCoordinates(x, y, z)\n\n\n\n"
+    "text": "Coordinates(itr)\n\n\nConvert the argument, which can be any iterable object, to coordinates.\n\nSpecifically,\n\nCoordinate and EmptyLine are passed through as is,\n2- or 3-element tuples of finite real numbers are interpreted as coordinates,\nnothing, (), and coordinates with non-finite numbers become empty lines.\n\nThe resulting coordinates are checked for dimension consistency.\n\nExamples\n\nThe following are equivalent:\n\nCoordinates((x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? () : (x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? EmptyLine() : Coordinate((x, 1/x)) for x in -5:5)\n\n\n\n\n\nCoordinates(x, y; xerror, yerror, xerrorplus, yerrorplus, xerrorminus, yerrorminus, meta)\n\n\nTwo dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; xerror, yerror, zerror, xerrorplus, yerrorplus, zerrorplus, xerrorminus, yerrorminus, zerrorminus, meta)\n\n\nThree dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; meta)\n\n\nConstruct coordinates from a matrix of values and edge vectors, such that z[i,j] corresponds to x[i] and y[j]. Empty scanlines are inserted, consistently with the mesh/ordering=x varies option of PGFPlots (the default).\n\nx = range(0; stop = 1, length = 10)\ny = range(-1; stop = 2, length = 13)\nz = sin.(x) + cos.(y\')\nCoordinates(x, y, z)\n\n\n\n\n\n"
 },
 
 {
@@ -165,7 +165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "PGFPlotsX.Expression",
     "category": "type",
-    "text": "Expression(expressions::Vector{String})\n\nExpression(strings::String...)\n\nAn Expression is a string or multiple strings, representing a function, and is written in a way LaTeX understands.\n\n\n\n"
+    "text": "Expression(expressions::Vector{String})\n\nExpression(strings::String...)\n\nAn Expression is a string or multiple strings, representing a function, and is written in a way LaTeX understands.\n\n\n\n\n\n"
 },
 
 {
@@ -181,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "PGFPlotsX.Graphics",
     "category": "type",
-    "text": "Graphics([options], filename)\n\nGraphics data simply wraps an image (eg a .png file).\n\n\n\n"
+    "text": "Graphics([options], filename)\n\nGraphics data simply wraps an image (eg a .png file).\n\n\n\n\n\n"
 },
 
 {
@@ -221,7 +221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot",
     "category": "type",
-    "text": "struct Plot <: PGFPlotsX.OptionType\n\nCorresponds to the \\addplot[3][+] family of pgfplot commands.\n\nInstead of the default constructor, use Plot([options], data, trailing...) and similar (PlotInc, Plot3, Plot3Inc) in user code.\n\n\n\n"
+    "text": "struct Plot <: PGFPlotsX.OptionType\n\nCorresponds to the \\addplot[3][+] family of pgfplot commands.\n\nInstead of the default constructor, use Plot([options], data, trailing...) and similar (PlotInc, Plot3, Plot3Inc) in user code.\n\n\n\n\n\n"
 },
 
 {
@@ -229,7 +229,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.PlotInc",
     "category": "function",
-    "text": "PlotInc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+    "text": "PlotInc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n\n\n"
 },
 
 {
@@ -245,7 +245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot3",
     "category": "function",
-    "text": "Plot3([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3 form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+    "text": "Plot3([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3 form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n\n\n"
 },
 
 {
@@ -253,7 +253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot3Inc",
     "category": "function",
-    "text": "Plot3Inc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n"
+    "text": "Plot3Inc([options::Options], data, trailing...)\n\nCorresponds to the \\addplot3+ form in PGFPlots.\n\nFor the interpretation of the other arguments, see Plot(::Options, ::PlotData, ...).\n\n\n\n\n\n"
 },
 
 {
@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Legend",
     "category": "type",
-    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\nlabels are wrapped in {}s, so they can contain ,.\n\n\n\n"
+    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\nlabels are wrapped in {}s, so they can contain ,.\n\n\n\n\n\n"
 },
 
 {
@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.LegendEntry",
     "category": "type",
-    "text": "LegendEntry([options::Options], name, [isexpanded])\n\nCorresponds to the \\addlegendentry and \\addlegendentryexpanded forms of PGFPlots.\n\n\n\n"
+    "text": "LegendEntry([options::Options], name, [isexpanded])\n\nCorresponds to the \\addlegendentry and \\addlegendentryexpanded forms of PGFPlots.\n\n\n\n\n\n"
 },
 
 {
@@ -317,7 +317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.Axis",
     "category": "type",
-    "text": "Axis([options], elements...)\n\nLinear axes, corresponds to axis in PGFPlots.\n\n\n\n"
+    "text": "Axis([options], elements...)\n\nLinear axes, corresponds to axis in PGFPlots.\n\n\n\n\n\n"
 },
 
 {
@@ -325,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "Axis",
     "category": "section",
-    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n    \\addplot+\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
+    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\",\n              ylabel = \"y\",\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n    \\addplot+\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
 },
 
 {
@@ -333,7 +333,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.GroupPlot",
     "category": "type",
-    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nother values, eg Plot are emitted using print_tex.\n\n\n\n"
+    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nother values, eg Plot are emitted using print_tex.\n\n\n\n\n\n"
 },
 
 {
@@ -357,7 +357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.SemiLogXAxis",
     "category": "type",
-    "text": "SemiLogXAxis([options], elements...)\n\nLog x and linear y axes, corresponds to semilogxaxis in PGFPlots.\n\n\n\n"
+    "text": "SemiLogXAxis([options], elements...)\n\nLog x and linear y axes, corresponds to semilogxaxis in PGFPlots.\n\n\n\n\n\n"
 },
 
 {
@@ -365,7 +365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.SemiLogYAxis",
     "category": "type",
-    "text": "SemiLogYAxis([options], elements...)\n\nLinear x and log y axes, corresponds to semilogyaxis in PGFPlots.\n\n\n\n"
+    "text": "SemiLogYAxis([options], elements...)\n\nLinear x and log y axes, corresponds to semilogyaxis in PGFPlots.\n\n\n\n\n\n"
 },
 
 {
@@ -373,7 +373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.LogLogAxis",
     "category": "type",
-    "text": "LogLogAxis([options], elements...)\n\nLog-log axes, corresponds to loglogaxis in PGFPlots.\n\n\n\n"
+    "text": "LogLogAxis([options], elements...)\n\nLog-log axes, corresponds to loglogaxis in PGFPlots.\n\n\n\n\n\n"
 },
 
 {
@@ -397,7 +397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "TikzPicture",
     "title": "PGFPlotsX.TikzPicture",
     "category": "type",
-    "text": "TikzPicture([options], contents...)\n\nCorredponds to a tikzpicture block in PGFPlots.\n\nElements can also be added with push! after contruction.\n\n\n\n"
+    "text": "TikzPicture([options], contents...)\n\nCorredponds to a tikzpicture block in PGFPlots.\n\nElements can also be added with push! after contruction.\n\n\n\n\n\n"
 },
 
 {
@@ -413,7 +413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "TikzPicture",
     "title": "PGFPlotsX.TikzDocument",
     "category": "type",
-    "text": "TikzDocument(elements...; use_default_preamble = true, preamble = [])\n\nCorresponds to a LaTeX document, usually wrapping TikzPictures.\n\nuse_default_preamble determines whether a preamble is added from the global variables (see CUSTOM_PREAMBLE and CUSTOM_PREAMBLE_PATH).\n\npreamble is appended after the default one (if any).\n\npush! can be used to append elements after construction, and similarly push_preamble! for the preamble.\n\n\n\n"
+    "text": "TikzDocument(elements...; use_default_preamble = true, preamble = [])\n\nCorresponds to a LaTeX document, usually wrapping TikzPictures.\n\nuse_default_preamble determines whether a preamble is added from the global variables (see CUSTOM_PREAMBLE and CUSTOM_PREAMBLE_PATH).\n\npreamble is appended after the default one (if any).\n\npush! can be used to append elements after construction, and similarly push_preamble! for the preamble.\n\n\n\n\n\n"
 },
 
 {
@@ -469,7 +469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.pgfsave",
     "category": "function",
-    "text": "save(filename, td; include_preamble, latex_engine, buildflags, dpi, showing_ide)\n\n\nSave the argument (either TikzDocument, or some other type which is wrapped in one automatically, eg TikzPicture, Axis, or Plot) to filename, guessing the format from the file extension. Keywords specify options, some specific to some output formats.\n\npgfsave is an alias which is exported.\n\n\n\n"
+    "text": "save(filename, td; include_preamble, latex_engine, buildflags, dpi, showing_ide)\n\n\nSave the argument (either TikzDocument, or some other type which is wrapped in one automatically, eg TikzPicture, Axis, or Plot) to filename, guessing the format from the file extension. Keywords specify options, some specific to some output formats.\n\npgfsave is an alias which is exported.\n\n\n\n\n\n"
 },
 
 {
@@ -485,7 +485,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.CUSTOM_PREAMBLE",
     "category": "constant",
-    "text": "A vector of stings, added after DEFAULT_PREAMBLE.\n\nUse this for additional definitions \\usepackage statements required by the LaTeX code you include into plots.\n\n\n\n"
+    "text": "A vector of stings, added after DEFAULT_PREAMBLE.\n\nUse this for additional definitions \\usepackage statements required by the LaTeX code you include into plots.\n\n\n\n\n\n"
 },
 
 {
@@ -509,7 +509,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.CUSTOM_FLAGS",
     "category": "constant",
-    "text": "Custom flags to the engine can be used in the latex command by push!-ing them into the global variable CUSTOM_FLAGS.\n\n\n\n"
+    "text": "Custom flags to the engine can be used in the latex command by push!-ing them into the global variable CUSTOM_FLAGS.\n\n\n\n\n\n"
 },
 
 {
@@ -533,7 +533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.print_tex",
     "category": "function",
-    "text": "print_tex(io, elt, [container])\n\nPrint elt to io as LaTeX code. The optional third argument allows methods to work differently depending on the container.\n\nThis method should indent as if at the top level, containers indent their contents as necessary. See print_indent.\n\n\n\nprint_tex(io, str)\n\n\nPrint a string as is, terminated with a newline.\n\nnote: Note\nThis is used as a workaround for LaTeX code that does not have a corresponding type, eg as elements in Axis. raw or LaTeXStrings are useful to avoid piling up backslashes. The newline is added to separate tokens.\n\n\n\nprint_tex(io, x)\n\n\nReal numbers are printed as is, except for non-finite representation.\n\n\n\n"
+    "text": "print_tex(io, elt, [container])\n\nPrint elt to io as LaTeX code. The optional third argument allows methods to work differently depending on the container.\n\nThis method should indent as if at the top level, containers indent their contents as necessary. See print_indent.\n\n\n\n\n\nprint_tex(io, str)\n\n\nPrint a string as is, terminated with a newline.\n\nnote: Note\nThis is used as a workaround for LaTeX code that does not have a corresponding type, eg as elements in Axis. raw or LaTeXStrings are useful to avoid piling up backslashes. The newline is added to separate tokens.\n\n\n\n\n\nprint_tex(io, x)\n\n\nReal numbers are printed as is, except for non-finite representation.\n\n\n\n\n\n"
 },
 
 {
@@ -541,7 +541,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.print_indent",
     "category": "function",
-    "text": "print_indent(f, io_main)\n\n\nCall the f with an IO buffer, capture the output, print it to io_main indended with four spaces.\n\n\n\nprint_indent(io_main, elt)\n\n\nPrint elt to io with indentation. Shortcut for the function wrapper of print_indent for a single element.\n\n\n\n"
+    "text": "print_indent(f, io_main)\n\n\nCall the f with an IO buffer, capture the output, print it to io_main indended with four spaces.\n\n\n\n\n\nprint_indent(io_main, elt)\n\n\nPrint elt to io with indentation. Shortcut for the function wrapper of print_indent for a single element.\n\n\n\n\n\n"
 },
 
 {
@@ -549,7 +549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.expand_scanlines",
     "category": "function",
-    "text": "expand_scanlines(n, nrow)\n\n\nExpand scanlines, which is a vector of scanline positions or an integer for repeated scanlines, into a Vector{Int}.\n\n\n\n"
+    "text": "expand_scanlines(n, nrow)\n\n\nExpand scanlines, which is a vector of scanline positions or an integer for repeated scanlines, into a Vector{Int}.\n\n\n\n\n\n"
 },
 
 {
@@ -557,7 +557,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.Options",
     "category": "type",
-    "text": "Options(pairs; print_empty)\n\n\nOptions passed to PGFPlots for various structures (table, plot, etc).\n\nContents emitted in key = value form, or key when value ≡ nothing. Also see the @pgf convenience macro.\n\nWhen print_empty = false (the default), empty options are not printed. Use print_empty = true to force printing a [] in this case.\n\n\n\n"
+    "text": "Options(pairs; print_empty)\n\n\nOptions passed to PGFPlots for various structures (table, plot, etc).\n\nContents emitted in key = value form, or key when value ≡ nothing. Also see the @pgf convenience macro.\n\nWhen print_empty = false (the default), empty options are not printed. Use print_empty = true to force printing a [] in this case.\n\n\n\n\n\n"
 },
 
 {
@@ -565,7 +565,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.CUSTOM_PREAMBLE_PATH",
     "category": "constant",
-    "text": "A file which is spliced directly to the preamble. Customize the file at this path for site-specific setting that apply for every plot.\n\n\n\n"
+    "text": "A file which is spliced directly to the preamble. Customize the file at this path for site-specific setting that apply for every plot.\n\n\n\n\n\n"
 },
 
 {
@@ -573,7 +573,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.DEFAULT_PREAMBLE",
     "category": "constant",
-    "text": "The default preamble for LaTeX documents. Don\'t change this, customize CUSTOM_PREAMBLE instead.\n\n\n\n"
+    "text": "The default preamble for LaTeX documents. Don\'t change this, customize CUSTOM_PREAMBLE instead.\n\n\n\n\n\n"
 },
 
 {
@@ -605,7 +605,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "Basic usage",
     "category": "section",
-    "text": "For basic usage, consider AbstractVectors and iterables. Notice how non-finite values are skipped. You can also use () or nothing for jumps in functions.x = linspace(-1, 1, 51) # so that it contains 1/0\n@pgf Axis(\n    {\n        xmajorgrids,\n        ymajorgrids,\n    },\n    Plot(\n        {\n            no_marks,\n        },\n        Coordinates(x, 1 ./ x)\n    )\n)\nsavefigs(\"coordinates-simple\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "For basic usage, consider AbstractVectors and iterables. Notice how non-finite values are skipped. You can also use () or nothing for jumps in functions.x = range(-1; stop = 1, length = 51) # so that it contains 1/0\n@pgf Axis(\n    {\n        xmajorgrids,\n        ymajorgrids,\n    },\n    Plot(\n        {\n            no_marks,\n        },\n        Coordinates(x, 1 ./ x)\n    )\n)\nsavefigs(\"coordinates-simple\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -613,7 +613,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "Error bars",
     "category": "section",
-    "text": "Use xerror, xerrorplus, xerrorminus, yerror etc. for error bars.x = linspace(0, 2π, 20)\n@pgf Plot(\n    {\n        \"no marks\",\n        \"error bars/y dir=both\",\n        \"error bars/y explicit\",\n    },\n    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))\n)\nsavefigs(\"coordinates-errorbars\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Use xerror, xerrorplus, xerrorminus, yerror etc. for error bars.x = range(0; stop = 2π, length = 20)\n@pgf Plot(\n    {\n        \"no marks\",\n        \"error bars/y dir=both\",\n        \"error bars/y explicit\",\n    },\n    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))\n)\nsavefigs(\"coordinates-errorbars\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -621,7 +621,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "3D",
     "category": "section",
-    "text": "Use three vectors to construct 3D coordinates.t = linspace(0, 6*π, 100)\n@pgf Plot3(\n    {\n        no_marks,\n    },\n    Coordinates(t .* sin.(t), t .* cos.(t), .-t)\n)\nsavefigs(\"coordinates-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Use three vectors to construct 3D coordinates.t = range(0; stop = 6*π, length = 100)\n@pgf Plot3(\n    {\n        no_marks,\n    },\n    Coordinates(t .* sin.(t), t .* cos.(t), .-t)\n)\nsavefigs(\"coordinates-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -629,7 +629,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "Edge vectors",
     "category": "section",
-    "text": "A convenience constructor is available for plotting a matrix of values calculated from edge vectors.x = linspace(-2, 2, 20)\ny = linspace(-0.5, 3, 25)\nf(x, y) = (1 - x)^2 + 100*(y - x^2)^2\n@pgf Plot3(\n    {\n        surf,\n    },\n    Coordinates(x, y, f.(x, y\'))\n)\nsavefigs(\"coordinates-3d-matrix\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "A convenience constructor is available for plotting a matrix of values calculated from edge vectors.x = range(-2; stop = 2, length = 20)\ny = range(-0.5; stop = 3, length = 25)\nf(x, y) = (1 - x)^2 + 100*(y - x^2)^2\n@pgf Plot3(\n    {\n        surf,\n    },\n    Coordinates(x, y, f.(x, y\'))\n)\nsavefigs(\"coordinates-3d-matrix\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -637,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Coordinates",
     "title": "Heatmap",
     "category": "section",
-    "text": "x = linspace(-2, 2, 40)\ny = linspace(-0.5, 3, 50)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\",\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Coordinates(x, y, @. √(f(x, y\')))\n    )\n)\nsavefigs(\"coordinates-3d-matrix-heatmap\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "x = range(-2; stop = 2, length = 40)\ny = range(-0.5; stop = 3, length = 50)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\",\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Coordinates(x, y, @. √(f(x, y\')))\n    )\n)\nsavefigs(\"coordinates-3d-matrix-heatmap\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -669,7 +669,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tables",
     "title": "Unnamed columns",
     "category": "section",
-    "text": "Letx = linspace(0, 2*pi, 100)\ny = sin.(x)x = linspace(0, 2*pi, 100)\ny = sin.(x)You can pass these coordinates in unnamed columns:Plot(Table([x, y]))\nsavefigs(\"table-unnamed-columns\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Letx = range(0; stop = 2*pi, length = 100)\ny = sin.(x)x = range(0; stop = 2*pi, length = 100)\ny = sin.(x)You can pass these coordinates in unnamed columns:Plot(Table([x, y]))\nsavefigs(\"table-unnamed-columns\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -693,7 +693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tables",
     "title": "Excluding points",
     "category": "section",
-    "text": "In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:x = linspace(-1, 1, 20)\nz = @. 1 - √(abs2(x) + abs2(x\'))\nz[z .≤ 0] .= -Inf\n@pgf Axis(\n    {\n        colorbar,\n        \"colormap/jet\",\n        \"unbounded coords\" = \"jump\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Table(x, x, z)\n    )\n)\nsavefigs(\"table-jump-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "In the example below, we use a matrix of values with edge vectors, and omit the points outside the unit circle:x = range(-1; stop = 1, length = 20)\nz = @. 1 - √(abs2(x) + abs2(x\'))\nz[z .≤ 0] .= -Inf\n@pgf Axis(\n    {\n        colorbar,\n        \"colormap/jet\",\n        \"unbounded coords\" = \"jump\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n        },\n        Table(x, x, z)\n    )\n)\nsavefigs(\"table-jump-3d\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -701,7 +701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tables",
     "title": "Quiver plot",
     "category": "section",
-    "text": "A quiver plot can be created as:x = -2pi:0.2:2*pi\ny = sin.(x)\n\nu = ones(length(x))\nv = cos.(x)\n\n@pgf Axis(\n    {\n        title = \"Quiver plot\"\n        grid = \"both\"\n    },\n    Plot(\n        {\n            quiver = {u = \"\\\\thisrow{u}\", v = \"\\\\thisrow{v}\"},\n            \"-stealth\"\n        },\n        Table(x = x, y = y, u = u, v = v)\n    ),\n    LegendEntry(\"\\$\\\\cos(x)\\$\"),\n    Plot(\n        {\n            color = \"red\",\n            very_thick\n        },\n        Coordinates(x, y)\n    ),\n    LegendEntry(\"\\$\\\\sin(x)\\$\")\n)\nsavefigs(\"quiver\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "A quiver plot can be created as:x = -2pi:0.2:2*pi\ny = sin.(x)\n\nu = ones(length(x))\nv = cos.(x)\n\n@pgf Axis(\n    {\n        title = \"Quiver plot\",\n        grid = \"both\"\n    },\n    Plot(\n        {\n            quiver = {u = \"\\\\thisrow{u}\", v = \"\\\\thisrow{v}\"},\n            \"-stealth\"\n        },\n        Table(x = x, y = y, u = u, v = v)\n    ),\n    LegendEntry(\"\\$\\\\cos(x)\\$\"),\n    Plot(\n        {\n            color = \"red\",\n            very_thick\n        },\n        Coordinates(x, y)\n    ),\n    LegendEntry(\"\\$\\\\sin(x)\\$\")\n)\nsavefigs(\"quiver\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -733,7 +733,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis-like objects",
     "title": "Multiple group plots",
     "category": "section",
-    "text": "x = linspace(0, 2*pi, 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "x = range(0; stop =2*pi, length = 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -741,7 +741,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis-like objects",
     "title": "Polar axis",
     "category": "section",
-    "text": "angles = [e/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in linspace(1, 10, 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "angles = [e/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -837,7 +837,7 @@ var documenterSearchIndex = {"docs": [
     "page": "PGFPlots manual gallery",
     "title": "Group plot",
     "category": "section",
-    "text": "# this is an imitation of the figure in the manual, as we generate the data\nx = linspace(0, 10, 100)\n@pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 2\",\n            horizontal_sep=\"0pt\",\n            vertical_sep=\"0pt\",\n            xticklabels_at=\"edge bottom\"\n        },\n        xmin = 0,\n        ymin = 0,\n        height = \"3.7cm\",\n        width = \"4cm\",\n        no_markers\n    },\n    nothing,\n    {xmin=5, xmax=10, ymin=50, ymax=100},\n    plot,\n    {xmax=5, ymax=50},\n    plot,\n    {xmin=5, xmax=10, ymax=50, yticklabels={}},\n    plot)\nsavefigs(\"groupplot-nested\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "# this is an imitation of the figure in the manual, as we generate the data\nx = range(0; stop = 10, length = 100)\n@pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 2\",\n            horizontal_sep=\"0pt\",\n            vertical_sep=\"0pt\",\n            xticklabels_at=\"edge bottom\"\n        },\n        xmin = 0,\n        ymin = 0,\n        height = \"3.7cm\",\n        width = \"4cm\",\n        no_markers\n    },\n    nothing,\n    {xmin=5, xmax=10, ymin=50, ymax=100},\n    plot,\n    {xmax=5, ymax=50},\n    plot,\n    {xmin=5, xmax=10, ymax=50, yticklabels={}},\n    plot)\nsavefigs(\"groupplot-nested\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -845,7 +845,7 @@ var documenterSearchIndex = {"docs": [
     "page": "PGFPlots manual gallery",
     "title": "Patch",
     "category": "section",
-    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = raw\"\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = \"\\\\\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -893,7 +893,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "ggplot2",
     "category": "section",
-    "text": "Something that looks a bit like ggplot2.using Colors\nusing LaTeXStrings\n\nggplot2_axis_theme = @pgf {\n    tick_align = \"outside\",\n    tick_pos = \"left\",\n    xmajorgrids,\n    x_grid_style = \"white\",\n    ymajorgrids,\n    y_grid_style = \"white\",\n    axis_line_style = \"white\",\n    \"axis_background/.style\" = {\n        fill = \"white!89.803921568627459!black\"\n    }\n}\n\nggplot2_plot_theme = @pgf {\n    mark=\"*\",\n    mark_size = 3,\n    mark_options = \"solid\",\n    line_width = \"1.64pt\",\n}\n\nx = 0:0.3:2\ny1 = sin.(2x)\ny2 = cos.(2x)\ny3 = cos.(5x)\nys = [y1, y2, y3]\nn = length(ys)\n\n# Evenly spread out colors\ncolors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]\n\n@pgf Axis(\n    {\n         ggplot2_axis_theme...,\n         xmin = -0.095, xmax = 1.995,\n         ymin = -1.1,   ymax =1.1,\n         title = L\"Simple plot $\\frac{\\alpha}{2}$\",\n         xlabel = \"time (s)\",\n         ylabel = \"Voltage (mV)\",\n    },\n    [\n        PlotInc(\n            {\n                ggplot2_plot_theme...,\n                color = colors[i]\n            },\n            Coordinates(x, _y))\n        for (i, _y) in enumerate(ys)]...,\n)\nsavefigs(\"ggplot\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Something that looks a bit like ggplot2.using Colors\nusing LaTeXStrings\n\nggplot2_axis_theme = @pgf {\n    tick_align = \"outside\",\n    tick_pos = \"left\",\n    xmajorgrids,\n    x_grid_style = \"white\",\n    ymajorgrids,\n    y_grid_style = \"white\",\n    axis_line_style = \"white\",\n    \"axis_background/.style\" = {\n        fill = \"white!89.803921568627459!black\"\n    }\n}\n\nggplot2_plot_theme = @pgf {\n    mark=\"*\",\n    mark_size = 3,\n    mark_options = \"solid\",\n    line_width = \"1.64pt\",\n}\n\nx = 0:0.3:2\ny1 = sin.(2x)\ny2 = cos.(2x)\ny3 = cos.(5x)\nys = [y1, y2, y3]\nn = length(ys)\n\n# Evenly spread out colors\ncolors = [LCHuv(65, 100, h) for h in range(15; stop = 360+15, length = n+1)][1:n]\n\n@pgf Axis(\n    {\n         ggplot2_axis_theme...,\n         xmin = -0.095, xmax = 1.995,\n         ymin = -1.1,   ymax =1.1,\n         title = L\"Simple plot $\\frac{\\alpha}{2}$\",\n         xlabel = \"time (s)\",\n         ylabel = \"Voltage (mV)\",\n    },\n    [\n        PlotInc(\n            {\n                ggplot2_plot_theme...,\n                color = colors[i]\n            },\n            Coordinates(x, _y))\n        for (i, _y) in enumerate(ys)]...,\n)\nsavefigs(\"ggplot\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -901,7 +901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "DataFrames.jl",
     "category": "section",
-    "text": "Creating a Table from a DataFrame will write it as expected.using RDatasets\ndf = dataset(\"datasets\", \"iris\") # load the dataset\n\n@pgf Axis(\n    {\n        legend_pos = \"south east\",\n        xlabel = \"Sepal length\",\n        ylabel = \"Sepal width\",\n    },\n    Plot(\n        {\n            scatter,\n            \"only marks\",\n            \"scatter src\"=\"explicit symbolic\",\n            \"scatter/classes\"=\n            {\n                setosa     = {mark = \"square*\",   \"blue\"},\n                versicolor = {mark = \"triangle*\", \"red\"},\n                virginica  = {mark = \"o\",         \"black\"},\n            }\n        },\n        Table(\n            {\n                x = \"SepalLength\",\n                y = \"SepalWidth\",\n                meta = \"Species\"\n            },\n            df, # <--- Creating a Table from a DataFrame\n        )\n    ),\n    Legend([\"Setosa\", \"Versicolor\", \"Virginica\"])\n)\nsavefigs(\"dataframes\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Creating a Table from a DataFrame will write it as expected.using DataFrames\n\nfunction mockdata(n, μ, σ, speed, racer)\n    distance = exp.(μ .+ randn(n).*σ)\n    noise = exp.(randn(n) * 0.1)\n    DataFrame(distance = distance,\n              tracktime = distance ./ (speed .* noise),\n              racer = fill(racer, n))\nend\n\nzenon_measurements = vcat(mockdata(20, 1, 0.2, 0.5, \"Tortoise\"),\n                          mockdata(20, 1, 0.2, 1, \"Achilles\"))\n\n@pgf Axis(\n    {\n        legend_pos = \"north west\",\n        xlabel = \"distance\",\n        ylabel = \"track time\",\n    },\n    Plot(\n        {\n            scatter,\n            \"only marks\",\n            \"scatter src\"=\"explicit symbolic\",\n            \"scatter/classes\"=\n            {\n                Tortoise = {mark = \"square*\",   \"blue\"},\n                Achilles = {mark = \"triangle*\", \"red\"},\n            }\n        },\n        Table(\n            {\n                x = \"distance\",\n                y = \"tracktime\",\n                meta = \"racer\"\n            },\n            zenon_measurements, # <--- Creating a Table from a DataFrame\n        )\n    ),\n    Legend([\"Tortoise\", \"Achilles\"])\n)\nsavefigs(\"dataframes\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -925,7 +925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "1D",
     "category": "section",
-    "text": "using StatsBase: Histogram, fit\n@pgf Axis(\n    {\n        \"ybar interval\",\n        \"xticklabel interval boundaries\",\n        xmajorgrids = false,\n        xticklabel = raw\"$[\\pgfmathprintnumber\\tick,\\pgfmathprintnumber\\nexttick)$\",\n        \"xticklabel style\" =\n        {\n            font = raw\"\\tiny\"\n        },\n    },\n    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))\nsavefigs(\"histogram-1d\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "using StatsBase: Histogram, fit\n@pgf Axis(\n    {\n        \"ybar interval\",\n        \"xticklabel interval boundaries\",\n        xmajorgrids = false,\n        xticklabel = raw\"$[\\pgfmathprintnumber\\tick,\\pgfmathprintnumber\\nexttick)$\",\n        \"xticklabel style\" =\n        {\n            font = raw\"\\tiny\"\n        },\n    },\n    Plot(Table(fit(Histogram, range(0; stop = 1, length = 100).^3, closed = :left))))\nsavefigs(\"histogram-1d\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -933,7 +933,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Julia types",
     "title": "2D",
     "category": "section",
-    "text": "using StatsBase: Histogram, fit\nw = linspace(-1, 1, 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "using StatsBase: Histogram, fit\nw = range(-1; stop = 1, length = 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 ]}

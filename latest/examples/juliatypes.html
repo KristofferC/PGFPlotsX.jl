@@ -69,7 +69,7 @@ ys = [y1, y2, y3]
 n = length(ys)
 
 # Evenly spread out colors
-colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
+colors = [LCHuv(65, 100, h) for h in range(15; stop = 360+15, length = n+1)][1:n]
 
 @pgf Axis(
     {
@@ -88,14 +88,24 @@ colors = [LCHuv(65, 100, h) for h in linspace(15, 360+15, n+1)][1:n]
             },
             Coordinates(x, _y))
         for (i, _y) in enumerate(ys)]...,
-)</code></pre></div><p><a href="ggplot.pdf">[.pdf]</a>, <a href="ggplot.tex">[generated .tex]</a></p><p><img src="ggplot.svg" alt/></p><h2><a class="nav-anchor" id="DataFrames.jl-1" href="#DataFrames.jl-1">DataFrames.jl</a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><div><pre><code class="language-julia">using RDatasets
-df = dataset(&quot;datasets&quot;, &quot;iris&quot;) # load the dataset
+)</code></pre></div><p><a href="ggplot.pdf">[.pdf]</a>, <a href="ggplot.tex">[generated .tex]</a></p><p><img src="ggplot.svg" alt/></p><h2><a class="nav-anchor" id="DataFrames.jl-1" href="#DataFrames.jl-1">DataFrames.jl</a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><div><pre><code class="language-julia">using DataFrames
+
+function mockdata(n, μ, σ, speed, racer)
+    distance = exp.(μ .+ randn(n).*σ)
+    noise = exp.(randn(n) * 0.1)
+    DataFrame(distance = distance,
+              tracktime = distance ./ (speed .* noise),
+              racer = fill(racer, n))
+end
+
+zenon_measurements = vcat(mockdata(20, 1, 0.2, 0.5, &quot;Tortoise&quot;),
+                          mockdata(20, 1, 0.2, 1, &quot;Achilles&quot;))
 
 @pgf Axis(
     {
-        legend_pos = &quot;south east&quot;,
-        xlabel = &quot;Sepal length&quot;,
-        ylabel = &quot;Sepal width&quot;,
+        legend_pos = &quot;north west&quot;,
+        xlabel = &quot;distance&quot;,
+        ylabel = &quot;track time&quot;,
     },
     Plot(
         {
@@ -104,23 +114,21 @@ df = dataset(&quot;datasets&quot;, &quot;iris&quot;) # load the dataset
             &quot;scatter src&quot;=&quot;explicit symbolic&quot;,
             &quot;scatter/classes&quot;=
             {
-                setosa     = {mark = &quot;square*&quot;,   &quot;blue&quot;},
-                versicolor = {mark = &quot;triangle*&quot;, &quot;red&quot;},
-                virginica  = {mark = &quot;o&quot;,         &quot;black&quot;},
+                Tortoise = {mark = &quot;square*&quot;,   &quot;blue&quot;},
+                Achilles = {mark = &quot;triangle*&quot;, &quot;red&quot;},
             }
         },
         Table(
             {
-                x = &quot;SepalLength&quot;,
-                y = &quot;SepalWidth&quot;,
-                meta = &quot;Species&quot;
+                x = &quot;distance&quot;,
+                y = &quot;tracktime&quot;,
+                meta = &quot;racer&quot;
             },
-            df, # &lt;--- Creating a Table from a DataFrame
+            zenon_measurements, # &lt;--- Creating a Table from a DataFrame
         )
     ),
-    Legend([&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;])
-)</code></pre><pre><code class="language-none">WARNING: Method definition unix2zdt(Real) in module TimeZones at /root/.julia/v0.6/TimeZones/src/conversions.jl:122 overwritten in module RData at /root/.julia/v0.6/RData/src/convert.jl:201.
-WARNING: Method definition unix2zdt(Real) in module TimeZones at /root/.julia/v0.6/TimeZones/src/conversions.jl:122 overwritten in module RData at /root/.julia/v0.6/RData/src/convert.jl:201.</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
+    Legend([&quot;Tortoise&quot;, &quot;Achilles&quot;])
+)</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
 x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -&gt; sin(x)*sin(y)
@@ -128,7 +136,15 @@ f = (x,y) -&gt; sin(x)*sin(y)
         contour_prepared,
         very_thick
     },
-    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre></div><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2><a class="nav-anchor" id="StatsBase.jl-1" href="#StatsBase.jl-1">StatsBase.jl</a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3><a class="nav-anchor" id="D-1" href="#D-1">1D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
+    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre><pre><code class="language-none">┌ Warning: `range(start, step, length)` is deprecated, use `range(start, step=step, length=length)` instead.
+│   caller = contourlevels(::Array{Float64,2}, ::Int64) at Contour.jl:103
+└ @ Contour ~/.julia/packages/Contour/5soA/src/Contour.jl:103
+┌ Warning: `Array{T, 1}(m::Int) where T` is deprecated, use `Array{T, 1}(undef, m)` instead.
+│   caller = coordinates at Contour.jl:112 [inlined]
+└ @ Core ~/.julia/packages/Contour/5soA/src/Contour.jl:112
+┌ Warning: `Array{T, 1}(m::Int) where T` is deprecated, use `Array{T, 1}(undef, m)` instead.
+│   caller = coordinates at Contour.jl:113 [inlined]
+└ @ Core ~/.julia/packages/Contour/5soA/src/Contour.jl:113</code></pre></div><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2><a class="nav-anchor" id="StatsBase.jl-1" href="#StatsBase.jl-1">StatsBase.jl</a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3><a class="nav-anchor" id="D-1" href="#D-1">1D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
 @pgf Axis(
     {
         &quot;ybar interval&quot;,
@@ -140,8 +156,8 @@ f = (x,y) -&gt; sin(x)*sin(y)
             font = raw&quot;\tiny&quot;
         },
     },
-    Plot(Table(fit(Histogram, linspace(0, 1, 100).^3, closed = :left))))</code></pre></div><p><a href="histogram-1d.pdf">[.pdf]</a>, <a href="histogram-1d.tex">[generated .tex]</a></p><p><img src="histogram-1d.svg" alt/></p><h3><a class="nav-anchor" id="D-2" href="#D-2">2D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
-w = linspace(-1, 1, 100) .^ 3
+    Plot(Table(fit(Histogram, range(0; stop = 1, length = 100).^3, closed = :left))))</code></pre></div><p><a href="histogram-1d.pdf">[.pdf]</a>, <a href="histogram-1d.tex">[generated .tex]</a></p><p><img src="histogram-1d.svg" alt/></p><h3><a class="nav-anchor" id="D-2" href="#D-2">2D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
+w = range(-1; stop = 1, length = 100) .^ 3
 xy = vec(tuple.(w, w&#39;))
 h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
 @pgf Axis(
@@ -157,4 +173,16 @@ h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
 
         },
         Table(h))
-)</code></pre></div><p><a href="histogram-2d.pdf">[.pdf]</a>, <a href="histogram-2d.tex">[generated .tex]</a></p><p><img src="histogram-2d.svg" alt/></p><footer><hr/><a class="previous" href="gallery.html"><span class="direction">Previous</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>
+)</code></pre><pre><code class="language-none">WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
+Add `using Statistics` to your imports.
+  likely near /mnt/docs/make.jl:5
+WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
+Add `using Statistics` to your imports.
+  likely near /mnt/docs/make.jl:5
+WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
+Add `using Statistics` to your imports.
+  likely near /mnt/docs/make.jl:5
+WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
+Add `using Statistics` to your imports.
+  likely near /mnt/docs/make.jl:5
+in #89 at /mnt/src/requires.jl</code></pre></div><p><a href="histogram-2d.pdf">[.pdf]</a>, <a href="histogram-2d.tex">[generated .tex]</a></p><p><img src="histogram-2d.svg" alt/></p><footer><hr/><a class="previous" href="gallery.html"><span class="direction">Previous</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>

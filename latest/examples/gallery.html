@@ -183,7 +183,7 @@
     },
     Expression(&quot;x * (1-x) * y * (1-y)&quot;)
 )</code></pre></div><p><a href="mesh-scatter.pdf">[.pdf]</a>, <a href="mesh-scatter.tex">[generated .tex]</a></p><p><img src="mesh-scatter.svg" alt/></p><hr/><h2><a class="nav-anchor" id="Group-plot-1" href="#Group-plot-1">Group plot</a></h2><div><pre><code class="language-julia"># this is an imitation of the figure in the manual, as we generate the data
-x = linspace(0, 10, 100)
+x = range(0; stop = 10, length = 100)
 @pgf plot = Plot({very_thick}, Table(x = x, y = @. (sin(x * 8) + 1) * 4 * x))
 @pgf GroupPlot(
     {
@@ -209,7 +209,7 @@ x = linspace(0, 10, 100)
     plot)</code></pre></div><p><a href="groupplot-nested.pdf">[.pdf]</a>, <a href="groupplot-nested.tex">[generated .tex]</a></p><p><img src="groupplot-nested.svg" alt/></p><hr/><h2><a class="nav-anchor" id="Patch-1" href="#Patch-1">Patch</a></h2><div><pre><code class="language-julia">@pgf Axis(Plot(
     {
         patch,
-        &quot;table/row sep&quot; = raw&quot;\\&quot;,
+        &quot;table/row sep&quot; = &quot;\\\\&quot;,
         patch_table = TableData([0 1 2;
                                  1 2 3;
                                  4 3 5])

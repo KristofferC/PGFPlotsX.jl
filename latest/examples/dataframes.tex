@@ -7,314 +7,94 @@
 \usepgfplotslibrary{statistics}
 \begin{document}
 \begin{tikzpicture}
-\begin{axis}[legend pos={south east}, xlabel={Sepal length}, ylabel={Sepal width}]
-    \addplot[scatter, only marks, scatter src={explicit symbolic}, scatter/classes={setosa={mark={square*}, blue}, versicolor={mark={triangle*}, red}, virginica={mark={o}, black}}]
-        table[row sep={\\}, x={SepalLength}, y={SepalWidth}, meta={Species}]
+\begin{axis}[legend pos={north west}, xlabel={distance}, ylabel={track time}]
+    \addplot[scatter, only marks, scatter src={explicit symbolic}, scatter/classes={Tortoise={mark={square*}, blue}, Achilles={mark={triangle*}, red}}]
+        table[row sep={\\}, x={distance}, y={tracktime}, meta={racer}]
         {
-            SepalLength  SepalWidth  PetalLength  PetalWidth  Species  \\
-            5.1  3.5  1.4  0.2  setosa
+            distance  tracktime  racer  \\
+            3.1107412944768336  5.436517591952025  Tortoise
               \\
-            4.9  3.0  1.4  0.2  setosa
+            2.0644379626647127  3.8084437878656274  Tortoise
               \\
-            4.7  3.2  1.3  0.2  setosa
+            3.045961575571213  5.09562509003037  Tortoise
               \\
-            4.6  3.1  1.5  0.2  setosa
+            2.3066225497775927  4.879861290053348  Tortoise
               \\
-            5.0  3.6  1.4  0.2  setosa
+            1.9005821611764213  3.7309534571609846  Tortoise
               \\
-            5.4  3.9  1.7  0.4  setosa
+            2.17940035327847  5.117389056735187  Tortoise
               \\
-            4.6  3.4  1.4  0.3  setosa
+            2.0946737932232806  5.0075823287783825  Tortoise
               \\
-            5.0  3.4  1.5  0.2  setosa
+            2.9343799467687206  5.487370679205474  Tortoise
               \\
-            4.4  2.9  1.4  0.2  setosa
+            2.5108013998508  4.919713089419937  Tortoise
               \\
-            4.9  3.1  1.5  0.1  setosa
+            2.745855656479475  6.087949551557224  Tortoise
               \\
-            5.4  3.7  1.5  0.2  setosa
+            2.3732008994927103  5.051782278139626  Tortoise
               \\
-            4.8  3.4  1.6  0.2  setosa
+            2.600154006074553  6.707692954928429  Tortoise
               \\
-            4.8  3.0  1.4  0.1  setosa
+            2.6131662364704202  5.432830947807925  Tortoise
               \\
-            4.3  3.0  1.1  0.1  setosa
+            3.422255888595062  7.198217433473768  Tortoise
               \\
-            5.8  4.0  1.2  0.2  setosa
+            2.9087360892720366  5.075927623745345  Tortoise
               \\
-            5.7  4.4  1.5  0.4  setosa
+            2.342005571387195  5.450496905275258  Tortoise
               \\
-            5.4  3.9  1.3  0.4  setosa
+            3.1811942733150387  6.934284824395399  Tortoise
               \\
-            5.1  3.5  1.4  0.3  setosa
+            2.318337540038737  5.219415977957999  Tortoise
               \\
-            5.7  3.8  1.7  0.3  setosa
+            3.295030633839759  7.006971765620016  Tortoise
               \\
-            5.1  3.8  1.5  0.3  setosa
+            1.8426160645342113  3.926981163438978  Tortoise
               \\
-            5.4  3.4  1.7  0.2  setosa
+            2.2311580310383214  2.104618410491686  Achilles
               \\
-            5.1  3.7  1.5  0.4  setosa
+            3.17086681861449  2.834175950311148  Achilles
               \\
-            4.6  3.6  1.0  0.2  setosa
+            2.384768214889806  2.1495130626193397  Achilles
               \\
-            5.1  3.3  1.7  0.5  setosa
+            2.7361969046723282  2.6229563989436295  Achilles
               \\
-            4.8  3.4  1.9  0.2  setosa
+            1.7135235040183763  1.5484078616959176  Achilles
               \\
-            5.0  3.0  1.6  0.2  setosa
+            2.870990189751045  2.823508193026587  Achilles
               \\
-            5.0  3.4  1.6  0.4  setosa
+            2.453448918366558  2.6923312338459944  Achilles
               \\
-            5.2  3.5  1.5  0.2  setosa
+            1.9273124646827884  2.0252058007386005  Achilles
               \\
-            5.2  3.4  1.4  0.2  setosa
+            2.588287026651199  2.6331722303751195  Achilles
               \\
-            4.7  3.2  1.6  0.2  setosa
+            4.22589325773575  3.5740427000586568  Achilles
               \\
-            4.8  3.1  1.6  0.2  setosa
+            3.1100315629896693  3.3224521255832484  Achilles
               \\
-            5.4  3.4  1.5  0.4  setosa
+            3.505731717445249  4.491405712972505  Achilles
               \\
-            5.2  4.1  1.5  0.1  setosa
+            3.415749666446566  3.2658698169579976  Achilles
               \\
-            5.5  4.2  1.4  0.2  setosa
+            2.716514050094793  2.5610704435540623  Achilles
               \\
-            4.9  3.1  1.5  0.2  setosa
+            3.0337226406951245  3.294221832280512  Achilles
               \\
-            5.0  3.2  1.2  0.2  setosa
+            2.9435248705013253  3.1308749210655256  Achilles
               \\
-            5.5  3.5  1.3  0.2  setosa
+            3.711196587451965  3.9903730392237122  Achilles
               \\
-            4.9  3.6  1.4  0.1  setosa
+            2.4050421302358265  2.6402033123675546  Achilles
               \\
-            4.4  3.0  1.3  0.2  setosa
+            2.230041441801448  2.49107221689441  Achilles
               \\
-            5.1  3.4  1.5  0.2  setosa
-              \\
-            5.0  3.5  1.3  0.3  setosa
-              \\
-            4.5  2.3  1.3  0.3  setosa
-              \\
-            4.4  3.2  1.3  0.2  setosa
-              \\
-            5.0  3.5  1.6  0.6  setosa
-              \\
-            5.1  3.8  1.9  0.4  setosa
-              \\
-            4.8  3.0  1.4  0.3  setosa
-              \\
-            5.1  3.8  1.6  0.2  setosa
-              \\
-            4.6  3.2  1.4  0.2  setosa
-              \\
-            5.3  3.7  1.5  0.2  setosa
-              \\
-            5.0  3.3  1.4  0.2  setosa
-              \\
-            7.0  3.2  4.7  1.4  versicolor
-              \\
-            6.4  3.2  4.5  1.5  versicolor
-              \\
-            6.9  3.1  4.9  1.5  versicolor
-              \\
-            5.5  2.3  4.0  1.3  versicolor
-              \\
-            6.5  2.8  4.6  1.5  versicolor
-              \\
-            5.7  2.8  4.5  1.3  versicolor
-              \\
-            6.3  3.3  4.7  1.6  versicolor
-              \\
-            4.9  2.4  3.3  1.0  versicolor
-              \\
-            6.6  2.9  4.6  1.3  versicolor
-              \\
-            5.2  2.7  3.9  1.4  versicolor
-              \\
-            5.0  2.0  3.5  1.0  versicolor
-              \\
-            5.9  3.0  4.2  1.5  versicolor
-              \\
-            6.0  2.2  4.0  1.0  versicolor
-              \\
-            6.1  2.9  4.7  1.4  versicolor
-              \\
-            5.6  2.9  3.6  1.3  versicolor
-              \\
-            6.7  3.1  4.4  1.4  versicolor
-              \\
-            5.6  3.0  4.5  1.5  versicolor
-              \\
-            5.8  2.7  4.1  1.0  versicolor
-              \\
-            6.2  2.2  4.5  1.5  versicolor
-              \\
-            5.6  2.5  3.9  1.1  versicolor
-              \\
-            5.9  3.2  4.8  1.8  versicolor
-              \\
-            6.1  2.8  4.0  1.3  versicolor
-              \\
-            6.3  2.5  4.9  1.5  versicolor
-              \\
-            6.1  2.8  4.7  1.2  versicolor
-              \\
-            6.4  2.9  4.3  1.3  versicolor
-              \\
-            6.6  3.0  4.4  1.4  versicolor
-              \\
-            6.8  2.8  4.8  1.4  versicolor
-              \\
-            6.7  3.0  5.0  1.7  versicolor
-              \\
-            6.0  2.9  4.5  1.5  versicolor
-              \\
-            5.7  2.6  3.5  1.0  versicolor
-              \\
-            5.5  2.4  3.8  1.1  versicolor
-              \\
-            5.5  2.4  3.7  1.0  versicolor
-              \\
-            5.8  2.7  3.9  1.2  versicolor
-              \\
-            6.0  2.7  5.1  1.6  versicolor
-              \\
-            5.4  3.0  4.5  1.5  versicolor
-              \\
-            6.0  3.4  4.5  1.6  versicolor
-              \\
-            6.7  3.1  4.7  1.5  versicolor
-              \\
-            6.3  2.3  4.4  1.3  versicolor
-              \\
-            5.6  3.0  4.1  1.3  versicolor
-              \\
-            5.5  2.5  4.0  1.3  versicolor
-              \\
-            5.5  2.6  4.4  1.2  versicolor
-              \\
-            6.1  3.0  4.6  1.4  versicolor
-              \\
-            5.8  2.6  4.0  1.2  versicolor
-              \\
-            5.0  2.3  3.3  1.0  versicolor
-              \\
-            5.6  2.7  4.2  1.3  versicolor
-              \\
-            5.7  3.0  4.2  1.2  versicolor
-              \\
-            5.7  2.9  4.2  1.3  versicolor
-              \\
-            6.2  2.9  4.3  1.3  versicolor
-              \\
-            5.1  2.5  3.0  1.1  versicolor
-              \\
-            5.7  2.8  4.1  1.3  versicolor
-              \\
-            6.3  3.3  6.0  2.5  virginica
-              \\
-            5.8  2.7  5.1  1.9  virginica
-              \\
-            7.1  3.0  5.9  2.1  virginica
-              \\
-            6.3  2.9  5.6  1.8  virginica
-              \\
-            6.5  3.0  5.8  2.2  virginica
-              \\
-            7.6  3.0  6.6  2.1  virginica
-              \\
-            4.9  2.5  4.5  1.7  virginica
-              \\
-            7.3  2.9  6.3  1.8  virginica
-              \\
-            6.7  2.5  5.8  1.8  virginica
-              \\
-            7.2  3.6  6.1  2.5  virginica
-              \\
-            6.5  3.2  5.1  2.0  virginica
-              \\
-            6.4  2.7  5.3  1.9  virginica
-              \\
-            6.8  3.0  5.5  2.1  virginica
-              \\
-            5.7  2.5  5.0  2.0  virginica
-              \\
-            5.8  2.8  5.1  2.4  virginica
-              \\
-            6.4  3.2  5.3  2.3  virginica
-              \\
-            6.5  3.0  5.5  1.8  virginica
-              \\
-            7.7  3.8  6.7  2.2  virginica
-              \\
-            7.7  2.6  6.9  2.3  virginica
-              \\
-            6.0  2.2  5.0  1.5  virginica
-              \\
-            6.9  3.2  5.7  2.3  virginica
-              \\
-            5.6  2.8  4.9  2.0  virginica
-              \\
-            7.7  2.8  6.7  2.0  virginica
-              \\
-            6.3  2.7  4.9  1.8  virginica
-              \\
-            6.7  3.3  5.7  2.1  virginica
-              \\
-            7.2  3.2  6.0  1.8  virginica
-              \\
-            6.2  2.8  4.8  1.8  virginica
-              \\
-            6.1  3.0  4.9  1.8  virginica
-              \\
-            6.4  2.8  5.6  2.1  virginica
-              \\
-            7.2  3.0  5.8  1.6  virginica
-              \\
-            7.4  2.8  6.1  1.9  virginica
-              \\
-            7.9  3.8  6.4  2.0  virginica
-              \\
-            6.4  2.8  5.6  2.2  virginica
-              \\
-            6.3  2.8  5.1  1.5  virginica
-              \\
-            6.1  2.6  5.6  1.4  virginica
-              \\
-            7.7  3.0  6.1  2.3  virginica
-              \\
-            6.3  3.4  5.6  2.4  virginica
-              \\
-            6.4  3.1  5.5  1.8  virginica
-              \\
-            6.0  3.0  4.8  1.8  virginica
-              \\
-            6.9  3.1  5.4  2.1  virginica
-              \\
-            6.7  3.1  5.6  2.4  virginica
-              \\
-            6.9  3.1  5.1  2.3  virginica
-              \\
-            5.8  2.7  5.1  1.9  virginica
-              \\
-            6.8  3.2  5.9  2.3  virginica
-              \\
-            6.7  3.3  5.7  2.5  virginica
-              \\
-            6.7  3.0  5.2  2.3  virginica
-              \\
-            6.3  2.5  5.0  1.9  virginica
-              \\
-            6.5  3.0  5.2  2.0  virginica
-              \\
-            6.2  3.4  5.4  2.3  virginica
-              \\
-            5.9  3.0  5.1  1.8  virginica
+            2.598581915628742  2.28624682349206  Achilles
               \\
         }
         ;
-    \legend{{Setosa}, {Versicolor}, {Virginica}}
+    \legend{{Tortoise}, {Achilles}}
 \end{axis}
 \end{tikzpicture}
 \end{document}
