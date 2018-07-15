@@ -741,7 +741,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis-like objects",
     "title": "Polar axis",
     "category": "section",
-    "text": "angles = [e/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "angles = [ℯ/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {

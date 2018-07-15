@@ -16,13 +16,7 @@
     push!(gp, {title = i})
     push!(gp, PlotInc(Coordinates(coords)))
 end
-gp</code></pre><pre><code class="language-none">WARNING: importing deprecated binding Base.middle into PGFPlotsX.
-WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
-Add `using Statistics` to your imports.
-  likely near /mnt/docs/make.jl:5
-WARNING: Base.middle is deprecated: it has been moved to the standard library package `Statistics`.
-Add `using Statistics` to your imports.
-  likely near /mnt/docs/make.jl:5</code></pre></div><p><a href="groupplot-simple.pdf">[.pdf]</a>, <a href="groupplot-simple.tex">[generated .tex]</a></p><p><img src="groupplot-simple.svg" alt/></p><h2><a class="nav-anchor" id="Multiple-group-plots-1" href="#Multiple-group-plots-1">Multiple group plots</a></h2><div><pre><code class="language-julia">x = range(0; stop =2*pi, length = 100)
+gp</code></pre></div><p><a href="groupplot-simple.pdf">[.pdf]</a>, <a href="groupplot-simple.tex">[generated .tex]</a></p><p><img src="groupplot-simple.svg" alt/></p><h2><a class="nav-anchor" id="Multiple-group-plots-1" href="#Multiple-group-plots-1">Multiple group plots</a></h2><div><pre><code class="language-julia">x = range(0; stop =2*pi, length = 100)
 @pgf GroupPlot(
     {
         group_style =
@@ -38,12 +32,6 @@ Add `using Statistics` to your imports.
     PlotInc(Table(x, sin.(x .+ 0.5))),
     {},
     PlotInc(Table(x, cos.(x))),
-    PlotInc(Table(x, cos.(x .+ 0.5))))</code></pre></div><p><a href="groupplot-multiple.pdf">[.pdf]</a>, <a href="groupplot-multiple.tex">[generated .tex]</a></p><p><img src="groupplot-multiple.svg" alt/></p><h2><a class="nav-anchor" id="Polar-axis-1" href="#Polar-axis-1">Polar axis</a></h2><div><pre><code class="language-julia">angles = [e/50*360*i for i in 1:500]
+    PlotInc(Table(x, cos.(x .+ 0.5))))</code></pre></div><p><a href="groupplot-multiple.pdf">[.pdf]</a>, <a href="groupplot-multiple.tex">[generated .tex]</a></p><p><img src="groupplot-multiple.svg" alt/></p><h2><a class="nav-anchor" id="Polar-axis-1" href="#Polar-axis-1">Polar axis</a></h2><div><pre><code class="language-julia">angles = [ℯ/50*360*i for i in 1:500]
 radius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]
-PolarAxis(PlotInc(Coordinates(angles, radius)))</code></pre><pre><code class="language-none">WARNING: importing deprecated binding Base.e into ex-pgf.
-WARNING: Base.e is deprecated, use ℯ (\euler) or `Base.MathConstants.e`
-  likely near /mnt/docs/make.jl:5
-WARNING: Base.e is deprecated, use ℯ (\euler) or `Base.MathConstants.e`
-  likely near /mnt/docs/make.jl:5
-WARNING: Base.e is deprecated, use ℯ (\euler) or `Base.MathConstants.e`
-  likely near /mnt/docs/make.jl:5</code></pre></div><p><a href="polar.pdf">[.pdf]</a>, <a href="polar.tex">[generated .tex]</a></p><p><img src="polar.svg" alt/></p><footer><hr/><a class="previous" href="tables.html"><span class="direction">Previous</span><span class="title">Tables</span></a><a class="next" href="gallery.html"><span class="direction">Next</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>
+PolarAxis(PlotInc(Coordinates(angles, radius)))</code></pre></div><p><a href="polar.pdf">[.pdf]</a>, <a href="polar.tex">[generated .tex]</a></p><p><img src="polar.svg" alt/></p><footer><hr/><a class="previous" href="tables.html"><span class="direction">Previous</span><span class="title">Tables</span></a><a class="next" href="gallery.html"><span class="direction">Next</span><span class="title">PGFPlots manual gallery</span></a></footer></article></body></html>
