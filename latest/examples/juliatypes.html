@@ -136,15 +136,7 @@ f = (x,y) -&gt; sin(x)*sin(y)
         contour_prepared,
         very_thick
     },
-    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre><pre><code class="language-none">┌ Warning: `range(start, step, length)` is deprecated, use `range(start, step=step, length=length)` instead.
-│   caller = contourlevels(::Array{Float64,2}, ::Int64) at Contour.jl:103
-└ @ Contour ~/.julia/packages/Contour/5soA/src/Contour.jl:103
-┌ Warning: `Array{T, 1}(m::Int) where T` is deprecated, use `Array{T, 1}(undef, m)` instead.
-│   caller = coordinates at Contour.jl:112 [inlined]
-└ @ Core ~/.julia/packages/Contour/5soA/src/Contour.jl:112
-┌ Warning: `Array{T, 1}(m::Int) where T` is deprecated, use `Array{T, 1}(undef, m)` instead.
-│   caller = coordinates at Contour.jl:113 [inlined]
-└ @ Core ~/.julia/packages/Contour/5soA/src/Contour.jl:113</code></pre></div><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2><a class="nav-anchor" id="StatsBase.jl-1" href="#StatsBase.jl-1">StatsBase.jl</a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3><a class="nav-anchor" id="D-1" href="#D-1">1D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
+    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre></div><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2><a class="nav-anchor" id="StatsBase.jl-1" href="#StatsBase.jl-1">StatsBase.jl</a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3><a class="nav-anchor" id="D-1" href="#D-1">1D</a></h3><div><pre><code class="language-julia">using StatsBase: Histogram, fit
 @pgf Axis(
     {
         &quot;ybar interval&quot;,
