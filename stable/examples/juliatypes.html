@@ -119,7 +119,8 @@ df = dataset(&quot;datasets&quot;, &quot;iris&quot;) # load the dataset
         )
     ),
     Legend([&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;])
-)</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
+)</code></pre><pre><code class="language-none">WARNING: Method definition unix2zdt(Real) in module TimeZones at /root/.julia/v0.6/TimeZones/src/conversions.jl:122 overwritten in module RData at /root/.julia/v0.6/RData/src/convert.jl:201.
+WARNING: Method definition unix2zdt(Real) in module TimeZones at /root/.julia/v0.6/TimeZones/src/conversions.jl:122 overwritten in module RData at /root/.julia/v0.6/RData/src/convert.jl:201.</code></pre></div><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2><a class="nav-anchor" id="Countour.jl-1" href="#Countour.jl-1">Countour.jl</a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contours.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><div><pre><code class="language-julia">using Contour
 x = 0.0:0.1:2π
 y = 0.0:0.1:2π
 f = (x,y) -&gt; sin(x)*sin(y)

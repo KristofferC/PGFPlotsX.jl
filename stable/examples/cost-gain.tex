@@ -6,12 +6,12 @@
 \usepgfplotslibrary{polar}
 \usepgfplotslibrary{statistics}
 \begin{document}
-\begin{tikzpicture}[]
+\begin{tikzpicture}
 \begin{axis}[height={9cm}, width={9cm}, grid={major}]
-    \addplot+[]
+    \addplot+
         {-x^5 - 242};
-    \addlegendentry[] {model}
-    \addplot+[]
+    \addlegendentry {model}
+    \addplot+
         coordinates {
             (-4.77778, 2027.60977)
             (-3.55556, 347.84069)
@@ -24,7 +24,7 @@
             (5.0, -3269.56775)
         }
         ;
-    \addlegendentry[] {estimate}
+    \addlegendentry {estimate}
 \end{axis}
 \end{tikzpicture}
 \end{document}

@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Overview",
     "title": "Overview",
     "category": "section",
-    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThis package is a collection of functions and types which make it convenient to generate LaTeX output, which can in turn be compiled by PGFPlots to produce vector or bitmap images like pdf, svg or png, or used directly in LaTeX documents.PGFPlots has a very detailed manual (a local copy should be available in TeXLive and MikTeX installations) which should be your primary source of documentation, and its contents are not repeated here. It is assumed that you read the relevant parts of this manual, and look for solutions there first.Instead, this manual describes a way to conveniently generate what LaTeX output from Julia, using the types introduced in this package, other packages, and Julia\'s built-in constructs. When working with this package, it is frequently convenient to examine the LaTeX representation of objects. print_tex is a method that prints LaTeX code that is written out when saving plots; we use it extensively in this manual for demonstrations, while in practice one would use it for debugging.As an example, consider the following trivial plot:\\begin{tikzpicture}[]\n\\begin{axis}\n    \\addplot+[only marks] table {\n            x  y\n            1  3\n            2  4\n        };\n    \\addplot+ table {\n            x  y\n            5  1\n            6  2\n        };\n\\end{axis}\n\\end{tikzpicture}which can be produced by this package with the code@pgf TikzPicture(\n        Axis(\n            PlotInc({ only_marks },\n                Table(; x = 1:2, y = 3:4)),\n            PlotInc(\n                Table(; x = 5:6, y = 1:2))))(The unconventional use of linebreaks in the Julia code is to emphasize the structural similarities between the two pieces of code).The plot is built up from two Tables, which are tabular representations of data with (usually) named columns. These provide data for Plots, here using the PlotInc constructor which corresponds to the \\addplot+ command: the + tells PGFPlots to use a default style that varies with each plot. Each plot can have a single source of data.Plots are grouped together into an Axis, which corresponds to what most other libraries would call a “plot” (we use the term flexibly, too). Besides grouping plots, Axis allows the customization of ticks, labels, axis styles, legends, and related objects.TikzPicture wraps the Axis. If you omit this, this package will do it for you automatically. Similarly, if you have a single Plot-like object and don\'t want to customize the Axis, it will also be added automatically.Finally, @pgf is a convenient syntax for specifying options. It is is a macro that traverses its argument recursively, and converts it to a PGFPlotsX.Options object. It is recommended that you use this macro. The convention of this library is to apply @pgf to whole expressions to avoid repetition, but this is not required.PGFPlotsX allows building up plots from types that correspond very closely to PGFPlots counterparts. The table below gives an overview of the types defined by this package. For most PGFPlots constructs, [] can be used to specify options, this corresponds to the [options] argument in the table above.PGFPlots ([] indicates options) PGFPlotsX remark\ntable[] { ... } Table([options], ...) preferred to Coordinates\ncoordinates { ... } Coordinates(...) useful error bars\n\\addplot[] { ... } & friends Plot([options], ...) & friends also PlotInc, Plot3, Plot3Inc\n\\legend, \\legendentry[] Legend, Legendentry([options]) \n{expression} Expression(...) math formulas\ngraphics[] { ... } Graphics([options], ...) bitmaps\n\\axis[] { ... } & friends Axis([options], ...) & friends can have multiple Plots & similar\n\\begin{tikzpicture} ... TikzPicture([options], ...) rarely used directly\n\\begin{document} ... TikzDocument(...; ...) rarely used directlyThe following sections document these."
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendThis package is a collection of functions and types which make it convenient to generate LaTeX output, which can in turn be compiled by PGFPlots to produce vector or bitmap images like pdf, svg or png, or used directly in LaTeX documents.PGFPlots has a very detailed manual (a local copy should be available in TeXLive and MikTeX installations) which should be your primary source of documentation, and its contents are not repeated here. It is assumed that you read the relevant parts of this manual, and look for solutions there first.Instead, this manual describes a way to conveniently generate what LaTeX output from Julia, using the types introduced in this package, other packages, and Julia\'s built-in constructs. When working with this package, it is frequently convenient to examine the LaTeX representation of objects. print_tex is a method that prints LaTeX code that is written out when saving plots; we use it extensively in this manual for demonstrations, while in practice one would use it for debugging.As an example, consider the following trivial plot:\\begin{tikzpicture}\n\\begin{axis}\n    \\addplot+[only marks] table {\n            x  y\n            1  3\n            2  4\n        };\n    \\addplot+ table {\n            x  y\n            5  1\n            6  2\n        };\n\\end{axis}\n\\end{tikzpicture}which can be produced by this package with the code@pgf TikzPicture(\n        Axis(\n            PlotInc({ only_marks },\n                Table(; x = 1:2, y = 3:4)),\n            PlotInc(\n                Table(; x = 5:6, y = 1:2))))(The unconventional use of linebreaks in the Julia code is to emphasize the structural similarities between the two pieces of code).The plot is built up from two Tables, which are tabular representations of data with (usually) named columns. These provide data for Plots, here using the PlotInc constructor which corresponds to the \\addplot+ command: the + tells PGFPlots to use a default style that varies with each plot. Each plot can have a single source of data.Plots are grouped together into an Axis, which corresponds to what most other libraries would call a “plot” (we use the term flexibly, too). Besides grouping plots, Axis allows the customization of ticks, labels, axis styles, legends, and related objects.TikzPicture wraps the Axis. If you omit this, this package will do it for you automatically. Similarly, if you have a single Plot-like object and don\'t want to customize the Axis, it will also be added automatically.Finally, @pgf is a convenient syntax for specifying options. It is is a macro that traverses its argument recursively, and converts it to a PGFPlotsX.Options object. It is recommended that you use this macro. The convention of this library is to apply @pgf to whole expressions to avoid repetition, but this is not required.PGFPlotsX allows building up plots from types that correspond very closely to PGFPlots counterparts. The table below gives an overview of the types defined by this package. For most PGFPlots constructs, [] can be used to specify options, this corresponds to the [options] argument in the table above.PGFPlots ([] indicates options) PGFPlotsX remark\ntable[] { ... } Table([options], ...) preferred to Coordinates\ncoordinates { ... } Coordinates(...) useful error bars\n\\addplot[] { ... } & friends Plot([options], ...) & friends also PlotInc, Plot3, Plot3Inc\n\\legend, \\legendentry[] Legend, Legendentry([options]) \n{expression} Expression(...) math formulas\ngraphics[] { ... } Graphics([options], ...) bitmaps\n\\axis[] { ... } & friends Axis([options], ...) & friends can have multiple Plots & similar\n\\begin{tikzpicture} ... TikzPicture([options], ...) rarely used directly\n\\begin{document} ... TikzDocument(...; ...) rarely used directlyThe following sections document these."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "PGFPlotsX.@pgf",
     "category": "macro",
-    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\ntheme = @pgf {xmajorgrids, x_grid_style = \"white\"}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\n\n\n"
+    "text": "@pgf { ... }\n\n@pgf some(nested(form({ ... })),\n          with_multiple_options({ ... }))\n\nConstruct Options from comma-delimited key (without value), key = value, key : value, or key => value pairs enclosed in { ... }, anywhere in the expression.\n\nThe argument is traversed recursively, allowing { ... } expressions in multiple places.\n\nMulti-word keys need to be either quoted, or written with underscores replacing spaces.\n\n@pgf {\n    \"only marks\",\n    mark_size = \"0.6pt\",\n    mark = \"o\",\n    color => \"black\",\n}\n\nAnother Options can be spliced into one being created using ..., e.g.\n\ntheme = @pgf {xmajorgrids, x_grid_style = \"white\"}\n\naxis_opt = @pgf {theme..., title = \"My figure\"}\n\nUse {} for empty options that print as [] in LaTeX.\n\n\n\n"
 },
 
 {
@@ -94,6 +94,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Modifying options after an object is created",
     "category": "section",
     "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}An alternative to using merge! is using  ... to splice an option into another one, e.g.julia> theme = @pgf {xmajorgrids, ymajorgrids};\n\njulia> a = Axis(\n           @pgf {theme..., title = \"Foo\"}\n       );\n\njulia> print_tex(a)\n\\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved."
+},
+
+{
+    "location": "man/options.html#Empty-options-1",
+    "page": "Options",
+    "title": "Empty options",
+    "category": "section",
+    "text": "Empty options are not printed by default, but printing [] can be useful in some cases, eg when combined with global settings \\pgfplotsset{every axis plot/.append style={...}} in LaTeX code. In order to force printing empty options, it is recommended to use {} in expressions like@pgf Plot({}, ...)"
 },
 
 {
@@ -181,7 +189,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Data",
     "title": "Graphics",
     "category": "section",
-    "text": "GraphicsExample:julia> print_tex(Graphics(\"img.png\"))\ngraphics[] {img.png}"
+    "text": "GraphicsExample:julia> print_tex(Graphics(\"img.png\"))\ngraphics {img.png}"
 },
 
 {
@@ -229,7 +237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Plot and PlotInc",
     "category": "section",
-    "text": "For \\addplot and \\addplot+, respectively.Plot\nPlotIncExample:julia> p = @pgf PlotInc({ blue }, Table(\"plotdata/invcum.dat\"));\n\njulia> print_tex(p)\n\\addplot+[blue]\n    table[]\n    {\n        plotdata/invcum.dat\n    }\n    ;"
+    "text": "For \\addplot and \\addplot+, respectively.Plot\nPlotIncExample:julia> p = @pgf PlotInc({ blue }, Table(\"plotdata/invcum.dat\"));\n\njulia> print_tex(p)\n\\addplot+[blue]\n    table {plotdata/invcum.dat};"
 },
 
 {
@@ -261,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "PGFPlotsX.Legend",
     "category": "type",
-    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\n\n\n"
+    "text": "Legend(labels)\n\n\nCorresponds to \\legend{ ... } in PGFPlots. Specifies multiple legends for an axis, its position is irrelevant.\n\nlabels are wrapped in {}s, so they can contain ,.\n\n\n\n"
 },
 
 {
@@ -277,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Legends",
     "category": "section",
-    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{Plot A, Plot B}"
+    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{{Plot A}, {Plot B}}"
 },
 
 {
@@ -317,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "Axis",
     "category": "section",
-    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+[]\n        {x^2};\n    \\addplot+[]\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
+    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\"\n              ylabel = \"y\"\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n    \\addplot+\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
 },
 
 {
@@ -333,7 +341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "GroupPlot",
     "category": "section",
-    "text": "A GroupPlot is a way of grouping multiple plots in one figure.GroupPlotExample:julia> @pgf gp = GroupPlot({group_style = { group_size = \"2 by 1\",},\n                                            height = \"6cm\", width = \"6cm\"});\n\njulia> for (expr, data) in zip([\"x^2\", \"exp(x)\"], [\"data1.dat\", \"data2.dat\"])\n           push!(gp, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data1.dat\n        }\n        ;\n    \\addplot[]\n        {exp(x)};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}In order to add options to the \\nextgroupplot call, simply add arguments in an “option like way” (using @pgf) when you push!julia> @pgf gp = GroupPlot({group_style = { group_size = \"1 by 1\",}, height = \"6cm\", width = \"6cm\"});\n\njulia> @pgf for (expr, data) in zip([\"x^2\"], [\"data2.dat\"])\n           push!(gp, {title = \"Data $data\"}, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]\n    \\nextgroupplot[title={Data data2.dat}]\n    \\addplot[]\n        {x^2};\n    \\addplot[]\n        table[]\n        {\n            data2.dat\n        }\n        ;\n\\end{groupplot}"
+    "text": "A GroupPlot is a way of grouping multiple plots in one figure.GroupPlotExample:julia> @pgf gp = GroupPlot({group_style = { group_size = \"2 by 1\",},\n                                            height = \"6cm\", width = \"6cm\"});\n\njulia> for (expr, data) in zip([\"x^2\", \"exp(x)\"], [\"data1.dat\", \"data2.dat\"])\n           push!(gp, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={2 by 1}}, height={6cm}, width={6cm}]\n    \\addplot\n        {x^2};\n    \\addplot\n        table {data1.dat};\n    \\addplot\n        {exp(x)};\n    \\addplot\n        table {data2.dat};\n\\end{groupplot}In order to add options to the \\nextgroupplot call, simply add arguments in an “option like way” (using @pgf) when you push!julia> @pgf gp = GroupPlot({group_style = { group_size = \"1 by 1\",}, height = \"6cm\", width = \"6cm\"});\n\njulia> @pgf for (expr, data) in zip([\"x^2\"], [\"data2.dat\"])\n           push!(gp, {title = \"Data $data\"}, Plot(Expression(expr)),  Plot(Table(data)))\n       end;\n\njulia> print_tex(gp)\n\\begin{groupplot}[group style={group size={1 by 1}}, height={6cm}, width={6cm}]\n    \\nextgroupplot[title={Data data2.dat}]\n    \\addplot\n        {x^2};\n    \\addplot\n        table {data2.dat};\n\\end{groupplot}"
 },
 
 {
@@ -341,7 +349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PolarAxis",
     "category": "section",
-    "text": "A PolarAxis plots data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}[]\n    \\addplot+[]\n        coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n        }\n        ;\n\\end{polaraxis}"
+    "text": "A PolarAxis plots data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}\n    \\addplot+\n        coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n        }\n        ;\n\\end{polaraxis}"
 },
 
 {
@@ -397,7 +405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "TikzPicture",
     "title": "TikzPicture",
     "category": "section",
-    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendA TikzPicture can contain multiple Axis-like objects.TikzPictureExample:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}[]\n    \\addplot[]\n        coordinates {\n            (1, 2)\n            (2, 4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendA TikzPicture can contain multiple Axis-like objects.TikzPictureExample:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}\n    \\addplot\n        coordinates {\n            (1, 2)\n            (2, 4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
 },
 
 {
@@ -549,7 +557,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.Options",
     "category": "type",
-    "text": "Options passed to PGFPlots for various structures (table, plot, etc).\n\nContents emitted in key = value form, or key when value ≡ nothing. Also see the @pgf convenience macro.\n\n\n\n"
+    "text": "Options(pairs; print_empty)\n\n\nOptions passed to PGFPlots for various structures (table, plot, etc).\n\nContents emitted in key = value form, or key when value ≡ nothing. Also see the @pgf convenience macro.\n\nWhen print_empty = false (the default), empty options are not printed. Use print_empty = true to force printing a [] in this case.\n\n\n\n"
 },
 
 {

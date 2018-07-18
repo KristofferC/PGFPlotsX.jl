@@ -6,10 +6,10 @@
 \usepgfplotslibrary{polar}
 \usepgfplotslibrary{statistics}
 \begin{document}
-\begin{tikzpicture}[]
+\begin{tikzpicture}
 \begin{groupplot}[group style={group size={2 by 1}, xticklabels at={edge bottom}, yticklabels at={edge left}}, no markers]
     \nextgroupplot[]
-    \addplot+[]
+    \addplot+
         table[row sep={\\}]
         {
             \\
@@ -115,7 +115,7 @@
             6.283185307179586  -2.4492935982947064e-16  \\
         }
         ;
-    \addplot+[]
+    \addplot+
         table[row sep={\\}]
         {
             \\
@@ -222,7 +222,7 @@
         }
         ;
     \nextgroupplot[]
-    \addplot+[]
+    \addplot+
         table[row sep={\\}]
         {
             \\
@@ -328,7 +328,7 @@
             6.283185307179586  1.0  \\
         }
         ;
-    \addplot+[]
+    \addplot+
         table[row sep={\\}]
         {
             \\

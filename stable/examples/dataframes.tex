@@ -6,7 +6,7 @@
 \usepgfplotslibrary{polar}
 \usepgfplotslibrary{statistics}
 \begin{document}
-\begin{tikzpicture}[]
+\begin{tikzpicture}
 \begin{axis}[legend pos={south east}, xlabel={Sepal length}, ylabel={Sepal width}]
     \addplot[scatter, only marks, scatter src={explicit symbolic}, scatter/classes={setosa={mark={square*}, blue}, versicolor={mark={triangle*}, red}, virginica={mark={o}, black}}]
         table[row sep={\\}, x={SepalLength}, y={SepalWidth}, meta={Species}]
@@ -314,7 +314,7 @@
               \\
         }
         ;
-    \legend{Setosa, Versicolor, Virginica}
+    \legend{{Setosa}, {Versicolor}, {Virginica}}
 \end{axis}
 \end{tikzpicture}
 \end{document}

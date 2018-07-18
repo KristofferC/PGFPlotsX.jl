@@ -6,7 +6,7 @@
 \usepgfplotslibrary{polar}
 \usepgfplotslibrary{statistics}
 \begin{document}
-\begin{tikzpicture}[]
+\begin{tikzpicture}
 \begin{axis}[title={Quiver plot}, grid={both}]
     \addplot[quiver={u={\thisrow{u}}, v={\thisrow{v}}}, -stealth]
         table[row sep={\\}]
@@ -77,7 +77,7 @@
             6.116814692820414  -0.16560417544830916  1.0  0.9861923022788637  \\
         }
         ;
-    \addlegendentry[] {$\cos(x)$}
+    \addlegendentry {$\cos(x)$}
     \addplot[color={red}, very thick]
         coordinates {
             (-6.283185307179586, 2.4492935982947064e-16)
@@ -145,7 +145,7 @@
             (6.116814692820414, -0.16560417544830916)
         }
         ;
-    \addlegendentry[] {$\sin(x)$}
+    \addlegendentry {$\sin(x)$}
 \end{axis}
 \end{tikzpicture}
 \end{document}
