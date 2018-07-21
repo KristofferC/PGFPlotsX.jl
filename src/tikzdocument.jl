@@ -355,17 +355,7 @@ function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
     if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
         filename = tempname() .* ".pdf"
         save(filename, p)
-        try
-            if Sys.isapple()
-                run(`open $filename`)
-            elseif Sys.islinux() || Sys.isbsd()
-                run(`xdg-open $filename`)
-            elseif Sys.iswindows()
-                run(`start $filename`)
-            end
-        catch e
-            error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))
-        end
+        DefaultApplication.open(filename)
     else
         print(io, p)
     end
