@@ -52,13 +52,17 @@ If you load the DataFrames package, you can also create tables from data frames,
 
     By default, PGFPlots expects rows to be separated in a table with a newline. This can be “fragile” in LaTeX, in the sense that linebreaks may be merged with other whitespace within certain constructs, eg macros. In order to prevent this, this package uses the option `rowsep=\\` by default. This is taken care of automatically, except for inline tables where you have to specify it manually. See the `patch` plot in the [gallery](@ref manual_gallery).
 
-## [Coordinates](@id coordinates_header)
+## [Using coordinates](@id coordinates_header)
 
-Coordinates are a list of points `(x,y)` or `(x,y,z)`. They can be created as:
+Coordinates are a list of points `(x,y)` or `(x,y,z)`. PGFPlotsX wraps these in the [`Coordinate`](@ref) type, but for multiple coordinates, it is recommended that you use the `Coordinates` constructor, which has convenience features like converting non-finite numbers to skipped points (represented by `nothing`).
+
+Strings are also accepted in place of numbers, and can be used for *symbolic* coordinates (eg for categorical data). See [this example](@ref symbolic_coordinates_example).
+
+### `Coordinates`
 
 * `Coordinates(x, y, [z])` where `x` and `y` (and optionally `z`) are lists.
 
-* `Coordinates(points)` where `points` is a list of tuples, e.g. `x = [(1.0, 2.0), (2.0, 4.0)]`.
+* `Coordinates(points)` where `points` is a list of tuples, [`Coordinate`](@ref)s, or `nothing`, e.g. `x = [(1.0, 2.0), (2.0, 4.0)]`.
 
 Errors can be added to `Coordinates` with keywords.
 
@@ -106,6 +110,26 @@ coordinates {
     (2, 4) +- (0.3, 0.1)
     (3, 8) +- (0.5, 0.5)
 }
+```
+
+### Individual coordinates
+
+Use this constructor when you need just a single `Coordinate`, eg as in
+
+```julia
+@pgf Axis(
+    {
+        legend_style =
+        {
+            at = PGFPlotsX.Coordinate(0.5, -0.15),
+            anchor = "north",
+            legend_columns = -1
+        },
+    }, ...)
+```
+
+```@docs
+Coordinate
 ```
 
 ## Expression

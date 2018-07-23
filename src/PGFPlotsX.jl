@@ -14,7 +14,7 @@ using Unicode: lowercase
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, GroupPlot
-export Plot, PlotInc, Plot3, Plot3Inc, Expression, EmptyLine, Coordinates,
+export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
 

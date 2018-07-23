@@ -59,6 +59,37 @@ savefigs("coordinates-errorbars", ans) # hide
 
 ![](coordinates-errorbars.svg)
 
+## [Symbolic coordinates](@id symbolic_coordinates_example)
+
+```@example pgf
+@pgf Axis(
+    {
+        ybar,
+        enlargelimits = 0.15,
+        legend_style =
+        {
+            at = Coordinate(0.5, -0.15),
+            anchor = "north",
+            legend_columns = -1
+        },
+        ylabel = raw"\#participants",
+        symbolic_x_coords=["tool8", "tool9", "tool10"],
+        xtick = "data",
+        nodes_near_coords,
+        nodes_near_coords_align={vertical},
+    },
+    Plot(Coordinates([("tool8", 7), ("tool9", 9), ("tool10", 4)])),
+    Plot(Coordinates([("tool8", 4), ("tool9", 4), ("tool10", 4)])),
+    Plot(Coordinates([("tool8", 1), ("tool9", 1), ("tool10", 1)])),
+    Legend(["used", "understood", "not understood"])
+)
+savefigs("coordinates-symbolic", ans) # hide
+```
+
+[\[.pdf\]](coordinates-symbolic.pdf), [\[generated .tex\]](coordinates-symbolic.tex)
+
+![](coordinates-symbolic.svg)
+
 ## 3D
 
 Use three vectors to construct 3D coordinates.
