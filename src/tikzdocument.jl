@@ -355,7 +355,11 @@ function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
     if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
         filename = tempname() .* ".pdf"
         save(filename, p)
-        DefaultApplication.open(filename)
+        try
+            DefaultApplication.open(filename)
+        catch e
+            error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))
+        end
     else
         print(io, p)
     end
