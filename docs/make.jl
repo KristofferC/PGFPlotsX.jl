@@ -9,6 +9,7 @@ makedocs(
     doctest = true,
     strict = true,
     checkdocs = :none,
+    assets = ["assets/custom.css"],
     pages = Any[
         "Home" => "index.md",
         "Manual" => [
