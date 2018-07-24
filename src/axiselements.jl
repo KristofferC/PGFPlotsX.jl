@@ -97,7 +97,7 @@ Coordinate(x::CoordinateType, y::CoordinateType, z; args...) =
 function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where N
     print(io, "(")
     for (i, x) in enumerate(data)
-        i == 1 || print(io, ", ")
+        i == 1 || print(io, ",")
         print(io, x)
     end
     print(io, ")")
@@ -642,7 +642,7 @@ an axis, its position is irrelevant.
 Legend(labels::AbstractString...) = Legend(collect(String, labels))
 
 print_tex(io::IO, l::Legend) =
-    println(io, "\\legend{{", join(l.labels, "}, {"), "}}")
+    println(io, "\\legend{{", join(l.labels, "},{"), "}}")
 
 ###############
 # LegendEntry #

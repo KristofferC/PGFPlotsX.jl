@@ -15,17 +15,17 @@ end
     @test_throws MethodError Coordinates((1, 2); error = (3, )) # incompatible dims
 
     # valid forms
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1, 2)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1, 2) +- (3, 4)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1,2)" # NOTE important not to have whitespace
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1,2) +- (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); errorminus = (3, 4))) ==
-        "(1, 2) -= (3, 4)"
+        "(1,2) -= (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2);
                                            errorminus = (3, 4),
                                            errorplus = (5, 6))) ==
-                                               "(1, 2) += (5, 6) -= (3, 4)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1, 2) [blue]"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((NaN, 1))) == "(NaN, 1)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate(("a fish", 1))) == "(a fish, 1)"
+                                               "(1,2) += (5,6) -= (3,4)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1,2) [blue]"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((NaN, 1))) == "(NaN,1)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate(("a fish", 1))) == "(a fish,1)"
 
     # convenience constructors
     @test Coordinate(1, 2) == Coordinate((1, 2))
@@ -144,22 +144,22 @@ end
         "graphics[testopt={1}] {filename}\n"
     # coordinates, tables, and plot
     c = Coordinates([(1, 2), (3, 4)])
-    @test repr_tex(c) == "coordinates {\n    (1, 2)\n    (3, 4)\n}\n"
+    @test repr_tex(c) == "coordinates {\n    (1,2)\n    (3,4)\n}\n"
     t = Table(x = 1:2, y = 3:4)
     @test repr_tex(t) == "table[row sep={\\\\}]\n{\n    x  y  \\\\\n    1  3  \\\\\n    2  4  \\\\\n}\n"
     @test repr_tex(@pgf Plot({ no_marks }, c)) ==
-        "\\addplot[no marks]\n    coordinates {\n        (1, 2)\n        (3, 4)\n    }\n    ;\n"
+        "\\addplot[no marks]\n    coordinates {\n        (1,2)\n        (3,4)\n    }\n    ;\n"
     @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
         "\\addplot[no marks]\n    table[row sep={\\\\}]\n    {\n        x  y  \\\\\n" *
         "        1  3  \\\\\n        2  4  \\\\\n    }\n    trailing\n    ;\n"
     # legend
-    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a}, {b}, {c}}\n"
+    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a},{b},{c}}\n"
     l = LegendEntry("a")
     @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
     @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
         "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
-        "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
+        "        coordinates {\n            (1,2)\n            (3,4)\n        }\n" *
         "        ;\n    \\addlegendentry {a}\n\\end{axis}\n"
 end
 

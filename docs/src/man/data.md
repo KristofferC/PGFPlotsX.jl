@@ -77,38 +77,38 @@ julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];
 
 julia> print_tex(Coordinates(x, y))
 coordinates {
-    (1, 2)
-    (2, 4)
-    (3, 8)
+    (1,2)
+    (2,4)
+    (3,8)
 }
 
 julia> print_tex(Coordinates(x, y, z))
 coordinates {
-    (1, 2, -1)
-    (2, 4, -2)
-    (3, 8, -3)
+    (1,2,-1)
+    (2,4,-2)
+    (3,8,-3)
 }
 
 julia> print_tex(Coordinates(x, x.^3))
 coordinates {
-    (1, 1)
-    (2, 8)
-    (3, 27)
+    (1,1)
+    (2,8)
+    (3,27)
 }
 
 julia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))
 coordinates {
-    (1.0, 2.0)
-    (2.0, 4.0)
+    (1.0,2.0)
+    (2.0,4.0)
 }
 
 julia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);
 
 julia> print_tex(c)
 coordinates {
-    (1, 2) +- (0.2, 0.2)
-    (2, 4) +- (0.3, 0.1)
-    (3, 8) +- (0.5, 0.5)
+    (1,2) +- (0.2,0.2)
+    (2,4) +- (0.3,0.1)
+    (3,8) +- (0.5,0.5)
 }
 ```
 
