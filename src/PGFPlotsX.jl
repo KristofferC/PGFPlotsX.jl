@@ -6,6 +6,7 @@ import MacroTools: prewalk, @capture, @forward
 
 using ArgCheck: @argcheck
 using DataStructures: OrderedDict
+import DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
 using Parameters: @unpack
 using StatsBase: midpoints

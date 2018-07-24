@@ -356,13 +356,7 @@ function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
-            if Sys.isapple()
-                run(`open $filename`)
-            elseif Sys.islinux() || Sys.isbsd()
-                run(`xdg-open $filename`)
-            elseif Sys.iswindows()
-                run(`start $filename`)
-            end
+            DefaultApplication.open(filename)
         catch e
             error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))
         end

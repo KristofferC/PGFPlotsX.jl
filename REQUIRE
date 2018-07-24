@@ -1,6 +1,7 @@
 julia 0.7-beta
 ArgCheck
 DataStructures
+DefaultApplication
 DocStringExtensions
 MacroTools
 Missings
