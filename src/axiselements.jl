@@ -33,32 +33,19 @@ end
 # Coordinate #
 ##############
 
-"""
-    EmptyLine()
-
-Placeholder for an empty line.
-
-In 2D plots, PGFPlots treats empty lines as *jumps* by default.
-
-In 3D plots (eg `surf` and similar), it is used as a scanline separator to
-establish the dimensions of the matrix.
-"""
-struct EmptyLine end
-
-print_tex(io::IO, ::EmptyLine) = println(io)
+const CoordinateType = Union{Real, AbstractString}
 
 struct Coordinate{N}
-    data::NTuple{N, Real}
+    data::NTuple{N, CoordinateType}
     error::Union{Nothing, NTuple{N, Real}}
     errorplus::Union{Nothing, NTuple{N, Real}}
     errorminus::Union{Nothing, NTuple{N, Real}}
     meta::Any
-    function Coordinate(data::NTuple{N, Real},
+    function Coordinate(data::NTuple{N, CoordinateType},
                         error::Union{Nothing, NTuple{N, Real}},
                         errorplus::Union{Nothing, NTuple{N, Real}},
                         errorminus::Union{Nothing, NTuple{N, Real}}, meta) where N
         @argcheck 2 ≤ N ≤ 3 "A Coordinate has to be two- or three dimensional."
-        @argcheck all(isfinite, data) "Non-finite coordinate values."
         @argcheck(!(error ≠ nothing &&
                     (errorplus ≠ nothing || errorminus ≠ nothing)),
                   "You can specify *either* `error`, or `errorplus`/`errorminus`.")
@@ -91,10 +78,26 @@ for constructing coordinates from arrays.
 Coordinate(data; error = nothing, errorplus = nothing, errorminus = nothing,
            meta = nothing) = Coordinate(data, error, errorplus, errorminus, meta)
 
-function print_tex(io::IO, data::NTuple{N, Real}) where N
+"""
+    $SIGNATURES
+
+Convenience constructor for 2-dimensional coordinates.
+"""
+Coordinate(x::CoordinateType, y::CoordinateType; args...) =
+    Coordinate((x, y); args...)
+
+"""
+    $SIGNATURES
+
+Convenience constructor for 3-dimensional coordinates.
+"""
+Coordinate(x::CoordinateType, y::CoordinateType, z; args...) =
+    Coordinate((x, y, z); args...)
+
+function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where N
     print(io, "(")
     for (i, x) in enumerate(data)
-        i == 1 || print(io, ", ")
+        i == 1 || print(io, ",")
         print(io, x)
     end
     print(io, ")")
@@ -102,11 +105,11 @@ end
 
 function print_tex(io::IO, coordinate::Coordinate)
     @unpack data, error, errorplus, errorminus, meta = coordinate
-    print_tex(io, data)
+    print_tex(io, data, coordinate)
     function _print_error(prefix, error)
         if error ≠ nothing
             print(io, " $(prefix) ")
-            print_tex(io, error)
+            print_tex(io, error, coordinate)
         end
     end
     _print_error("+-", error)
@@ -121,8 +124,11 @@ function print_tex(io::IO, coordinate::Coordinate)
 end
 
 struct Coordinates{N}
-    data::AbstractVector{Union{EmptyLine, Coordinate{N}}}
+    data::AbstractVector{Union{Nothing, Coordinate{N}}}
 end
+
+coordinate_or_nothing(data, args...) =
+    all(x -> x isa AbstractString || isfinite(x), data) ? Coordinate(data, args...) : nothing
 
 """
     $SIGNATURES
@@ -131,11 +137,11 @@ Convert the argument, which can be any iterable object, to coordinates.
 
 Specifically,
 
-- `Coordinate` and `EmptyLine` are passed through *as is*,
+- `Coordinate` and `Nothing` are passed through *as is*,
 
-- 2- or 3-element tuples of finite real numbers are interpreted as coordinates,
+- 2- or 3-element tuples of finite real numbers or strings are interpreted as coordinates,
 
-- `nothing`, `()`, and coordinates with non-finite numbers become empty lines.
+- `()`, and tuples with non-finite numbers become `nothing` (representing empty lines).
 
 The resulting coordinates are checked for dimension consistency.
 
@@ -145,34 +151,34 @@ The following are equivalent:
 ```julia
 Coordinates((x, 1/x) for x in -5:5)
 Coordinates(x == 0 ? () : (x, 1/x) for x in -5:5)
-Coordinates(x == 0 ? EmptyLine() : Coordinate((x, 1/x)) for x in -5:5)
+Coordinates(x == 0 ? nothing : Coordinate((x, 1/x)) for x in -5:5)
+```
+
+Use `enumerate` to add 1, 2, … for the `x`-axis to an existing set of `y` coordinates:
+```julia
+Coordinates(enumerate([1, 4, 9]))
 ```
 """
 function Coordinates(itr)
     common_N = 0
     check_N(N) = common_N == 0 ? common_N = N :
         @argcheck N == common_N "Incompatible dimensions."
-    ensure_c(::Union{EmptyLine, Nothing, Tuple{}}) = EmptyLine()
+    ensure_c(::Union{Nothing, Tuple{}}) = nothing
     ensure_c(c::Coordinate{N}) where N = (check_N(N); c)
-    function ensure_c(data::NTuple{N, Real}) where N
-        check_N(N)
-        if all(isfinite, data)
-            Coordinate(data)
-        else
-            EmptyLine()
-        end
-    end
     ensure_c(x) = throw(ArgumentError("Can't interpret $x as a coordinate."))
+    function ensure_c(data::NTuple{N, CoordinateType}) where N
+        check_N(N)
+        coordinate_or_nothing(data)
+    end
     data = [ensure_c(data) for data in itr]
+    @argcheck common_N ≠ 0 || "Could not determine dimension from coordinates"
     Coordinates{common_N}(data)
 end
 
 expand_errors(_::Nothing...) = nothing
 
+# mixed reals and `nothing`: replace the latter by 0s
 expand_errors(data::Union{Real, Nothing}...) = map(x -> x isa Nothing ? 0 : x, data)
-
-coordinate_or_emptyline(data, args...) =
-    all(isfinite, data) ? Coordinate(data, args...) : EmptyLine()
 
 """
     $SIGNATURES
@@ -184,11 +190,14 @@ function Coordinates(x::AbstractVector, y::AbstractVector;
                      xerrorplus = nothing, yerrorplus = nothing,
                      xerrorminus = nothing, yerrorminus = nothing,
                      meta = nothing)
-    Coordinates{2}(@. coordinate_or_emptyline(tuple(x, y),
-                                              expand_errors(xerror, yerror),
-                                              expand_errors(xerrorplus, yerrorplus),
-                                              expand_errors(xerrorminus, yerrorminus),
-                                              meta))
+    Coordinates{2}(@. coordinate_or_nothing(tuple(x, y),
+                                            expand_errors(xerror,
+                                                          yerror),
+                                            expand_errors(xerrorplus,
+                                                          yerrorplus),
+                                            expand_errors(xerrorminus,
+                                                          yerrorminus),
+                                            meta))
 end
 
 """
@@ -198,34 +207,34 @@ Three dimensional coordinates from two vectors, with error bars.
 """
 function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector;
                      xerror = nothing, yerror = nothing, zerror = nothing,
-                     xerrorplus = nothing, yerrorplus = nothing, zerrorplus = nothing,
-                     xerrorminus = nothing, yerrorminus = nothing, zerrorminus = nothing,
+                     xerrorplus = nothing, yerrorplus = nothing,
+                     zerrorplus = nothing, xerrorminus = nothing,
+                     yerrorminus = nothing, zerrorminus = nothing,
                      meta = nothing)
-    Coordinates{3}(@. coordinate_or_emptyline(tuple(x, y, z),
-                                              expand_errors(xerror,
-                                                            yerror,
-                                                            zerror),
-                                              expand_errors(xerrorplus,
-                                                            yerrorplus,
-                                                            zerrorplus),
-                                              expand_errors(xerrorminus,
-                                                            yerrorminus,
-                                                            zerrorminus),
-                                              meta))
+    Coordinates{3}(@. coordinate_or_nothing(tuple(x, y, z),
+                                            expand_errors(xerror,
+                                                          yerror,
+                                                          zerror),
+                                            expand_errors(xerrorplus,
+                                                          yerrorplus,
+                                                          zerrorplus),
+                                            expand_errors(xerrorminus,
+                                                          yerrorminus,
+                                                          zerrorminus),
+                                            meta))
 end
 
 """
     $SIGNATURES
 
-Return new coordinates, inserting [`EmptyLine`](@ref) after every `stride`
-lines.
+Return new coordinates, inserting [`nothing`](@ref) after every `stride` lines.
 """
 function insert_scanlines(coordinates::Coordinates{N}, stride) where N
-    data = Vector{Union{EmptyLine, Coordinate{N}}}()
+    data = Vector{Union{Nothing, Coordinate{N}}}()
     for (i, coordinate) in enumerate(coordinates.data)
         push!(data, coordinate)
         if i % stride == 0
-            push!(data, EmptyLine())
+            push!(data, nothing)
         end
     end
     Coordinates(data)
@@ -254,11 +263,13 @@ function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
                      length(x))
 end
 
+print_tex(io::IO, ::Nothing, ::Coordinates) = println(io)
+
 function print_tex(io::IO, coordinates::Coordinates)
     println(io, "coordinates {")
     print_indent(io) do io
         for coordinate in coordinates.data
-            print_tex(io, coordinate)
+            print_tex(io, coordinate, coordinates)
         end
     end
     println(io, "}")
@@ -631,7 +642,7 @@ an axis, its position is irrelevant.
 Legend(labels::AbstractString...) = Legend(collect(String, labels))
 
 print_tex(io::IO, l::Legend) =
-    println(io, "\\legend{{", join(l.labels, "}, {"), "}}")
+    println(io, "\\legend{{", join(l.labels, "},{"), "}}")
 
 ###############
 # LegendEntry #

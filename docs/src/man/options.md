@@ -26,9 +26,9 @@ julia> p = @pgf PlotInc({ "very thick", "mark" => "halfcircle" }, c);
 julia> print_tex(p); # print_tex can be used to preview the generated .tex
 \addplot+[very thick, mark={halfcircle}]
     coordinates {
-        (1, 2)
-        (2, 4)
-        (3, 8)
+        (1,2)
+        (2,4)
+        (3,8)
     }
     ;
 ```
@@ -61,9 +61,9 @@ julia> print_tex(a)
 \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
     \addplot+[smooth]
         coordinates {
-            (1, 2)
-            (2, 4)
-            (3, 8)
+            (1,2)
+            (2,4)
+            (3,8)
         }
         ;
 \end{axis}
@@ -135,9 +135,9 @@ julia> delete!(p, "fill");
 julia> print_tex(p)
 \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
     coordinates {
-        (1, 2)
-        (2, 4)
-        (3, 8)
+        (1,2)
+        (2,4)
+        (3,8)
     }
     ;
 ```

@@ -63,9 +63,9 @@ julia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));
 julia> print_tex(p)
 \addplot3[very thick]
     coordinates {
-        (1, 2, 3)
-        (2, 4, 9)
-        (3, 8, 27)
+        (1,2,3)
+        (2,4,9)
+        (3,8,27)
     }
     ;
 ```
@@ -83,7 +83,7 @@ Example:
 
 ```jldoctest
 julia> print_tex(Legend(["Plot A", "Plot B"]))
-\legend{{Plot A}, {Plot B}}
+\legend{{Plot A},{Plot B}}
 ```
 
 ## [Using LaTeX code directly](@id latex_code_strings)

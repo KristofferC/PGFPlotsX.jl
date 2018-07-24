@@ -8,20 +8,28 @@
 end
 
 @testset "coordinate" begin
+    # invalid coordinates
     @test_throws ArgumentError PGFPlotsX.Coordinate((1, ))    # dimension not 2 or 3
-    @test_throws ArgumentError PGFPlotsX.Coordinate((NaN, 1)) # not finite
     @test_throws ArgumentError PGFPlotsX.Coordinate((1, 2);   # can't specify both
                                               error = (0, 0), errorplus = (0, 0))
     @test_throws MethodError Coordinates((1, 2); error = (3, )) # incompatible dims
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1, 2)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1, 2) +- (3, 4)"
+
+    # valid forms
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1,2)" # NOTE important not to have whitespace
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1,2) +- (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); errorminus = (3, 4))) ==
-        "(1, 2) -= (3, 4)"
+        "(1,2) -= (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2);
                                            errorminus = (3, 4),
                                            errorplus = (5, 6))) ==
-                                               "(1, 2) += (5, 6) -= (3, 4)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1, 2) [blue]"
+                                               "(1,2) += (5,6) -= (3,4)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1,2) [blue]"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate((NaN, 1))) == "(NaN,1)"
+    @test squashed_repr_tex(PGFPlotsX.Coordinate(("a fish", 1))) == "(a fish,1)"
+
+    # convenience constructors
+    @test Coordinate(1, 2) == Coordinate((1, 2))
+    @test Coordinate(1, 2, 3) == Coordinate((1, 2, 3))
 end
 
 @testset "coordinates and convenience constructors" begin
@@ -33,15 +41,15 @@ end
     @test Coordinates(1:2, 3:4).data == PGFPlotsX.Coordinate.([(1, 3), (2, 4)])
     # skip empty
     @test Coordinates([(2, 3), (), nothing]).data ==
-        [PGFPlotsX.Coordinate((2, 3)), EmptyLine(), EmptyLine()]
+        [PGFPlotsX.Coordinate((2, 3)), nothing, nothing]
     @test Coordinates(1:2, 3:4, (1:2)./((3:4)')).data ==
         Coordinates(Any[1, 2, NaN, 1, 2, NaN],
-                        Any[3, 3, NaN, 4, 4, NaN],
-                        Any[1/3, 2/3, NaN, 1/4, 2/4, NaN]).data
+                    Any[3, 3, NaN, 4, 4, NaN],
+                    Any[1/3, 2/3, NaN, 1/4, 2/4, NaN]).data
     # from iterables
     @test Coordinates(enumerate(3:4)).data == PGFPlotsX.Coordinate.([(1, 3), (2, 4)])
     @test Coordinates((x, 1/x) for x in -1:1).data ==
-        [PGFPlotsX.Coordinate((-1, -1.0)), EmptyLine(), PGFPlotsX.Coordinate((1, 1.0))]
+        [PGFPlotsX.Coordinate((-1, -1.0)), nothing, PGFPlotsX.Coordinate((1, 1.0))]
     let x = 1:3,
         y = -1:1,
         z = x ./ y
@@ -136,22 +144,22 @@ end
         "graphics[testopt={1}] {filename}\n"
     # coordinates, tables, and plot
     c = Coordinates([(1, 2), (3, 4)])
-    @test repr_tex(c) == "coordinates {\n    (1, 2)\n    (3, 4)\n}\n"
+    @test repr_tex(c) == "coordinates {\n    (1,2)\n    (3,4)\n}\n"
     t = Table(x = 1:2, y = 3:4)
     @test repr_tex(t) == "table[row sep={\\\\}]\n{\n    x  y  \\\\\n    1  3  \\\\\n    2  4  \\\\\n}\n"
     @test repr_tex(@pgf Plot({ no_marks }, c)) ==
-        "\\addplot[no marks]\n    coordinates {\n        (1, 2)\n        (3, 4)\n    }\n    ;\n"
+        "\\addplot[no marks]\n    coordinates {\n        (1,2)\n        (3,4)\n    }\n    ;\n"
     @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
         "\\addplot[no marks]\n    table[row sep={\\\\}]\n    {\n        x  y  \\\\\n" *
         "        1  3  \\\\\n        2  4  \\\\\n    }\n    trailing\n    ;\n"
     # legend
-    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a}, {b}, {c}}\n"
+    @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a},{b},{c}}\n"
     l = LegendEntry("a")
     @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
     @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
         "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
-        "        coordinates {\n            (1, 2)\n            (3, 4)\n        }\n" *
+        "        coordinates {\n            (1,2)\n            (3,4)\n        }\n" *
         "        ;\n    \\addlegendentry {a}\n\\end{axis}\n"
 end
 

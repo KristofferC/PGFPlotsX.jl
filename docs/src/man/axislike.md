@@ -47,8 +47,8 @@ julia> print_tex(a)
         {x^2};
     \addplot+
         coordinates {
-            (1, 3)
-            (2, 4)
+            (1,3)
+            (2,4)
         }
         ;
 \end{axis}
@@ -121,10 +121,10 @@ julia> print_tex(p)
 \begin{polaraxis}
     \addplot+
         coordinates {
-            (0, 1)
-            (90, 1)
-            (180, 1)
-            (270, 1)
+            (0,1)
+            (90,1)
+            (180,1)
+            (270,1)
         }
         ;
 \end{polaraxis}
