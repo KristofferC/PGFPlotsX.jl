@@ -9,16 +9,16 @@
     color =&gt; &quot;black&quot;,
 }</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><pre><code class="language-none">theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;}
 
-axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre><p>Use <code>{}</code> for empty options that print as <code>[]</code> in LaTeX.</p></div></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/cb3fc212ff490d23c6490591b0fa8aec2b76c652/src/options.jl#L48-L82">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre><p>Use <code>{}</code> for empty options that print as <code>[]</code> in LaTeX.</p></div></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/27f482fa937411829bad5cc821c3afb504bbc7a1/src/options.jl#L48-L82">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 
 julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
 \addplot+[very thick, mark={halfcircle}]
     coordinates {
-        (1, 2)
-        (2, 4)
-        (3, 8)
+        (1,2)
+        (2,4)
+        (3,8)
     }
     ;</code></pre><p>Inside the expression following <code>@pgf</code>, <code>{}</code> expressions can be nested, and can also occur in multiple places.</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis(
            {
@@ -39,9 +39,9 @@ julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
 \begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
     \addplot+[smooth]
         coordinates {
-            (1, 2)
-            (2, 4)
-            (3, 8)
+            (1,2)
+            (2,4)
+            (3,8)
         }
         ;
 \end{axis}</code></pre><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>If you use <code>@pgf</code> inside argument lists, make sure you wrap its argument in parentheses, eg</p><pre><code class="language-julia">Plot(@pgf({ scatter }), some_table)</code></pre><p>Otherwise Julia will also pass the subsequent arguments through <code>@pgf</code>, which results in an error since they are combined into a tuple.</p></div></div><p>Each option is either a standalone <em>keyword</em> (without value, modifying the plot by itself), or a <em>keyword-value pair</em>. Keywords can be entered</p><ol><li><p>as Julia identifiers, which is useful for keywords with no spaces (eg <code>smooth</code>),</p></li><li><p>separated by underscores, which are replaced by spaces (eg <code>only_marks</code> will appear in LaTeX code as <code>only marks</code>),</p></li><li><p>or quoted as strings, eg <code>&quot;very thick&quot;</code>.</p></li></ol><p><em>Values</em> are provided after a <code>=</code>, <code>:</code>, or <code>=&gt;</code>, so the following are equivalent:</p><ol><li><p><code>@pgf { draw = &quot;black&quot; }</code>,</p></li><li><p><code>@pgf { draw : &quot;black&quot; }</code>,</p></li><li><p><code>@pgf { draw =&gt; &quot;black&quot; }</code>.</p></li></ol><p>Values should be valid Julia expressions, as they are evaluated, so you cannot use <code>@pgf { draw = black }</code> unless <code>black</code> is assigned to some Julia value in that context.</p><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>Keys that contain symbols that in Julia are operators (e.g the key <code>&quot;axis background/.style&quot;</code>) have to be entered as strings.</p></div></div><h3><a class="nav-anchor" id="Transformations-1" href="#Transformations-1">Transformations</a></h3><p>In addition to replacing underscores in keys, the following transformations of values are done when the options are written in <code>.tex</code> style:</p><ul><li><p>A list as a value is written as &quot;comma joined&quot; e.g. <code>[1, 2, 3] -&gt; &quot;1, 2, 3&quot;</code>.</p></li><li><p>A tuple as a value is written with braces delimiting the elements e.g. <code>(60, 30) -&gt; {60}{30}</code></p></li></ul><h2><a class="nav-anchor" id="Modifying-options-after-an-object-is-created-1" href="#Modifying-options-after-an-object-is-created-1">Modifying options after an object is created</a></h2><p>It is sometimes convenient to set and get options after an object has been created.</p><p>You can use <code>getindex</code>, <code>setindex!</code> (ie <code>obj[&quot;option&quot;]</code> or <code>obj[&quot;option&quot;] = value</code>, respectively), and <code>delete!</code> just like you would for modifiable associative collections (eg a <code>Dict</code>).</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
@@ -64,9 +64,9 @@ julia&gt; delete!(p, &quot;fill&quot;);
 julia&gt; print_tex(p)
 \addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
     coordinates {
-        (1, 2)
-        (2, 4)
-        (3, 8)
+        (1,2)
+        (2,4)
+        (3,8)
     }
     ;</code></pre><p>You can also merge in options that have been created separately, using <code>merge!</code>:</p><pre><code class="language-julia-repl">julia&gt; a = Axis();
 
