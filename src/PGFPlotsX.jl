@@ -1,5 +1,3 @@
-__precompile__()
-
 module PGFPlotsX
 
 import MacroTools: prewalk, @capture, @forward
