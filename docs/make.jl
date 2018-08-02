@@ -27,7 +27,8 @@ makedocs(
             "examples/tables.md",
             "examples/axislike.md",
             "examples/gallery.md",
-            "examples/juliatypes.md"
+            "examples/juliatypes.md",
+            "examples/convenience.md",
         ]
     ]
 )

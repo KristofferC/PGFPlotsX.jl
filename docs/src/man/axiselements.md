@@ -86,6 +86,15 @@ julia> print_tex(Legend(["Plot A", "Plot B"]))
 \legend{{Plot A},{Plot B}}
 ```
 
+## Horizontal and vertical lines
+
+[`HLine`](@ref) and [`VLine`](@ref) have no equivalent constructs in `pgfplots`, they are provided for convenient drawing of horizontal and vertical lines. When options are used, they are passed to the TikZ function `\draw[...]`.
+
+```@docs
+HLine
+VLine
+```
+
 ## [Using LaTeX code directly](@id latex_code_strings)
 
 In case there is no type defined in this package for some construct, you can use a `String` in an axis, and it is inserted verbatim into the generated LaTeX code. [Raw string literals](https://docs.julialang.org/en/latest/manual/strings/#man-raw-string-literals-1) and the package [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) are useful to avoid a lot of escaping.
