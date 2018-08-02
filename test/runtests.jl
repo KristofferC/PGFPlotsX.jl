@@ -23,6 +23,7 @@ mktempdir() do tmp; cd(tmp) do
     include("test_build.jl")
 end end
 
+Base.CoreLogging.disable_logging(Base.CoreLogging.Warn) # no deprecation messages
 include("../docs/make.jl")
 
 # Run doc stuff, turn off deprecations (this doesn't seem to work on .travis)
