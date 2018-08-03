@@ -313,6 +313,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/axiselements.html#PGFPlotsX.HLine",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.HLine",
+    "category": "type",
+    "text": "HLine([options], y)\n\nA horizontal vertical line at y.\n\n\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.VLine",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.VLine",
+    "category": "type",
+    "text": "VLine([options], x)\n\nA vertical line at x.\n\n\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#Horizontal-and-vertical-lines-1",
+    "page": "Axis elements",
+    "title": "Horizontal and vertical lines",
+    "category": "section",
+    "text": "HLine and VLine have no equivalent constructs in pgfplots, they are provided for convenient drawing of horizontal and vertical lines. When options are used, they are passed to the TikZ function \\draw[...].HLine\nVLine"
+},
+
+{
     "location": "man/axiselements.html#latex_code_strings-1",
     "page": "Axis elements",
     "title": "Using LaTeX code directly",
@@ -966,6 +990,30 @@ var documenterSearchIndex = {"docs": [
     "title": "2D",
     "category": "section",
     "text": "using StatsBase: Histogram, fit\nw = range(-1; stop = 1, length = 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/convenience.html#",
+    "page": "Convenience constructs",
+    "title": "Convenience constructs",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "examples/convenience.html#Convenience-constructs-1",
+    "page": "Convenience constructs",
+    "title": "Convenience constructs",
+    "category": "section",
+    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/convenience.html#Horizontal-and-vertical-lines-1",
+    "page": "Convenience constructs",
+    "title": "Horizontal and vertical lines",
+    "category": "section",
+    "text": "x = range(3.01; stop = 6, length = 100)\ny = @. 1/(x-3) + 3\n@pgf Axis(\n    {\n        ymin = 2.5,\n        ymax = 6,\n        xmin = 2.5\n    },\n    Plot(\n        {\n            no_marks\n        },\n        Table(x, y)\n    ),\n    HLine({ dashed, blue }, 3),\n    VLine({ dotted, red }, 3)\n)\nsavefigs(\"hvline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 ]}
