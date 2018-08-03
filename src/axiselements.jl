@@ -674,3 +674,45 @@ function print_tex(io::IO, legendentry::LegendEntry)
     print(io, name)
     println(io, "}")
 end
+
+###################
+# VLine and HLine #
+###################
+
+struct VLine
+    options::Options
+    x::Real
+end
+
+"""
+    VLine([options], x)
+
+A vertical line at `x`.
+"""
+VLine(x::Real) = VLine(Options(), x)
+
+function print_tex(io::IO, vline::VLine)
+    @unpack options, x = vline
+    print(io, "\\draw")
+    print_options(io, options; newline = false)
+    println(io, "($(x),\\pgfkeysvalueof{/pgfplots/ymin})--($(x),\\pgfkeysvalueof{/pgfplots/ymax});")
+end
+
+struct HLine
+    options::Options
+    y::Real
+end
+
+"""
+    HLine([options], y)
+
+A horizontal vertical line at `y`.
+"""
+HLine(y::Real) = HLine(Options(), y)
+
+function print_tex(io::IO, hline::HLine)
+    @unpack options, y = hline
+    print(io, "\\draw")
+    print_options(io, options; newline = false)
+    println(io, "(\\pgfkeysvalueof{/pgfplots/xmin},$(y))--(\\pgfkeysvalueof{/pgfplots/xmax},$(y));")
+end

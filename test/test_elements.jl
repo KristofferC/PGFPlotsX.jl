@@ -186,3 +186,10 @@ end
     append!(document, ["stuff"])
     @test document.elements == [picture, "stuff"]
 end
+
+@testset "vertical and horizontal lines" begin
+    @test repr_tex((@pgf VLine({blue}, 9))) ==
+        "\\draw[blue] (9,\\pgfkeysvalueof{/pgfplots/ymin})--(9,\\pgfkeysvalueof{/pgfplots/ymax});\n"
+    @test repr_tex((@pgf HLine({dashed}, 4.0))) ==
+        "\\draw[dashed] (\\pgfkeysvalueof{/pgfplots/xmin},4.0)--(\\pgfkeysvalueof{/pgfplots/xmax},4.0);\n"
+end
