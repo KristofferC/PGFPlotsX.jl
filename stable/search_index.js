@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "The @pgf macro",
     "category": "section",
-    "text": "Use the @pgf {} macro to define options.@pgfFor constructors that accept options, they always come first. When omitted, there are assumed to be no options.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = @pgf PlotInc({ \"very thick\", \"mark\" => \"halfcircle\" }, c);\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;Inside the expression following @pgf, {} expressions can be nested, and can also occur in multiple places.julia> @pgf a = Axis(\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           },\n           PlotInc(\n           {\n               smooth\n           },\n           c)\n       );which is converted to LaTeX asjulia> print_tex(a)\n\\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n    \\addplot+[smooth]\n        coordinates {\n            (1, 2)\n            (2, 4)\n            (3, 8)\n        }\n        ;\n\\end{axis}note: Note\nIf you use @pgf inside argument lists, make sure you wrap its argument in parentheses, egPlot(@pgf({ scatter }), some_table)Otherwise Julia will also pass the subsequent arguments through @pgf, which results in an error since they are combined into a tuple.Each option is either a standalone keyword (without value, modifying the plot by itself), or a keyword-value pair. Keywords can be enteredas Julia identifiers, which is useful for keywords with no spaces (eg smooth),\nseparated by underscores, which are replaced by spaces (eg only_marks will appear in LaTeX code as only marks),\nor quoted as strings, eg \"very thick\".Values are provided after a =, :, or =>, so the following are equivalent:@pgf { draw = \"black\" },\n@pgf { draw : \"black\" },\n@pgf { draw => \"black\" }.Values should be valid Julia expressions, as they are evaluated, so you cannot use @pgf { draw = black } unless black is assigned to some Julia value in that context.note: Note\nKeys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered as strings."
+    "text": "Use the @pgf {} macro to define options.@pgfFor constructors that accept options, they always come first. When omitted, there are assumed to be no options.julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = @pgf PlotInc({ \"very thick\", \"mark\" => \"halfcircle\" }, c);\n\njulia> print_tex(p); # print_tex can be used to preview the generated .tex\n\\addplot+[very thick, mark={halfcircle}]\n    coordinates {\n        (1,2)\n        (2,4)\n        (3,8)\n    }\n    ;Inside the expression following @pgf, {} expressions can be nested, and can also occur in multiple places.julia> @pgf a = Axis(\n           {\n               \"axis background/.style\" =\n               {\n                   shade,\n                   top_color = \"gray\",\n                   bottom_color = \"white\",\n               },\n               ymode = \"log\"\n           },\n           PlotInc(\n           {\n               smooth\n           },\n           c)\n       );which is converted to LaTeX asjulia> print_tex(a)\n\\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]\n    \\addplot+[smooth]\n        coordinates {\n            (1,2)\n            (2,4)\n            (3,8)\n        }\n        ;\n\\end{axis}note: Note\nIf you use @pgf inside argument lists, make sure you wrap its argument in parentheses, egPlot(@pgf({ scatter }), some_table)Otherwise Julia will also pass the subsequent arguments through @pgf, which results in an error since they are combined into a tuple.Each option is either a standalone keyword (without value, modifying the plot by itself), or a keyword-value pair. Keywords can be enteredas Julia identifiers, which is useful for keywords with no spaces (eg smooth),\nseparated by underscores, which are replaced by spaces (eg only_marks will appear in LaTeX code as only marks),\nor quoted as strings, eg \"very thick\".Values are provided after a =, :, or =>, so the following are equivalent:@pgf { draw = \"black\" },\n@pgf { draw : \"black\" },\n@pgf { draw => \"black\" }.Values should be valid Julia expressions, as they are evaluated, so you cannot use @pgf { draw = black } unless black is assigned to some Julia value in that context.note: Note\nKeys that contain symbols that in Julia are operators (e.g the key \"axis background/.style\") have to be entered as strings."
 },
 
 {
@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Options",
     "title": "Modifying options after an object is created",
     "category": "section",
-    "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1, 2)\n        (2, 4)\n        (3, 8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}An alternative to using merge! is using  ... to splice an option into another one, e.g.julia> theme = @pgf {xmajorgrids, ymajorgrids};\n\njulia> a = Axis(\n           @pgf {theme..., title = \"Foo\"}\n       );\n\njulia> print_tex(a)\n\\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved."
+    "text": "It is sometimes convenient to set and get options after an object has been created.You can use getindex, setindex! (ie obj[\"option\"] or obj[\"option\"] = value, respectively), and delete! just like you would for modifiable associative collections (eg a Dict).julia> c = Coordinates([1, 2, 3], [2, 4, 8]);\n\njulia> p = PlotInc(c);\n\njulia> p[\"fill\"] = \"blue\";\n\njulia> p[\"fill\"]\n\"blue\"\n\njulia> @pgf p[\"axis background/.style\"] = { shade, top_color = \"gray\", bottom_color = \"white\" };\n\njulia> p[\"axis background/.style\"][\"top_color\"];\n\njulia> p[\"very thick\"] = nothing # Set a value-less options;\n\njulia> delete!(p, \"fill\");\n\njulia> print_tex(p)\n\\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]\n    coordinates {\n        (1,2)\n        (2,4)\n        (3,8)\n    }\n    ;You can also merge in options that have been created separately, using merge!:julia> a = Axis();\n\njulia> @pgf opts = {xmin = 0, ymax = 1, ybar};\n\njulia> merge!(a, opts);\n\njulia> print_tex(a)\n\\begin{axis}[xmin={0}, ymax={1}, ybar]\n\\end{axis}An alternative to using merge! is using  ... to splice an option into another one, e.g.julia> theme = @pgf {xmajorgrids, ymajorgrids};\n\njulia> a = Axis(\n           @pgf {theme..., title = \"Foo\"}\n       );\n\njulia> print_tex(a)\n\\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]\n\\end{axis}It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved."
 },
 
 {
@@ -145,19 +145,43 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/data.html#coordinates_header-1",
+    "page": "Data",
+    "title": "Using coordinates",
+    "category": "section",
+    "text": "Coordinates are a list of points (x,y) or (x,y,z). PGFPlotsX wraps these in the Coordinate type, but for multiple coordinates, it is recommended that you use the Coordinates constructor, which has convenience features like converting non-finite numbers to skipped points (represented by nothing).Strings are also accepted in place of numbers, and can be used for symbolic coordinates (eg for categorical data). See this example."
+},
+
+{
     "location": "man/data.html#PGFPlotsX.Coordinates",
     "page": "Data",
     "title": "PGFPlotsX.Coordinates",
     "category": "type",
-    "text": "Coordinates(itr)\n\n\nConvert the argument, which can be any iterable object, to coordinates.\n\nSpecifically,\n\nCoordinate and EmptyLine are passed through as is,\n2- or 3-element tuples of finite real numbers are interpreted as coordinates,\nnothing, (), and coordinates with non-finite numbers become empty lines.\n\nThe resulting coordinates are checked for dimension consistency.\n\nExamples\n\nThe following are equivalent:\n\nCoordinates((x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? () : (x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? EmptyLine() : Coordinate((x, 1/x)) for x in -5:5)\n\n\n\n\n\nCoordinates(x, y; xerror, yerror, xerrorplus, yerrorplus, xerrorminus, yerrorminus, meta)\n\n\nTwo dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; xerror, yerror, zerror, xerrorplus, yerrorplus, zerrorplus, xerrorminus, yerrorminus, zerrorminus, meta)\n\n\nThree dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; meta)\n\n\nConstruct coordinates from a matrix of values and edge vectors, such that z[i,j] corresponds to x[i] and y[j]. Empty scanlines are inserted, consistently with the mesh/ordering=x varies option of PGFPlots (the default).\n\nx = range(0; stop = 1, length = 10)\ny = range(-1; stop = 2, length = 13)\nz = sin.(x) + cos.(y\')\nCoordinates(x, y, z)\n\n\n\n\n\n"
+    "text": "Coordinates(itr)\n\n\nConvert the argument, which can be any iterable object, to coordinates.\n\nSpecifically,\n\nCoordinate and Nothing are passed through as is,\n2- or 3-element tuples of finite real numbers or strings are interpreted as coordinates,\n(), and tuples with non-finite numbers become nothing (representing empty lines).\n\nThe resulting coordinates are checked for dimension consistency.\n\nExamples\n\nThe following are equivalent:\n\nCoordinates((x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? () : (x, 1/x) for x in -5:5)\nCoordinates(x == 0 ? nothing : Coordinate((x, 1/x)) for x in -5:5)\n\nUse enumerate to add 1, 2, … for the x-axis to an existing set of y coordinates:\n\nCoordinates(enumerate([1, 4, 9]))\n\n\n\n\n\nCoordinates(x, y; xerror, yerror, xerrorplus, yerrorplus, xerrorminus, yerrorminus, meta)\n\n\nTwo dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; xerror, yerror, zerror, xerrorplus, yerrorplus, zerrorplus, xerrorminus, yerrorminus, zerrorminus, meta)\n\n\nThree dimensional coordinates from two vectors, with error bars.\n\n\n\n\n\nCoordinates(x, y, z; meta)\n\n\nConstruct coordinates from a matrix of values and edge vectors, such that z[i,j] corresponds to x[i] and y[j]. Empty scanlines are inserted, consistently with the mesh/ordering=x varies option of PGFPlots (the default).\n\nx = range(0; stop = 1, length = 10)\ny = range(-1; stop = 2, length = 13)\nz = sin.(x) + cos.(y\')\nCoordinates(x, y, z)\n\n\n\n\n\n"
 },
 
 {
-    "location": "man/data.html#coordinates_header-1",
+    "location": "man/data.html#Coordinates-1",
     "page": "Data",
     "title": "Coordinates",
     "category": "section",
-    "text": "Coordinates are a list of points (x,y) or (x,y,z). They can be created as:Coordinates(x, y, [z]) where x and y (and optionally z) are lists.\nCoordinates(points) where points is a list of tuples, e.g. x = [(1.0, 2.0), (2.0, 4.0)].Errors can be added to Coordinates with keywords.CoordinatesExamples:julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];\n\njulia> print_tex(Coordinates(x, y))\ncoordinates {\n    (1, 2)\n    (2, 4)\n    (3, 8)\n}\n\njulia> print_tex(Coordinates(x, y, z))\ncoordinates {\n    (1, 2, -1)\n    (2, 4, -2)\n    (3, 8, -3)\n}\n\njulia> print_tex(Coordinates(x, x.^3))\ncoordinates {\n    (1, 1)\n    (2, 8)\n    (3, 27)\n}\n\njulia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))\ncoordinates {\n    (1.0, 2.0)\n    (2.0, 4.0)\n}\n\njulia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);\n\njulia> print_tex(c)\ncoordinates {\n    (1, 2) +- (0.2, 0.2)\n    (2, 4) +- (0.3, 0.1)\n    (3, 8) +- (0.5, 0.5)\n}"
+    "text": "Coordinates(x, y, [z]) where x and y (and optionally z) are lists.\nCoordinates(points) where points is a list of tuples, Coordinates, or nothing, e.g. x = [(1.0, 2.0), (2.0, 4.0)].Errors can be added to Coordinates with keywords.CoordinatesExamples:julia> x = [1, 2, 3]; y = [2, 4, 8]; z = [-1, -2, -3];\n\njulia> print_tex(Coordinates(x, y))\ncoordinates {\n    (1,2)\n    (2,4)\n    (3,8)\n}\n\njulia> print_tex(Coordinates(x, y, z))\ncoordinates {\n    (1,2,-1)\n    (2,4,-2)\n    (3,8,-3)\n}\n\njulia> print_tex(Coordinates(x, x.^3))\ncoordinates {\n    (1,1)\n    (2,8)\n    (3,27)\n}\n\njulia> print_tex(Coordinates([(1.0, 2.0), (2.0, 4.0)]))\ncoordinates {\n    (1.0,2.0)\n    (2.0,4.0)\n}\n\njulia> c = Coordinates(x, y, xerror = [0.2, 0.3, 0.5], yerror = [0.2, 0.1, 0.5]);\n\njulia> print_tex(c)\ncoordinates {\n    (1,2) +- (0.2,0.2)\n    (2,4) +- (0.3,0.1)\n    (3,8) +- (0.5,0.5)\n}"
+},
+
+{
+    "location": "man/data.html#PGFPlotsX.Coordinate",
+    "page": "Data",
+    "title": "PGFPlotsX.Coordinate",
+    "category": "type",
+    "text": "Coordinate(data; error, errorplus, errorminus, meta)\n\n\nConstruct a coordinate, with optional error bars and metadata. data should be a 2- or 3-element tuples of finite real numbers.\n\nYou can specify either\n\nerror, which will then be used for error bars in both directions, or\nerrorplus and/or errorminus, for asymmetrical error bars.\n\nError values can be tuples of the same kind as data, or nothing.\n\nMetadata can be provided in meta.\n\nUsers rarely need to use this constructor, see methods of Coordinates for constructing coordinates from arrays.\n\n\n\n\n\nCoordinate(x, y; args...)\n\n\nConvenience constructor for 2-dimensional coordinates.\n\n\n\n\n\nCoordinate(x, y, z; args...)\n\n\nConvenience constructor for 3-dimensional coordinates.\n\n\n\n\n\n"
+},
+
+{
+    "location": "man/data.html#Individual-coordinates-1",
+    "page": "Data",
+    "title": "Individual coordinates",
+    "category": "section",
+    "text": "Use this constructor when you need just a single Coordinate, eg as in@pgf Axis(\n    {\n        legend_style =\n        {\n            at = PGFPlotsX.Coordinate(0.5, -0.15),\n            anchor = \"north\",\n            legend_columns = -1\n        },\n    }, ...)Coordinate"
 },
 
 {
@@ -261,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Plot3",
     "category": "section",
-    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3D graphics. Otherwise it works the same as Plot. The incremental variant is Plot3Inc.Plot3\nPlot3IncExample:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));\n\njulia> print_tex(p)\n\\addplot3[very thick]\n    coordinates {\n        (1, 2, 3)\n        (2, 4, 9)\n        (3, 8, 27)\n    }\n    ;"
+    "text": "Plot3 will use the \\addplot3 command instead of \\addplot to draw 3D graphics. Otherwise it works the same as Plot. The incremental variant is Plot3Inc.Plot3\nPlot3IncExample:julia> x, y, z = [1, 2, 3], [2, 4, 8], [3, 9, 27];\n\njulia> p = @pgf Plot3({ very_thick }, Coordinates(x, y, z));\n\njulia> print_tex(p)\n\\addplot3[very thick]\n    coordinates {\n        (1,2,3)\n        (2,4,9)\n        (3,8,27)\n    }\n    ;"
 },
 
 {
@@ -285,7 +309,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Legends",
     "category": "section",
-    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{{Plot A}, {Plot B}}"
+    "text": "Legend\nLegendEntryA Legend can be used to add legends to an axis, for multiple plots at the same time. In contrast, LegendEntry applies to the preceding plot.Example:julia> print_tex(Legend([\"Plot A\", \"Plot B\"]))\n\\legend{{Plot A},{Plot B}}"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.HLine",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.HLine",
+    "category": "type",
+    "text": "HLine([options], y)\n\nA horizontal vertical line at y.\n\n\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#PGFPlotsX.VLine",
+    "page": "Axis elements",
+    "title": "PGFPlotsX.VLine",
+    "category": "type",
+    "text": "VLine([options], x)\n\nA vertical line at x.\n\n\n\n\n\n"
+},
+
+{
+    "location": "man/axiselements.html#Horizontal-and-vertical-lines-1",
+    "page": "Axis elements",
+    "title": "Horizontal and vertical lines",
+    "category": "section",
+    "text": "HLine and VLine have no equivalent constructs in pgfplots, they are provided for convenient drawing of horizontal and vertical lines. When options are used, they are passed to the TikZ function \\draw[...].HLine\nVLine"
 },
 
 {
@@ -325,7 +373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "Axis",
     "category": "section",
-    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\",\n              ylabel = \"y\",\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n    \\addplot+\n        coordinates {\n            (1, 3)\n            (2, 4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
+    "text": "AxisAxis make up the labels and titles etc in the figure and is the standard way of wrapping plots, represented in TeX as\\begin{axis} [...]\n    ...\n\\end{axis}Examples:julia> @pgf a = Axis({\n              xlabel = \"x\",\n              ylabel = \"y\",\n              title = \"Figure\"\n          },\n          PlotInc( Expression(\"x^2\")));\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n\\end{axis}\n\njulia> push!(a, PlotInc(Coordinates([1, 2], [3, 4])));\n\n\njulia> print_tex(a)\n\\begin{axis}[xlabel={x}, ylabel={y}, title={Figure}]\n    \\addplot+\n        {x^2};\n    \\addplot+\n        coordinates {\n            (1,3)\n            (2,4)\n        }\n        ;\n\\end{axis}Any struct can be pushed into an Axis. The LaTeX code that is generated is the result of PGFPlotsX.print_tex(io::IO, t::T, ::Axis), where T is the type of the struct. Pushed strings are written out verbatim."
 },
 
 {
@@ -349,7 +397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PolarAxis",
     "category": "section",
-    "text": "A PolarAxis plots data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}\n    \\addplot+\n        coordinates {\n            (0, 1)\n            (90, 1)\n            (180, 1)\n            (270, 1)\n        }\n        ;\n\\end{polaraxis}"
+    "text": "A PolarAxis plots data on a polar grid.Example:julia> p = PolarAxis( PlotInc( Coordinates([0, 90, 180, 270], [1, 1, 1, 1])));\n\njulia> print_tex(p)\n\\begin{polaraxis}\n    \\addplot+\n        coordinates {\n            (0,1)\n            (90,1)\n            (180,1)\n            (270,1)\n        }\n        ;\n\\end{polaraxis}"
 },
 
 {
@@ -405,7 +453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "TikzPicture",
     "title": "TikzPicture",
     "category": "section",
-    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendA TikzPicture can contain multiple Axis-like objects.TikzPictureExample:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}\n    \\addplot\n        coordinates {\n            (1, 2)\n            (2, 4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
+    "text": "DocTestSetup = quote\n    using PGFPlotsX\nendA TikzPicture can contain multiple Axis-like objects.TikzPictureExample:julia> tp = @pgf TikzPicture({ \"scale\" => 1.5 }, Axis(Plot(Coordinates([1, 2], [2, 4]))));\n\njulia> print_tex(tp)\n\\begin{tikzpicture}[scale={1.5}]\n\\begin{axis}\n    \\addplot\n        coordinates {\n            (1,2)\n            (2,4)\n        }\n        ;\n\\end{axis}\n\\end{tikzpicture}"
 },
 
 {
@@ -614,6 +662,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Error bars",
     "category": "section",
     "text": "Use xerror, xerrorplus, xerrorminus, yerror etc. for error bars.x = range(0; stop = 2π, length = 20)\n@pgf Plot(\n    {\n        \"no marks\",\n        \"error bars/y dir=both\",\n        \"error bars/y explicit\",\n    },\n    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))\n)\nsavefigs(\"coordinates-errorbars\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/coordinates.html#symbolic_coordinates_example-1",
+    "page": "Coordinates",
+    "title": "Symbolic coordinates",
+    "category": "section",
+    "text": "@pgf Axis(\n    {\n        ybar,\n        enlargelimits = 0.15,\n        legend_style =\n        {\n            at = Coordinate(0.5, -0.15),\n            anchor = \"north\",\n            legend_columns = -1\n        },\n        ylabel = raw\"\\#participants\",\n        symbolic_x_coords=[\"tool8\", \"tool9\", \"tool10\"],\n        xtick = \"data\",\n        nodes_near_coords,\n        nodes_near_coords_align={vertical},\n    },\n    Plot(Coordinates([(\"tool8\", 7), (\"tool9\", 9), (\"tool10\", 4)])),\n    Plot(Coordinates([(\"tool8\", 4), (\"tool9\", 4), (\"tool10\", 4)])),\n    Plot(Coordinates([(\"tool8\", 1), (\"tool9\", 1), (\"tool10\", 1)])),\n    Legend([\"used\", \"understood\", \"not understood\"])\n)\nsavefigs(\"coordinates-symbolic\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -934,6 +990,30 @@ var documenterSearchIndex = {"docs": [
     "title": "2D",
     "category": "section",
     "text": "using StatsBase: Histogram, fit\nw = range(-1; stop = 1, length = 100) .^ 3\nxy = vec(tuple.(w, w\'))\nh = fit(Histogram, (first.(xy), last.(xy)), closed = :left)\n@pgf Axis(\n    {\n        view = (0, 90),\n        colorbar,\n        \"colormap/jet\"\n    },\n    Plot3(\n        {\n            surf,\n            shader = \"flat\",\n\n        },\n        Table(h))\n)\nsavefigs(\"histogram-2d\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/convenience.html#",
+    "page": "Convenience constructs",
+    "title": "Convenience constructs",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "examples/convenience.html#Convenience-constructs-1",
+    "page": "Convenience constructs",
+    "title": "Convenience constructs",
+    "category": "section",
+    "text": "using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/convenience.html#Horizontal-and-vertical-lines-1",
+    "page": "Convenience constructs",
+    "title": "Horizontal and vertical lines",
+    "category": "section",
+    "text": "x = range(3.01; stop = 6, length = 100)\ny = @. 1/(x-3) + 3\n@pgf Axis(\n    {\n        ymin = 2.5,\n        ymax = 6,\n        xmin = 2.5\n    },\n    Plot(\n        {\n            no_marks\n        },\n        Table(x, y)\n    ),\n    HLine({ dashed, blue }, 3),\n    VLine({ dotted, red }, 3)\n)\nsavefigs(\"hvline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 ]}
