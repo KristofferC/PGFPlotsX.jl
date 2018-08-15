@@ -82,4 +82,13 @@ function __init__()
                                   histogram.weights)
         end
     end
+
+    @require Juno="e5e0dc1b-0480-54bc-9374-aad01c23163d" begin
+        Juno.Media.media(_SHOWABLE, Juno.Media.Plot)
+        function Juno.Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
+            f = tempname() * ((!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png")
+            save(f, p; dpi = _JUNO_DPI, showing_ide=true)
+            Juno.Media.render(pane, HTML("<div><img src=\"$f\" /></div>"))
+        end
+    end
 end
