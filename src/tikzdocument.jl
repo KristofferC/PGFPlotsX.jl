@@ -293,17 +293,6 @@ _JUNO_DPI = 150
 show_juno_png(v::Bool) = global _JUNO_PNG = v
 dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
 
-@require Juno="e5e0dc1b-0480-54bc-9374-aad01c23163d" begin
-    import Media
-    import Hiccup
-    Media.media(_SHOWABLE, Media.Plot)
-    function Media.render(pane::Juno.PlotPane, p::_SHOWABLE)
-        f = tempname() * ((!_JUNO_PNG && HAVE_PDFTOSVG) ? ".svg" : ".png")
-        save(f, p; dpi = _JUNO_DPI, showing_ide=true)
-        Media.render(pane, Hiccup.div(Hiccup.img(src = f)))
-    end
-end
-
 if HAVE_PDFTOPPM
     function savepng(filename::String, td::TikzDocument;
                      latex_engine = latexengine(),
