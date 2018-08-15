@@ -10,10 +10,10 @@ PKGNAME="PGFPlotsX"
 cd /mnt && if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
 
 # run tests
-$JULIABIN -e "Pkg.clone(\"/mnt/\", \"$PKGNAME\"); Pkg.build(\"$PKGNAME\"); Pkg.test(\"$PKGNAME\"; coverage=true)"
+$JULIABIN -e "import Pkg; Pkg.clone(\"/mnt/\", \"$PKGNAME\"); Pkg.build(\"$PKGNAME\"); Pkg.test(\"$PKGNAME\"; coverage=true)"
 TEST_EXIT=$?                    # return with this
 
 # save coverage results back to host
-PKGDIR=`$JULIABIN -e "print(Pkg.dir(\"$PKGNAME\"))"`
+PKGDIR=`$JULIABIN -e "import Pkg; print(Pkg.dir(\"$PKGNAME\"))"`
 rsync -mav --include="*/" --include="*.cov" --exclude="*" $PKGDIR/ /mnt/
 exit $TEST_EXIT
