@@ -1,4 +1,18 @@
+const __is_juno = Ref(false)
+
 function __init__()
+
+    @require Juno="e5e0dc1b-0480-54bc-9374-aad01c23163d" begin
+        __is_juno[] = true
+    end
+
+    pushdisplay(PGFPlotsXDisplay())
+    atreplinit(i -> begin
+        if PlotDisplay() in Base.Multimedia.displays
+            popdisplay(PGFPlotsXDisplay())
+        end
+        pushdisplay(PGFPlotsXDisplay())
+    end)
 
     @require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" begin
         function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
