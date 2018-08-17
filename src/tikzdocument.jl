@@ -288,11 +288,6 @@ if HAVE_PDFTOSVG
     end
 end
 
-_JUNO_PNG = false
-_JUNO_DPI = 150
-show_juno_png(v::Bool) = global _JUNO_PNG = v
-dpi_juno_png(dpi::Int) = global _JUNO_DPI = dpi
-
 if HAVE_PDFTOPPM
     function savepng(filename::String, td::TikzDocument;
                      latex_engine = latexengine(),
@@ -336,12 +331,11 @@ end
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
-_is_juno()   = isdefined(Main, :Juno) && Main.Juno.isactive()
 _is_vscode() = isdefined(Main, :_vscodeserver)
-_is_ide()    = _is_ijulia() || _is_juno() || _is_vscode()
+_is_ide()    = _is_ijulia() || _is_vscode()
 
 function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
-    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && !_is_juno() && isdefined(Base, :active_repl)
+    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && isdefined(Base, :active_repl)
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
