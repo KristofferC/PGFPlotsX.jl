@@ -19,6 +19,8 @@ export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
 
 const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 
+struct PGFPlotsXDisplay <: AbstractDisplay end
+
 """
 A file which is spliced directly to the preamble. Customize the file at this
 path for site-specific setting that apply for every plot.

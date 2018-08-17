@@ -274,14 +274,14 @@ if HAVE_PDFTOSVG
             global showing_Ijulia = false
         end
         s = read(filename, String)
-        s = replace(s, "glyph", "glyph-$(_tikzid)-")
-        s = replace(s, "\"clip", "\"clip-$(_tikzid)-")
-        s = replace(s, "#clip", "#clip-$(_tikzid)-")
-        s = replace(s, "\"image", "\"image-$(_tikzid)-")
-        s = replace(s, "#image", "#image-$(_tikzid)-")
-        s = replace(s, "linearGradient id=\"linear", "linearGradient id=\"linear-$(_tikzid)-")
-        s = replace(s, "#linear", "#linear-$(_tikzid)-")
-        s = replace(s, "image id=\"", "image style=\"image-rendering: pixelated;\" id=\"")
+        s = replace(s, "glyph" => "glyph-$(_tikzid)-")
+        s = replace(s, "\"clip" => "\"clip-$(_tikzid)-")
+        s = replace(s, "#clip" => "#clip-$(_tikzid)-")
+        s = replace(s, "\"image" => "\"image-$(_tikzid)-")
+        s = replace(s, "#image" => "#image-$(_tikzid)-")
+        s = replace(s, "linearGradient id=\"linear" => "linearGradient id=\"linear-$(_tikzid)-")
+        s = replace(s, "#linear" => "#linear-$(_tikzid)-")
+        s = replace(s, "image id=\"" => "image style=\"image-rendering: pixelated;\" id=\"")
         _tikzid += 1
         println(f, s)
         rm(filename; force = true)
@@ -332,10 +332,11 @@ _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_vscode() = isdefined(Main, :_vscodeserver)
-_is_ide()    = _is_ijulia() || _is_vscode()
+_is_juno()   = __is_juno[]
+_is_ide()    = _is_ijulia() || _is_vscode() || _is_juno()
 
-function Base.show(io::IO, ::MIME"text/plain", p::_SHOWABLE)
-    if isinteractive() && _DISPLAY_PDF && !_is_ijulia() && isdefined(Base, :active_repl)
+function Base.display(::PGFPlotsXDisplay, p::_SHOWABLE)
+    if _DISPLAY_PDF
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
