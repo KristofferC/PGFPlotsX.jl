@@ -371,7 +371,6 @@ savefigs("groupplot-nested", ans) # hide
         :x => [0, 1, 2, 3, 2, 4],
         :y => [0, 1, 0, 1, 0, 0],
         :c => [0.2, 0, 1, 0, 0.5, 0.5])))
-
 savefigs("patch-inline", ans) # hide
 ```
 
