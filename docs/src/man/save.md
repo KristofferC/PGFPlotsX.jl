@@ -2,7 +2,7 @@
 
 ## Jupyter
 
-Figures are shown in `svg` format when evaluated in Jupyter. For this you need the `pdf2svg` software installed. If you want to show them in `png` format (because perhaps is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show.
+Figures are shown in `svg` format when evaluated in Jupyter. For this you need the `pdf2svg` software installed. If you want to show them in `png` format (perhaps `svg` is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show.
 
 ## Juno
 
