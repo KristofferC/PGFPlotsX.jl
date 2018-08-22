@@ -901,7 +901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "PGFPlots manual gallery",
     "title": "Patch",
     "category": "section",
-    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = \"\\\\\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = \"\\\\\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
