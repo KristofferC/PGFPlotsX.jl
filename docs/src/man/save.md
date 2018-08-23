@@ -1,15 +1,8 @@
 #  Showing / Exporting figures
 
-## Jupyter
+## Jupyter, Juno
 
-Figures are shown in `svg` format when evaluated in Jupyter. For this you need the `pdf2svg` software installed. If you want to show them in `png` format (because perhaps is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show.
-
-## Juno
-
-Figures are shown in the Juno plot pane as `svg`s by default. If you want to show them as `png`, run `show_juno_png(true)`, (`false` to go back to `svg`).
-To set the dpi of the figures in Juno when using `png`, run `dpi_juno_png(dpi::Int)`.
-If you are on macOS and there are problems finding the latex executable, see [this isssue](https://github.com/atom/atom/issues/6956).
-Starting Atom through the terminal seems to work around it.
+Figures are shown in `svg` format when evaluated in Jupyter or Juno. For this you need the `pdf2svg` software installed. If you want to show figures in `png` format (because perhaps the svg format is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show.
 
 ## REPL
 
