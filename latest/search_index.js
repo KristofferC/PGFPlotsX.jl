@@ -489,19 +489,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Jupyter-1",
+    "location": "man/save.html#Jupyter,-Juno-1",
     "page": "Showing / Exporting figures",
-    "title": "Jupyter",
+    "title": "Jupyter, Juno",
     "category": "section",
-    "text": "Figures are shown in svg format when evaluated in Jupyter. For this you need the pdf2svg software installed. If you want to show them in png format (because perhaps is too large), you can use display(MIME\"image/png\", p) where p is the figure to show."
-},
-
-{
-    "location": "man/save.html#Juno-1",
-    "page": "Showing / Exporting figures",
-    "title": "Juno",
-    "category": "section",
-    "text": "Figures are shown in the Juno plot pane as svgs by default. If you want to show them as png, run show_juno_png(true), (false to go back to svg). To set the dpi of the figures in Juno when using png, run dpi_juno_png(dpi::Int). If you are on macOS and there are problems finding the latex executable, see this isssue. Starting Atom through the terminal seems to work around it."
+    "text": "Figures are shown in svg format when evaluated in Jupyter or Juno. For this you need the pdf2svg software installed. If you want to show figures in png format (because perhaps the svg format is too large), you can use display(MIME\"image/png\", p) where p is the figure to show. In Juno, if you are on macOS and there are problems finding the latex executable, see this issue. Starting Atom from the terminal seems to work around it."
 },
 
 {
