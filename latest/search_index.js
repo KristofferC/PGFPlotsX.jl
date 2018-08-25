@@ -33,6 +33,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Learning-about-PGFPlots-1",
+    "page": "Home",
+    "title": "Learning about PGFPlots",
+    "category": "section",
+    "text": "PGFPlotsX does not replicate the PGFPlots documentation. In order to make the best use of this library, you should become familiar with at least the outline of the PGFPlots manual, so that you know about features (plot types, controlling axes and appearance, …) and can look them up when they are needed. If you have PGFPlots installed, a local copy of this manual should be accessible; for example in TeXLive you can open it withtexdoc pgfplotsStudying this documentation, especially the manual gallery and other related examples, you will gain a good understanding of how Julia code can be used to generate LaTeX output for PGFPlots easily.Other useful sources of examples include:the PGFplots examples gallery,\nthe collection of plots from the reference manuals."
+},
+
+{
     "location": "man/structs.html#",
     "page": "Overview",
     "title": "Overview",
