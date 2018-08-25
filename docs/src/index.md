@@ -23,3 +23,19 @@ For `png` figures `pdftoppm` is required. This should by default on Linux and on
 !!! note
 
     If you installed a new LaTeX engine, `pdf2svg` or `pdftoppm` after you installed *PGFPlotsX* you need to run `Pkg.build("PGFPlotsX")` for this to be reflected. The output from `Pkg.build` should tell you what LaTeX engines and figure-converters it finds.
+
+## Learning about PGFPlots
+
+**PGFPlotsX does not replicate the PGFPlots documentation.** In order to make the best use of this library, you should become familiar with *at least the outline* of the [PGFPlots manual](http://pgfplots.sourceforge.net/pgfplots.pdf), so that you know about features (plot types, controlling axes and appearance, …) and can look them up when they are needed. If you have PGFPlots installed, a local copy of this manual should be accessible; for example in TeXLive you can open it with
+
+```sh
+texdoc pgfplots
+```
+
+Studying this documentation, especially the [manual gallery](@ref manual_gallery) and other related examples, you will gain a good understanding of how Julia code can be used to generate LaTeX output for PGFPlots easily.
+
+Other useful sources of examples include:
+
+1. the [PGFplots examples gallery](http://www.pgfplots.net/tikz/examples/),
+
+2. the collection of [plots from the reference manuals](http://pgfplots.sourceforge.net/gallery.html).
