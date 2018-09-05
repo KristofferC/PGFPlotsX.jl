@@ -2,7 +2,7 @@
 
 ## Jupyter, Juno
 
-Figures are shown in `svg` format when evaluated in Jupyter or Juno. For this you need the `pdf2svg` software installed. If you want to show figures in `png` format (because perhaps the svg format is too large), you can use `display(MIME"image/png", p)` where `p` is the figure to show. In Juno, if you are on macOS and there are problems finding the latex executable, see [this issue](https://github.com/atom/atom/issues/6956). Starting Atom from the terminal seems to work around it.
+Figures are shown in `svg` format when evaluated in Jupyter or Juno. For this you need the `pdf2svg` software installed. If you want to show figures in `png` format (because perhaps the svg format is too large), you can use `display("image/png", p)` where `p` is the figure to show. In Juno, if you are on macOS and there are problems finding the latex executable, see [this issue](https://github.com/atom/atom/issues/6956). Starting Atom from the terminal seems to work around it.
 
 ## REPL
 
