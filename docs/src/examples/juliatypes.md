@@ -24,7 +24,7 @@ relative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))
 @pgf Axis(
     {
         date_coordinates_in = "x",
-        "x tick label style" = "{rotate=90}",
+        x_tick_label_style = "{rotate=90}",
         xlabel = "date",
         ylabel = "relative solar irradiance",
     },
