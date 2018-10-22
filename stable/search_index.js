@@ -33,6 +33,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Learning-about-PGFPlots-1",
+    "page": "Home",
+    "title": "Learning about PGFPlots",
+    "category": "section",
+    "text": "PGFPlotsX does not replicate the PGFPlots documentation. In order to make the best use of this library, you should become familiar with at least the outline of the PGFPlots manual, so that you know about features (plot types, controlling axes and appearance, …) and can look them up when they are needed. If you have PGFPlots installed, a local copy of this manual should be accessible; for example in TeXLive you can open it withtexdoc pgfplotsStudying this documentation, especially the manual gallery and other related examples, you will gain a good understanding of how Julia code can be used to generate LaTeX output for PGFPlots easily.Other useful sources of examples include:the PGFplots examples gallery,\nthe collection of plots from the reference manuals."
+},
+
+{
     "location": "man/structs.html#",
     "page": "Overview",
     "title": "Overview",
@@ -489,19 +497,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Jupyter-1",
+    "location": "man/save.html#Jupyter,-Juno-1",
     "page": "Showing / Exporting figures",
-    "title": "Jupyter",
+    "title": "Jupyter, Juno",
     "category": "section",
-    "text": "Figures are shown in svg format when evaluated in Jupyter. For this you need the pdf2svg software installed. If you want to show them in png format (because perhaps is too large), you can use display(MIME\"image/png\", p) where p is the figure to show."
-},
-
-{
-    "location": "man/save.html#Juno-1",
-    "page": "Showing / Exporting figures",
-    "title": "Juno",
-    "category": "section",
-    "text": "Figures are shown in the Juno plot pane as svgs by default. If you want to show them as png, run show_juno_png(true), (false to go back to svg). To set the dpi of the figures in Juno when using png, run dpi_juno_png(dpi::Int). If you are on macOS and there are problems finding the latex executable, see this isssue. Starting Atom through the terminal seems to work around it."
+    "text": "Figures are shown in svg format when evaluated in Jupyter or Juno. For this you need the pdf2svg software installed. If you want to show figures in png format (because perhaps the svg format is too large), you can use display(\"image/png\", p) where p is the figure to show. In Juno, if you are on macOS and there are problems finding the latex executable, see this issue. Starting Atom from the terminal seems to work around it."
 },
 
 {
@@ -901,7 +901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "PGFPlots manual gallery",
     "title": "Patch",
     "category": "section",
-    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = \"\\\\\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\n\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "@pgf Axis(Plot(\n    {\n        patch,\n        \"table/row sep\" = \"\\\\\\\\\",\n        patch_table = TableData([0 1 2;\n                                 1 2 3;\n                                 4 3 5])\n    },\n    Table(\n        {\n            point_meta = raw\"\\thisrow{c}\"\n        },\n        :x => [0, 1, 2, 3, 2, 4],\n        :y => [0, 1, 0, 1, 0, 0],\n        :c => [0.2, 0, 1, 0, 0.5, 0.5])))\nsavefigs(\"patch-inline\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
@@ -918,6 +918,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Julia types",
     "category": "section",
     "text": "There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/juliatypes.html#Dates-1",
+    "page": "Julia types",
+    "title": "Dates",
+    "category": "section",
+    "text": "Dates is a standard library in Julia. Date and DateTime types are supported natively, but you should specify the date_coordinates_in = ... option in your plot for the relevant axes.using Dates\ndategrid = Date(2000,1,1):Day(1):Date(2000,12,31)\nrelative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))\n\n@pgf Axis(\n    {\n        date_coordinates_in = \"x\",\n        x_tick_label_style = \"{rotate=90}\",\n        xlabel = \"date\",\n        ylabel = \"relative solar irradiance\",\n    },\n    Plot(\n    {\n        no_marks\n    },\n    Table(dategrid, relative_irradiance.(dategrid))))\nsavefigs(\"dates\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
