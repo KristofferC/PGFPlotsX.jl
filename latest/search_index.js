@@ -921,6 +921,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "examples/juliatypes.html#Dates-1",
+    "page": "Julia types",
+    "title": "Dates",
+    "category": "section",
+    "text": "Dates is a standard library in Julia. Date and DateTime types are supported natively, but you should specify the date_coordinates_in = ... option in your plot for the relevant axes.using Dates\ndategrid = Date(2000,1,1):Day(1):Date(2000,12,31)\nrelative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))\n\n@pgf Axis(\n    {\n        date_coordinates_in = \"x\",\n        x_tick_label_style = \"{rotate=90}\",\n        xlabel = \"date\",\n        ylabel = \"relative solar irradiance\",\n    },\n    Plot(\n    {\n        no_marks\n    },\n    Table(dategrid, relative_irradiance.(dategrid))))\nsavefigs(\"dates\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
     "location": "examples/juliatypes.html#Colors.jl-1",
     "page": "Julia types",
     "title": "Colors.jl",
