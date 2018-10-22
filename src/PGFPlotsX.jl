@@ -4,6 +4,7 @@ import MacroTools: prewalk, @capture, @forward
 
 using ArgCheck: @argcheck
 using DataStructures: OrderedDict
+using Dates
 import DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
 using Parameters: @unpack
@@ -81,6 +82,10 @@ function print_tex(io::IO, x::Real)
 end
 
 print_tex(io::IO, ::Missing) = print(io, "nan")
+
+print_tex(io::IO, dt::Date) = Dates.format(io, dt, dateformat"YYYY-mm-dd")
+
+print_tex(io::IO, dt::DateTime) = Dates.format(io, dt, dateformat"YYYY-mm-dd HH:MM")
 
 print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
                                                   "Define one by overloading print_tex(io::IO, data::T) ",

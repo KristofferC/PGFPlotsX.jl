@@ -12,6 +12,34 @@ savefigs = (figname, obj) -> begin
 end
 ```
 
+## Dates
+
+`Dates` is a standard library in Julia. `Date` and `DateTime` types are supported natively, but you should specify the `date_coordinates_in = ...` option in your plot for the relevant axes.
+
+```@example pgf
+using Dates
+dategrid = Date(2000,1,1):Day(1):Date(2000,12,31)
+relative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))
+
+@pgf Axis(
+    {
+        date_coordinates_in = "x",
+        x_tick_label_style = "{rotate=90}",
+        xlabel = "date",
+        ylabel = "relative solar irradiance",
+    },
+    Plot(
+    {
+        no_marks
+    },
+    Table(dategrid, relative_irradiance.(dategrid))))
+savefigs("dates", ans) # hide
+```
+
+[\[.pdf\]](dates.pdf), [\[generated .tex\]](dates.tex)
+
+![](dates.svg)
+
 ## Colors.jl
 
 ### LineColor

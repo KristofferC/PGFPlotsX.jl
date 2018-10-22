@@ -5,6 +5,8 @@
     @test squashed_repr_tex(Inf) == "+inf"
     @test squashed_repr_tex(-Inf) == "-inf"
     @test squashed_repr_tex(missing) == "nan"
+    @test squashed_repr_tex(Date(2000, 1, 2)) == "2000-01-02"
+    @test squashed_repr_tex(DateTime(2000, 1, 2, 3, 4)) == "2000-01-02 03:04"
 end
 
 @testset "coordinate" begin

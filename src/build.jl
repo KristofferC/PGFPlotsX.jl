@@ -67,13 +67,14 @@ The default preamble for LaTeX documents. Don't change this, customize
 [`CUSTOM_PREAMBLE`](@ref) instead.
 """
 DEFAULT_PREAMBLE =
-String[
-"\\usepackage{pgfplots}",
-"\\pgfplotsset{compat=newest}",
-"\\usepgfplotslibrary{groupplots}",
-"\\usepgfplotslibrary{polar}",
-"\\usepgfplotslibrary{statistics}",
-]
+    String[
+        "\\usepackage{pgfplots}",
+        "\\pgfplotsset{compat=newest}",
+        "\\usepgfplotslibrary{groupplots}",
+        "\\usepgfplotslibrary{polar}",
+        "\\usepgfplotslibrary{statistics}",
+        "\\usepgfplotslibrary{dateplot}",
+    ]
 
 # Collects the full preamble from the different sources, default and custom
 function _default_preamble()
