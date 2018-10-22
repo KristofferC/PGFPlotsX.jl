@@ -4,6 +4,7 @@ using PGFPlotsX: Options
 using Colors
 using Contour
 using DataFrames
+using Dates
 using LaTeXStrings
 
 if get(ENV, "CI", false) == true
