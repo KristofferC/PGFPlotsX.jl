@@ -298,3 +298,36 @@ savefigs("histogram-2d", ans) # hide
 [\[.pdf\]](histogram-2d.pdf), [\[generated .tex\]](histogram-2d.tex)
 
 ![](histogram-2d.svg)
+
+## Measurements.jl
+
+Vectors of `Measurement` can be plotted using `Coordinates` in 2D.
+
+```@example pgf
+using Measurements
+x = [measurement(x, 0.1 + 0.1*rand()) for x in -5:1.0:5]
+y = x.^2
+
+@pgf Axis(
+    {
+        "error bars/error bar style" =
+        {
+            very_thin,
+        },
+    },
+    Plot(
+        {
+            only_marks,
+            mark = "star",
+            "error bars/y dir=both",
+            "error bars/y explicit",
+        },
+        Coordinates(x, y)
+    )
+)
+savefigs("measurements", ans) # hide
+```
+
+[\[.pdf\]](measurements.pdf), [\[generated .tex\]](measurements.tex)
+
+![](measurements.svg)
