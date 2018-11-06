@@ -6,6 +6,7 @@ using Contour
 using DataFrames
 using Dates
 using LaTeXStrings
+using Measurements
 
 if get(ENV, "CI", false) == true
     PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)

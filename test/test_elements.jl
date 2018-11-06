@@ -58,6 +58,16 @@ end
         @test Coordinates(x, y, z).data ==
             Coordinates((x, y, x / y) for (x,y) in zip(x, y)).data
     end
+    # from Measurements
+    let x = [1.0 ± 0.1, 2.0 ± 0.2]
+        y = [3.0 ± 0.3, 4.0 ± 0.4]
+        @test Coordinates(x, y).data ==
+            Coordinates([1.0, 2.0], [3.0, 4.0], xerror = [0.1, 0.2], yerror = [0.3, 0.4]).data
+        @test Coordinates(x, [3.0, 4.0]).data ==
+            Coordinates([1.0, 2.0], [3.0, 4.0], xerror = [0.1, 0.2]).data
+        @test Coordinates([1.0, 2.0], y).data ==
+            Coordinates([1.0, 2.0], [3.0, 4.0], yerror = [0.3, 0.4]).data
+    end
 end
 
 @testset "tables" begin
