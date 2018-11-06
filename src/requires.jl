@@ -99,19 +99,19 @@ function __init__()
 
     @require Measurements="eff96d63-e80a-5855-80a2-b1b0885c5ab7" begin
         function PGFPlotsX.Coordinates(x::AbstractVector{T}, y::AbstractVector;
-                                            kwargs...) where T <: Measurements.Measurement
+                                    kwargs...) where T <: Measurements.Measurement{<:Real}
             Coordinates(Measurements.value.(x), y;
                 xerror = Measurements.uncertainty.(x), kwargs...)
         end
 
         function PGFPlotsX.Coordinates(x::AbstractVector, y::AbstractVector{T};
-                                            kwargs...) where T <: Measurements.Measurement
+                                    kwargs...) where T <: Measurements.Measurement{<:Real}
             Coordinates(x, Measurements.value.(y);
                 yerror = Measurements.uncertainty.(y), kwargs...)
         end
 
         function PGFPlotsX.Coordinates(x::AbstractVector{T}, y::AbstractVector{T};
-                                            kwargs...) where T <: Measurements.Measurement
+                                    kwargs...) where T <: Measurements.Measurement{<:Real}
             Coordinates(Measurements.value.(x), Measurements.value.(y);
                 xerror = Measurements.uncertainty.(x),
                 yerror = Measurements.uncertainty.(y), kwargs...)
