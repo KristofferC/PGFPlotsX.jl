@@ -33,10 +33,11 @@ makedocs(
     ]
 )
 
+printstyled("deploying docs"; color = "blue")
+
 deploydocs(
     repo = "github.com/KristofferC/PGFPlotsX.jl.git",
     target = "build",
-    julia = "1.0",
     deps = nothing,
     make = nothing
 )
