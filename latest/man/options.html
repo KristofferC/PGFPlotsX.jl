@@ -9,7 +9,7 @@
     color =&gt; &quot;black&quot;,
 }</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><pre><code class="language-none">theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;}
 
-axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre><p>Use <code>{}</code> for empty options that print as <code>[]</code> in LaTeX.</p></div></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/ac0df6e5a71d19bfa40b58a4b34457e109e6b9c7/src/options.jl#L48-L82">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre><p>Use <code>{}</code> for empty options that print as <code>[]</code> in LaTeX.</p></div></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/ad8ce6768d4e1f4ae3da7a39b07294b32eb49638/src/options.jl#L48-L82">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
 
 julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
 
