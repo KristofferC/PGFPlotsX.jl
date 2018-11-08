@@ -14,6 +14,6 @@ $JULIABIN -e "import Pkg; Pkg.clone(\"/mnt/\", \"$PKGNAME\"); Pkg.build(\"$PKGNA
 TEST_EXIT=$?                    # return with this
 
 # save coverage results back to host
-PKGDIR=`$JULIABIN -e "import Pkg; print(Pkg.dir(\"$PKGNAME\"))"`
+PKGDIR=`$JULIABIN -e "import Pkg, $PKGNAME; print(joinpath(dirname(pathof($PKGNAME)), ".."))"`
 rsync -mav --include="*/" --include="*.cov" --exclude="*" $PKGDIR/ /mnt/
 exit $TEST_EXIT
