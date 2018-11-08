@@ -25,10 +25,13 @@ mktempdir() do tmp; cd(tmp) do
     include("test_build.jl")
 end end
 
-Base.CoreLogging.disable_logging(Base.CoreLogging.Warn) # no deprecation messages
-include("../docs/make.jl")
-
-# Run doc stuff, turn off deprecations (this doesn't seem to work on .travis)
-# cd(joinpath(@__DIR__, "..", "docs")) do
-#    run(`$(Base.julia_cmd()) --depwarn=no --color=yes -L make.jl`)
-#end
+# Build the docs on Julia v1.0
+if get(ENV, "TRAVIS_JULIA_VERSION", nothing) == "1.0"
+    cd(joinpath(@__DIR__, "..")) do
+        withenv("JULIA_LOAD_PATH" => nothing) do
+            cmd = `$(Base.julia_cmd()) --depwarn=no --color=yes --project=docs/`
+            run(`$(cmd) -e 'using Pkg; Pkg.instantiate()'`)
+            run(`$(cmd) docs/make.jl`)
+        end
+    end
+end

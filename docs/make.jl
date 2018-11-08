@@ -1,10 +1,10 @@
 using Documenter, PGFPlotsX
+PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
 using Contour, Colors, DataFrames
 
 makedocs(
     modules = [PGFPlotsX],
-    format = :html,
     sitename = "PGFPlotsX.jl",
     doctest = true,
     strict = true,
@@ -37,7 +37,4 @@ makedocs(
 
 deploydocs(
     repo = "github.com/KristofferC/PGFPlotsX.jl.git",
-    target = "build",
-    deps = nothing,
-    make = nothing
 )
