@@ -33,7 +33,7 @@ makedocs(
     ]
 )
 
-printstyled("deploying docs"; color = "blue")
+@info "calling deploydocs"
 
 deploydocs(
     repo = "github.com/KristofferC/PGFPlotsX.jl.git",
