@@ -1,0 +1,29 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[error bars/error bar style={very thin}]
+    \addplot[only marks, mark={star}, error bars/y dir=both, error bars/y explicit]
+        coordinates {
+            (-5.0,25.0) +- (0.10219739597896474,1.0219739597896473)
+            (-4.0,16.0) +- (0.16402196104278421,1.3121756883422737)
+            (-3.0,9.0) +- (0.1426428567403775,0.855857140442265)
+            (-2.0,4.0) +- (0.17673124660583778,0.7069249864233511)
+            (-1.0,1.0) +- (0.13504648133400496,0.2700929626680099)
+            (0.0,0.0) +- (0.1535667565617769,0.0)
+            (1.0,1.0) +- (0.12734016182640626,0.2546803236528125)
+            (2.0,4.0) +- (0.11129985186624858,0.4451994074649943)
+            (3.0,9.0) +- (0.1828000012641947,1.0968000075851683)
+            (4.0,16.0) +- (0.17106846930353925,1.368547754428314)
+            (5.0,25.0) +- (0.19088280977333194,1.9088280977333194)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
