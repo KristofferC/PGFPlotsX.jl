@@ -1,0 +1,34 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}
+    \addplot[color={rgb,1:red,0.0;green,0.0;blue,0.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 50};
+    \addplot[color={rgb,1:red,1.0;green,1.0;blue,0.38431372549019605}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 100};
+    \addplot[color={rgb,1:red,1.0;green,0.6235294117647059;blue,1.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 150};
+    \addplot[color={rgb,1:red,0.0;green,0.8392156862745098;blue,1.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 200};
+    \addplot[color={rgb,1:red,0.8431372549019608;green,0.26666666666666666;blue,0.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 250};
+    \addplot[color={rgb,1:red,0.0;green,0.5019607843137255;blue,0.16078431372549018}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 300};
+    \addplot[color={rgb,1:red,0.0;green,0.37254901960784315;blue,0.8352941176470589}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 350};
+    \addplot[color={rgb,1:red,0.5764705882352941;green,0.0;blue,0.40784313725490196}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 400};
+    \addplot[color={rgb,1:red,1.0;green,0.796078431372549;blue,0.7098039215686275}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 450};
+    \addplot[color={rgb,1:red,0.6549019607843137;green,0.5254901960784314;blue,0.0}, domain={-3*0.001:3*0.001}, style={ultra thick}, samples={50}]
+        {exp(-(x-0)^2 / (2 * 0.001^2)) / (0.001 * sqrt(2*pi)) + 500};
+\end{axis}
+\end{tikzpicture}
+\end{document}
