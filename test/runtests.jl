@@ -1,11 +1,8 @@
 using Test
 using PGFPlotsX
 using PGFPlotsX: Options
-using Colors
-using Contour
 using DataFrames
 using Dates
-using LaTeXStrings
 using Measurements
 
 if get(ENV, "CI", false) == true
