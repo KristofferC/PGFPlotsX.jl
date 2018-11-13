@@ -106,7 +106,7 @@ end
 _OLD_LUALATEX = false
 
 """
-List of class options used in the preamble (default ["tikz"]).
+List of class options used in the preamble (default `["tikz"]`).
 
 By setting
 `PGFPlotsX.CLASS_OPTIONS[1] = "varwidth"; push!(PGFPlotsX.CLASS_OPTIONS, "crop=false")`
