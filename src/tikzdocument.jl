@@ -105,6 +105,17 @@ end
 
 _OLD_LUALATEX = false
 
+"""
+List of class options used in the preamble (default `["tikz"]`).
+
+By setting
+`PGFPlotsX.CLASS_OPTIONS[1] = "varwidth"; push!(PGFPlotsX.CLASS_OPTIONS, "crop=false")`
+the preamble will contain `documentclass[varwidth,crop=false]{standalone}`.
+
+See https://www.ctan.org/pkg/standalone for a list of options.
+"""
+CLASS_OPTIONS = ["tikz"]
+
 savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
     print_tex(io, td; include_preamble = include_preamble)
 
@@ -119,7 +130,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
             println(io, "\\RequirePackage{luatex85}")
         end
         # Temp workaround for CI
-        println(io, "\\documentclass[tikz]{standalone}")
+        println(io, "\\documentclass[$(join(CLASS_OPTIONS, ','))]{standalone}")
         if use_default_preamble
             preamble = vcat(_default_preamble(), preamble)
         end

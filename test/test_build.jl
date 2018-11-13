@@ -126,3 +126,19 @@ end
         end
     end
 end
+
+@testset "class options" begin
+    tmp_pdf = tempname() * ".pdf"
+    mktempdir() do dir
+        cd(dir) do
+            PGFPlotsX.CLASS_OPTIONS[1] = "varwidth"
+            push!(PGFPlotsX.CLASS_OPTIONS, "crop = false")
+            td = TikzDocument("\\begin{tabular}{cc}",
+                              TikzPicture(Axis(Plot(Expression("x^2")))),
+                              "& A \\end{tabular}")
+            pgfsave(tmp_pdf, td)
+            @test is_pdf_file(tmp_pdf)
+            rm(tmp_pdf)
+        end
+    end
+end

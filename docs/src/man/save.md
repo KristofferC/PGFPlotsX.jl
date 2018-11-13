@@ -48,6 +48,13 @@ There are a few ways to do this:
 PGFPlotsX.CUSTOM_PREAMBLE
 ```
 
+Access to the class options of the standalone document class is possible with
+[`PGFPlotsX.CLASS_OPTIONS`](@ref).
+
+```@docs
+PGFPlotsX.CLASS_OPTIONS
+```
+
 ## Choosing the LaTeX engine used
 
 Thee are two different choices for latex engines, `PDFLATEX`, `LUALATEX`.
