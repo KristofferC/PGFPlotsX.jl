@@ -537,11 +537,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/save/#PGFPlotsX.CLASS_OPTIONS",
+    "page": "Showing / Exporting figures",
+    "title": "PGFPlotsX.CLASS_OPTIONS",
+    "category": "constant",
+    "text": "List of class options used in the preamble (default [\"tikz\"]).\n\nBy setting PGFPlotsX.CLASS_OPTIONS[1] = \"varwidth\"; push!(PGFPlotsX.CLASS_OPTIONS, \"crop=false\") the preamble will contain documentclass[varwidth,crop=false]{standalone}.\n\nSee https://www.ctan.org/pkg/standalone for a list of options.\n\n\n\n\n\n"
+},
+
+{
     "location": "man/save/#customizing_the_preamble-1",
     "page": "Showing / Exporting figures",
     "title": "Customizing the preamble",
     "category": "section",
-    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable PGFPlotsX.CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_preamble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble.PGFPlotsX.CUSTOM_PREAMBLE"
+    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable PGFPlotsX.CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_preamble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble.PGFPlotsX.CUSTOM_PREAMBLEAccess to the class options of the standalone document class is possible with PGFPlotsX.CLASS_OPTIONS.PGFPlotsX.CLASS_OPTIONS"
 },
 
 {
