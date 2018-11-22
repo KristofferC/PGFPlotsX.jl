@@ -4,7 +4,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-latest-img]][docs-latest-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)| 
+| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)| 
 
 
 *PGFPlotsX* is a Julia package to generate publication quality figures using the LaTeX library PGFPlots.
@@ -32,7 +32,7 @@ julia> Pkg.add("PGFPlotsX")
 ## Documentation
 
 - [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the documentation.**
-- [**LATEST**][docs-latest-url] &mdash; *in-development version of the documentation.*
+- [**DEV**][docs-dev-url] &mdash; *in-development version of the documentation.*
 
 
 ## Authors
@@ -41,8 +41,8 @@ julia> Pkg.add("PGFPlotsX")
 - Tamas K. Papp - [@tpapp](https://github.com/tpapp)
 
 
-[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-latest-url]: https://kristofferc.github.io/PGFPlotsX.jl/latest/
+[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[docs-dev-url]: https://kristofferc.github.io/PGFPlotsX.jl/dev/
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stable-url]: https://kristofferc.github.io/PGFPlotsX.jl/stable
