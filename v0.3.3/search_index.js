@@ -1,7 +1,7 @@
 var documenterSearchIndex = {"docs": [
 
 {
-    "location": "index.html#",
+    "location": "#",
     "page": "Home",
     "title": "Home",
     "category": "page",
@@ -9,7 +9,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#PGFPlotsX-1",
+    "location": "#PGFPlotsX-1",
     "page": "Home",
     "title": "PGFPlotsX",
     "category": "section",
@@ -17,7 +17,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Introduction-1",
+    "location": "#Introduction-1",
     "page": "Home",
     "title": "Introduction",
     "category": "section",
@@ -25,7 +25,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Installation-1",
+    "location": "#Installation-1",
     "page": "Home",
     "title": "Installation",
     "category": "section",
@@ -33,7 +33,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Learning-about-PGFPlots-1",
+    "location": "#Learning-about-PGFPlots-1",
     "page": "Home",
     "title": "Learning about PGFPlots",
     "category": "section",
@@ -41,7 +41,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/structs.html#",
+    "location": "man/structs/#",
     "page": "Overview",
     "title": "Overview",
     "category": "page",
@@ -49,7 +49,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/structs.html#Overview-1",
+    "location": "man/structs/#Overview-1",
     "page": "Overview",
     "title": "Overview",
     "category": "section",
@@ -57,7 +57,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#",
+    "location": "man/options/#",
     "page": "Options",
     "title": "Options",
     "category": "page",
@@ -65,7 +65,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#options_header-1",
+    "location": "man/options/#options_header-1",
     "page": "Options",
     "title": "Options",
     "category": "section",
@@ -73,7 +73,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#PGFPlotsX.@pgf",
+    "location": "man/options/#PGFPlotsX.@pgf",
     "page": "Options",
     "title": "PGFPlotsX.@pgf",
     "category": "macro",
@@ -81,7 +81,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#The-@pgf-macro-1",
+    "location": "man/options/#The-@pgf-macro-1",
     "page": "Options",
     "title": "The @pgf macro",
     "category": "section",
@@ -89,7 +89,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#Transformations-1",
+    "location": "man/options/#Transformations-1",
     "page": "Options",
     "title": "Transformations",
     "category": "section",
@@ -97,7 +97,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#Modifying-options-after-an-object-is-created-1",
+    "location": "man/options/#Modifying-options-after-an-object-is-created-1",
     "page": "Options",
     "title": "Modifying options after an object is created",
     "category": "section",
@@ -105,7 +105,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/options.html#Empty-options-1",
+    "location": "man/options/#Empty-options-1",
     "page": "Options",
     "title": "Empty options",
     "category": "section",
@@ -113,7 +113,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#",
+    "location": "man/data/#",
     "page": "Data",
     "title": "Data",
     "category": "page",
@@ -121,7 +121,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#Data-1",
+    "location": "man/data/#Data-1",
     "page": "Data",
     "title": "Data",
     "category": "section",
@@ -129,7 +129,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.Table",
+    "location": "man/data/#PGFPlotsX.Table",
     "page": "Data",
     "title": "PGFPlotsX.Table",
     "category": "type",
@@ -137,7 +137,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.TableData",
+    "location": "man/data/#PGFPlotsX.TableData",
     "page": "Data",
     "title": "PGFPlotsX.TableData",
     "category": "type",
@@ -145,7 +145,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#table_header-1",
+    "location": "man/data/#table_header-1",
     "page": "Data",
     "title": "Table and TableData",
     "category": "section",
@@ -153,7 +153,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#coordinates_header-1",
+    "location": "man/data/#coordinates_header-1",
     "page": "Data",
     "title": "Using coordinates",
     "category": "section",
@@ -161,7 +161,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.Coordinates",
+    "location": "man/data/#PGFPlotsX.Coordinates",
     "page": "Data",
     "title": "PGFPlotsX.Coordinates",
     "category": "type",
@@ -169,7 +169,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#Coordinates-1",
+    "location": "man/data/#Coordinates-1",
     "page": "Data",
     "title": "Coordinates",
     "category": "section",
@@ -177,7 +177,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.Coordinate",
+    "location": "man/data/#PGFPlotsX.Coordinate",
     "page": "Data",
     "title": "PGFPlotsX.Coordinate",
     "category": "type",
@@ -185,7 +185,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#Individual-coordinates-1",
+    "location": "man/data/#Individual-coordinates-1",
     "page": "Data",
     "title": "Individual coordinates",
     "category": "section",
@@ -193,7 +193,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.Expression",
+    "location": "man/data/#PGFPlotsX.Expression",
     "page": "Data",
     "title": "PGFPlotsX.Expression",
     "category": "type",
@@ -201,7 +201,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#Expression-1",
+    "location": "man/data/#Expression-1",
     "page": "Data",
     "title": "Expression",
     "category": "section",
@@ -209,7 +209,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#PGFPlotsX.Graphics",
+    "location": "man/data/#PGFPlotsX.Graphics",
     "page": "Data",
     "title": "PGFPlotsX.Graphics",
     "category": "type",
@@ -217,7 +217,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/data.html#Graphics-1",
+    "location": "man/data/#Graphics-1",
     "page": "Data",
     "title": "Graphics",
     "category": "section",
@@ -225,7 +225,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#",
+    "location": "man/axiselements/#",
     "page": "Axis elements",
     "title": "Axis elements",
     "category": "page",
@@ -233,7 +233,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#axis_elements-1",
+    "location": "man/axiselements/#axis_elements-1",
     "page": "Axis elements",
     "title": "Axis elements",
     "category": "section",
@@ -241,7 +241,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#plotlike-1",
+    "location": "man/axiselements/#plotlike-1",
     "page": "Axis elements",
     "title": "Plots",
     "category": "section",
@@ -249,7 +249,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.Plot",
+    "location": "man/axiselements/#PGFPlotsX.Plot",
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot",
     "category": "type",
@@ -257,7 +257,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.PlotInc",
+    "location": "man/axiselements/#PGFPlotsX.PlotInc",
     "page": "Axis elements",
     "title": "PGFPlotsX.PlotInc",
     "category": "function",
@@ -265,7 +265,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#Plot-and-PlotInc-1",
+    "location": "man/axiselements/#Plot-and-PlotInc-1",
     "page": "Axis elements",
     "title": "Plot and PlotInc",
     "category": "section",
@@ -273,7 +273,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.Plot3",
+    "location": "man/axiselements/#PGFPlotsX.Plot3",
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot3",
     "category": "function",
@@ -281,7 +281,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.Plot3Inc",
+    "location": "man/axiselements/#PGFPlotsX.Plot3Inc",
     "page": "Axis elements",
     "title": "PGFPlotsX.Plot3Inc",
     "category": "function",
@@ -289,7 +289,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#Plot3-1",
+    "location": "man/axiselements/#Plot3-1",
     "page": "Axis elements",
     "title": "Plot3",
     "category": "section",
@@ -297,7 +297,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.Legend",
+    "location": "man/axiselements/#PGFPlotsX.Legend",
     "page": "Axis elements",
     "title": "PGFPlotsX.Legend",
     "category": "type",
@@ -305,7 +305,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.LegendEntry",
+    "location": "man/axiselements/#PGFPlotsX.LegendEntry",
     "page": "Axis elements",
     "title": "PGFPlotsX.LegendEntry",
     "category": "type",
@@ -313,7 +313,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#Legends-1",
+    "location": "man/axiselements/#Legends-1",
     "page": "Axis elements",
     "title": "Legends",
     "category": "section",
@@ -321,7 +321,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.HLine",
+    "location": "man/axiselements/#PGFPlotsX.HLine",
     "page": "Axis elements",
     "title": "PGFPlotsX.HLine",
     "category": "type",
@@ -329,7 +329,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#PGFPlotsX.VLine",
+    "location": "man/axiselements/#PGFPlotsX.VLine",
     "page": "Axis elements",
     "title": "PGFPlotsX.VLine",
     "category": "type",
@@ -337,7 +337,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#Horizontal-and-vertical-lines-1",
+    "location": "man/axiselements/#Horizontal-and-vertical-lines-1",
     "page": "Axis elements",
     "title": "Horizontal and vertical lines",
     "category": "section",
@@ -345,7 +345,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axiselements.html#latex_code_strings-1",
+    "location": "man/axiselements/#latex_code_strings-1",
     "page": "Axis elements",
     "title": "Using LaTeX code directly",
     "category": "section",
@@ -353,7 +353,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#",
+    "location": "man/axislike/#",
     "page": "Axis & friends",
     "title": "Axis & friends",
     "category": "page",
@@ -361,7 +361,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#axislike-1",
+    "location": "man/axislike/#axislike-1",
     "page": "Axis & friends",
     "title": "Axis & friends",
     "category": "section",
@@ -369,7 +369,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PGFPlotsX.Axis",
+    "location": "man/axislike/#PGFPlotsX.Axis",
     "page": "Axis & friends",
     "title": "PGFPlotsX.Axis",
     "category": "type",
@@ -377,7 +377,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#Axis-1",
+    "location": "man/axislike/#Axis-1",
     "page": "Axis & friends",
     "title": "Axis",
     "category": "section",
@@ -385,7 +385,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PGFPlotsX.GroupPlot",
+    "location": "man/axislike/#PGFPlotsX.GroupPlot",
     "page": "Axis & friends",
     "title": "PGFPlotsX.GroupPlot",
     "category": "type",
@@ -393,7 +393,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#GroupPlot-1",
+    "location": "man/axislike/#GroupPlot-1",
     "page": "Axis & friends",
     "title": "GroupPlot",
     "category": "section",
@@ -401,7 +401,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PolarAxis-1",
+    "location": "man/axislike/#PolarAxis-1",
     "page": "Axis & friends",
     "title": "PolarAxis",
     "category": "section",
@@ -409,7 +409,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PGFPlotsX.SemiLogXAxis",
+    "location": "man/axislike/#PGFPlotsX.SemiLogXAxis",
     "page": "Axis & friends",
     "title": "PGFPlotsX.SemiLogXAxis",
     "category": "type",
@@ -417,7 +417,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PGFPlotsX.SemiLogYAxis",
+    "location": "man/axislike/#PGFPlotsX.SemiLogYAxis",
     "page": "Axis & friends",
     "title": "PGFPlotsX.SemiLogYAxis",
     "category": "type",
@@ -425,7 +425,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#PGFPlotsX.LogLogAxis",
+    "location": "man/axislike/#PGFPlotsX.LogLogAxis",
     "page": "Axis & friends",
     "title": "PGFPlotsX.LogLogAxis",
     "category": "type",
@@ -433,7 +433,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/axislike.html#Semilog-and-log-log-axes-1",
+    "location": "man/axislike/#Semilog-and-log-log-axes-1",
     "page": "Axis & friends",
     "title": "Semilog and log-log axes",
     "category": "section",
@@ -441,7 +441,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/picdoc.html#",
+    "location": "man/picdoc/#",
     "page": "TikzPicture",
     "title": "TikzPicture",
     "category": "page",
@@ -449,7 +449,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/picdoc.html#PGFPlotsX.TikzPicture",
+    "location": "man/picdoc/#PGFPlotsX.TikzPicture",
     "page": "TikzPicture",
     "title": "PGFPlotsX.TikzPicture",
     "category": "type",
@@ -457,7 +457,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/picdoc.html#TikzPicture-1",
+    "location": "man/picdoc/#TikzPicture-1",
     "page": "TikzPicture",
     "title": "TikzPicture",
     "category": "section",
@@ -465,7 +465,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/picdoc.html#PGFPlotsX.TikzDocument",
+    "location": "man/picdoc/#PGFPlotsX.TikzDocument",
     "page": "TikzPicture",
     "title": "PGFPlotsX.TikzDocument",
     "category": "type",
@@ -473,7 +473,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/picdoc.html#TikzDocument-1",
+    "location": "man/picdoc/#TikzDocument-1",
     "page": "TikzPicture",
     "title": "TikzDocument",
     "category": "section",
@@ -481,7 +481,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#",
+    "location": "man/save/#",
     "page": "Showing / Exporting figures",
     "title": "Showing / Exporting figures",
     "category": "page",
@@ -489,7 +489,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Showing-/-Exporting-figures-1",
+    "location": "man/save/#Showing-/-Exporting-figures-1",
     "page": "Showing / Exporting figures",
     "title": "Showing / Exporting figures",
     "category": "section",
@@ -497,7 +497,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Jupyter,-Juno-1",
+    "location": "man/save/#Jupyter,-Juno-1",
     "page": "Showing / Exporting figures",
     "title": "Jupyter, Juno",
     "category": "section",
@@ -505,7 +505,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#REPL-1",
+    "location": "man/save/#REPL-1",
     "page": "Showing / Exporting figures",
     "title": "REPL",
     "category": "section",
@@ -513,7 +513,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#PGFPlotsX.pgfsave",
+    "location": "man/save/#PGFPlotsX.pgfsave",
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.pgfsave",
     "category": "function",
@@ -521,7 +521,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Exporting-to-files-1",
+    "location": "man/save/#Exporting-to-files-1",
     "page": "Showing / Exporting figures",
     "title": "Exporting to files",
     "category": "section",
@@ -529,7 +529,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#PGFPlotsX.CUSTOM_PREAMBLE",
+    "location": "man/save/#PGFPlotsX.CUSTOM_PREAMBLE",
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.CUSTOM_PREAMBLE",
     "category": "constant",
@@ -537,15 +537,23 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#customizing_the_preamble-1",
+    "location": "man/save/#PGFPlotsX.CLASS_OPTIONS",
     "page": "Showing / Exporting figures",
-    "title": "Customizing the preamble",
-    "category": "section",
-    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable PGFPlotsX.CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_preamble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble.PGFPlotsX.CUSTOM_PREAMBLE"
+    "title": "PGFPlotsX.CLASS_OPTIONS",
+    "category": "constant",
+    "text": "List of class options used in the preamble (default [\"tikz\"]).\n\nBy setting PGFPlotsX.CLASS_OPTIONS[1] = \"varwidth\"; push!(PGFPlotsX.CLASS_OPTIONS, \"crop=false\") the preamble will contain documentclass[varwidth,crop=false]{standalone}.\n\nSee https://www.ctan.org/pkg/standalone for a list of options.\n\n\n\n\n\n"
 },
 
 {
-    "location": "man/save.html#Choosing-the-LaTeX-engine-used-1",
+    "location": "man/save/#customizing_the_preamble-1",
+    "page": "Showing / Exporting figures",
+    "title": "Customizing the preamble",
+    "category": "section",
+    "text": "It is common to use a custom preamble to add user-defined macros or use different packages. There are a few ways to do this:push! strings into the global variable PGFPlotsX.CUSTOM_PREAMBLE. Each string in that vector will be inserted in the preamble.\nModify the custom_preamble.tex file in the deps folder of the directory of the package. This file is directly spliced into the preamble of the output.\nDefine the environment variable PGFPLOTSX_PREAMBLE_PATH to a path pointing to a preamble file. The content of that will be inserted into the preamble.PGFPlotsX.CUSTOM_PREAMBLEAccess to the class options of the standalone document class is possible with PGFPlotsX.CLASS_OPTIONS.PGFPlotsX.CLASS_OPTIONS"
+},
+
+{
+    "location": "man/save/#Choosing-the-LaTeX-engine-used-1",
     "page": "Showing / Exporting figures",
     "title": "Choosing the LaTeX engine used",
     "category": "section",
@@ -553,7 +561,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#PGFPlotsX.CUSTOM_FLAGS",
+    "location": "man/save/#PGFPlotsX.CUSTOM_FLAGS",
     "page": "Showing / Exporting figures",
     "title": "PGFPlotsX.CUSTOM_FLAGS",
     "category": "constant",
@@ -561,7 +569,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/save.html#Custom-flags-1",
+    "location": "man/save/#Custom-flags-1",
     "page": "Showing / Exporting figures",
     "title": "Custom flags",
     "category": "section",
@@ -569,7 +577,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#",
+    "location": "man/internals/#",
     "page": "Internals",
     "title": "Internals",
     "category": "page",
@@ -577,7 +585,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.print_tex",
+    "location": "man/internals/#PGFPlotsX.print_tex",
     "page": "Internals",
     "title": "PGFPlotsX.print_tex",
     "category": "function",
@@ -585,7 +593,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.print_indent",
+    "location": "man/internals/#PGFPlotsX.print_indent",
     "page": "Internals",
     "title": "PGFPlotsX.print_indent",
     "category": "function",
@@ -593,7 +601,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.expand_scanlines",
+    "location": "man/internals/#PGFPlotsX.expand_scanlines",
     "page": "Internals",
     "title": "PGFPlotsX.expand_scanlines",
     "category": "function",
@@ -601,7 +609,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.Options",
+    "location": "man/internals/#PGFPlotsX.Options",
     "page": "Internals",
     "title": "PGFPlotsX.Options",
     "category": "type",
@@ -609,7 +617,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.CUSTOM_PREAMBLE_PATH",
+    "location": "man/internals/#PGFPlotsX.CUSTOM_PREAMBLE_PATH",
     "page": "Internals",
     "title": "PGFPlotsX.CUSTOM_PREAMBLE_PATH",
     "category": "constant",
@@ -617,7 +625,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#PGFPlotsX.DEFAULT_PREAMBLE",
+    "location": "man/internals/#PGFPlotsX.DEFAULT_PREAMBLE",
     "page": "Internals",
     "title": "PGFPlotsX.DEFAULT_PREAMBLE",
     "category": "constant",
@@ -625,7 +633,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/internals.html#Internals-1",
+    "location": "man/internals/#Internals-1",
     "page": "Internals",
     "title": "Internals",
     "category": "section",
@@ -633,7 +641,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#",
+    "location": "examples/coordinates/#",
     "page": "Coordinates",
     "title": "Coordinates",
     "category": "page",
@@ -641,7 +649,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Coordinates-1",
+    "location": "examples/coordinates/#Coordinates-1",
     "page": "Coordinates",
     "title": "Coordinates",
     "category": "section",
@@ -649,7 +657,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Basic-usage-1",
+    "location": "examples/coordinates/#Basic-usage-1",
     "page": "Coordinates",
     "title": "Basic usage",
     "category": "section",
@@ -657,7 +665,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Error-bars-1",
+    "location": "examples/coordinates/#Error-bars-1",
     "page": "Coordinates",
     "title": "Error bars",
     "category": "section",
@@ -665,7 +673,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#symbolic_coordinates_example-1",
+    "location": "examples/coordinates/#symbolic_coordinates_example-1",
     "page": "Coordinates",
     "title": "Symbolic coordinates",
     "category": "section",
@@ -673,7 +681,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#D-1",
+    "location": "examples/coordinates/#D-1",
     "page": "Coordinates",
     "title": "3D",
     "category": "section",
@@ -681,7 +689,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Edge-vectors-1",
+    "location": "examples/coordinates/#Edge-vectors-1",
     "page": "Coordinates",
     "title": "Edge vectors",
     "category": "section",
@@ -689,7 +697,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Heatmap-1",
+    "location": "examples/coordinates/#Heatmap-1",
     "page": "Coordinates",
     "title": "Heatmap",
     "category": "section",
@@ -697,7 +705,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/coordinates.html#Matrix-plot-1",
+    "location": "examples/coordinates/#Matrix-plot-1",
     "page": "Coordinates",
     "title": "Matrix plot",
     "category": "section",
@@ -705,7 +713,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#",
+    "location": "examples/tables/#",
     "page": "Tables",
     "title": "Tables",
     "category": "page",
@@ -713,7 +721,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Tables-1",
+    "location": "examples/tables/#Tables-1",
     "page": "Tables",
     "title": "Tables",
     "category": "section",
@@ -721,7 +729,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Unnamed-columns-1",
+    "location": "examples/tables/#Unnamed-columns-1",
     "page": "Tables",
     "title": "Unnamed columns",
     "category": "section",
@@ -729,7 +737,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Named-columns-1",
+    "location": "examples/tables/#Named-columns-1",
     "page": "Tables",
     "title": "Named columns",
     "category": "section",
@@ -737,7 +745,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Rename-options-1",
+    "location": "examples/tables/#Rename-options-1",
     "page": "Tables",
     "title": "Rename options",
     "category": "section",
@@ -745,7 +753,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Excluding-points-1",
+    "location": "examples/tables/#Excluding-points-1",
     "page": "Tables",
     "title": "Excluding points",
     "category": "section",
@@ -753,7 +761,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/tables.html#Quiver-plot-1",
+    "location": "examples/tables/#Quiver-plot-1",
     "page": "Tables",
     "title": "Quiver plot",
     "category": "section",
@@ -761,7 +769,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike.html#",
+    "location": "examples/axislike/#",
     "page": "Axis-like objects",
     "title": "Axis-like objects",
     "category": "page",
@@ -769,7 +777,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike.html#Axis-like-objects-1",
+    "location": "examples/axislike/#Axis-like-objects-1",
     "page": "Axis-like objects",
     "title": "Axis-like objects",
     "category": "section",
@@ -777,7 +785,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike.html#Simple-group-plot-1",
+    "location": "examples/axislike/#Simple-group-plot-1",
     "page": "Axis-like objects",
     "title": "Simple group plot",
     "category": "section",
@@ -785,7 +793,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike.html#Multiple-group-plots-1",
+    "location": "examples/axislike/#Multiple-group-plots-1",
     "page": "Axis-like objects",
     "title": "Multiple group plots",
     "category": "section",
@@ -793,7 +801,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike.html#Polar-axis-1",
+    "location": "examples/axislike/#Polar-axis-1",
     "page": "Axis-like objects",
     "title": "Polar axis",
     "category": "section",
@@ -801,7 +809,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#",
+    "location": "examples/gallery/#",
     "page": "PGFPlots manual gallery",
     "title": "PGFPlots manual gallery",
     "category": "page",
@@ -809,7 +817,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#manual_gallery-1",
+    "location": "examples/gallery/#manual_gallery-1",
     "page": "PGFPlots manual gallery",
     "title": "PGFPlots manual gallery",
     "category": "section",
@@ -817,7 +825,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Cost-Error-1",
+    "location": "examples/gallery/#Cost-Error-1",
     "page": "PGFPlots manual gallery",
     "title": "Cost Error",
     "category": "section",
@@ -825,7 +833,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Simple-Expression-1",
+    "location": "examples/gallery/#Simple-Expression-1",
     "page": "PGFPlots manual gallery",
     "title": "Simple Expression",
     "category": "section",
@@ -833,7 +841,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Mixing-expression-and-coordinates-1",
+    "location": "examples/gallery/#Mixing-expression-and-coordinates-1",
     "page": "PGFPlots manual gallery",
     "title": "Mixing expression and coordinates",
     "category": "section",
@@ -841,7 +849,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Log-logLog-1",
+    "location": "examples/gallery/#Log-logLog-1",
     "page": "PGFPlots manual gallery",
     "title": "Log logLog",
     "category": "section",
@@ -849,7 +857,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Yaxis-log-1",
+    "location": "examples/gallery/#Yaxis-log-1",
     "page": "PGFPlots manual gallery",
     "title": "Yaxis log",
     "category": "section",
@@ -857,7 +865,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Dof-vs-error-1",
+    "location": "examples/gallery/#Dof-vs-error-1",
     "page": "PGFPlots manual gallery",
     "title": "Dof vs error",
     "category": "section",
@@ -865,7 +873,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Scatter-classes-1",
+    "location": "examples/gallery/#Scatter-classes-1",
     "page": "PGFPlots manual gallery",
     "title": "Scatter classes",
     "category": "section",
@@ -873,7 +881,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Splines-1",
+    "location": "examples/gallery/#Splines-1",
     "page": "PGFPlots manual gallery",
     "title": "Splines",
     "category": "section",
@@ -881,7 +889,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Mesh-scatter-1",
+    "location": "examples/gallery/#Mesh-scatter-1",
     "page": "PGFPlots manual gallery",
     "title": "Mesh scatter",
     "category": "section",
@@ -889,7 +897,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Group-plot-1",
+    "location": "examples/gallery/#Group-plot-1",
     "page": "PGFPlots manual gallery",
     "title": "Group plot",
     "category": "section",
@@ -897,7 +905,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/gallery.html#Patch-1",
+    "location": "examples/gallery/#Patch-1",
     "page": "PGFPlots manual gallery",
     "title": "Patch",
     "category": "section",
@@ -905,7 +913,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#",
+    "location": "examples/juliatypes/#",
     "page": "Julia types",
     "title": "Julia types",
     "category": "page",
@@ -913,7 +921,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#Julia-types-1",
+    "location": "examples/juliatypes/#Julia-types-1",
     "page": "Julia types",
     "title": "Julia types",
     "category": "section",
@@ -921,7 +929,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#Dates-1",
+    "location": "examples/juliatypes/#Dates-1",
     "page": "Julia types",
     "title": "Dates",
     "category": "section",
@@ -929,7 +937,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#Colors.jl-1",
+    "location": "examples/juliatypes/#Colors.jl-1",
     "page": "Julia types",
     "title": "Colors.jl",
     "category": "section",
@@ -937,7 +945,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#LineColor-1",
+    "location": "examples/juliatypes/#LineColor-1",
     "page": "Julia types",
     "title": "LineColor",
     "category": "section",
@@ -945,7 +953,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#Colormap-1",
+    "location": "examples/juliatypes/#Colormap-1",
     "page": "Julia types",
     "title": "Colormap",
     "category": "section",
@@ -953,7 +961,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#ggplot2-1",
+    "location": "examples/juliatypes/#ggplot2-1",
     "page": "Julia types",
     "title": "ggplot2",
     "category": "section",
@@ -961,7 +969,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#DataFrames.jl-1",
+    "location": "examples/juliatypes/#DataFrames.jl-1",
     "page": "Julia types",
     "title": "DataFrames.jl",
     "category": "section",
@@ -969,7 +977,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#Countour.jl-1",
+    "location": "examples/juliatypes/#Countour.jl-1",
     "page": "Julia types",
     "title": "Countour.jl",
     "category": "section",
@@ -977,7 +985,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#StatsBase.jl-1",
+    "location": "examples/juliatypes/#StatsBase.jl-1",
     "page": "Julia types",
     "title": "StatsBase.jl",
     "category": "section",
@@ -985,7 +993,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#D-1",
+    "location": "examples/juliatypes/#D-1",
     "page": "Julia types",
     "title": "1D",
     "category": "section",
@@ -993,7 +1001,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes.html#D-2",
+    "location": "examples/juliatypes/#D-2",
     "page": "Julia types",
     "title": "2D",
     "category": "section",
@@ -1001,7 +1009,15 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/convenience.html#",
+    "location": "examples/juliatypes/#Measurements.jl-1",
+    "page": "Julia types",
+    "title": "Measurements.jl",
+    "category": "section",
+    "text": "Vectors of Measurement can be plotted using Coordinates in 2D.using Measurements\nx = [measurement(x, 0.1 + 0.1*rand()) for x in -5:1.0:5]\ny = x.^2\n\n@pgf Axis(\n    {\n        \"error bars/error bar style\" =\n        {\n            very_thin,\n        },\n    },\n    Plot(\n        {\n            only_marks,\n            mark = \"star\",\n            \"error bars/y dir=both\",\n            \"error bars/y explicit\",\n        },\n        Coordinates(x, y)\n    )\n)\nsavefigs(\"measurements\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/convenience/#",
     "page": "Convenience constructs",
     "title": "Convenience constructs",
     "category": "page",
@@ -1009,7 +1025,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/convenience.html#Convenience-constructs-1",
+    "location": "examples/convenience/#Convenience-constructs-1",
     "page": "Convenience constructs",
     "title": "Convenience constructs",
     "category": "section",
@@ -1017,7 +1033,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/convenience.html#Horizontal-and-vertical-lines-1",
+    "location": "examples/convenience/#Horizontal-and-vertical-lines-1",
     "page": "Convenience constructs",
     "title": "Horizontal and vertical lines",
     "category": "section",

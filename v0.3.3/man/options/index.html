@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Options · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link href="../../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><a href="../../index.html"><img class="logo" src="../../assets/logo.png" alt="PGFPlotsX.jl logo"/></a><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../../">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../structs/">Overview</a></li><li class="current"><a class="toctext" href>Options</a><ul class="internal"><li><a class="toctext" href="#The-@pgf-macro-1">The <code>@pgf</code> macro</a></li><li><a class="toctext" href="#Modifying-options-after-an-object-is-created-1">Modifying options after an object is created</a></li><li><a class="toctext" href="#Empty-options-1">Empty options</a></li></ul></li><li><a class="toctext" href="../data/">Data</a></li><li><a class="toctext" href="../axiselements/">Axis elements</a></li><li><a class="toctext" href="../axislike/"><code>Axis</code> &amp; friends</a></li><li><a class="toctext" href="../picdoc/">TikzPicture</a></li><li><a class="toctext" href="../save/">Showing / Exporting figures</a></li><li><a class="toctext" href="../internals/">Internals</a></li></ul></li><li><span class="toctext">Examples</span><ul><li><a class="toctext" href="../../examples/coordinates/">Coordinates</a></li><li><a class="toctext" href="../../examples/tables/">Tables</a></li><li><a class="toctext" href="../../examples/axislike/">Axis-like objects</a></li><li><a class="toctext" href="../../examples/gallery/">PGFPlots manual gallery</a></li><li><a class="toctext" href="../../examples/juliatypes/">Julia types</a></li><li><a class="toctext" href="../../examples/convenience/">Convenience constructs</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Manual</li><li><a href>Options</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/man/options.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Options</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="options_header-1" href="#options_header-1">Options</a></h1><p>Options, which usually occur between brackets (<code>[]</code>) after commands like <code>\addplot</code>, <code>table</code>, or beginnings of environments like <code>\begin{axis}</code> in LaTeX code, are key to most of the functionality of PGFPlots.</p><h2><a class="nav-anchor" id="The-@pgf-macro-1" href="#The-@pgf-macro-1">The <code>@pgf</code> macro</a></h2><p>Use the <code>@pgf {}</code> macro to define options.</p><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="PGFPlotsX.@pgf" href="#PGFPlotsX.@pgf"><code>PGFPlotsX.@pgf</code></a> — <span class="docstring-category">Macro</span>.</div><div><div><pre><code class="language-none">@pgf { ... }
+
+@pgf some(nested(form({ ... })),
+          with_multiple_options({ ... }))</code></pre><p>Construct <a href="../internals/#PGFPlotsX.Options"><code>Options</code></a> from comma-delimited <code>key</code> (without value), <code>key = value</code>, <code>key : value</code>, or <code>key =&gt; value</code> pairs enclosed in <code>{ ... }</code>, anywhere in the expression.</p><p>The argument is traversed recursively, allowing <code>{ ... }</code> expressions in multiple places.</p><p>Multi-word keys need to be either quoted, or written with underscores replacing spaces.</p><pre><code class="language-julia">@pgf {
+    &quot;only marks&quot;,
+    mark_size = &quot;0.6pt&quot;,
+    mark = &quot;o&quot;,
+    color =&gt; &quot;black&quot;,
+}</code></pre><p>Another <code>Options</code> can be spliced into one being created using <code>...</code>, e.g.</p><pre><code class="language-none">theme = @pgf {xmajorgrids, x_grid_style = &quot;white&quot;}
+
+axis_opt = @pgf {theme..., title = &quot;My figure&quot;}</code></pre><p>Use <code>{}</code> for empty options that print as <code>[]</code> in LaTeX.</p></div></div><a class="source-link" target="_blank" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/d568a44505874688d81274d3a7c6f08cce82d00c/src/options.jl#L48-L82">source</a></section><p>For constructors that accept options, they always come <em>first</em>. When omitted, there are assumed to be no options.</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+
+julia&gt; p = @pgf PlotInc({ &quot;very thick&quot;, &quot;mark&quot; =&gt; &quot;halfcircle&quot; }, c);
+
+julia&gt; print_tex(p); # print_tex can be used to preview the generated .tex
+\addplot+[very thick, mark={halfcircle}]
+    coordinates {
+        (1,2)
+        (2,4)
+        (3,8)
+    }
+    ;</code></pre><p>Inside the expression following <code>@pgf</code>, <code>{}</code> expressions can be nested, and can also occur in multiple places.</p><pre><code class="language-julia-repl">julia&gt; @pgf a = Axis(
+           {
+               &quot;axis background/.style&quot; =
+               {
+                   shade,
+                   top_color = &quot;gray&quot;,
+                   bottom_color = &quot;white&quot;,
+               },
+               ymode = &quot;log&quot;
+           },
+           PlotInc(
+           {
+               smooth
+           },
+           c)
+       );</code></pre><p>which is converted to LaTeX as</p><pre><code class="language-julia-repl">julia&gt; print_tex(a)
+\begin{axis}[axis background/.style={shade, top color={gray}, bottom color={white}}, ymode={log}]
+    \addplot+[smooth]
+        coordinates {
+            (1,2)
+            (2,4)
+            (3,8)
+        }
+        ;
+\end{axis}</code></pre><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>If you use <code>@pgf</code> inside argument lists, make sure you wrap its argument in parentheses, eg</p><pre><code class="language-julia">Plot(@pgf({ scatter }), some_table)</code></pre><p>Otherwise Julia will also pass the subsequent arguments through <code>@pgf</code>, which results in an error since they are combined into a tuple.</p></div></div><p>Each option is either a standalone <em>keyword</em> (without value, modifying the plot by itself), or a <em>keyword-value pair</em>. Keywords can be entered</p><ol><li><p>as Julia identifiers, which is useful for keywords with no spaces (eg <code>smooth</code>),</p></li><li><p>separated by underscores, which are replaced by spaces (eg <code>only_marks</code> will appear in LaTeX code as <code>only marks</code>),</p></li><li><p>or quoted as strings, eg <code>&quot;very thick&quot;</code>.</p></li></ol><p><em>Values</em> are provided after a <code>=</code>, <code>:</code>, or <code>=&gt;</code>, so the following are equivalent:</p><ol><li><p><code>@pgf { draw = &quot;black&quot; }</code>,</p></li><li><p><code>@pgf { draw : &quot;black&quot; }</code>,</p></li><li><p><code>@pgf { draw =&gt; &quot;black&quot; }</code>.</p></li></ol><p>Values should be valid Julia expressions, as they are evaluated, so you cannot use <code>@pgf { draw = black }</code> unless <code>black</code> is assigned to some Julia value in that context.</p><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>Keys that contain symbols that in Julia are operators (e.g the key <code>&quot;axis background/.style&quot;</code>) have to be entered as strings.</p></div></div><h3><a class="nav-anchor" id="Transformations-1" href="#Transformations-1">Transformations</a></h3><p>In addition to replacing underscores in keys, the following transformations of values are done when the options are written in <code>.tex</code> style:</p><ul><li><p>A list as a value is written as &quot;comma joined&quot; e.g. <code>[1, 2, 3] -&gt; &quot;1, 2, 3&quot;</code>.</p></li><li><p>A tuple as a value is written with braces delimiting the elements e.g. <code>(60, 30) -&gt; {60}{30}</code></p></li></ul><h2><a class="nav-anchor" id="Modifying-options-after-an-object-is-created-1" href="#Modifying-options-after-an-object-is-created-1">Modifying options after an object is created</a></h2><p>It is sometimes convenient to set and get options after an object has been created.</p><p>You can use <code>getindex</code>, <code>setindex!</code> (ie <code>obj[&quot;option&quot;]</code> or <code>obj[&quot;option&quot;] = value</code>, respectively), and <code>delete!</code> just like you would for modifiable associative collections (eg a <code>Dict</code>).</p><pre><code class="language-julia-repl">julia&gt; c = Coordinates([1, 2, 3], [2, 4, 8]);
+
+julia&gt; p = PlotInc(c);
+
+julia&gt; p[&quot;fill&quot;] = &quot;blue&quot;;
+
+julia&gt; p[&quot;fill&quot;]
+&quot;blue&quot;
+
+julia&gt; @pgf p[&quot;axis background/.style&quot;] = { shade, top_color = &quot;gray&quot;, bottom_color = &quot;white&quot; };
+
+julia&gt; p[&quot;axis background/.style&quot;][&quot;top_color&quot;];
+
+julia&gt; p[&quot;very thick&quot;] = nothing # Set a value-less options;
+
+julia&gt; delete!(p, &quot;fill&quot;);
+
+julia&gt; print_tex(p)
+\addplot+[axis background/.style={shade, top color={gray}, bottom color={white}}, very thick]
+    coordinates {
+        (1,2)
+        (2,4)
+        (3,8)
+    }
+    ;</code></pre><p>You can also merge in options that have been created separately, using <code>merge!</code>:</p><pre><code class="language-julia-repl">julia&gt; a = Axis();
+
+julia&gt; @pgf opts = {xmin = 0, ymax = 1, ybar};
+
+julia&gt; merge!(a, opts);
+
+julia&gt; print_tex(a)
+\begin{axis}[xmin={0}, ymax={1}, ybar]
+\end{axis}</code></pre><p>An alternative to using <code>merge!</code> is using  <code>...</code> to splice an option into another one, e.g.</p><pre><code class="language-julia-repl">julia&gt; theme = @pgf {xmajorgrids, ymajorgrids};
+
+julia&gt; a = Axis(
+           @pgf {theme..., title = &quot;Foo&quot;}
+       );
+
+julia&gt; print_tex(a)
+\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]
+\end{axis}</code></pre><p>It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.</p><h2><a class="nav-anchor" id="Empty-options-1" href="#Empty-options-1">Empty options</a></h2><p>Empty options are not printed by default, but printing <code>[]</code> can be useful in some cases, eg when combined with global settings <code>\pgfplotsset{every axis plot/.append style={...}}</code> in LaTeX code. In order to force printing empty options, it is recommended to use <code>{}</code> in expressions like</p><pre><code class="language-julia">@pgf Plot({}, ...)</code></pre><footer><hr/><a class="previous" href="../structs/"><span class="direction">Previous</span><span class="title">Overview</span></a><a class="next" href="../data/"><span class="direction">Next</span><span class="title">Data</span></a></footer></article></body></html>
