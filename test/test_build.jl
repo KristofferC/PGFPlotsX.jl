@@ -59,12 +59,20 @@ end
             pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(read("$tmp.tex", String))
-            pgfsave("$tmp.png", a)
-            @test is_png_file("$tmp.png")
+            if PGFPlotsX.HAVE_PDFTOPPM
+                pgfsave("$tmp.png", a)
+                @test is_png_file("$tmp.png")
+            else
+                @test_throws PGFPlotsX.MissingExternalProgramError pgfsave("$tmp.png", a)
+            end
+            if PGFPlotsX.HAVE_PDFTOSVG
+                pgfsave("$tmp.svg", a)
+                @test is_svg_file("$tmp.svg")
+            else
+                @test_throws PGFPlotsX.MissingExternalProgramError pgfsave("$tmp.svg", a)
+            end
             pgfsave("$tmp.pdf", a)
             @test is_pdf_file("$tmp.pdf")
-            pgfsave("$tmp.svg", a)
-            @test is_svg_file("$tmp.svg")
             pgfsave("$tmp.tikz", a)
             @test is_tikz_standalone("$tmp.tikz")
 

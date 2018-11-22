@@ -44,6 +44,15 @@ extensions should be recognized by `\\includegraphics` when the
 """
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
 
+struct MissingExternalProgramError
+    program::AbstractString
+end
+
+function Base.showerror(io::IO, e::MissingExternalProgramError)
+    print(io, "Did not find `$(e.program)`. Install it and run ",
+          "Pkg.build(\"PGFPLotsX\") to enable this functionality.")
+end
+
 """
     $SIGNATURES
 
@@ -70,24 +79,18 @@ function save(filename::String, td::TikzDocument;
         savetex(filename, td; include_preamble = include_preamble)
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
         savetex(filename, td; include_preamble = false)
-    elseif HAVE_PDFTOSVG && fileext == ".svg"
-        savesvg(filename, td;
-                latex_engine = latex_engine, buildflags = buildflags)
+    elseif fileext == ".svg"
+        HAVE_PDFTOSVG || throw(MissingExternalProgramError("pdf2svg"))
+        savesvg(filename, td; latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".pdf"
-        savepdf(filename, td;
-                latex_engine = latex_engine, buildflags = buildflags)
-    elseif HAVE_PDFTOPPM && fileext == ".png"
+        savepdf(filename, td; latex_engine = latex_engine, buildflags = buildflags)
+    elseif fileext == ".png"
+        HAVE_PDFTOPPM || throw(MissingExternalProgramError("pdftoppm"))
         savepng(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
     else
-        allowed_file_endings = vcat(["tex", "pdf"],
+        allowed_file_endings = vcat(["tex", "pdf", "png", "svg"],
                                     lstrip.(STANDALONE_TIKZ_FILEEXTS, '.'))
-        if HAVE_PDFTOPPM
-            push!(allowed_file_endings, "png")
-        end
-        if HAVE_PDFTOSVG
-            push!(allowed_file_endings, "svg")
-        end
         throw(ArgumentError("allowed file endings are $(join(allowed_file_endings, ", "))."))
     end
     return
