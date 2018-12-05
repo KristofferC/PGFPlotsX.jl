@@ -299,6 +299,36 @@ savefigs("histogram-2d", ans) # hide
 
 ![](histogram-2d.svg)
 
+## ECDF
+
+Empirical cumulative distribution functions (from `StatsBase.ecdf`) can be plotted using `Table`, automatically generating a grid on the range of the input data. The optional argument `n` selects the number of gridpoints.
+
+!!! note
+    This feature requires StatsBase v0.26.0 or later.
+
+```@example pgf
+using StatsBase: ecdf
+x = randn(1000) # random standard normal values
+@pgf Axis(
+    {
+        xlabel = "x",
+        ylabel = "ecdf"
+    },
+    Plot(
+        {
+            no_marks,
+            thick,
+            red
+        },
+        Table(ecdf(x)))
+)
+savefigs("ecdf", ans) # hide
+```
+
+[\[.pdf\]](ecdf.pdf), [\[generated .tex\]](ecdf.tex)
+
+![](ecdf.svg)
+
 ## Measurements.jl
 
 Vectors of `Measurement` can be plotted using `Coordinates` in 2D.
