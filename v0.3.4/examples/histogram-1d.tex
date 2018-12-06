@@ -1,0 +1,27 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ybar interval, xticklabel interval boundaries, xmajorgrids={false}, xticklabel={$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$}, xticklabel style={font={\tiny}}]
+    \addplot
+        table[row sep={\\}]
+        {
+            \\
+            0.0  58.0  \\
+            0.2  15.0  \\
+            0.4  11.0  \\
+            0.6  8.0  \\
+            0.8  7.0  \\
+            1.0  1.0  \\
+            1.2  0.0  \\
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
