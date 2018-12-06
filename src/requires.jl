@@ -90,6 +90,11 @@ function __init__()
                                 histogram.weights; kwargs...)
         end
 
+        function PGFPlotsX.TableData(e::StatsBase.ECDF; n = 100, kwargs...)
+            x = range(extrema(e)...; length = n)
+            PGFPlotsX.TableData(hcat(x, map(e, x)), nothing, 0; kwargs...)
+        end
+
         function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T
             PGFPlotsX.Coordinates(midpoints(histogram.edges[1]),
                                   midpoints(histogram.edges[2]),
