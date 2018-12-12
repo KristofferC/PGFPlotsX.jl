@@ -1009,6 +1009,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "examples/juliatypes/#ECDF-1",
+    "page": "Julia types",
+    "title": "ECDF",
+    "category": "section",
+    "text": "Empirical cumulative distribution functions (from StatsBase.ecdf) can be plotted using Table, automatically generating a grid on the range of the input data. The optional argument n selects the number of gridpoints.note: Note\nThis feature requires StatsBase v0.26.0 or later.using StatsBase: ecdf\nx = randn(1000) # random standard normal values\n@pgf Axis(\n    {\n        xlabel = \"x\",\n        ylabel = \"ecdf\"\n    },\n    Plot(\n        {\n            no_marks,\n            thick,\n            red\n        },\n        Table(ecdf(x)))\n)\nsavefigs(\"ecdf\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
     "location": "examples/juliatypes/#Measurements.jl-1",
     "page": "Julia types",
     "title": "Measurements.jl",
