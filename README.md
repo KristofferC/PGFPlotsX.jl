@@ -4,7 +4,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)| 
+| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![][travis-img]][travis-url] [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)|
 
 
 *PGFPlotsX* is a Julia package to generate publication quality figures using the LaTeX library PGFPlots.
@@ -19,7 +19,7 @@ Features include:
 * Showing figures inline in Jupyter notebooks, Juno and VSCode-julia. Both png- and svg-figures can be shown.
 * Exporting to tex, pdf, svg, and png, file formats.
 * Customizing the preamble so that commands from latex packages can be used.
-* [Extra functionality](https://kristofferc.github.io/PGFPlotsX.jl/stable/examples/juliatypes.html) when different packages are loaded, for example *Colors*, *DataFrames*, *Contour* etc.
+* [Extra functionality](https://kristofferc.github.io/PGFPlotsX.jl/stable/examples/juliatypes/) when different packages are loaded, for example *Colors*, *DataFrames*, *Contour* etc.
 
 ## Installation
 
