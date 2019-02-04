@@ -85,6 +85,33 @@ end
     end
 end
 
+@testset "show(io, mime, plot)" begin; mktempdir() do dir; cd(dir) do
+    tmp = tempname()
+    io = IOBuffer()
+    a = Axis(Plot(Expression("x^2")))
+    # pdf
+    let tmp = tmp * ".pdf", mime = MIME"application/pdf"()
+        show(io, mime, a)
+        write(tmp, take!(io))
+        @test is_pdf_file(tmp)
+        rm(tmp; force=true)
+    end
+    # svg
+    let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
+        show(io, mime, a)
+        write(tmp, take!(io))
+        @test is_svg_file(tmp)
+        rm(tmp; force=true)
+    end
+    # png
+    let tmp = tmp * ".png", mime = MIME"image/png"()
+        show(io, mime, a)
+        write(tmp, take!(io))
+        @test is_png_file(tmp)
+        rm(tmp; force=true)
+    end
+end end end
+
 @testset "gnuplot / shell-escape" begin
     tmp_pdf = tempname() * ".pdf"
     expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
