@@ -214,6 +214,13 @@ end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
 
+function Base.show(io::IO, ::MIME"application/pdf", p::_SHOWABLE)
+    filename = tempname() * ".pdf"
+    save(filename, p; showing_ide=_is_ide())
+    write(io, read(filename))
+    rm(filename; force = true)
+end
+
 # Copyright TikzPictures.jl (see LICENSE.md)
 function latexerrormsg(s)
     beginError = false
