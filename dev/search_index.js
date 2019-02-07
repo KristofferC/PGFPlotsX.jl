@@ -389,7 +389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.GroupPlot",
     "category": "type",
-    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nother values, eg Plot are emitted using print_tex.\n\n\n\n\n\n"
+    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nan Axis is emitted as a \\nextgroupplot[options...], followed by the contents,\nother values, eg Plot are emitted using print_tex.\n\n\n\n\n\n"
 },
 
 {
@@ -797,7 +797,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis-like objects",
     "title": "Multiple group plots",
     "category": "section",
-    "text": "x = range(0; stop =2*pi, length = 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Each set of options (here, empty {}) starts a new set of axes.x = range(0; stop =2*pi, length = 100)\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    {},\n    PlotInc(Table(x, sin.(x))),\n    PlotInc(Table(x, sin.(x .+ 0.5))),\n    {},\n    PlotInc(Table(x, cos.(x))),\n    PlotInc(Table(x, cos.(x .+ 0.5))))\nsavefigs(\"groupplot-multiple\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/axislike/#Using-Axis-in-group-plots-1",
+    "page": "Axis-like objects",
+    "title": "Using Axis in group plots",
+    "category": "section",
+    "text": "Alternatively, you can use Axis to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.x = range(0; stop =2*pi, length = 100)\naxs1 = @pgf Axis({ xlabel = raw\"$\\alpha$\", ylabel = \"sin\" },\n                 PlotInc(Table(x, sin.(x))),\n                 PlotInc(Table(x, sin.(x .+ 0.5))));\naxs2 = @pgf Axis({ xlabel = raw\"$\\beta$\", ylabel = \"cos\" },\n                  PlotInc(Table(x, cos.(x))),\n                  PlotInc(Table(x, cos.(x .+ 0.5))));\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    axs1, axs2)\nsavefigs(\"groupplot-multiple-axis\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
