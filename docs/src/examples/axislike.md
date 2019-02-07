@@ -41,6 +41,8 @@ savefigs("groupplot-simple", ans) # hide
 
 ## Multiple group plots
 
+Each set of options (here, empty `{}`) starts a new set of axes.
+
 ```@example pgf
 x = range(0; stop =2*pi, length = 100)
 @pgf GroupPlot(
@@ -66,6 +68,35 @@ savefigs("groupplot-multiple", ans) # hide
 
 ![](groupplot-multiple.svg)
 
+## Using `Axis` in group plots
+
+Alternatively, you can use `Axis` to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.
+
+```@example pgf
+x = range(0; stop =2*pi, length = 100)
+axs1 = @pgf Axis({ xlabel = raw"$\alpha$", ylabel = "sin" },
+                 PlotInc(Table(x, sin.(x))),
+                 PlotInc(Table(x, sin.(x .+ 0.5))));
+axs2 = @pgf Axis({ xlabel = raw"$\beta$", ylabel = "cos" },
+                  PlotInc(Table(x, cos.(x))),
+                  PlotInc(Table(x, cos.(x .+ 0.5))));
+@pgf GroupPlot(
+    {
+        group_style =
+        {
+            group_size="2 by 1",
+            xticklabels_at="edge bottom",
+            yticklabels_at="edge left"
+        },
+        no_markers
+    },
+    axs1, axs2)
+savefigs("groupplot-multiple-axis", ans) # hide
+```
+
+[\[.pdf\]](groupplot-multiple-axis.pdf), [\[generated .tex\]](groupplot-multiple-axis.tex)
+
+![](groupplot-multiple-axis.svg)
 
 ## Polar axis
 

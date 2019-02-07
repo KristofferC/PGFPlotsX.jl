@@ -4,7 +4,9 @@ $(TYPEDEF)
 An axis-like object that has `options` and `contents`. Each subtype `T` has the
 constructor
 
-```julia T([options], contents...) ```
+```julia
+T([options], contents...)
+```
 
 and supports [`axislike_environment(T)`](@ref).
 
@@ -103,20 +105,28 @@ The `contents` after the global options are processed as follows:
 
 2. `nothing` is emitted as a `\\nextgroupplot[group/empty plot]`,
 
-3. other values, eg `Plot` are emitted using [`print_tex`](@ref).
+3. an [`Axis`](@ref) is emitted as a `\\nextgroupplot[options...]`, followed by the contents,
+
+4. other values, eg `Plot` are emitted using [`print_tex`](@ref).
 """
 @define_axislike GroupPlot "groupplot"
 
 function print_tex(io::IO, groupplot::GroupPlot)
     @unpack options, contents = groupplot
     isempty(contents) && return
-    print(io, "\\begin{groupplot}")
+    print(io, raw"\begin{groupplot}")
     print_options(io, options)
     print_indent(io) do io
         for elt in contents
             if elt isa Options
-                print(io, "\\nextgroupplot")
+                print(io, raw"\nextgroupplot")
                 print_options(io, elt)
+            elseif elt isa Axis
+                print(io, raw"\nextgroupplot")
+                print_options(io, elt.options)
+                for c in elt.contents
+                    print_tex(io, c)
+                end
             elseif elt isa Plot
                 print_tex(io, elt)
             elseif elt isa Nothing
@@ -126,5 +136,5 @@ function print_tex(io::IO, groupplot::GroupPlot)
             end
         end
     end
-    println(io, "\\end{groupplot}")
+    println(io, raw"\end{groupplot}")
 end
