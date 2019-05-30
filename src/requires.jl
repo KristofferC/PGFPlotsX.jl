@@ -15,8 +15,7 @@ function __init__()
     end)
 
     @require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" begin
-        using Printf
-        fixnotation(c::Float64) = @sprintf("%f", c)
+        fixnotation(c::Float64) = round(c, digits = 4)
         function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
             rgb = convert(Colors.RGB, c)
             _rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
