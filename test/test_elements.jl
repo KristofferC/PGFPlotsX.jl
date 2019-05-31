@@ -205,3 +205,10 @@ end
     @test repr_tex((@pgf HLine({dashed}, 4.0))) ==
         "\\draw[dashed] (\\pgfkeysvalueof{/pgfplots/xmin},4.0)--(\\pgfkeysvalueof{/pgfplots/xmax},4.0);\n"
 end
+
+@testset "colors" begin
+    @test squashed_repr_tex(@pgf { color = RGB(1e-10, 1, 1) }) == 
+        "[color={rgb,1:red,0.0;green,1.0;blue,1.0}]"
+    @test squashed_repr_tex(@pgf { color = HSV(1, 1e-10, 1) }) == 
+        "[color={rgb,1:red,1.0;green,1.0;blue,1.0}]"
+end
