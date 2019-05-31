@@ -20,15 +20,13 @@ function __init__()
             round.((Colors.red(rgb), Colors.green(rgb), Colors.blue(rgb)); digits = 4) # somewhat arbitrary choice of accuracy
         end
 
-        function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
+        function PGFPlotsX.print_tex(io::IO, c::Colors.Colorant)
             rgb_64 = _rgb_for_printing(c)
             print(io, "rgb,1:",
                   "red,"  , rgb_64[1], ";",
                   "green,", rgb_64[2], ";",
                   "blue," , rgb_64[3])
         end
-
-        PGFPlotsX.print_tex(io::IO, c::Colors.Colorant) = PGFPlotsX.print_opt(io, c)
 
         function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::Any)
             name, color = c
