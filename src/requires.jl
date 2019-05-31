@@ -15,40 +15,38 @@ function __init__()
     end)
 
     @require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" begin
-        fixnotation(c::Float64) = round(c, digits = 4)
+        function PGFPlotsX._rgb_for_printing(c::Colors.Colorant)
+            rgb = convert(Colors.RGB{Float64}, c)
+            round.((red(rgb), green(rgb), blue(rgb)); digits = 4) # somewhat arbitrary choice of accuracy
+        end
+        
         function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
-            rgb = convert(Colors.RGB, c)
-            _rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
-            rgb_64 = fixnotation.(_rgb_64)
+            rgb_64 = _rgb_for_printing(c)
             print(io, "rgb,1:",
                   "red,"  , rgb_64[1], ";",
                   "green,", rgb_64[2], ";",
                   "blue," , rgb_64[3])
         end
-
+    
         function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::Any)
             name, color = c
-            rgb = convert(Colors.RGB, color)
-            _rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
-            rgb_64 = fixnotation.(_rgb_64)
+            rgb_64 = _rgb_for_printing(color)
             print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
         end
-
+    
         function PGFPlotsX.print_tex(io::IO,
-                                     c::Tuple{String, Vector{<:Colors.Colorant}},
-                                     ::Any)
+            c::Tuple{String, Vector{<:Colors.Colorant}},
+            ::Any)
             name, colors = c
             println(io, "\\pgfplotsset{ colormap={$name}{")
             for col in colors
-                rgb = convert(Colors.RGB, col)
-                _rgb_64 = convert.(Float64, (rgb.r, rgb.g, rgb.b))
-                rgb_64 = fixnotation.(_rgb_64)
+                rgb_64 = _rgb_for_printing(col)
                 println(io, "rgb=(", join(rgb_64, ","), ")")
             end
             println(io, "}}")
         end
     end
-
+    
     @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" begin
         """
             $SIGNATURES
