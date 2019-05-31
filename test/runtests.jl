@@ -12,10 +12,14 @@ end
 @show PGFPlotsX.latexengine
 PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
-@info "External binaries" PGFPlotsX.HAVE_PDFTOPPM PGFPlotsX.HAVE_PDFTOSVG
+GNUPLOT_VERSION = try chomp(read(`gnuplot -V`, String)); catch; nothing; end
+HAVE_GNUPLOT = GNUPLOT_VERSION ≠ nothing
 
-if !(PGFPlotsX.HAVE_PDFTOPPM && PGFPlotsX.HAVE_PDFTOSVG)
-    @warn "Both `pdf2svg` or `pdftoppm` needs to be installed for complete test coverage."
+@info "External binaries" PGFPlotsX.HAVE_PDFTOPPM PGFPlotsX.HAVE_PDFTOSVG GNUPLOT_VERSION
+
+if !(PGFPlotsX.HAVE_PDFTOPPM && PGFPlotsX.HAVE_PDFTOSVG && HAVE_GNUPLOT)
+    @warn "External binaries `pdf2svg`, `pdftoppm`, and `gnuplot` need to be installed
+for complete test coverage."
 end
 
 include("utilities.jl")

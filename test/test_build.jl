@@ -121,32 +121,34 @@ end
 end end end
 
 @testset "gnuplot / shell-escape" begin
-    tmp_pdf = tempname() * ".pdf"
-    expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
-    mktempdir() do dir
-        cd(dir) do
-            @pgf p =
-                Axis(
-                    {
-                        colorbar,
-                        xlabel = "x",
-                        ylabel = "y",
-                        domain = "1:2",
-                        y_domain = "74:87.9",
-                        view = (0, 90),
-                    },
-                    Plot3(
+    if HAVE_GNUPLOT
+        tmp_pdf = tempname() * ".pdf"
+        expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
+        mktempdir() do dir
+            cd(dir) do
+                @pgf p =
+                    Axis(
                         {
-                            contour_gnuplot = {
-                                number = 30,
-                                labels = false},
-                            thick,
-                            samples = 40,
+                            colorbar,
+                            xlabel = "x",
+                            ylabel = "y",
+                            domain = "1:2",
+                            y_domain = "74:87.9",
+                            view = (0, 90),
                         },
-                        Expression(expr)))
-            pgfsave(tmp_pdf, p)
-            @test is_pdf_file(tmp_pdf)
-            rm(tmp_pdf)
+                        Plot3(
+                            {
+                                contour_gnuplot = {
+                                    number = 30,
+                                    labels = false},
+                                thick,
+                                samples = 40,
+                            },
+                            Expression(expr)))
+                pgfsave(tmp_pdf, p)
+                @test is_pdf_file(tmp_pdf)
+                rm(tmp_pdf)
+            end
         end
     end
 end
