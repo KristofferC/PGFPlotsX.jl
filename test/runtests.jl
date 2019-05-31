@@ -12,6 +12,12 @@ end
 @show PGFPlotsX.latexengine
 PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
+@info "External binaries" PGFPlotsX.HAVE_PDFTOPPM PGFPlotsX.HAVE_PDFTOSVG
+
+if !(PGFPlotsX.HAVE_PDFTOPPM && PGFPlotsX.HAVE_PDFTOSVG)
+    @warn "Both `pdf2svg` or `pdftoppm` needs to be installed for complete test coverage."
+end
+
 include("utilities.jl")
 
 include("test_options.jl")

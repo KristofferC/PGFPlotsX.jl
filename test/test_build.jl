@@ -98,17 +98,25 @@ end
     end
     # svg
     let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
-        show(io, mime, a)
-        write(tmp, take!(io))
-        @test is_svg_file(tmp)
-        rm(tmp; force=true)
+        if PGFPlotsX.HAVE_PDFTOSVG
+            show(io, mime, a)
+            write(tmp, take!(io))
+            @test is_svg_file(tmp)
+            rm(tmp; force=true)
+        else
+            @test_throws MethodError show(io, mime, a)
+        end
     end
     # png
     let tmp = tmp * ".png", mime = MIME"image/png"()
-        show(io, mime, a)
-        write(tmp, take!(io))
-        @test is_png_file(tmp)
-        rm(tmp; force=true)
+        if PGFPlotsX.HAVE_PDFTOPPM
+            show(io, mime, a)
+            write(tmp, take!(io))
+            @test is_png_file(tmp)
+            rm(tmp; force=true)
+        else
+            @test_throws MethodError show(io, mime, a)
+        end
     end
 end end end
 
