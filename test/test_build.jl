@@ -98,47 +98,57 @@ end
     end
     # svg
     let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
-        show(io, mime, a)
-        write(tmp, take!(io))
-        @test is_svg_file(tmp)
-        rm(tmp; force=true)
+        if PGFPlotsX.HAVE_PDFTOSVG
+            show(io, mime, a)
+            write(tmp, take!(io))
+            @test is_svg_file(tmp)
+            rm(tmp; force=true)
+        else
+            @test_throws MethodError show(io, mime, a)
+        end
     end
     # png
     let tmp = tmp * ".png", mime = MIME"image/png"()
-        show(io, mime, a)
-        write(tmp, take!(io))
-        @test is_png_file(tmp)
-        rm(tmp; force=true)
+        if PGFPlotsX.HAVE_PDFTOPPM
+            show(io, mime, a)
+            write(tmp, take!(io))
+            @test is_png_file(tmp)
+            rm(tmp; force=true)
+        else
+            @test_throws MethodError show(io, mime, a)
+        end
     end
 end end end
 
 @testset "gnuplot / shell-escape" begin
-    tmp_pdf = tempname() * ".pdf"
-    expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
-    mktempdir() do dir
-        cd(dir) do
-            @pgf p =
-                Axis(
-                    {
-                        colorbar,
-                        xlabel = "x",
-                        ylabel = "y",
-                        domain = "1:2",
-                        y_domain = "74:87.9",
-                        view = (0, 90),
-                    },
-                    Plot3(
+    if HAVE_GNUPLOT
+        tmp_pdf = tempname() * ".pdf"
+        expr = "-2.051^3*1000./(2*3.1415*(2.99*10^2)^2)/(x^2*cos(y)^2)"
+        mktempdir() do dir
+            cd(dir) do
+                @pgf p =
+                    Axis(
                         {
-                            contour_gnuplot = {
-                                number = 30,
-                                labels = false},
-                            thick,
-                            samples = 40,
+                            colorbar,
+                            xlabel = "x",
+                            ylabel = "y",
+                            domain = "1:2",
+                            y_domain = "74:87.9",
+                            view = (0, 90),
                         },
-                        Expression(expr)))
-            pgfsave(tmp_pdf, p)
-            @test is_pdf_file(tmp_pdf)
-            rm(tmp_pdf)
+                        Plot3(
+                            {
+                                contour_gnuplot = {
+                                    number = 30,
+                                    labels = false},
+                                thick,
+                                samples = 40,
+                            },
+                            Expression(expr)))
+                pgfsave(tmp_pdf, p)
+                @test is_pdf_file(tmp_pdf)
+                rm(tmp_pdf)
+            end
         end
     end
 end
