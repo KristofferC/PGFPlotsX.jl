@@ -4,6 +4,7 @@ using PGFPlotsX: Options
 using DataFrames
 using Dates
 using Measurements
+using Colors
 
 if get(ENV, "CI", false) == true
     PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
