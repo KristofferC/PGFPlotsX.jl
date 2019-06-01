@@ -68,6 +68,10 @@ end
         @test Coordinates([1.0, 2.0], y).data ==
             Coordinates([1.0, 2.0], [3.0, 4.0], yerror = [0.3, 0.4]).data
     end
+
+    # meta printing
+    @test squashed_repr_tex(Coordinates([1], [1]; meta = [RGB(0.1, 0.2, 0.3)])) ==
+        "coordinates {\n(1,1) [rgb=0.1,0.2,0.3]\n}"
 end
 
 @testset "tables" begin
@@ -207,8 +211,8 @@ end
 end
 
 @testset "colors" begin
-    @test squashed_repr_tex(@pgf { color = RGB(1e-10, 1, 1) }) == 
+    @test squashed_repr_tex(@pgf { color = RGB(1e-10, 1, 1) }) ==
         "[color={rgb,1:red,0.0;green,1.0;blue,1.0}]"
-    @test squashed_repr_tex(@pgf { color = HSV(1, 1e-10, 1) }) == 
+    @test squashed_repr_tex(@pgf { color = HSV(1, 1e-10, 1) }) ==
         "[color={rgb,1:red,1.0;green,1.0;blue,1.0}]"
 end
