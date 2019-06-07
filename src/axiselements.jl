@@ -104,7 +104,7 @@ function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where 
 end
 
 # Print raw strings inside coordinates. Compared to generic `print_tex`, print no newline,
-# this requires that tokens are separates in some other way (eg brackets).
+# this requires that tokens are separated in some other way (eg containing brackets).
 print_tex(io::IO, str::AbstractString, ::Coordinate) = print(io, str)
 
 function print_tex(io::IO, coordinate::Coordinate)
