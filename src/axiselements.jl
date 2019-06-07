@@ -103,6 +103,10 @@ function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where 
     print(io, ")")
 end
 
+# Print raw strings inside coordinates. Compared to generic `print_tex`, print no newline,
+# this requires that tokens are separated in some other way (eg containing brackets).
+print_tex(io::IO, str::AbstractString, ::Coordinate) = print(io, str)
+
 function print_tex(io::IO, coordinate::Coordinate)
     @unpack data, error, errorplus, errorminus, meta = coordinate
     print_tex(io, data, coordinate)
@@ -117,7 +121,7 @@ function print_tex(io::IO, coordinate::Coordinate)
     _print_error("-=", errorminus)
     if meta ≠ nothing
         print(io, " [")
-        print(io, meta)
+        print_tex(io, meta, coordinate)
         print(io, "]")
     end
     println(io)

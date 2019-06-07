@@ -106,6 +106,37 @@ savefigs("colormap", td) # hide
 
 ![](colormap.svg)
 
+### Explicit colors in surface plots
+
+When used outside options, all `Colors.Colorant` colors are printed in the format that can be used in surface plots explicitly.
+
+```@example pgf
+using Colors
+hues = 0:30:360
+saturations = 0:0.1:1
+HS = vec(tuple.(hues, saturations'))
+c = Coordinates(first.(HS), last.(HS); meta = [HSL(hs..., 0.5) for hs in HS])
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xlabel = "hue (degrees)",
+        ylabel = "saturation"
+    },
+    Plot(
+        {
+            "matrix_plot*",
+            no_marks,
+            "mesh/color input" = "explicit",
+            "mesh/cols" = length(hues)
+        },
+        c))
+savefigs("explicit_surface_color", ans) # hide
+```
+
+[\[.pdf\]](explicit_surface_color.pdf), [\[generated .tex\]](explicit_surface_color.tex)
+
+![](explicit_surface_color.svg)
+
 ### ggplot2
 
 Something that looks a bit like ggplot2.
