@@ -969,6 +969,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "examples/juliatypes/#Explicit-colors-in-surface-plots-1",
+    "page": "Julia types",
+    "title": "Explicit colors in surface plots",
+    "category": "section",
+    "text": "When used outside options, all Colors.Colorant colors are printed in the format that can be used in surface plots explicitly.using Colors\nhues = 0:30:360\nsaturations = 0:0.1:1\nHS = vec(tuple.(hues, saturations\'))\nc = Coordinates(first.(HS), last.(HS); meta = [HSL(hs..., 0.5) for hs in HS])\n@pgf Axis(\n    {\n        enlargelimits = false,\n        xlabel = \"hue (degrees)\",\n        ylabel = \"saturation\"\n    },\n    Plot(\n        {\n            \"matrix_plot*\",\n            no_marks,\n            \"mesh/color input\" = \"explicit\",\n            \"mesh/cols\" = length(hues)\n        },\n        c))\nsavefigs(\"explicit_surface_color\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
     "location": "examples/juliatypes/#ggplot2-1",
     "page": "Julia types",
     "title": "ggplot2",

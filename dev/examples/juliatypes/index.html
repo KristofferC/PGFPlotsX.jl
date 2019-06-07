@@ -53,7 +53,25 @@ push!(tp, gp)
 
 for cmap in colormaps
     @pgf push!(gp, { colormap_name = cmap }, p)
-end</code></pre></div><p><a href="../colormap.pdf">[.pdf]</a>, <a href="../colormap.tex">[generated .tex]</a></p><p><img src="../colormap.svg" alt/></p><h3><a class="nav-anchor" id="ggplot2-1" href="#ggplot2-1">ggplot2</a></h3><p>Something that looks a bit like ggplot2.</p><div><pre><code class="language-julia">using Colors
+end</code></pre></div><p><a href="../colormap.pdf">[.pdf]</a>, <a href="../colormap.tex">[generated .tex]</a></p><p><img src="../colormap.svg" alt/></p><h3><a class="nav-anchor" id="Explicit-colors-in-surface-plots-1" href="#Explicit-colors-in-surface-plots-1">Explicit colors in surface plots</a></h3><p>When used outside options, all <code>Colors.Colorant</code> colors are printed in the format that can be used in surface plots explicitly.</p><div><pre><code class="language-julia">using Colors
+hues = 0:30:360
+saturations = 0:0.1:1
+HS = vec(tuple.(hues, saturations&#39;))
+c = Coordinates(first.(HS), last.(HS); meta = [HSL(hs..., 0.5) for hs in HS])
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xlabel = &quot;hue (degrees)&quot;,
+        ylabel = &quot;saturation&quot;
+    },
+    Plot(
+        {
+            &quot;matrix_plot*&quot;,
+            no_marks,
+            &quot;mesh/color input&quot; = &quot;explicit&quot;,
+            &quot;mesh/cols&quot; = length(hues)
+        },
+        c))</code></pre></div><p><a href="../explicit_surface_color.pdf">[.pdf]</a>, <a href="../explicit_surface_color.tex">[generated .tex]</a></p><p><img src="../explicit_surface_color.svg" alt/></p><h3><a class="nav-anchor" id="ggplot2-1" href="#ggplot2-1">ggplot2</a></h3><p>Something that looks a bit like ggplot2.</p><div><pre><code class="language-julia">using Colors
 using LaTeXStrings
 
 ggplot2_axis_theme = @pgf {
