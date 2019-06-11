@@ -130,6 +130,38 @@ julia> print_tex(p)
 \end{polaraxis}
 ```
 
+### SmithChart
+
+A `SmithChart` plots data on a Smith Chart axis.
+
+Smith Charts, used commonly in RF/Microwave engineering, map the complex half
+plane with positive real parts to the unit circle.
+
+The axis will visualize plots with 2D input coordinates $z \in \mathbb{C}$ of the
+form $z = x + jy \in \mathbb{C}$ with $x \ge 0$ using the map
+```math
+r\colon [0,\infty] \times [-\infty,\infty] \to
+    \{ a+j b \;\vert\;  a^2 + b^2 = 1 \},
+    \quad r(z) = \frac{z-1}{z+1}
+```
+
+Example:
+
+```jldoctest
+julia> p = SmithChart( Plot( Coordinates([(0.5,0.2),(1,0.8),(2,2)])));
+
+julia> print_tex(p)
+\begin{smithchart}
+    \addplot
+        coordinates {
+            (0.5,0.2)
+            (1,0.8)
+            (2,2)
+        }
+        ;
+\end{smithchart}
+```
+
 ### Semilog and log-log axes
 
 ```@docs
