@@ -13,7 +13,7 @@ using Requires: @require
 using Unicode: lowercase
 
 export TikzDocument, TikzPicture
-export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, GroupPlot
+export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!

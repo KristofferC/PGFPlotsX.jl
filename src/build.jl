@@ -72,6 +72,7 @@ DEFAULT_PREAMBLE =
         "\\pgfplotsset{compat=newest}",
         "\\usepgfplotslibrary{groupplots}",
         "\\usepgfplotslibrary{polar}",
+        "\\usepgfplotslibrary{smithchart}",
         "\\usepgfplotslibrary{statistics}",
         "\\usepgfplotslibrary{dateplot}",
     ]

@@ -95,6 +95,13 @@ Polar axes, corresponds to `polaraxis` in PGFPlots.
 @define_axislike PolarAxis "polaraxis"
 
 """
+    SmithChart([options], elements...)
+
+Smith Chart axes, corresponds to `smithchart` in PGFPlots.
+"""
+@define_axislike SmithChart "smithchart"
+
+"""
     GroupPlot([options], contents...)
 
 A group plot, using the `groupplots` library of PGFPlots.
