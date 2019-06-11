@@ -114,11 +114,13 @@ savefigs("polar", ans) # hide
 ## Smith Chart
 
 ```@example pgf
-frequency = Array(range(100e6,stop=10e9,length=10)) # 100 MHz to 10 GHz
+ # Samples for 100 MHz to 10 GHz
+frequency = range(100e6,stop=10e9,length=10)
 L = 1e-9 # 1 nH
 R = 25   # 25 Ω
 Z0 = 50  # 50 Ω Reference
-network = (R .+ 1.0im*2*pi*frequency*L) ./ Z0 # Series network of R + jωL, normalized
+# Series network of R + jωL, normalized
+network = @. (R + 1.0im*2*pi*frequency*L) / Z0
 SmithChart(Plot(Coordinates([(real(z),imag(z)) for z in network])))
 savefigs("smith", ans) # hide
 ```
