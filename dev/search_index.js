@@ -409,6 +409,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/axislike/#SmithChart-1",
+    "page": "Axis & friends",
+    "title": "SmithChart",
+    "category": "section",
+    "text": "A SmithChart plots data on a Smith Chart axis.Smith Charts, used commonly in RF/Microwave engineering, map the complex half plane with positive real parts to the unit circle.The axis will visualize plots with 2D input coordinates z in mathbbC of the form z = x + jy in mathbbC with x ge 0 using the maprcolon 0infty times -inftyinfty to\n     a+j b vert  a^2 + b^2 = 1 \n    quad r(z) = fracz-1z+1Example:julia> p = SmithChart( Plot( Coordinates([(0.5,0.2),(1,0.8),(2,2)])));\n\njulia> print_tex(p)\n\\begin{smithchart}\n    \\addplot\n        coordinates {\n            (0.5,0.2)\n            (1,0.8)\n            (2,2)\n        }\n        ;\n\\end{smithchart}"
+},
+
+{
     "location": "man/axislike/#PGFPlotsX.SemiLogXAxis",
     "page": "Axis & friends",
     "title": "PGFPlotsX.SemiLogXAxis",
@@ -814,6 +822,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Polar axis",
     "category": "section",
     "text": "angles = [ℯ/50*360*i for i in 1:500]\nradius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]\nPolarAxis(PlotInc(Coordinates(angles, radius)))\nsavefigs(\"polar\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/axislike/#Smith-Chart-1",
+    "page": "Axis-like objects",
+    "title": "Smith Chart",
+    "category": "section",
+    "text": " # Samples for 100 MHz to 10 GHz\nfrequency = range(100e6,stop=10e9,length=10)\nL = 1e-9 # 1 nH\nR = 25   # 25 Ω\nZ0 = 50  # 50 Ω Reference\n# Series network of R + jωL, normalized\nnetwork = @. (R + 1.0im*2*pi*frequency*L) / Z0\nSmithChart(Plot(Coordinates([(real(z),imag(z)) for z in network])))\nsavefigs(\"smith\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
