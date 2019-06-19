@@ -112,7 +112,8 @@ The `contents` after the global options are processed as follows:
 
 2. `nothing` is emitted as a `\\nextgroupplot[group/empty plot]`,
 
-3. an [`Axis`](@ref) is emitted as a `\\nextgroupplot[options...]`, followed by the contents,
+3. [`Axis`](@ref), [`SemiLogXAxis`](@ref), [`SemiLogYAxis`](@ref) and [`LogLogAxis`](@ref)
+   are emitted as `\\nextgroupplot[options...]`, followed by the contents,
 
 4. other values, eg `Plot` are emitted using [`print_tex`](@ref).
 """
@@ -128,9 +129,18 @@ function print_tex(io::IO, groupplot::GroupPlot)
             if elt isa Options
                 print(io, raw"\nextgroupplot")
                 print_options(io, elt)
-            elseif elt isa Axis
+            elseif typeof(elt) in (Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis)
                 print(io, raw"\nextgroupplot")
-                print_options(io, elt.options)
+                # add extra option for SemiLogXAxis, SemiLogYAxis, LogLogAxis
+                opts = elt.options
+                if elt isa SemiLogXAxis
+                    opts = merge(Options("xmode=log,ymode=normal" => nothing), opts)
+                elseif elt isa SemiLogYAxis
+                    opts = merge(Options("xmode=normal,ymode=log" => nothing), opts)
+                elseif elt isa LogLogAxis
+                    opts = merge(Options("xmode=log,ymode=log" => nothing), opts)
+                end
+                print_options(io, opts)
                 for c in elt.contents
                     print_tex(io, c)
                 end

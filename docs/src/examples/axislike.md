@@ -68,29 +68,29 @@ savefigs("groupplot-multiple", ans) # hide
 
 ![](groupplot-multiple.svg)
 
-## Using `Axis` in group plots
+## Using `Axis` etc in group plots
 
-Alternatively, you can use `Axis` to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.
+Alternatively, you can use `Axis`, `SemiLogXAxis`, `SemiLogYAxis` and `LogLogAxis` to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.
 
 ```@example pgf
-x = range(0; stop =2*pi, length = 100)
-axs1 = @pgf Axis({ xlabel = raw"$\alpha$", ylabel = "sin" },
-                 PlotInc(Table(x, sin.(x))),
-                 PlotInc(Table(x, sin.(x .+ 0.5))));
-axs2 = @pgf Axis({ xlabel = raw"$\beta$", ylabel = "cos" },
-                  PlotInc(Table(x, cos.(x))),
-                  PlotInc(Table(x, cos.(x .+ 0.5))));
+x = range(0; stop=2, length = 100)
+exp_plot = PlotInc(Table(x, exp.(x)))
+exp_legend = LegendEntry(raw"$\exp(x)$")
+log_plot = PlotInc(Table(x, log.(x)))
+log_legend = LegendEntry(raw"$\log(x)$")
+
+axs1 = @pgf Axis(exp_plot, exp_legend, log_plot, log_legend)
+axs2 = @pgf SemiLogYAxis(exp_plot, exp_legend, log_plot, log_legend)
+axs3 = @pgf SemiLogXAxis(exp_plot, exp_legend, log_plot, log_legend)
+axs4 = @pgf LogLogAxis(exp_plot, exp_legend, log_plot, log_legend)
+
 @pgf GroupPlot(
-    {
-        group_style =
-        {
-            group_size="2 by 1",
-            xticklabels_at="edge bottom",
-            yticklabels_at="edge left"
-        },
-        no_markers
+    { group_style = { group_size="2 by 2" },
+      no_markers,
+      legend_pos="north west",
+      xlabel=raw"$x$",
     },
-    axs1, axs2)
+    axs1, axs2, axs3, axs4)
 savefigs("groupplot-multiple-axis", ans) # hide
 ```
 
