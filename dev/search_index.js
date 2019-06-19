@@ -389,7 +389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis & friends",
     "title": "PGFPlotsX.GroupPlot",
     "category": "type",
-    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nan Axis is emitted as a \\nextgroupplot[options...], followed by the contents,\nother values, eg Plot are emitted using print_tex.\n\n\n\n\n\n"
+    "text": "GroupPlot([options], contents...)\n\nA group plot, using the groupplots library of PGFPlots.\n\nThe contents after the global options are processed as follows:\n\nOptions (ie from @pgf {}) will emit a \\nextgroupplot with the given options,\nnothing is emitted as a \\nextgroupplot[group/empty plot],\nAxis, SemiLogXAxis, SemiLogYAxis and LogLogAxis are emitted as \\nextgroupplot[options...], followed by the contents,\nother values, eg Plot are emitted using print_tex.\n\n\n\n\n\n"
 },
 
 {
@@ -809,11 +809,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/axislike/#Using-Axis-in-group-plots-1",
+    "location": "examples/axislike/#Using-Axis-etc-in-group-plots-1",
     "page": "Axis-like objects",
-    "title": "Using Axis in group plots",
+    "title": "Using Axis etc in group plots",
     "category": "section",
-    "text": "Alternatively, you can use Axis to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.x = range(0; stop =2*pi, length = 100)\naxs1 = @pgf Axis({ xlabel = raw\"$\\alpha$\", ylabel = \"sin\" },\n                 PlotInc(Table(x, sin.(x))),\n                 PlotInc(Table(x, sin.(x .+ 0.5))));\naxs2 = @pgf Axis({ xlabel = raw\"$\\beta$\", ylabel = \"cos\" },\n                  PlotInc(Table(x, cos.(x))),\n                  PlotInc(Table(x, cos.(x .+ 0.5))));\n@pgf GroupPlot(\n    {\n        group_style =\n        {\n            group_size=\"2 by 1\",\n            xticklabels_at=\"edge bottom\",\n            yticklabels_at=\"edge left\"\n        },\n        no_markers\n    },\n    axs1, axs2)\nsavefigs(\"groupplot-multiple-axis\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "Alternatively, you can use Axis, SemiLogXAxis, SemiLogYAxis and LogLogAxis to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.x = range(0; stop=2, length = 100)\nexp_plot = PlotInc(Table(x, exp.(x)))\nexp_legend = LegendEntry(raw\"$\\exp(x)$\")\nlog_plot = PlotInc(Table(x, log.(x)))\nlog_legend = LegendEntry(raw\"$\\log(x)$\")\n\naxs1 = @pgf Axis(exp_plot, exp_legend, log_plot, log_legend)\naxs2 = @pgf SemiLogYAxis(exp_plot, exp_legend, log_plot, log_legend)\naxs3 = @pgf SemiLogXAxis(exp_plot, exp_legend, log_plot, log_legend)\naxs4 = @pgf LogLogAxis(exp_plot, exp_legend, log_plot, log_legend)\n\n@pgf GroupPlot(\n    { group_style = { group_size=\"2 by 2\" },\n      no_markers,\n      legend_pos=\"north west\",\n      xlabel=raw\"$x$\",\n    },\n    axs1, axs2, axs3, axs4)\nsavefigs(\"groupplot-multiple-axis\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
