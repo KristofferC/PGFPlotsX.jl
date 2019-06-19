@@ -1,0 +1,48 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[tick align={outside}, tick pos={left}, xmajorgrids, x grid style={white}, ymajorgrids, y grid style={white}, axis line style={white}, axis background/.style={fill={white!89.803921568627459!black}}, xmin={-0.095}, xmax={1.995}, ymin={-1.1}, ymax={1.1}, title={Simple plot $\frac{\alpha}{2}$}, xlabel={time (s)}, ylabel={Voltage (mV)}]
+    \addplot+[mark={*}, mark size={3}, mark options={solid}, line width={1.64pt}, color={rgb,1:red,0.972;green,0.4636;blue,0.4272}]
+        coordinates {
+            (0.0,0.0)
+            (0.3,0.5646424733950354)
+            (0.6,0.9320390859672263)
+            (0.9,0.9738476308781951)
+            (1.2,0.675463180551151)
+            (1.5,0.1411200080598672)
+            (1.8,-0.44252044329485246)
+        }
+        ;
+    \addplot+[mark={*}, mark size={3}, mark options={solid}, line width={1.64pt}, color={rgb,1:red,0.0;green,0.7282;blue,0.2208}]
+        coordinates {
+            (0.0,1.0)
+            (0.3,0.8253356149096783)
+            (0.6,0.3623577544766736)
+            (0.9,-0.2272020946930871)
+            (1.2,-0.7373937155412454)
+            (1.5,-0.9899924966004454)
+            (1.8,-0.896758416334147)
+        }
+        ;
+    \addplot+[mark={*}, mark size={3}, mark options={solid}, line width={1.64pt}, color={rgb,1:red,0.3805;green,0.6115;blue,1.0}]
+        coordinates {
+            (0.0,1.0)
+            (0.3,0.0707372016677029)
+            (0.6,-0.9899924966004454)
+            (0.9,-0.2107957994307797)
+            (1.2,0.960170286650366)
+            (1.5,0.3466353178350258)
+            (1.8,-0.9111302618846769)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
