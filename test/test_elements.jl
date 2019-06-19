@@ -216,3 +216,16 @@ end
     @test squashed_repr_tex(@pgf { color = HSV(1, 1e-10, 1) }) ==
         "[color={rgb,1:red,1.0;green,1.0;blue,1.0}]"
 end
+
+@testset "Axis, SemiLogXAxis, SemiLogYAxis and LogLogAxis inside GroupPlot" begin
+    gp = @pgf GroupPlot({group_style={group_size="2 by 2"}},
+        Axis(), SemiLogXAxis(), SemiLogYAxis(), LogLogAxis())
+    @test repr_tex(gp) == """
+    \\begin{groupplot}[group style={group size={2 by 2}}]
+        \\nextgroupplot
+        \\nextgroupplot[xmode=log,ymode=normal]
+        \\nextgroupplot[xmode=normal,ymode=log]
+        \\nextgroupplot[xmode=log,ymode=log]
+    \\end{groupplot}
+    """
+end
