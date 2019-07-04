@@ -40,7 +40,6 @@ else
     if have_pdftoppm
         default_pdftoppm = `pdftoppm`
     else
-        have_pdftoppm
         @warn(string("Did not find `pdftocairo` or `pdftoppm`, png output will be disabled. Install `pdftocairo` or `pdftoppm` ",
                     "and run Pkg.build(\"PGFPLotsX\") to enable"))
     end
@@ -66,9 +65,13 @@ end
 open(joinpath(@__DIR__, "deps.jl"), "w") do f
     println(f, "DEFAULT_ENGINE = \"", default_engine, "\"")
     println(f, "HAVE_PDFTOPPM = ", have_pdftoppm)
-    println(f, "DEFAULT_PDFTOPPM = ", default_pdftoppm)
+    if have_pdftoppm
+        println(f, "DEFAULT_PDFTOPPM = ", default_pdftoppm)
+    end
     println(f, "HAVE_PDFTOSVG = ", have_pdf2svg)
-    println(f, "DEFAULT_PDFTOSVG = ", default_pdftosvg)
+    if have_pdf2svg
+        println(f, "DEFAULT_PDFTOSVG = ", default_pdftosvg)
+    end
 end
 
 
