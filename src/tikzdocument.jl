@@ -273,7 +273,7 @@ if HAVE_PDFTOSVG
             Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
         end
         # TODO Better error
-        svg_cmd = `pdf2svg $tmp_pdf $filename`
+        svg_cmd = `$DEFAULT_PDFTOSVG $tmp_pdf $filename`
         svg_success = success(svg_cmd)
         if !svg_success
             error("Failed to run $svg_cmd")
@@ -330,7 +330,7 @@ if HAVE_PDFTOPPM
             savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
         end
         filebase = splitext(filename)[1]
-        png_cmd = `pdftoppm -png -r $dpi -singlefile $tmp $filebase`
+        png_cmd = `$DEFAULT_PDFTOPPM -png -r $dpi -singlefile $tmp $filebase`
         png_success = success(png_cmd)
         found_ijulia_cache_matching && rm(tmp; force=true)
         if !png_success
