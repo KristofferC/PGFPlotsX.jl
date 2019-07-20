@@ -40,11 +40,20 @@ include("../deps/deps.jl")
 Print `elt` to `io` as LaTeX code. The optional third argument allows methods to
 work differently depending on the container.
 
+`print_tex(String, ...)` returns the LaTeX code as a `String`.
+
 This method should indent as if at the top level, containers indent their
 contents as necessary. See [`print_indent`](@ref).
 """
 print_tex(io::IO, a, b) = print_tex(io, a)
+
 print_tex(a) = print_tex(stdout, a)
+
+function print_tex(::Type{String}, args...)
+    io = IOBuffer()
+    print_tex(io, args...)
+    String(take!(io))
+end
 
 include("options.jl")
 include("utilities.jl")

@@ -107,11 +107,14 @@ function Base.merge!(a::OptionType, options::Options)
 end
 
 """
-    $SIGNATURES
+    $(SIGNATURES)
 
 Print options between `[]`. For each option, the value is printed using
 [`print_opt`](@ref). Unless `newline == true` (the default), a newline follows
 the `]`, otherwise a space.
+
+Note that you can also use `print_tex` for this purpose, in which case a newline is not
+printed.
 """
 function print_options(io::IO, options::Options; newline = true)
     @unpack dict, print_empty = options
@@ -124,6 +127,8 @@ function print_options(io::IO, options::Options; newline = true)
     end
     newline ? println(io) : print(io, " ")
 end
+
+print_tex(io::IO, options::Options) = print_options(io, options; newline = false)
 
 accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
 accum_opt!(d::AbstractDict, opt::Pair) = d[first(opt)] = last(opt)

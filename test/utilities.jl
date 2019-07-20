@@ -1,17 +1,7 @@
 # utilities for testing
 
 "Invoke print_tex with the given arguments, collect the results in a string."
-function repr_tex(args...)
-    io = IOBuffer()
-    print_tex(io, args...)
-    String(take!(io))
-end
-
-function repr_tex(options::Options)
-    io = IOBuffer()
-    PGFPlotsX.print_options(io, options; newline = false)
-    String(take!(io))
-end
+repr_tex(args...) = print_tex(String, args...)
 
 """
 Trim lines, merge whitespace to a single space, merge multiple empty lines into
