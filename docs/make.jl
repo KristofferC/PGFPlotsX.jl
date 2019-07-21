@@ -29,6 +29,7 @@ makedocs(
             "examples/gallery.md",
             "examples/juliatypes.md",
             "examples/convenience.md",
+            "examples/latex.md",
         ]
     ]
 )

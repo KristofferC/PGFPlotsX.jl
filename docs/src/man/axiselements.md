@@ -98,3 +98,5 @@ VLine
 ## [Using LaTeX code directly](@id latex_code_strings)
 
 In case there is no type defined in this package for some construct, you can use a `String` in an axis, and it is inserted verbatim into the generated LaTeX code. [Raw string literals](https://docs.julialang.org/en/latest/manual/strings/#man-raw-string-literals-1) and the package [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) are useful to avoid a lot of escaping.
+
+[The gallery](@ref latex-code) has some detailed examples, eg for annotating plots.
