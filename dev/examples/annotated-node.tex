@@ -1,0 +1,36 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[only marks, xlabel={x}, ylabel={y}]
+    \addplot
+        table[row sep={\\}]
+        {
+            \\
+            0.004513640488852001  -0.05109461790333032  \\
+            0.3312486605632845  -0.048324694664811124  \\
+            -0.21263577698560399  0.1764915561174293  \\
+            0.3149704660524187  0.014496710478331709  \\
+            0.007954750944525562  0.03855050906832422  \\
+            0.39841820968423425  -0.40837486040351423  \\
+            0.13032856057655734  0.006144881279050364  \\
+            0.22890391581722888  -0.0003171213897347681  \\
+            -0.38684596437327007  0.09044512164388449  \\
+            0.1889204239613913  -0.022586425899587863  \\
+            2.0  1.0  \\
+        }
+        ;
+    \node 
+    [draw={rgb,1:red,0.8039;green,0.3098;blue,0.2235}, pin={180:outlier}]  at 
+    (2.0,1.0)
+    {};
+\end{axis}
+\end{tikzpicture}
+\end{document}

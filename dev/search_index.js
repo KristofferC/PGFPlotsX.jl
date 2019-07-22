@@ -349,7 +349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Axis elements",
     "title": "Using LaTeX code directly",
     "category": "section",
-    "text": "In case there is no type defined in this package for some construct, you can use a String in an axis, and it is inserted verbatim into the generated LaTeX code. Raw string literals and the package LaTeXStrings are useful to avoid a lot of escaping."
+    "text": "In case there is no type defined in this package for some construct, you can use a String in an axis, and it is inserted verbatim into the generated LaTeX code. Raw string literals and the package LaTeXStrings are useful to avoid a lot of escaping.The gallery has some detailed examples, eg for annotating plots."
 },
 
 {
@@ -597,7 +597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internals",
     "title": "PGFPlotsX.print_tex",
     "category": "function",
-    "text": "print_tex(io, elt, [container])\n\nPrint elt to io as LaTeX code. The optional third argument allows methods to work differently depending on the container.\n\nprint_tex(String, ...) returns the LaTeX code as a String.\n\nThis method should indent as if at the top level, containers indent their contents as necessary. See print_indent.\n\n\n\n\n\nprint_tex(io, str)\n\n\nPrint a string as is, terminated with a newline.\n\nnote: Note\nThis is used as a workaround for LaTeX code that does not have a corresponding type, eg as elements in Axis. raw or LaTeXStrings are useful to avoid piling up backslashes. The newline is added to separate tokens.\n\n\n\n\n\nprint_tex(io, x)\n\n\nReal numbers are printed as is, except for non-finite representation.\n\n\n\n\n\n"
+    "text": "print_tex(io, elt, [container])\n\nPrint elt to io as LaTeX code. The optional third argument allows methods to work differently depending on the container.\n\nprint_tex(String, ...) returns the LaTeX code as a String.\n\nThis method should indent as if at the top level, containers indent their contents as necessary. See print_indent.\n\n\n\n\n\nprint_tex(io, str)\n\n\nPrint a string as is, terminated with a newline.\n\nnote: Note\nThis is used as a workaround for LaTeX code that does not have a corresponding type, eg as elements in Axis. raw or LaTeXStrings are useful to avoid piling up backslashes. The newline is added to separate tokens.\n\n\n\n\n\nprint_tex(io, vector)\n\n\nVectors are emitted elementwise without any extra whitespace as LaTeX code, using the print_tex method for each element.\n\n\n\n\n\nprint_tex(io, x)\n\n\nReal numbers are printed as is, except for non-finite representation.\n\n\n\n\n\n"
 },
 
 {
@@ -1078,6 +1078,30 @@ var documenterSearchIndex = {"docs": [
     "title": "Horizontal and vertical lines",
     "category": "section",
     "text": "x = range(3.01; stop = 6, length = 100)\ny = @. 1/(x-3) + 3\n@pgf Axis(\n    {\n        ymin = 2.5,\n        ymax = 6,\n        xmin = 2.5\n    },\n    Plot(\n        {\n            no_marks\n        },\n        Table(x, y)\n    ),\n    HLine({ dashed, blue }, 3),\n    VLine({ dotted, red }, 3)\n)\nsavefigs(\"hvline\", ans) # hide[.pdf], [generated .tex](Image: )"
+},
+
+{
+    "location": "examples/latex/#",
+    "page": "Using LaTeX code",
+    "title": "Using LaTeX code",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "examples/latex/#latex-code-1",
+    "page": "Using LaTeX code",
+    "title": "Using LaTeX code",
+    "category": "section",
+    "text": "PGFPlotsX has does not specify types for all LaTeX constructs. This is not a limitation, as you can just provide LaTeX code as strings, which are emitted directly. They can be freely mixed with other types, which are converted to LaTeX with print_tex. Since elements of AbstractVectors are printed in turn, this allows for a compact style.using PGFPlotsX\nsavefigs = (figname, obj) -> begin\n    pgfsave(figname * \".pdf\", obj)\n    run(`pdf2svg $(figname * \".pdf\") $(figname * \".svg\")`)\n    pgfsave(figname * \".tex\", obj);\n    return nothing\nend"
+},
+
+{
+    "location": "examples/latex/#Annotating-plots-1",
+    "page": "Using LaTeX code",
+    "title": "Annotating plots",
+    "category": "section",
+    "text": "The example below demonstrates the use of \\node. Note the following:we use the raw string literal, which ensures that we don\'t need to escape the \\; \"\\\\node\" would work identically\nthe options (with {}, also containing a color) and coordinates we mix in just work as they should,\nwe provide separating whitespace, and the terminating ;.using Colors\nx = vcat(randn(10) ./ 4, 2.0)\ny = vcat(randn(10) ./ 4, 1.0)\n@pgf Axis(\n    {\n        only_marks,\n        xlabel = \"x\",\n        ylabel = \"y\"\n    },\n    Plot(Table(x, y)),\n    [raw\"\\node \",\n     {\n         draw = parse(Colorant, \"tomato3\"),\n         pin = \"180:outlier\"\n     },\n     \" at \",\n     Coordinate(x[end], y[end]),\n     \"{};\"])\nsavefigs(\"annotated-node\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 ]}
