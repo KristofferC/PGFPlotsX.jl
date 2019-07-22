@@ -73,6 +73,14 @@ Print a string *as is*, terminated with a newline.
 print_tex(io::IO, str::AbstractString) = println(io, str)
 
 """
+$(SIGNATURES)
+
+Vectors are emitted elementwise without any extra whitespace as LaTeX code, using the
+`print_tex` method for each element.
+"""
+print_tex(io::IO, vector::AbstractVector) = foreach(elt -> print_tex(io, elt), vector)
+
+"""
     $SIGNATURES
 
 Real numbers are printed as is, except for non-finite representation.
