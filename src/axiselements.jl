@@ -1,3 +1,6 @@
+"Types accepted by `Plot` for the field `data`."
+abstract type PlotData <: OptionType end
+
 ##############
 # Expression #
 ##############
@@ -10,7 +13,7 @@
 An `Expression` is a string or multiple strings, representing a function, and is
 written in a way LaTeX understands.
 """
-struct Expression <: OptionType
+struct Expression <: PlotData
     fs::Vector{String}
 end
 
@@ -127,7 +130,7 @@ function print_tex(io::IO, coordinate::Coordinate)
     println(io)
 end
 
-struct Coordinates{N}
+struct Coordinates{N} <: PlotData
     data::AbstractVector{Union{Nothing, Coordinate{N}}}
 end
 
@@ -438,7 +441,7 @@ function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
     TableData(columns, colnames, length(x), rowsep)
 end
 
-struct Table <: OptionType
+struct Table <: PlotData
     options::Options
     content::Union{TableData, AbstractString}
     Table(options::Options, content::Union{TableData, AbstractString}) =
@@ -512,7 +515,7 @@ end
 
 `Graphics` data simply wraps an image (eg a `.png` file).
 """
-struct Graphics <: OptionType
+struct Graphics <: PlotData
     options::Options
     filename::String
 end
@@ -530,9 +533,6 @@ end
 ########
 # Plot #
 ########
-
-"Types accepted by `Plot` for the field `data`."
-const PlotData = Union{Coordinates, Table, Expression, Graphics}
 
 """
 $(TYPEDEF)
