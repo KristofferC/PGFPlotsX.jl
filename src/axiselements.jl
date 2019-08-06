@@ -532,7 +532,7 @@ end
 ########
 
 "Types accepted by `Plot` for the field `data`."
-const PlotData = Union{Coordinates, Table, Expression, Graphics}
+const PlotData = Union{Coordinates, Table, Expression, Graphics, AbstractString}
 
 """
 $(TYPEDEF)
