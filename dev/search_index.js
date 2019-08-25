@@ -1009,11 +1009,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "examples/juliatypes/#Countour.jl-1",
+    "location": "examples/juliatypes/#Contour.jl-1",
     "page": "Julia types",
-    "title": "Countour.jl",
+    "title": "Contour.jl",
     "category": "section",
-    "text": "A Table of a contour from the Contours.jl package will print as .tex in a format that is good to use with contour_prepared.using Contour\nx = 0.0:0.1:2π\ny = 0.0:0.1:2π\nf = (x,y) -> sin(x)*sin(y)\n@pgf Plot({\n        contour_prepared,\n        very_thick\n    },\n    Table(contours(x, y, f.(x, y\'), 6)))\nsavefigs(\"contour\", ans) # hide[.pdf], [generated .tex](Image: )"
+    "text": "A Table of a contour from the Contour.jl package will print as .tex in a format that is good to use with contour_prepared.using Contour\nx = 0.0:0.1:2π\ny = 0.0:0.1:2π\nf = (x,y) -> sin(x)*sin(y)\n@pgf Plot({\n        contour_prepared,\n        very_thick\n    },\n    Table(contours(x, y, f.(x, y\'), 6)))\nsavefigs(\"contour\", ans) # hide[.pdf], [generated .tex](Image: )"
 },
 
 {
