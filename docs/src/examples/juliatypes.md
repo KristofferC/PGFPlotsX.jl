@@ -253,9 +253,9 @@ savefigs("dataframes", ans) # hide
 
 ![](dataframes.svg)
 
-## Countour.jl
+## Contour.jl
 
-A `Table` of a contour from the [Contours.jl package](https://github.com/JuliaGeometry/Contour.jl) will print as .tex in a format that is
+A `Table` of a contour from the [Contour.jl package](https://github.com/JuliaGeometry/Contour.jl) will print as .tex in a format that is
 good to use with `contour_prepared`.
 
 ```@example pgf
