@@ -59,9 +59,6 @@ end
             pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(read("$tmp.tex", String))
-            # test with filename::String{SubString}
-            pgfsave(split("foo|$tmp-2.tex", '|')[2], a)
-            @test is_tex_document("$tmp-2.tex")
             if PGFPlotsX.HAVE_PDFTOPPM
                 pgfsave("$tmp.png", a)
                 @test is_png_file("$tmp.png")
@@ -78,6 +75,9 @@ end
             @test is_pdf_file("$tmp.pdf")
             pgfsave("$tmp.tikz", a)
             @test is_tikz_standalone("$tmp.tikz")
+            # test with filename::String{SubString}
+            pgfsave(split("foo|$tmp-2.pdf", '|')[2], a)
+            @test is_pdf_file("$tmp-2.pdf")
 
             let tikz_lines = readlines("$tmp.tikz")
                 @test occursin(r"^\\begin{tikzpicture}.*", tikz_lines[1])
