@@ -63,7 +63,7 @@ Keywords specify options, some specific to some output formats.
 
 `pgfsave` is an alias which is exported.
 """
-function save(filename::String, td::TikzDocument;
+function save(filename::AbstractString, td::TikzDocument;
               include_preamble::Bool = true,
               latex_engine = latexengine(),
               buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
@@ -99,7 +99,7 @@ end
 const pgfsave = save
 
 # TeX
-function savetex(filename::String, td::TikzDocument;
+function savetex(filename::AbstractString, td::TikzDocument;
                  include_preamble::Bool = true)
     open(filename, "w") do io
         savetex(io, td; include_preamble = include_preamble)
@@ -152,7 +152,7 @@ end
 
 _HAS_WARNED_SHELL_ESCAPE = false
 
-function savepdf(filename::String, td::TikzDocument;
+function savepdf(filename::AbstractString, td::TikzDocument;
                  latex_engine = latexengine(),
                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                  run_count = 0, tmp = tempname())
@@ -260,7 +260,7 @@ if HAVE_PDFTOSVG
     `filename` with the extension (if any) replaced by `".pdf"`. This overwrites
     an existing PDF file with the same name.
     """
-    function savesvg(filename::String, td::TikzDocument;
+    function savesvg(filename::AbstractString, td::TikzDocument;
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      keep_pdf = false)
@@ -310,7 +310,7 @@ if HAVE_PDFTOSVG
 end
 
 if HAVE_PDFTOPPM
-    function savepng(filename::String, td::TikzDocument;
+    function savepng(filename::AbstractString, td::TikzDocument;
                      latex_engine = latexengine(),
                      buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
                      dpi::Int = 150)
