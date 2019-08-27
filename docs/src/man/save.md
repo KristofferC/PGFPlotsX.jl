@@ -13,7 +13,7 @@ In the REPL, the figure will be exported to a `pdf` and attempted to be opened i
 Figures can be exported to files using
 
 ```jlcon
-pgfsave(filename::String, figure; include_preamble::Bool = true, dpi = 150)
+pgfsave(filename::AbstractString, figure; include_preamble::Bool = true, dpi = 150)
 ```
 
 where the file extension of `filename` determines the file type (can be `pdf`, `svg` or `tex`, or the standalone `tikz` file extensions below), `include_preamble` sets if the preamble should be included in the output (only relevant for `tex` export) and `dpi` determines the dpi of the figure (only relevant for `png` export).

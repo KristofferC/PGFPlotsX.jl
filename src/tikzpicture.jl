@@ -29,6 +29,6 @@ function print_tex(io::IO, tp::TikzPicture)
     println(io, "\\end{tikzpicture}")
 end
 
-function save(filename::String, tp::TikzPicture; kwargs...)
+function save(filename::AbstractString, tp::TikzPicture; kwargs...)
     save(filename, TikzDocument(tp); kwargs...)
 end

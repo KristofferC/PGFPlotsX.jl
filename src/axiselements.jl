@@ -517,7 +517,7 @@ struct Graphics <: OptionType
     filename::String
 end
 
-function Graphics(filename::String, args::Vararg{PGFOption})
+function Graphics(filename::AbstractString, args::Vararg{PGFOption})
     Graphics(dictify(args), filename)
 end
 
@@ -612,7 +612,7 @@ Plot3Inc(options::Options, data::PlotData, trailing...) =
 Plot3Inc(data::PlotData, trailing...) =
     Plot(true, true, Options(), data, trailing)
 
-function save(filename::String, plot::Plot; kwargs...)
+function save(filename::AbstractString, plot::Plot; kwargs...)
     save(filename, Axis(plot); kwargs...)
 end
 

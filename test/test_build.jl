@@ -75,6 +75,9 @@ end
             @test is_pdf_file("$tmp.pdf")
             pgfsave("$tmp.tikz", a)
             @test is_tikz_standalone("$tmp.tikz")
+            # test with filename::String{SubString}
+            pgfsave(split("foo|$tmp-2.pdf", '|')[2], a)
+            @test is_pdf_file("$tmp-2.pdf")
 
             let tikz_lines = readlines("$tmp.tikz")
                 @test occursin(r"^\\begin{tikzpicture}.*", tikz_lines[1])

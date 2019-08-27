@@ -40,7 +40,7 @@ function print_tex(io::IO, axislike::T) where {T <: AxisLike}
     println(io, "\\end{", name, "}")
 end
 
-function save(filename::String, axislike::AxisLike; kwargs...)
+function save(filename::AbstractString, axislike::AxisLike; kwargs...)
     save(filename, TikzPicture(axislike); kwargs...)
 end
 

@@ -25,7 +25,7 @@ Temporary files (`.aux`, `.log`) are cleaned up.
     Changing the working directory is required because of external tools like
     `gnuplot`, which don't respect `--output-directory`.
 """
-function run_latex_once(filename::String, eng::LaTeXEngine, flags)
+function run_latex_once(filename::AbstractString, eng::LaTeXEngine, flags)
     dir, file = splitdir(filename)
     cmd = `$(_engine_cmd(eng)) $flags $file`
     succ = cd(() -> success(cmd), dir)
@@ -34,7 +34,7 @@ function run_latex_once(filename::String, eng::LaTeXEngine, flags)
     succ, log, cmd
 end
 
-function rm_tmpfiles(filename::String)
+function rm_tmpfiles(filename::AbstractString)
     logfile = _replace_fileext(filename, ".log")
     auxfile = _replace_fileext(filename, ".aux")
     rm(logfile; force = true)
