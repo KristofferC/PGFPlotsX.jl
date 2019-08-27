@@ -59,6 +59,9 @@ end
             pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(read("$tmp.tex", String))
+            # test with filename::String{SubString}
+            pgfsave(split("foo|$tmp-2.tex", '|')[2], a)
+            @test is_tex_document("$tmp-2.tex")
             if PGFPlotsX.HAVE_PDFTOPPM
                 pgfsave("$tmp.png", a)
                 @test is_png_file("$tmp.png")
