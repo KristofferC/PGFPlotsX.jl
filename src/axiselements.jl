@@ -514,7 +514,7 @@ end
 """
 struct Graphics <: OptionType
     options::Options
-    filename::AbstractString
+    filename::String
 end
 
 function Graphics(filename::AbstractString, args::Vararg{PGFOption})
