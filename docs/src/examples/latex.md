@@ -47,3 +47,22 @@ savefigs("annotated-node", ans) # hide
 [\[.pdf\]](annotated-node.pdf), [\[generated .tex\]](annotated-node.tex)
 
 ![](annotated-node.svg)
+
+## [LaTeX code for plot elements](@id latex-plot-elements)
+
+The example below demonstrates how strings can be included as “data” for `Plot`. Specifically, here we name two paths, then use `fill between [of=f and g]` to fill the space between them. This requires the use of the `fillbetween` library for PGFPlots, which we insert in the premable.
+
+```@example pgf
+push!(PGFPlotsX.CUSTOM_PREAMBLE, raw"\usepgfplotslibrary{fillbetween}")
+x = range(-1, 1, length = 51)
+@pgf Axis({ xmajorgrids, ymajorgrids },
+          Plot({ "name path=f", no_marks, }, Coordinates(x, x)),
+          Plot({ "name path=g", no_marks, }, Coordinates(x, 1.2 .* x .+ 1)),
+          Plot({ thick, color = "blue", fill = "blue", opacity = 0.5 },
+               raw"fill between [of=f and g]"))
+savefigs("fillbetween", ans) # hide
+```
+
+[\[.pdf\]](fillbetween.pdf), [\[generated .tex\]](fillbetween.tex)
+
+![](fillbetween.svg)
