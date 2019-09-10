@@ -356,7 +356,7 @@ _is_vscode() = isdefined(Main, :_vscodeserver)
 _is_juno()   = __is_juno[]
 _is_ide()    = _is_ijulia() || _is_vscode() || _is_juno()
 
-function Base.display(::PGFPlotsXDisplay, p::_SHOWABLE)
+function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
     if _DISPLAY_PDF
         filename = tempname() .* ".pdf"
         save(filename, p)
@@ -366,6 +366,6 @@ function Base.display(::PGFPlotsXDisplay, p::_SHOWABLE)
             error("Failed to show the generated pdf, run `PGFPlotsX.enable_interactive(false)` to stop trying to show pdfs.\n", "Error: ", sprint(Base.showerror, e))
         end
     else
-        print(io, p)
+        throw(MethodError(display, (d, p)))
     end
 end
