@@ -159,3 +159,7 @@ Example:
 julia> print_tex(Graphics("img.png"))
 graphics {img.png}
 ```
+
+## Strings in `Plot`
+
+Strings (technically, all subtypes of `AbstractString`) are also accepted by plots, and will be emitted into LaTeX *as is*. This is mostly useful for using constructs from TikZ that do not have a native representation in this package direcly as LaTeX code. See [this example](@ref latex-plot-elements).
