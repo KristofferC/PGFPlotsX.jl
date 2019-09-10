@@ -5,11 +5,12 @@ using Contour, Colors, DataFrames
 
 makedocs(
     modules = [PGFPlotsX],
+    format = Documenter.HTML(; assets = ["assets/custom.css"],
+                             prettyurls = get(ENV, "CI", nothing) == "true"),
     sitename = "PGFPlotsX.jl",
     doctest = true,
     strict = true,
     checkdocs = :none,
-    assets = ["assets/custom.css"],
     pages = Any[
         "Home" => "index.md",
         "Manual" => [
