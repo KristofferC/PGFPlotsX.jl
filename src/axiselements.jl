@@ -464,7 +464,7 @@ Table([1:10, 11:20])                      # same contents, unnamed
 
 Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
 
-@pgf Table({ "x index" = 2, "y index" = 1" }, randn(10, 3))
+@pgf Table({ "x index" = 2, "y index" = 1 }, randn(10, 3))
 
 let x = range(0; stop = 1, length = 10), y = range(-2; stop =  3, length = 15)
     Table(x, y, sin.(x + y'))             # edges & matrix
