@@ -21,7 +21,7 @@ elseif have_pdflatex
 else
     @warn(string("No LaTeX installation found, figures will not be generated. ",
                  "Make sure either pdflatex or lualatex are installed and that ",
-                 "the correct paths are set then run Pkg.build(\"PGFPLotsX\")"))
+                 "the correct paths are set then run Pkg.build(\"PGFPlotsX\")"))
 end
 
 print(stderr, "Looking for pdftocairo...")
@@ -41,7 +41,7 @@ else
         default_pdftoppm = `pdftoppm`
     else
         @warn(string("Did not find `pdftocairo` or `pdftoppm`, png output will be disabled. Install `pdftocairo` or `pdftoppm` ",
-                    "and run Pkg.build(\"PGFPLotsX\") to enable"))
+                    "and run Pkg.build(\"PGFPlotsX\") to enable"))
     end
 
     print(stderr, "Looking for pdf2svg...")
@@ -53,7 +53,7 @@ else
         default_pdftosvg = `pdf2svg`
     else
         @warn(string("Did not find `pdftocairo` or `pdf2svg`, svg output will be disabled. Install `pdftocairo` or `pdf2svg` ",
-                    "and run Pkg.build(\"PGFPLotsX\") to enable"))
+                    "and run Pkg.build(\"PGFPlotsX\") to enable"))
     end
 end
 
