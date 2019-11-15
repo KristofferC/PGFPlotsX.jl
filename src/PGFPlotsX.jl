@@ -1,24 +1,20 @@
 module PGFPlotsX
 
-import MacroTools: prewalk, @capture, @forward
-
 using ArgCheck: @argcheck
-using DataStructures: OrderedDict
 using Dates
-import DefaultApplication
+using DataStructures: OrderedDict
+using DefaultApplication: DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
+using MacroTools: prewalk, @capture, @forward
 using Parameters: @unpack
-using StatsBase: midpoints
 using Requires: @require
-using Unicode: lowercase
+using StatsBase: midpoints
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
-
-const DEBUG = haskey(ENV, "PGFPLOTSX_DEBUG")
 
 struct PGFPlotsXDisplay <: AbstractDisplay end
 
@@ -27,12 +23,6 @@ A file which is spliced directly to the preamble. Customize the file at this
 path for site-specific setting that apply for every plot.
 """
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
-const AbstractDict = Union{Dict, OrderedDict}
-
-if !isfile(joinpath(@__DIR__, "..", "deps", "deps.jl"))
-    error("""please run Pkg.build("PGFPlotsX") before loading the package""")
-end
-include("../deps/deps.jl")
 
 """
     print_tex(io, elt, [container])
@@ -126,9 +116,5 @@ include("tikzpicture.jl")
 include("tikzdocument.jl")
 include("requires.jl")
 include("build.jl")
-
-if DEFAULT_ENGINE == "PDFLATEX"
-    latexengine!(PDFLATEX)
-end
 
 end # module

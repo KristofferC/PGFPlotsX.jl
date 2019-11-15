@@ -3,8 +3,22 @@
 ################
 @enum(LaTeXEngine, LUALATEX, PDFLATEX)
 
-const ACTIVE_LATEX_ENGINE = Ref(LUALATEX)
-latexengine() = ACTIVE_LATEX_ENGINE[]
+const ACTIVE_LATEX_ENGINE = Ref{Union{Nothing, LaTeXEngine}}(nothing)
+function latexengine()
+    if ACTIVE_LATEX_ENGINE[] === nothing
+        for (engine, enum) in zip(("lualatex", "pdflatex"), (LUALATEX, PDFLATEX))
+            @debug "latexengine: looking for latex engine $engine"
+            if Sys.which(engine) !== nothing
+                @debug "latexengine: found latex engine $engine, using it"
+                return ACTIVE_LATEX_ENGINE[] = enum
+            end
+        end
+        throw(MissingExternalProgramError("No LaTeX installation found, figures will not be generated. ",
+                                          "Make sure either pdflatex or lualatex are installed and that ",
+                                          "the PATH variable is correctly set."))
+    end
+    return ACTIVE_LATEX_ENGINE[]
+end
 latexengine!(eng::LaTeXEngine) = ACTIVE_LATEX_ENGINE[] = eng
 
 _engine_cmd(eng::LaTeXEngine) = `$(lowercase(string(eng)))`
@@ -28,7 +42,10 @@ Temporary files (`.aux`, `.log`) are cleaned up.
 function run_latex_once(filename::AbstractString, eng::LaTeXEngine, flags)
     dir, file = splitdir(filename)
     cmd = `$(_engine_cmd(eng)) $flags $file`
-    succ = cd(() -> success(cmd), dir)
+    @debug "running latex command $cmd in dir $dir"
+    succ = cd(dir) do 
+        success(cmd)
+    end
     logfile = _replace_fileext(filename, ".log")
     log = read(logfile, String)
     succ, log, cmd
@@ -103,3 +120,73 @@ function _default_preamble()
     end
     return preamble
 end
+
+#######
+# PNG # 
+#######
+@enum(PNGEngine, NO_PNG_ENGINE, PNG_PDF_TO_CAIRO, PDF_TO_PPM)
+const ACTIVE_PNG_ENGINE = Ref{Union{Nothing, PNGEngine}}(nothing)
+function png_engine()
+    if ACTIVE_PNG_ENGINE[] === nothing
+        for (engine, enum) in zip(("pdftocairo", "pdftoppm"), (PNG_PDF_TO_CAIRO, PDF_TO_PPM))
+            @debug "png_engine: looking for png engine $engine"
+            if Sys.which(engine) !== nothing
+                @debug "png_engine: found png engine $engine, using it"
+                return ACTIVE_PNG_ENGINE[] = enum
+            end
+        end
+        return ACTIVE_PNG_ENGINE[] = NO_PNG_ENGINE
+    end
+    return ACTIVE_PNG_ENGINE[]
+end
+
+function convert_pdf_to_png(pdf::String, png::String; engine::PNGEngine=png_engine(), dpi=150::Integer)
+    if engine == PNG_PDF_TO_CAIRO
+        return run(`pdftocairo -png -r $dpi -singlefile $pdf $png`)
+    elseif engine == PDF_TO_PPM
+        return run(`pdftoppm -png -r $dpi -singlefile $pdf $png`)
+    elseif engine == NO_PNG_ENGINE
+        throw(MissingExternalProgramError("No PDF to PNG converter found, we looked for `pdftocairo` and `pdftoppm`. ",
+                                          "Make sure one of these are installed and available at PATH and restart Julia."))
+    else 
+        error("unreachable reached")
+    end
+end
+
+
+#######
+# SVG #
+#######
+@enum(SVGEngine, NO_SVG_ENGINE, SVG_PDF_TO_CAIRO, PDF_TO_SVG)
+const ACTIVE_SVG_ENGINE = Ref{Union{Nothing, SVGEngine}}(nothing)
+function svg_engine()
+    if ACTIVE_SVG_ENGINE[] === nothing
+        for (engine, enum) in zip(("pdftocairo", "pdftosvg"), (SVG_PDF_TO_CAIRO, PDF_TO_SVG))
+            @debug "svg_engine: looking for svg engine $engine"
+            if Sys.which(engine) !== nothing
+                @debug "svg_engine: found svg engine $engine, using it"
+                return ACTIVE_SVG_ENGINE[] = enum
+            end
+        end
+        return ACTIVE_SVG_ENGINE[] = NO_SVG_ENGINE
+    end
+    return ACTIVE_SVG_ENGINE[]
+end
+
+function convert_pdf_to_svg(pdf::String, svg::String, engine=svg_engine())
+    if engine == SVG_PDF_TO_CAIRO
+        cmd = `pdftocairo -svg -l 1 $pdf $svg`
+        @debug "running $cmd"
+        return run(cmd)
+    elseif engine == PDF_TO_SVG
+        cmd = `pdf2svg $pdf $svg`
+        @debug "running $cmd"
+        return run(cmd)
+    elseif engine == NO_SVG_ENGINE
+        throw(MissingExternalProgramError("No PDF to SVG converter found, we looked for `pdftocairo` and `pdf2svg`. ",
+                                          "Make sure one of these are installed and available at PATH and restart Julia."))
+    else 
+        error("unreachable reached")
+    end
+end
+
