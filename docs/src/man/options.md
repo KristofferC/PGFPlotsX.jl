@@ -172,6 +172,25 @@ julia> print_tex(a)
 
 It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.
 
+To combine options without modifying anything, you can also use `merge`:
+```jldoctest
+julia> O1 = @pgf { color = "red" };
+
+julia> O2 = @pgf { dashed };
+
+julia> O3 = @pgf { no_marks };
+
+julia> print_tex(Plot(merge(O1, O2, O3), Table(1:2, 1:2)))
+\addplot[color={red}, dashed, no marks]
+    table[row sep={\\}]
+    {
+        \\
+        1  1  \\
+        2  2  \\
+    }
+    ;
+```
+
 ## Empty options
 
 Empty options are not printed by default, but printing `[]` can be useful in some cases, eg when combined with global settings `\pgfplotsset{every axis plot/.append style={...}}` in LaTeX code. In order to force printing empty options, it is recommended to use `{}` in expressions like

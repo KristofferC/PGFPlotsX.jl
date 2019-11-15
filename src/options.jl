@@ -21,8 +21,11 @@ Options(pairs::Pair...; print_empty::Bool = false) =
 
 Base.copy(options::Options) = deepcopy(options)
 
-Base.merge(a::Options, b::Options) =
-    Options(merge(a.dict, b.dict), a.print_empty || b.print_empty)
+function Base.merge(options::Options, others::Options...)
+    args = (options, others...)
+    Options(mapreduce(opts -> opts.dict, merge, args),
+            mapreduce(opts -> opts.print_empty, |, args))
+end
 
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
@@ -99,11 +102,13 @@ abstract type OptionType end
 
 Base.copy(a::OptionType) = deepcopy(a)
 
-function Base.merge!(a::OptionType, options::Options)
-    for (k, v) in options.dict
-        a[k] = v
+function Base.merge!(options::Union{Options,OptionType}, others::Options...)
+    for other in others
+        for (k, v) in other.dict
+            options[k] = v
+        end
     end
-    return a
+    options
 end
 
 """
