@@ -3,6 +3,9 @@
 ################
 @enum(LaTeXEngine, LUALATEX, PDFLATEX)
 
+"""
+The active LaTeX engine. Initialized the first time [`latexengine`](@ref) is called.
+"""
 const ACTIVE_LATEX_ENGINE = Ref{Union{Nothing, LaTeXEngine}}(nothing)
 function latexengine()
     if ACTIVE_LATEX_ENGINE[] === nothing
