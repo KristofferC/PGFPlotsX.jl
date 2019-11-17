@@ -244,7 +244,7 @@ global _tikzid = round(UInt64, time() * 1e6)
 # we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
 # As a workaround, We therefore maintain a cache which should work in most
 # cases, The cache is the hash of the tex output and a copy of the pdf when
-# the svg is showed. The PNG shower looks for the existence of these and uses
+# the svg is showed. The PNG shower looks for the existence of these and re-uses
 # the pdf if the hash is the same
 const Ijulia_cache = Any[nothing, nothing]
 global showing_Ijulia = false
@@ -278,7 +278,7 @@ function savesvg(filename::AbstractString, td::TikzDocument;
     end
 end
 
-Base.showable(::MIME"image/svg+xml", td::_SHOWABLE) = png_engine() != NO_PNG_ENGINE
+Base.showable(::MIME"image/svg+xml", td::_SHOWABLE) = svg_engine() !== NO_SVG_ENGINE
 
 # Copyright TikzPictures.jl (see LICENSE.md)
 function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
@@ -326,7 +326,7 @@ function savepng(filename::AbstractString, td::TikzDocument;
     found_ijulia_cache_matching && rm(tmp; force=true)
 end
 
-Base.showable(::MIME"image/png", ::_SHOWABLE) = svg_engine() !== NO_SVG_ENGINE
+Base.showable(::MIME"image/png", ::_SHOWABLE) = png_engine() !== NO_PNG_ENGINE
 function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
     filename = tempname() * ".png"
     global showing_Ijulia = true

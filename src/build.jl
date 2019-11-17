@@ -141,16 +141,19 @@ function png_engine()
 end
 
 function convert_pdf_to_png(pdf::String, png::String; engine::PNGEngine=png_engine(), dpi=150::Integer)
-    if engine == PNG_PDF_TO_CAIRO
-        return run(`pdftocairo -png -r $dpi -singlefile $pdf $png`)
-    elseif engine == PDF_TO_PPM
-        return run(`pdftoppm -png -r $dpi -singlefile $pdf $png`)
-    elseif engine == NO_PNG_ENGINE
+    if engine == NO_PNG_ENGINE
         throw(MissingExternalProgramError("No PDF to PNG converter found, we looked for `pdftocairo` and `pdftoppm`. ",
                                           "Make sure one of these are installed and available at PATH and restart Julia."))
+    end
+    if engine == PNG_PDF_TO_CAIRO
+        cmd = `pdftocairo -png -r $dpi -singlefile $pdf $png`
+    elseif engine == PDF_TO_PPM
+        cmd = `pdftoppm -png -r $dpi -singlefile $pdf $png`
     else 
         error("unreachable reached")
     end
+    @debug "convert_pdf_to_png: running $cmd"
+    return run(cmd)
 end
 
 
@@ -174,19 +177,18 @@ function svg_engine()
 end
 
 function convert_pdf_to_svg(pdf::String, svg::String, engine=svg_engine())
-    if engine == SVG_PDF_TO_CAIRO
-        cmd = `pdftocairo -svg -l 1 $pdf $svg`
-        @debug "running $cmd"
-        return run(cmd)
-    elseif engine == PDF_TO_SVG
-        cmd = `pdf2svg $pdf $svg`
-        @debug "running $cmd"
-        return run(cmd)
-    elseif engine == NO_SVG_ENGINE
+    if engine == NO_SVG_ENGINE
         throw(MissingExternalProgramError("No PDF to SVG converter found, we looked for `pdftocairo` and `pdf2svg`. ",
                                           "Make sure one of these are installed and available at PATH and restart Julia."))
+    end
+    if engine == SVG_PDF_TO_CAIRO
+        cmd = `pdftocairo -svg -l 1 $pdf $svg`
+    elseif engine == PDF_TO_SVG
+        cmd = `pdf2svg $pdf $svg`
     else 
         error("unreachable reached")
     end
+    @debug "convert_pdf_to_svg: running $cmd"
+    return run(cmd)
 end
 
