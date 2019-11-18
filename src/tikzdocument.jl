@@ -45,12 +45,12 @@ extensions should be recognized by `\\includegraphics` when the
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
 
 struct MissingExternalProgramError
-    program::AbstractString
+    str::AbstractString
 end
+MissingExternalProgramError(strs...) = MissingExternalProgramError(join(strs))
 
 function Base.showerror(io::IO, e::MissingExternalProgramError)
-    print(io, "Did not find `$(e.program)`. Install it and run ",
-          "Pkg.build(\"PGFPLotsX\") to enable this functionality.")
+    print(io, e.str)
 end
 
 """
@@ -80,12 +80,10 @@ function save(filename::AbstractString, td::TikzDocument;
     elseif fileext ∈ STANDALONE_TIKZ_FILEEXTS
         savetex(filename, td; include_preamble = false)
     elseif fileext == ".svg"
-        HAVE_PDFTOSVG || throw(MissingExternalProgramError("pdf2svg"))
         savesvg(filename, td; latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".pdf"
         savepdf(filename, td; latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".png"
-        HAVE_PDFTOPPM || throw(MissingExternalProgramError("pdftoppm"))
         savepng(filename, td;
                 latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
     else
@@ -166,9 +164,9 @@ function savepdf(filename::AbstractString, td::TikzDocument;
                                                   latex_engine, buildflags)
 
     if !latex_success
-        DEBUG && println("LaTeX command $latexcmd failed")
+        @debug "LaTeX command $latexcmd failed"
         if !_OLD_LUALATEX && occursin("File `luatex85.sty' not found", log)
-            DEBUG && println("The log indicates luatex85.sty is not found, trying again without require")
+            @debug "The log indicates luatex85.sty is not found, trying again without require"
             _OLD_LUALATEX = true
             run_again = true
         elseif (occursin("Maybe you need to enable the shell-escape feature", log) ||
@@ -177,10 +175,10 @@ function savepdf(filename::AbstractString, td::TikzDocument;
                 @warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
                 _HAS_WARNED_SHELL_ESCAPE = true
             end
-            DEBUG && println("The log indicates that shell-escape is needed")
+            @debug "The log indicates that shell-escape is needed"
             shell_escape = "--shell-escape"
             if !(shell_escape in [DEFAULT_FLAGS; CUSTOM_FLAGS])
-                DEBUG && println("Adding shell-escape and trying to save pdf again")
+                @debug "Adding shell-escape and trying to save pdf again"
                 # Try again with enabling shell_escape
                 push!(DEFAULT_FLAGS, shell_escape)
                 push!(buildflags, shell_escape)
@@ -246,108 +244,98 @@ global _tikzid = round(UInt64, time() * 1e6)
 # we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
 # As a workaround, We therefore maintain a cache which should work in most
 # cases, The cache is the hash of the tex output and a copy of the pdf when
-# the svg is showed. The PNG shower looks for the existence of these and uses
+# the svg is showed. The PNG shower looks for the existence of these and re-uses
 # the pdf if the hash is the same
 const Ijulia_cache = Any[nothing, nothing]
 global showing_Ijulia = false
-if HAVE_PDFTOSVG
-    """
-    $SIGNATURES
 
-    Save `td` in `filename` using the SVG format.
+"""
+$SIGNATURES
 
-    Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
-    `filename` with the extension (if any) replaced by `".pdf"`. This overwrites
-    an existing PDF file with the same name.
-    """
-    function savesvg(filename::AbstractString, td::TikzDocument;
-                     latex_engine = latexengine(),
-                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                     keep_pdf = false)
-        tmp_pdf = tempname() * ".pdf"
-        savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
-        if _is_ijulia() && showing_Ijulia
-            tmp_ijulia_pdf = tempname() * ".pdf"
-            hsh = hash(sprint(print_tex, td))
-            cp(tmp_pdf, tmp_ijulia_pdf)
-            Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
-        end
-        # TODO Better error
-        svg_cmd = `$DEFAULT_PDFTOSVG $tmp_pdf $filename`
-        svg_success = success(svg_cmd)
-        if !svg_success
-            error("Failed to run $svg_cmd")
-        end
-        if keep_pdf
-            mv(tmp_pdf, _replace_fileext(filename, ".pdf"); force = true)
-        else
-            rm(tmp_pdf)
-        end
+Save `td` in `filename` using the SVG format.
+
+Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
+`filename` with the extension (if any) replaced by `".pdf"`. This overwrites
+an existing PDF file with the same name.
+"""
+function savesvg(filename::AbstractString, td::TikzDocument;
+                 latex_engine = latexengine(),
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                 keep_pdf = false)
+    tmp_pdf = tempname() * ".pdf"
+    savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
+    if _is_ijulia() && showing_Ijulia
+        tmp_ijulia_pdf = tempname() * ".pdf"
+        hsh = hash(sprint(print_tex, td))
+        cp(tmp_pdf, tmp_ijulia_pdf)
+        Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
     end
-
-    # Copyright TikzPictures.jl (see LICENSE.md)
-    function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
-        global _tikzid
-        filename = tempname() * ".svg"
-        global showing_Ijulia = true
-        try save(filename, td; showing_ide=_is_ide())
-        finally
-            global showing_Ijulia = false
-        end
-        s = read(filename, String)
-        s = replace(s, "glyph" => "glyph-$(_tikzid)-")
-        s = replace(s, "\"clip" => "\"clip-$(_tikzid)-")
-        s = replace(s, "#clip" => "#clip-$(_tikzid)-")
-        s = replace(s, "\"image" => "\"image-$(_tikzid)-")
-        s = replace(s, "#image" => "#image-$(_tikzid)-")
-        s = replace(s, "linearGradient id=\"linear" => "linearGradient id=\"linear-$(_tikzid)-")
-        s = replace(s, "#linear" => "#linear-$(_tikzid)-")
-        s = replace(s, "image id=\"" => "image style=\"image-rendering: pixelated;\" id=\"")
-        _tikzid += 1
-        println(f, s)
-        rm(filename; force = true)
+    convert_pdf_to_svg(tmp_pdf, filename)
+    if keep_pdf
+        mv(tmp_pdf, _replace_fileext(filename, ".pdf"); force = true)
+    else
+        rm(tmp_pdf)
     end
 end
 
-if HAVE_PDFTOPPM
-    function savepng(filename::AbstractString, td::TikzDocument;
-                     latex_engine = latexengine(),
-                     buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                     dpi::Int = 150)
-        found_ijulia_cache_matching = false
-        local tmp
-        if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
-            hsh = hash(sprint(print_tex, td))
-            if Ijulia_cache[1] == hsh
-                tmp = Ijulia_cache[2]
-                found_ijulia_cache_matching = true
-            end
-            fill!(Ijulia_cache, nothing)
-        end
+Base.showable(::MIME"image/svg+xml", td::_SHOWABLE) = svg_engine() !== NO_SVG_ENGINE
 
-        if !found_ijulia_cache_matching
-            tmp = tempname() * ".pdf"
-            savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
-        end
-        filebase = splitext(filename)[1]
-        png_cmd = `$DEFAULT_PDFTOPPM -png -r $dpi -singlefile $tmp $filebase`
-        png_success = success(png_cmd)
-        found_ijulia_cache_matching && rm(tmp; force=true)
-        if !png_success
-            error("Error when saving to png")
-        end
+# Copyright TikzPictures.jl (see LICENSE.md)
+function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
+    global _tikzid
+    filename = tempname() * ".svg"
+    global showing_Ijulia = true
+    try save(filename, td; showing_ide=_is_ide())
+    finally
+        global showing_Ijulia = false
     end
+    s = read(filename, String)
+    s = replace(s, "glyph" => "glyph-$(_tikzid)-")
+    s = replace(s, "\"clip" => "\"clip-$(_tikzid)-")
+    s = replace(s, "#clip" => "#clip-$(_tikzid)-")
+    s = replace(s, "\"image" => "\"image-$(_tikzid)-")
+    s = replace(s, "#image" => "#image-$(_tikzid)-")
+    s = replace(s, "linearGradient id=\"linear" => "linearGradient id=\"linear-$(_tikzid)-")
+    s = replace(s, "#linear" => "#linear-$(_tikzid)-")
+    s = replace(s, "image id=\"" => "image style=\"image-rendering: pixelated;\" id=\"")
+    _tikzid += 1
+    println(f, s)
+    rm(filename; force = true)
+end
 
-    function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
-        filename = tempname() * ".png"
-        global showing_Ijulia = true
-        try save(filename, p; showing_ide=_is_ide())
-        finally
-            global showing_Ijulia = false
+function savepng(filename::AbstractString, td::TikzDocument;
+                 latex_engine = latexengine(),
+                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+                 dpi::Int = 150)
+    found_ijulia_cache_matching = false
+    local tmp
+    if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
+        hsh = hash(sprint(print_tex, td))
+        if Ijulia_cache[1] == hsh
+            tmp = Ijulia_cache[2]
+            found_ijulia_cache_matching = true
         end
-        write(io, read(filename))
-        rm(filename; force = true)
+        fill!(Ijulia_cache, nothing)
     end
+    if !found_ijulia_cache_matching
+        tmp = tempname() * ".pdf"
+        savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
+    end
+    filebase = splitext(filename)[1]
+    convert_pdf_to_png(tmp, filebase; dpi=dpi)
+    found_ijulia_cache_matching && rm(tmp; force=true)
+end
+
+Base.showable(::MIME"image/png", ::_SHOWABLE) = png_engine() !== NO_PNG_ENGINE
+function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
+    filename = tempname() * ".png"
+    global showing_Ijulia = true
+    try save(filename, p; showing_ide=_is_ide())
+    finally
+        global showing_Ijulia = false
+    end
+    write(io, read(filename))
+    rm(filename; force = true)
 end
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
