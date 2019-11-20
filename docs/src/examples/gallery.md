@@ -414,7 +414,7 @@ axis = @pgf Axis(
             "set layers",   # this is needed to make the scatter points appear behind the graphs
             view = raw"{49}{25}", # viewpoint
             ytick = collect(0:9),
-            ztick = collect(0:0.1:1),
+            ztick = collect(0:0.1:1)
         },
         );
 
@@ -425,53 +425,52 @@ axis = @pgf Axis(
             color = "black",
             fill = "yellow!60",
             "fill opacity = 0.65",
-            "on layer" = "axis background", # so we can see the grid lines trought
+            "on layer" = "axis background" # so we can see the grid lines trought
         },
-            Table(x=[dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ,
-                     dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ],
-                  y=[length(rnd)-1, 0, 0, length(rnd)-1],z=[0, 0, 0, 0]
-                 ),
-            raw"\closedcycle",
+        Table(x = [dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ,
+                 dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ],
+              y = [length(rnd) - 1, 0, 0, length(rnd) - 1],z = [0, 0, 0, 0]
+             ),
+        raw"\closedcycle"
         )
         push!(axis,area)
 
-
+# add the slices as individual plots to the common axis
 @pgf for i in eachindex(dists)
-        scatter = Plot3(
+    scatter = Plot3(
+        {
+            "only marks",
+            color = "red!80",
+            "mark options" = raw"{scale=0.4}",
+            "mark layer" = "like plot",     # set the markers on the same layer as the plot
+            "on layer" = "axis background"
+        },
+        Table(x = rnd[i], y = (length(dists) - i) * ones(length(rnd[i])), z = zeros(length(rnd[i] .+ 0.1)))
+        )
+    push!(axis,scatter)
+
+    if i%2 == 1     # add a pdf-curve on top of each second data set
+        curve = Plot3(
             {
-                "only marks",
-                color = "red!80",
-                "mark options" = raw"{scale=0.4}",
-                "mark layer" = "like plot",     # set the markers on the same layer as the plot
-                "on layer" = "axis background",
+                "no marks",
+                style = "{thick}",
+                color = "blue"
             },
-                Table(x = rnd[i], y= (length(dists)-i) *ones(length(rnd[i])), z=zeros(length(rnd[i].+0.1)) )
+            Table(x = x_pnts, y = (length(dists) - i) * ones(length(x_pnts)), z = dat_pdf[i](x_pnts))
             )
-            push!(axis,scatter)
 
-        if i%2 ==1
-            curve= Plot3(
-                {
-                    "no marks",
-                    style ="{thick}",
-                    color = "blue",
-                },
-                    Table(x = x_pnts, y= (length(dists)-i) *ones(length(x_pnts)), z=dat_pdf[i](x_pnts) ),
-
-                )
-
-            fill= Plot3(
-                {
-                    draw ="none",
-                    fill = "blue",
-                    "fill opacity=0.25",
-                },
-                    Table(x = x_pnts_ext, y= (length(dists)-i) *ones(length(x_pnts_ext)), z=[[0];dat_pdf[i](x_pnts) ;[0]]),
-
-                )
-            push!(axis,curve,fill)
-        end
+        # the fill is drawn seperately to handle the the end of the curves nicely. This is an alternative to "\fillbetween"
+        fill = Plot3(
+            {
+                draw = "none",
+                fill = "blue",
+                "fill opacity = 0.25"
+            },
+            Table(x = x_pnts_ext, y = (length(dists) - i) * ones(length(x_pnts_ext)), z = [[0];dat_pdf[i](x_pnts) ;[0]])
+            )
+        push!(axis,curve,fill)
     end
+end
     savefigs("3d_waterfall", axis) # hide
 ```
 
