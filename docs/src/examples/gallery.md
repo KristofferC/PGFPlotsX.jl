@@ -378,7 +378,7 @@ savefigs("patch-inline", ans) # hide
 
 ![](patch-inline.svg)
 
------------------------
+------------------------
 
 ## 3D Waterfall
 
@@ -394,14 +394,14 @@ x_max = 10
 μ_max = 5
 
 dist = (μ, σ) -> Normal(μ, σ)      # use normal distributions
-dists = [dist(-6+i, 1+0.3*i) for i in 1:10]       # make the set of distributions we're going to plot
-rnd = rand.(Truncated.(dists, x_min, x_max), 20)  # creates random scatter points
-dat_pdf = [(x) -> pdf(d, x) for d in dists] # Get the pdf of the dists
+dists = [dist(-6+i, 1+0.3*i) for i in 1:10]         # make the set of distributions we're going to plot
+rnd = rand.(Truncated.(dists, x_min, x_max), 20)    # creates random scatter points
+dat_pdf = [(x) -> pdf(d, x) for d in dists]         # Get the pdf of the dists
 
-x_pnts = collect(x_min:0.05:x_max)   # point density for pdf's
-x_pnts_ext =[[x_pnts[1]]; x_pnts; [x_pnts[end]]] #add redundant points at the ends, this is needed for nicer fill
+x_pnts = collect(x_min:0.05:x_max)                  # point density for pdf's
+x_pnts_ext = [[x_pnts[1]]; x_pnts; [x_pnts[end]]]   # add redundant points at the ends, this is needed for nicer fill
 
-
+# define the Axis to which we will push! the contents of the plot
 axis = @pgf Axis(
         {
             width = raw"1\textwidth",
@@ -411,13 +411,14 @@ axis = @pgf Axis(
             xmin = x_min,
             zmin = 0,
             "axis background/.style = { fill = gray!10 }",    # add some beauty
-            "set layers",   # this is needed to make the scatter points appear behind the graphs
-            view = raw"{49}{25}", # viewpoint
+            "set layers",           # this is needed to make the scatter points appear behind the graphs
+            view = raw"{49}{25}",   # viewpoint
             ytick = collect(0:9),
             ztick = collect(0:0.1:1)
         },
         );
 
+# draw a yellow area at the potom of the plot, centered at μ and 2σ wide.
 @pgf area = Plot3(
         {
             "no marks",
@@ -425,10 +426,10 @@ axis = @pgf Axis(
             color = "black",
             fill = "yellow!60",
             "fill opacity = 0.65",
-            "on layer" = "axis background" # so we can see the grid lines trought
+            "on layer" = "axis background"  # so we can see the grid lines through the colored area
         },
         Table(x = [dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ,
-                 dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ],
+                   dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ],
               y = [length(rnd) - 1, 0, 0, length(rnd) - 1],z = [0, 0, 0, 0]
              ),
         raw"\closedcycle"
@@ -449,7 +450,8 @@ axis = @pgf Axis(
         )
     push!(axis,scatter)
 
-    if i%2 == 1   # add a pdf-curve on top of each second data set
+    # add a pdf-curve on top of each second data set
+    if i%2 == 1
         curve = Plot3(
             {
                 "no marks",
