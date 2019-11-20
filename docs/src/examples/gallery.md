@@ -399,7 +399,7 @@ rnd = rand.(Truncated.(dists, x_min, x_max),20)  # creates random scatter points
 dat_pdf = [(x) -> pdf(d, x) for d in dists] # Get the pdf of the dists
 
 x_pnts = collect(x_min:0.05:x_max)   # point density for pdf's
-x_pnts_ext =[[x_pnts[1]]; x_pnts ; [x_pnts[end]]] #add redundant points at the ends, this is needed for nicer fill
+x_pnts_ext =[[x_pnts[1]]; x_pnts; [x_pnts[end]]] #add redundant points at the ends, this is needed for nicer fill
 
 
 axis = @pgf Axis(
