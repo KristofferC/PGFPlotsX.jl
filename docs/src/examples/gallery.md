@@ -417,7 +417,7 @@ axis = @pgf Axis(
         "axis background/.style" = { fill = "gray!10" }, # add some beauty
         # this is needed to make the scatter points appear behind the graphs:
         set_layers,
-        view = raw"{49}{25}",   # viewpoint
+        view = "{49}{25}",   # viewpoint
         ytick = collect(0:9),
         ztick = collect(0:0.1:1)
     },
