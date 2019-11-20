@@ -427,7 +427,10 @@ axis = @pgf Axis(
             "fill opacity = 0.65",
             "on layer" = "axis background", # so we can see the grid lines trought
         },
-            Table(x=[dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ, dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ], y=[length(rnd)-1, 0, 0, length(rnd)-1],z=[0, 0, 0, 0] ),
+            Table(x=[dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ,
+                     dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ],
+                  y=[length(rnd)-1, 0, 0, length(rnd)-1],z=[0, 0, 0, 0]
+                 ),
             raw"\closedcycle",
         )
         push!(axis,area)
