@@ -396,7 +396,7 @@ x_max = 10
 dist = (μ, σ) -> Normal(μ, σ)      # use normal distributions
 dists = [dist(-6+i, 1+0.3*i) for i in 1:10]       # make the set of distributions we're going to plot
 rnd = rand.(Truncated.(dists, x_min, x_max),20)  # creates random scatter points
-dat_pdf = [(x) ->  pdf(d,x) for d in dists ] # Get the pdf of the dists
+dat_pdf = [(x) -> pdf(d, x) for d in dists] # Get the pdf of the dists
 
 x_pnts = collect(x_min:0.05:x_max)   # point density for pdf's
 x_pnts_ext =[[x_pnts[1]]; x_pnts ; [x_pnts[end]]] #add redundant points at the ends, this is needed for nicer fill
