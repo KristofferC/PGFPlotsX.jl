@@ -377,3 +377,99 @@ savefigs("patch-inline", ans) # hide
 [\[.pdf\]](patch-inline.pdf), [\[generated .tex\]](patch-inline.tex)
 
 ![](patch-inline.svg)
+
+-----------------------
+
+## 3D Waterfall
+
+```@example pgf
+using Random
+using Distributions
+
+Random.seed!(42)
+#Generate Data
+x_min = -10 # xrange to plot
+x_max = 10
+μ_min = -5
+μ_max = 5
+
+dist = (μ, σ) ->  Normal(μ, σ)      # use normal distributions
+dists = [dist(-6+i, 1+0.3*i) for i in 1:10]       # make the set of distributions we're going to plot
+rnd = rand.(Truncated.(dists, x_min, x_max),20)  # creates random scatter points
+dat_pdf = [(x) ->  pdf(d,x) for d in dists ] # Get the pdf of the dists
+
+x_pnts = collect(x_min:0.05:x_max)   # point density for pdf's
+x_pnts_ext =[[x_pnts[1]]; x_pnts ; [x_pnts[end]]] #add redundant points at the ends, this is needed for nicer fill
+
+
+axis = @pgf Axis(
+        {
+            width = raw"1\textwidth",
+            height = raw"0.6\textwidth",
+            grid = "both",
+            xmax = x_max,
+            xmin = x_min,
+            zmin = 0,
+            "axis background/.style={fill=gray!10}",    # add some beauty
+            "set layers",   # this is needed to make the scatter points appear behind the graphs
+            view = raw"{49}{25}", # viewpoint
+            ytick = collect(0:9),
+            ztick = collect(0:0.1:1),
+        },
+        );
+
+@pgf area = Plot3(
+        {
+            "no marks",
+            style ="{dashed}",
+            color = "black",
+            fill = "yellow!60",
+            "fill opacity = 0.65",
+            "on layer" = "axis background", # so we can see the grid lines trought
+        },
+            Table(x=[dists[1].μ-dists[1].σ, dists[end].μ-dists[end].σ, dists[end].μ+dists[end].σ, dists[1].μ+dists[1].σ], y=[length(rnd)-1, 0, 0, length(rnd)-1],z=[0, 0, 0, 0] ),
+            raw"\closedcycle",
+        )
+        push!(axis,area)
+
+
+@pgf for i in eachindex(dists)
+        scatter = Plot3(
+            {
+                "only marks",
+                color = "red!80",
+                "mark options" = raw"{scale=0.4}",
+                "mark layer" = "like plot",     # set the markers on the same layer as the plot
+                "on layer" = "axis background",
+            },
+                Table(x = rnd[i], y= (length(dists)-i) *ones(length(rnd[i])), z=zeros(length(rnd[i].+0.1)) )
+            )
+            push!(axis,scatter)
+
+        if i%2 ==1
+            curve= Plot3(
+                {
+                    "no marks",
+                    style ="{thick}",
+                    color = "blue",
+                },
+                    Table(x = x_pnts, y= (length(dists)-i) *ones(length(x_pnts)), z=dat_pdf[i](x_pnts) ),
+
+                )
+
+            fill= Plot3(
+                {
+                    draw ="none",
+                    fill = "blue",
+                    "fill opacity=0.25",
+                },
+                    Table(x = x_pnts_ext, y= (length(dists)-i) *ones(length(x_pnts_ext)), z=[[0];dat_pdf[i](x_pnts) ;[0]]),
+
+                )
+            push!(axis,curve,fill)
+        end
+    end
+    savefigs("3d_waterfall", ans) # hide
+```
+
+[\[.pdf\]](3d_waterfall.pdf), [\[generated .tex\]](3d_waterfall.tex)
