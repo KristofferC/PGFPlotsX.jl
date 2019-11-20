@@ -410,7 +410,7 @@ axis = @pgf Axis(
             xmax = x_max,
             xmin = x_min,
             zmin = 0,
-            "axis background/.style={fill=gray!10}",    # add some beauty
+            "axis background/.style = { fill = gray!10 }",    # add some beauty
             "set layers",   # this is needed to make the scatter points appear behind the graphs
             view = raw"{49}{25}", # viewpoint
             ytick = collect(0:9),
