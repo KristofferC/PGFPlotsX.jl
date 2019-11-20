@@ -418,7 +418,6 @@ axis = @pgf Axis(
         },
         );
 
-# draw a yellow area on the bottom of the graph, 2σ wide, centered at μ
 @pgf area = Plot3(
         {
             "no marks",
@@ -446,11 +445,11 @@ axis = @pgf Axis(
             "mark layer" = "like plot",     # set the markers on the same layer as the plot
             "on layer" = "axis background"
         },
-        Table(x = rnd[i], y = (length(dists) - i) * ones(length(rnd[i])), z = zeros(length(rnd[i] .+ 0.1)))
+        Table(x = rnd[i], y = (length(dists) - i) * ones(length(rnd[i])), z = zeros(length(rnd[i])))
         )
     push!(axis,scatter)
 
-    if i%2 == 1     # add a pdf-curve on top of each second data set
+    if i%2 == 1   # add a pdf-curve on top of each second data set
         curve = Plot3(
             {
                 "no marks",
@@ -467,11 +466,12 @@ axis = @pgf Axis(
                 fill = "blue",
                 "fill opacity = 0.25"
             },
-            Table(x = x_pnts_ext, y = (length(dists) - i) * ones(length(x_pnts_ext)), z = [[0]; dat_pdf[i](x_pnts) ;[0]])
+            Table(x = x_pnts_ext, y = (length(dists) - i) * ones(length(x_pnts_ext)), z = [[0]; dat_pdf[i](x_pnts); [0]])
             )
         push!(axis,curve,fill)
     end
 end
+
     savefigs("3d_waterfall", axis) # hide
 ```
 
