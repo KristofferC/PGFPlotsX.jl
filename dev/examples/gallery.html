@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>PGFPlots manual gallery · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><a href="../index.html"><img class="logo" src="../assets/logo.png" alt="PGFPlotsX.jl logo"/></a><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../man/structs.html">Overview</a></li><li><a class="toctext" href="../man/options.html">Options</a></li><li><a class="toctext" href="../man/data.html">Data</a></li><li><a class="toctext" href="../man/axiselements.html">Axis elements</a></li><li><a class="toctext" href="../man/axislike.html"><code>Axis</code> &amp; friends</a></li><li><a class="toctext" href="../man/picdoc.html">TikzPicture</a></li><li><a class="toctext" href="../man/save.html">Showing / Exporting figures</a></li><li><a class="toctext" href="../man/internals.html">Internals</a></li></ul></li><li><span class="toctext">Examples</span><ul><li><a class="toctext" href="coordinates.html">Coordinates</a></li><li><a class="toctext" href="tables.html">Tables</a></li><li><a class="toctext" href="axislike.html">Axis-like objects</a></li><li class="current"><a class="toctext" href="gallery.html">PGFPlots manual gallery</a><ul class="internal"><li><a class="toctext" href="#Cost-Error-1">Cost Error</a></li><li><a class="toctext" href="#Simple-Expression-1">Simple Expression</a></li><li><a class="toctext" href="#Mixing-expression-and-coordinates-1">Mixing expression and coordinates</a></li><li><a class="toctext" href="#Log-logLog-1">Log logLog</a></li><li><a class="toctext" href="#Yaxis-log-1">Yaxis log</a></li><li><a class="toctext" href="#Dof-vs-error-1">Dof vs error</a></li><li><a class="toctext" href="#Scatter-classes-1">Scatter classes</a></li><li><a class="toctext" href="#Splines-1">Splines</a></li><li><a class="toctext" href="#Mesh-scatter-1">Mesh scatter</a></li><li><a class="toctext" href="#Group-plot-1">Group plot</a></li><li><a class="toctext" href="#Patch-1">Patch</a></li></ul></li><li><a class="toctext" href="juliatypes.html">Julia types</a></li><li><a class="toctext" href="convenience.html">Convenience constructs</a></li><li><a class="toctext" href="latex.html">Using LaTeX code</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Examples</li><li><a href="gallery.html">PGFPlots manual gallery</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/gallery.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>PGFPlots manual gallery</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="manual_gallery-1" href="#manual_gallery-1">PGFPlots manual gallery</a></h1><p>Examples converted from <a href="http://pgfplots.sourceforge.net/gallery.html">the PGFPlots manual gallery</a>. This is a work in progress.</p><div></div><hr/><h2><a class="nav-anchor" id="Cost-Error-1" href="#Cost-Error-1">Cost Error</a></h2><pre><code class="language-julia">@pgf Axis(
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>PGFPlots manual gallery · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><a href="../index.html"><img class="logo" src="../assets/logo.png" alt="PGFPlotsX.jl logo"/></a><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../man/structs.html">Overview</a></li><li><a class="toctext" href="../man/options.html">Options</a></li><li><a class="toctext" href="../man/data.html">Data</a></li><li><a class="toctext" href="../man/axiselements.html">Axis elements</a></li><li><a class="toctext" href="../man/axislike.html"><code>Axis</code> &amp; friends</a></li><li><a class="toctext" href="../man/picdoc.html">TikzPicture</a></li><li><a class="toctext" href="../man/save.html">Showing / Exporting figures</a></li><li><a class="toctext" href="../man/internals.html">Internals</a></li></ul></li><li><span class="toctext">Examples</span><ul><li><a class="toctext" href="coordinates.html">Coordinates</a></li><li><a class="toctext" href="tables.html">Tables</a></li><li><a class="toctext" href="axislike.html">Axis-like objects</a></li><li class="current"><a class="toctext" href="gallery.html">PGFPlots manual gallery</a><ul class="internal"><li><a class="toctext" href="#Cost-Error-1">Cost Error</a></li><li><a class="toctext" href="#Simple-Expression-1">Simple Expression</a></li><li><a class="toctext" href="#Mixing-expression-and-coordinates-1">Mixing expression and coordinates</a></li><li><a class="toctext" href="#Log-logLog-1">Log logLog</a></li><li><a class="toctext" href="#Yaxis-log-1">Yaxis log</a></li><li><a class="toctext" href="#Dof-vs-error-1">Dof vs error</a></li><li><a class="toctext" href="#Scatter-classes-1">Scatter classes</a></li><li><a class="toctext" href="#Splines-1">Splines</a></li><li><a class="toctext" href="#Mesh-scatter-1">Mesh scatter</a></li><li><a class="toctext" href="#Group-plot-1">Group plot</a></li><li><a class="toctext" href="#Patch-1">Patch</a></li><li><a class="toctext" href="#D-Waterfall-1">3D Waterfall</a></li></ul></li><li><a class="toctext" href="juliatypes.html">Julia types</a></li><li><a class="toctext" href="convenience.html">Convenience constructs</a></li><li><a class="toctext" href="latex.html">Using LaTeX code</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Examples</li><li><a href="gallery.html">PGFPlots manual gallery</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/gallery.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>PGFPlots manual gallery</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="manual_gallery-1" href="#manual_gallery-1">PGFPlots manual gallery</a></h1><div></div><hr/><h2><a class="nav-anchor" id="Cost-Error-1" href="#Cost-Error-1">Cost Error</a></h2><pre><code class="language-julia">@pgf Axis(
     {
         xlabel = &quot;Cost&quot;,
         ylabel = &quot;Error&quot;,
@@ -206,7 +206,8 @@ x = range(0; stop = 10, length = 100)
     {xmax=5, ymax=50},
     plot,
     {xmin=5, xmax=10, ymax=50, yticklabels={}},
-    plot)</code></pre><p><a href="groupplot-nested.pdf">[.pdf]</a>, <a href="groupplot-nested.tex">[generated .tex]</a></p><p><img src="groupplot-nested.svg" alt/></p><hr/><h2><a class="nav-anchor" id="Patch-1" href="#Patch-1">Patch</a></h2><pre><code class="language-julia">@pgf Axis(Plot(
+    plot
+)</code></pre><p><a href="groupplot-nested.pdf">[.pdf]</a>, <a href="groupplot-nested.tex">[generated .tex]</a></p><p><img src="groupplot-nested.svg" alt/></p><hr/><h2><a class="nav-anchor" id="Patch-1" href="#Patch-1">Patch</a></h2><pre><code class="language-julia">@pgf Axis(Plot(
     {
         patch,
         &quot;table/row sep&quot; = &quot;\\\\&quot;,
@@ -220,4 +221,110 @@ x = range(0; stop = 10, length = 100)
         },
         :x =&gt; [0, 1, 2, 3, 2, 4],
         :y =&gt; [0, 1, 0, 1, 0, 0],
-        :c =&gt; [0.2, 0, 1, 0, 0.5, 0.5])))</code></pre><p><a href="patch-inline.pdf">[.pdf]</a>, <a href="patch-inline.tex">[generated .tex]</a></p><p><img src="patch-inline.svg" alt/></p><footer><hr/><a class="previous" href="axislike.html"><span class="direction">Previous</span><span class="title">Axis-like objects</span></a><a class="next" href="juliatypes.html"><span class="direction">Next</span><span class="title">Julia types</span></a></footer></article></body></html>
+        :c =&gt; [0.2, 0, 1, 0, 0.5, 0.5])))</code></pre><p><a href="patch-inline.pdf">[.pdf]</a>, <a href="patch-inline.tex">[generated .tex]</a></p><p><img src="patch-inline.svg" alt/></p><hr/><h2><a class="nav-anchor" id="D-Waterfall-1" href="#D-Waterfall-1">3D Waterfall</a></h2><pre><code class="language-julia">using Random
+using Distributions
+
+Random.seed!(42)
+#Generate Data
+x_min = -10 # xrange to plot
+x_max = 10
+μ_min = -5
+μ_max = 5
+
+dist = (μ, σ) -&gt; Normal(μ, σ)
+# make the set of distributions we&#39;re going to plot:
+dists = [dist(-6+i, 1+0.3*i) for i in 1:10]
+# creates random scatter points:
+rnd = rand.(Truncated.(dists, x_min, x_max), 20)
+# get the pdf of the dists:
+dat_pdf = [(x) -&gt; pdf.(d, x) for d in dists]
+
+# point density for pdfs
+x_pnts = collect(x_min:0.05:x_max)
+
+# add redundant points at the ends, for nicer fill:
+x_pnts_ext = [[x_pnts[1]]; x_pnts; [x_pnts[end]]]
+
+# define the Axis to which we will push! the contents of the plot
+axis = @pgf Axis(
+    {
+        width = raw&quot;1\textwidth&quot;,
+        height = raw&quot;0.6\textwidth&quot;,
+        grid = &quot;both&quot;,
+        xmax = x_max,
+        xmin = x_min,
+        zmin = 0,
+        &quot;axis background/.style&quot; = { fill = &quot;gray!10&quot; }, # add some beauty
+        # this is needed to make the scatter points appear behind the graphs:
+        set_layers,
+        view = &quot;{49}{25}&quot;,   # viewpoint
+        ytick = collect(0:9),
+        ztick = collect(0:0.1:1)
+    },
+)
+
+# draw a yellow area at the bottom of the plot, centered at μ and 2σ wide.
+@pgf area = Plot3(
+    {
+        no_marks,
+        style =&quot;{dashed}&quot;,
+        color = &quot;black&quot;,
+        fill = &quot;yellow!60&quot;,
+        fill_opacity = 0.65,
+        # so we can see the grid lines through the colored area:
+        on_layer = &quot;axis background&quot;
+    },
+    Table(x = [dists[1  ].μ - dists[1  ].σ, dists[end].μ - dists[end].σ,
+               dists[end].μ + dists[end].σ, dists[1  ].μ + dists[1  ].σ],
+          y = [length(rnd) - 1, 0, 0, length(rnd) - 1],
+          z = [0, 0, 0, 0]
+         ),
+    raw&quot;\closedcycle&quot;
+)
+push!(axis, area)
+
+# add the slices as individual plots to the common axis
+@pgf for i in eachindex(dists)
+    scatter = Plot3(
+        {
+            only_marks,
+            color = &quot;red!80&quot;,
+            mark_options = {scale=0.4},
+            # set the markers on the same layer as the plot:
+            mark_layer = &quot;like plot&quot;,
+            on_layer = &quot;axis background&quot;
+        },
+        Table(x = rnd[i],
+              y = (length(dists) - i) * ones(length(rnd[i])),
+              z = zeros(length(rnd[i])))
+    )
+    push!(axis, scatter)
+
+    # add a pdf-curve on top of each second data set
+    if i%2 == 1
+        curve = Plot3(
+            {
+                no_marks,
+                style = {thick},
+                color = &quot;blue&quot;
+            },
+            Table(x = x_pnts,
+                  y = (length(dists) - i) * ones(length(x_pnts)),
+                  z = dat_pdf[i](x_pnts))
+        )
+
+        # The fill is drawn seperately to handle the the end of the curves nicely.
+        # This is an alternative to &quot;\fillbetween&quot;
+        fill = Plot3(
+            {
+                draw = &quot;none&quot;,
+                fill = &quot;blue&quot;,
+                fill_opacity = 0.25
+            },
+            Table(x = x_pnts_ext,
+                  y = (length(dists) - i) * ones(length(x_pnts_ext)),
+                  z = [[0]; dat_pdf[i](x_pnts); [0]])
+        )
+        push!(axis, curve, fill)
+    end
+end</code></pre><p><a href="3d_waterfall.pdf">[.pdf]</a>, <a href="3d_waterfall.tex">[generated .tex]</a></p><p><img src="3d_waterfall.svg" alt/></p><footer><hr/><a class="previous" href="axislike.html"><span class="direction">Previous</span><span class="title">Axis-like objects</span></a><a class="next" href="juliatypes.html"><span class="direction">Next</span><span class="title">Julia types</span></a></footer></article></body></html>
