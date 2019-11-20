@@ -418,6 +418,7 @@ axis = @pgf Axis(
         },
         );
 
+# draw a yellow area on the bottom of the graph, 2σ wide, centered at μ
 @pgf area = Plot3(
         {
             "no marks",
@@ -466,7 +467,7 @@ axis = @pgf Axis(
                 fill = "blue",
                 "fill opacity = 0.25"
             },
-            Table(x = x_pnts_ext, y = (length(dists) - i) * ones(length(x_pnts_ext)), z = [[0];dat_pdf[i](x_pnts) ;[0]])
+            Table(x = x_pnts_ext, y = (length(dists) - i) * ones(length(x_pnts_ext)), z = [[0]; dat_pdf[i](x_pnts) ;[0]])
             )
         push!(axis,curve,fill)
     end
