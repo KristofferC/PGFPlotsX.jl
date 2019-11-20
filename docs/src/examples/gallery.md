@@ -418,7 +418,7 @@ axis = @pgf Axis(
         },
         );
 
-# draw a yellow area at the potom of the plot, centered at μ and 2σ wide.
+# draw a yellow area at the bottom of the plot, centered at μ and 2σ wide.
 @pgf area = Plot3(
         {
             "no marks",
