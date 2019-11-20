@@ -469,7 +469,7 @@ axis = @pgf Axis(
             push!(axis,curve,fill)
         end
     end
-    savefigs("3d_waterfall", ans) # hide
+    savefigs("3d_waterfall", axis) # hide
 ```
 
 [\[.pdf\]](3d_waterfall.pdf), [\[generated .tex\]](3d_waterfall.tex)
