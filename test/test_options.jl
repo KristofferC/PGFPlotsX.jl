@@ -30,3 +30,10 @@ end
     @test squashed_repr_tex(@pgf Plot({}, Table([], []))) ==
         "\\addplot[]\ntable[row sep={\\\\}]\n{\n\\\\\n}\n;" # note []
 end
+
+@testset "options push! and append!" begin
+    opt1 = "color" => "red"
+    opt2 = "dashed"
+    @test @pgf(push!({}, opt1, opt2)).dict == Dict([opt1, opt2 => nothing])
+    @test @pgf(append!({}, [opt1, opt2])).dict == Dict([opt1, opt2 => nothing])
+end
