@@ -1,0 +1,30 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[error bars/error bar style={very thin}]
+    \addplot[only marks, mark={star}, error bars/y dir=both, error bars/y explicit]
+        coordinates {
+            (-5.0,25.0) +- (0.14325325206738465,1.4325325206738464)
+            (-4.0,16.0) +- (0.1594679451443306,1.2757435611546448)
+            (-3.0,9.0) +- (0.19973980558839763,1.1984388335303857)
+            (-2.0,4.0) +- (0.13980914550881796,0.5592365820352718)
+            (-1.0,1.0) +- (0.1366896307346679,0.2733792614693358)
+            (0.0,0.0) +- (0.10378987218281298,0.0)
+            (1.0,1.0) +- (0.16087995713392128,0.32175991426784256)
+            (2.0,4.0) +- (0.11212125801649282,0.4484850320659713)
+            (3.0,9.0) +- (0.17420486419060932,1.045229185143656)
+            (4.0,16.0) +- (0.15398811432505466,1.2319049146004373)
+            (5.0,25.0) +- (0.1252159495486701,1.252159495486701)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
