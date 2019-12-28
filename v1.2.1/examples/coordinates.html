@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Coordinates · PGFPlotsX.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><a href="../index.html"><img class="logo" src="../assets/logo.png" alt="PGFPlotsX.jl logo"/></a><h1>PGFPlotsX.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="../man/structs.html">Overview</a></li><li><a class="toctext" href="../man/options.html">Options</a></li><li><a class="toctext" href="../man/data.html">Data</a></li><li><a class="toctext" href="../man/axiselements.html">Axis elements</a></li><li><a class="toctext" href="../man/axislike.html"><code>Axis</code> &amp; friends</a></li><li><a class="toctext" href="../man/picdoc.html">TikzPicture</a></li><li><a class="toctext" href="../man/save.html">Showing / Exporting figures</a></li><li><a class="toctext" href="../man/internals.html">Internals</a></li></ul></li><li><span class="toctext">Examples</span><ul><li class="current"><a class="toctext" href="coordinates.html">Coordinates</a><ul class="internal"><li><a class="toctext" href="#Basic-usage-1">Basic usage</a></li><li><a class="toctext" href="#Error-bars-1">Error bars</a></li><li><a class="toctext" href="#symbolic_coordinates_example-1">Symbolic coordinates</a></li><li><a class="toctext" href="#D-1">3D</a></li><li><a class="toctext" href="#Edge-vectors-1">Edge vectors</a></li><li><a class="toctext" href="#Heatmap-1">Heatmap</a></li><li><a class="toctext" href="#Matrix-plot-1">Matrix plot</a></li></ul></li><li><a class="toctext" href="tables.html">Tables</a></li><li><a class="toctext" href="axislike.html">Axis-like objects</a></li><li><a class="toctext" href="gallery.html">pgfplots gallery</a></li><li><a class="toctext" href="juliatypes.html">Julia types</a></li><li><a class="toctext" href="convenience.html">Convenience constructs</a></li><li><a class="toctext" href="latex.html">Using LaTeX code</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Examples</li><li><a href="coordinates.html">Coordinates</a></li></ul><a class="edit-page" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/coordinates.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Coordinates</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Coordinates-1" href="#Coordinates-1">Coordinates</a></h1><div></div><p>Use <code>Coordinates</code> to construct the <code>pgfplots</code> construct <code>coordinates</code>. Various constructors are available.</p><h2><a class="nav-anchor" id="Basic-usage-1" href="#Basic-usage-1">Basic usage</a></h2><p>For basic usage, consider <code>AbstractVectors</code> and iterables. Notice how non-finite values are skipped. You can also use <code>()</code> or <code>nothing</code> for jumps in functions.</p><pre><code class="language-julia">x = range(-1; stop = 1, length = 51) # so that it contains 1/0
+@pgf Axis(
+    {
+        xmajorgrids,
+        ymajorgrids,
+    },
+    Plot(
+        {
+            no_marks,
+        },
+        Coordinates(x, 1 ./ x)
+    )
+)</code></pre><p><a href="coordinates-simple.pdf">[.pdf]</a>, <a href="coordinates-simple.tex">[generated .tex]</a></p><p><img src="coordinates-simple.svg" alt/></p><h2><a class="nav-anchor" id="Error-bars-1" href="#Error-bars-1">Error bars</a></h2><p>Use <code>xerror</code>, <code>xerrorplus</code>, <code>xerrorminus</code>, <code>yerror</code> etc. for error bars.</p><pre><code class="language-julia">x = range(0; stop = 2π, length = 20)
+@pgf Plot(
+    {
+        &quot;no marks&quot;,
+        &quot;error bars/y dir=both&quot;,
+        &quot;error bars/y explicit&quot;,
+    },
+    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))
+)</code></pre><p><a href="coordinates-errorbars.pdf">[.pdf]</a>, <a href="coordinates-errorbars.tex">[generated .tex]</a></p><p><img src="coordinates-errorbars.svg" alt/></p><h2><a class="nav-anchor" id="symbolic_coordinates_example-1" href="#symbolic_coordinates_example-1">Symbolic coordinates</a></h2><pre><code class="language-julia">@pgf Axis(
+    {
+        ybar,
+        enlargelimits = 0.15,
+        legend_style =
+        {
+            at = Coordinate(0.5, -0.15),
+            anchor = &quot;north&quot;,
+            legend_columns = -1
+        },
+        ylabel = raw&quot;\#participants&quot;,
+        symbolic_x_coords=[&quot;tool8&quot;, &quot;tool9&quot;, &quot;tool10&quot;],
+        xtick = &quot;data&quot;,
+        nodes_near_coords,
+        nodes_near_coords_align={vertical},
+    },
+    Plot(Coordinates([(&quot;tool8&quot;, 7), (&quot;tool9&quot;, 9), (&quot;tool10&quot;, 4)])),
+    Plot(Coordinates([(&quot;tool8&quot;, 4), (&quot;tool9&quot;, 4), (&quot;tool10&quot;, 4)])),
+    Plot(Coordinates([(&quot;tool8&quot;, 1), (&quot;tool9&quot;, 1), (&quot;tool10&quot;, 1)])),
+    Legend([&quot;used&quot;, &quot;understood&quot;, &quot;not understood&quot;])
+)</code></pre><p><a href="coordinates-symbolic.pdf">[.pdf]</a>, <a href="coordinates-symbolic.tex">[generated .tex]</a></p><p><img src="coordinates-symbolic.svg" alt/></p><h2><a class="nav-anchor" id="D-1" href="#D-1">3D</a></h2><p>Use three vectors to construct 3D coordinates.</p><pre><code class="language-julia">t = range(0; stop = 6*π, length = 100)
+@pgf Plot3(
+    {
+        no_marks,
+    },
+    Coordinates(t .* sin.(t), t .* cos.(t), .-t)
+)</code></pre><p><a href="coordinates-3d.pdf">[.pdf]</a>, <a href="coordinates-3d.tex">[generated .tex]</a></p><p><img src="coordinates-3d.svg" alt/></p><h2><a class="nav-anchor" id="Edge-vectors-1" href="#Edge-vectors-1">Edge vectors</a></h2><p>A convenience constructor is available for plotting a matrix of values calculated from edge vectors.</p><pre><code class="language-julia">x = range(-2; stop = 2, length = 20)
+y = range(-0.5; stop = 3, length = 25)
+f(x, y) = (1 - x)^2 + 100*(y - x^2)^2
+@pgf Plot3(
+    {
+        surf,
+    },
+    Coordinates(x, y, f.(x, y&#39;))
+)</code></pre><p><a href="coordinates-3d-matrix.pdf">[.pdf]</a>, <a href="coordinates-3d-matrix.tex">[generated .tex]</a></p><p><img src="coordinates-3d-matrix.svg" alt/></p><h2><a class="nav-anchor" id="Heatmap-1" href="#Heatmap-1">Heatmap</a></h2><pre><code class="language-julia">x = range(-2; stop = 2, length = 40)
+y = range(-0.5; stop = 3, length = 50)
+@pgf Axis(
+    {
+        view = (0, 90),
+        colorbar,
+        &quot;colormap/jet&quot;,
+    },
+    Plot3(
+        {
+            surf,
+            shader = &quot;flat&quot;,
+        },
+        Coordinates(x, y, @. √(f(x, y&#39;)))
+    )
+)</code></pre><p><a href="coordinates-3d-matrix-heatmap.pdf">[.pdf]</a>, <a href="coordinates-3d-matrix-heatmap.tex">[generated .tex]</a></p><p><img src="coordinates-3d-matrix-heatmap.svg" alt/></p><h2><a class="nav-anchor" id="Matrix-plot-1" href="#Matrix-plot-1">Matrix plot</a></h2><pre><code class="language-julia">x = repeat(0:2, outer = 3)
+y = repeat(0:2, inner = 3)
+meta = [&quot;color=$c&quot; for c in [&quot;red&quot;, &quot;blue&quot;, &quot;yellow&quot;, &quot;black&quot;, &quot;brown&quot;, &quot;magenta&quot;, &quot;green&quot;, &quot;red&quot;, &quot;white&quot;]]
+c = Coordinates(x, y; meta = meta)
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xtick = [0, 1, 2]
+    },
+    PlotInc(
+        {
+            matrix_plot,
+            mark = &quot;*&quot;,
+            nodes_near_coords = raw&quot;\coordindex&quot;,
+            &quot;mesh/color input&quot; = &quot;explicit&quot;,
+            &quot;mesh/cols&quot; = 3
+        },
+        c,
+    )
+)</code></pre><p><a href="matrix-plot.pdf">[.pdf]</a>, <a href="matrix-plot.tex">[generated .tex]</a></p><p><img src="matrix-plot.svg" alt/></p><footer><hr/><a class="previous" href="../man/internals.html"><span class="direction">Previous</span><span class="title">Internals</span></a><a class="next" href="tables.html"><span class="direction">Next</span><span class="title">Tables</span></a></footer></article></body></html>

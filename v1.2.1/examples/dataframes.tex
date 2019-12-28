@@ -1,0 +1,102 @@
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[legend pos={north west}, xlabel={distance}, ylabel={track time}]
+    \addplot[scatter, only marks, scatter src={explicit symbolic}, scatter/classes={Tortoise={mark={square*}, blue}, Achilles={mark={triangle*}, red}}]
+        table[row sep={\\}, x={distance}, y={tracktime}, meta={racer}]
+        {
+            distance  tracktime  racer  \\
+            2.380374563683315  4.744534385990302  Tortoise
+              \\
+            2.5273212450475686  4.958215353486296  Tortoise
+              \\
+            2.788869098757401  4.911346092830005  Tortoise
+              \\
+            2.2907792640095574  4.903806654363452  Tortoise
+              \\
+            3.155888031216841  5.877918159079875  Tortoise
+              \\
+            2.6046557291857737  4.41808089675872  Tortoise
+              \\
+            3.0691457474725135  7.033440909556357  Tortoise
+              \\
+            2.637714273089169  4.477503447502249  Tortoise
+              \\
+            2.8786135578081646  6.552193069069019  Tortoise
+              \\
+            3.29956488188131  7.013741312826511  Tortoise
+              \\
+            2.982968327673971  6.267367592859777  Tortoise
+              \\
+            2.664052105368892  5.28748496295941  Tortoise
+              \\
+            3.301519126243282  6.498733141340656  Tortoise
+              \\
+            3.5674621637425155  6.8246271832552985  Tortoise
+              \\
+            3.267312475844574  7.376919717568693  Tortoise
+              \\
+            2.7161364558151155  6.218541470741447  Tortoise
+              \\
+            3.1050502234758945  6.885142604122231  Tortoise
+              \\
+            2.4772302038430722  4.449827857756097  Tortoise
+              \\
+            2.6664159556445655  4.792955182551923  Tortoise
+              \\
+            2.028291190550629  4.126162680366677  Tortoise
+              \\
+            2.8256997330159592  2.503161743279842  Achilles
+              \\
+            1.6547898121729625  1.4137556446214945  Achilles
+              \\
+            2.479727310892442  2.698774209214637  Achilles
+              \\
+            2.142646114972494  1.991378889806319  Achilles
+              \\
+            2.863696410772575  2.579791880996253  Achilles
+              \\
+            2.396023839049621  2.037397239154139  Achilles
+              \\
+            3.6987335704365756  2.8094224523369267  Achilles
+              \\
+            2.662577290038963  2.238537204748515  Achilles
+              \\
+            3.3533782963783185  3.7923031587836995  Achilles
+              \\
+            2.6721371623286054  2.7706130483940723  Achilles
+              \\
+            1.8337181446184152  1.8038526141205504  Achilles
+              \\
+            3.2633177824642328  3.357549927397968  Achilles
+              \\
+            3.6814919043803007  3.070231061360453  Achilles
+              \\
+            2.2418665331825482  2.4212243834859626  Achilles
+              \\
+            3.447623009150945  3.5796798357797197  Achilles
+              \\
+            2.5945414534177798  2.6776747434705053  Achilles
+              \\
+            3.2906024627361337  3.2151277230890813  Achilles
+              \\
+            2.554918437485716  2.7967216120442675  Achilles
+              \\
+            2.6954317523166575  2.6563027482377524  Achilles
+              \\
+            1.8246409651876978  1.7843576084223889  Achilles
+              \\
+        }
+        ;
+    \legend{{Tortoise},{Achilles}}
+\end{axis}
+\end{tikzpicture}
+\end{document}
