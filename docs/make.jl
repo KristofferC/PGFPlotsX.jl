@@ -1,5 +1,5 @@
 using Documenter, PGFPlotsX
-PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
+PGFPlotsX.latexengine!(PGFPlotsX.LUALATEX)
 
 using Contour, Colors, DataFrames, Distributions
 
