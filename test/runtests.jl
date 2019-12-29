@@ -16,9 +16,11 @@ PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 GNUPLOT_VERSION = try chomp(read(`gnuplot -V`, String)); catch; nothing; end
 HAVE_GNUPLOT = GNUPLOT_VERSION ≠ nothing
 
-@info "External binaries" PGFPlotsX.HAVE_PDFTOPPM PGFPlotsX.HAVE_PDFTOSVG GNUPLOT_VERSION
+@info "External binaries" PGFPlotsX.png_engine() PGFPlotsX.svg_engine() GNUPLOT_VERSION
 
-if !(PGFPlotsX.HAVE_PDFTOPPM && PGFPlotsX.HAVE_PDFTOSVG && HAVE_GNUPLOT)
+if !(PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE && 
+     PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE &&
+     HAVE_GNUPLOT)
     @warn "External binaries `pdf2svg`, `pdftoppm`, and `gnuplot` need to be installed
 for complete test coverage."
 end

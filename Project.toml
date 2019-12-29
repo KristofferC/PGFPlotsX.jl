@@ -1,22 +1,27 @@
 name = "PGFPlotsX"
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
-version = "1.1.0"
+version = "1.2.1"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
-Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DefaultApplication = "3f0dd361-4fe0-5fc6-8523-80b14ec94d85"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-Missings = "e1d29d7a-bbdc-5cf2-9ac0-f12de2c33e28"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-Unicode = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [compat]
+ArgCheck = "^1"
+DataStructures = "^0.17"
+DefaultApplication = "^0.1"
+DocStringExtensions = "^0.8"
+MacroTools = "^0.5"
+Parameters = "^0.12"
+Requires = "0.5, 1.0"
+StatsBase = "^0.32"
 julia = "1"
 
 [extras]

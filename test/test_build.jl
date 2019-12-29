@@ -59,13 +59,13 @@ end
             pgfsave("$tmp.tex", a)
             @test is_tex_document("$tmp.tex")
             println(read("$tmp.tex", String))
-            if PGFPlotsX.HAVE_PDFTOPPM
+            if PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE
                 pgfsave("$tmp.png", a)
                 @test is_png_file("$tmp.png")
             else
                 @test_throws PGFPlotsX.MissingExternalProgramError pgfsave("$tmp.png", a)
             end
-            if PGFPlotsX.HAVE_PDFTOSVG
+            if PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE
                 pgfsave("$tmp.svg", a)
                 @test is_svg_file("$tmp.svg")
             else
@@ -101,7 +101,7 @@ end
     end
     # svg
     let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
-        if PGFPlotsX.HAVE_PDFTOSVG
+        if PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE
             show(io, mime, a)
             write(tmp, take!(io))
             @test is_svg_file(tmp)
@@ -112,7 +112,7 @@ end
     end
     # png
     let tmp = tmp * ".png", mime = MIME"image/png"()
-        if PGFPlotsX.HAVE_PDFTOPPM
+        if PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE
             show(io, mime, a)
             write(tmp, take!(io))
             @test is_png_file(tmp)

@@ -205,9 +205,9 @@ end
 
 @testset "vertical and horizontal lines" begin
     @test repr_tex((@pgf VLine({blue}, 9))) ==
-        "\\draw[blue] (9,\\pgfkeysvalueof{/pgfplots/ymin})--(9,\\pgfkeysvalueof{/pgfplots/ymax});\n"
+        "\\draw[blue] ({axis cs:9,0}|-{rel axis cs:0,1}) -- ({axis cs:9,0}|-{rel axis cs:0,0});\n"
     @test repr_tex((@pgf HLine({dashed}, 4.0))) ==
-        "\\draw[dashed] (\\pgfkeysvalueof{/pgfplots/xmin},4.0)--(\\pgfkeysvalueof{/pgfplots/xmax},4.0);\n"
+        "\\draw[dashed] ({rel axis cs:1,0}|-{axis cs:0,4.0}) -- ({rel axis cs:0,0}|-{axis cs:0,4.0});\n"
 end
 
 @testset "colors" begin

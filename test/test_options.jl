@@ -52,3 +52,10 @@ end
     @test merge!(P, @pgf({ b = 2 }), @pgf({ c = 3 })) ≡ P
     @test P.options ≅ O3
 end
+  
+@testset "options push! and append!" begin
+    opt1 = "color" => "red"
+    opt2 = "dashed"
+    @test @pgf(push!({}, opt1, opt2)).dict == Dict([opt1, opt2 => nothing])
+    @test @pgf(append!({}, [opt1, opt2])).dict == Dict([opt1, opt2 => nothing])
+end

@@ -4,7 +4,7 @@
 using PGFPlotsX
 savefigs = (figname, obj) -> begin
     pgfsave(figname * ".pdf", obj)
-    run(`pdf2svg $(figname * ".pdf") $(figname * ".svg")`)
+    run(`pdftocairo -svg -l  1 $(figname * ".pdf") $(figname * ".svg")`)
     pgfsave(figname * ".tex", obj);
     return nothing
 end

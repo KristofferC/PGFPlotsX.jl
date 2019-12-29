@@ -143,6 +143,17 @@ function accum_opt!(d::AbstractDict, opt::AbstractDict)
     end
 end
 
+function Base.append!(options::Options, opts)
+    for opt in opts
+        accum_opt!(options.dict, opt)
+    end
+    options
+end
+
+function Base.push!(options::Options, opts::Union{String,Pair}...)
+    append!(options, opts)
+end
+
 function dictify(args)
     options = Options()
     for arg in args
