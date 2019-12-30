@@ -1,0 +1,24 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}
+    \addplot
+        table[row sep={\\}]
+        {
+            \\
+            0  0  \\
+            1  1  \\
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}

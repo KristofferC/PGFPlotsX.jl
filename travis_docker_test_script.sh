@@ -8,5 +8,9 @@ JULIABIN=/test/julia-$JULIAVER/bin/julia
 
 cd /mnt && if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
 
+# TEST CODE
+lualatex --halt-on-error lualatex.tex
+cat lualatex.log
+
 # run tests
 $JULIABIN -e "import Pkg; Pkg.build(); Pkg.test(; coverage=true)"
