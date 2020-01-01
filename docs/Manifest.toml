@@ -47,9 +47,9 @@ version = "0.9.0"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "InteractiveUtils", "Printf", "Reexport"]
-git-tree-sha1 = "b9c284790747cf072af85f35acfe958845cfe9a9"
+git-tree-sha1 = "288e7a907bd993d50f5664e8e4fcddb9a3107039"
 uuid = "5ae59095-9a9b-59fe-a467-6f913c188581"
-version = "0.11.0"
+version = "0.11.1"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
@@ -203,9 +203,9 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[OpenBLAS_jll]]
 deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "87f80e645b1fbf22f7d1f99168abb8ef313d0422"
+git-tree-sha1 = "cb0671dfcf4afbad1d3631079c58275b46a572b8"
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
-version = "0.3.7+1"
+version = "0.3.7+2"
 
 [[OpenSpecFun_jll]]
 deps = ["Libdl", "Pkg"]
