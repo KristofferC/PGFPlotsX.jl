@@ -10,7 +10,7 @@ if get(ENV, "CI", false) == true
     PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 end
 
-@show PGFPlotsX.latexengine
+@info "LaTeX engine" PGFPlotsX.latexengine()
 PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
 
 GNUPLOT_VERSION = try chomp(read(`gnuplot -V`, String)); catch; nothing; end
@@ -18,7 +18,7 @@ HAVE_GNUPLOT = GNUPLOT_VERSION ≠ nothing
 
 @info "External binaries" PGFPlotsX.png_engine() PGFPlotsX.svg_engine() GNUPLOT_VERSION
 
-if !(PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE && 
+if !(PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE &&
      PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE &&
      HAVE_GNUPLOT)
     @warn "External binaries `pdf2svg`, `pdftoppm`, and `gnuplot` need to be installed
@@ -35,8 +35,8 @@ mktempdir() do tmp; cd(tmp) do
     include("test_build.jl")
 end end
 
-# Build the docs on Julia v1.0
-if get(ENV, "TRAVIS_JULIA_VERSION", nothing) == "1.0"
+# Build the docs on Julia v1.3
+if get(ENV, "TRAVIS_JULIA_VERSION", nothing) == "1.3"
     cd(joinpath(@__DIR__, "..")) do
         withenv("JULIA_LOAD_PATH" => nothing) do
             cmd = `$(Base.julia_cmd()) --depwarn=no --color=yes --project=docs/`

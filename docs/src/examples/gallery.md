@@ -497,3 +497,37 @@ savefigs("3d_waterfall", axis) # hide
 [\[.pdf\]](3d_waterfall.pdf), [\[generated .tex\]](3d_waterfall.tex)
 
 ![](3d_waterfall.svg)
+
+## Parametric 3D curve
+
+This nice parametric curve was adapted from a [TeXWelt answer](https://texwelt.de/fragen/7436/drehtransformation-mit-pgfplots). We calculate the curve in Julia using broadcasting, and use the colors from the Julia logo.
+
+```@example pgf
+p1 = range(0, 360; length = 100)' # parameter 1
+p2 = range(0, 360; length = 70)   # parameter 2
+w1 = @. sind(3*(p1 + 2 * p2)) + 1.25 # wave 1
+w2 = @. 6 + w1 * cosd(p1)            # wave 2
+x = vec(@. w2 * cosd(p2))
+y = vec(@. w2 * sind(p2))
+z = vec(@. w1 * sind(p1))
+logo_colors = [(77,100,174), (57,151,79), (255,255,255), (146,89,163), (202,60,50)]
+
+@pgf Axis(
+    {
+        axis_equal,
+        axis_lines = "none"
+    },
+    Plot3(
+        {
+            surf,
+            z_buffer = "sort",
+            colormap = "{Julia}{$(join(map(c -> "rgb255=$c", logo_colors), ", "))}",
+            "mesh/rows" = length(p1)
+        },
+        Table(x, y, z)))
+savefigs("3d_parametric", ans) # hide
+```
+
+[\[.pdf\]](3d_parametric.pdf), [\[generated .tex\]](3d_parametric.tex)
+
+![](3d_parametric.svg)
