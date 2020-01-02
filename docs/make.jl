@@ -1,7 +1,7 @@
 using Documenter, PGFPlotsX
-PGFPlotsX.latexengine!(PGFPlotsX.PDFLATEX)
+PGFPlotsX.latexengine!(PGFPlotsX.LUALATEX)
 
-using Contour, Colors, DataFrames
+using Contour, Colors, DataFrames, Distributions
 
 makedocs(
     modules = [PGFPlotsX],

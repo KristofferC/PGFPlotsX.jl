@@ -699,7 +699,7 @@ function print_tex(io::IO, vline::VLine)
     @unpack options, x = vline
     print(io, "\\draw")
     print_options(io, options; newline = false)
-    println(io, "($(x),\\pgfkeysvalueof{/pgfplots/ymin})--($(x),\\pgfkeysvalueof{/pgfplots/ymax});")
+    println(io, "({axis cs:$(x),0}|-{rel axis cs:0,1}) -- ({axis cs:$(x),0}|-{rel axis cs:0,0});")
 end
 
 struct HLine
@@ -718,5 +718,5 @@ function print_tex(io::IO, hline::HLine)
     @unpack options, y = hline
     print(io, "\\draw")
     print_options(io, options; newline = false)
-    println(io, "(\\pgfkeysvalueof{/pgfplots/xmin},$(y))--(\\pgfkeysvalueof{/pgfplots/xmax},$(y));")
+    println(io, "({rel axis cs:1,0}|-{axis cs:0,$(y)}) -- ({rel axis cs:0,0}|-{axis cs:0,$(y)});")
 end

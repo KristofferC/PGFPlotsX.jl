@@ -44,7 +44,7 @@ extensions should be recognized by `\\includegraphics` when the
 """
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
 
-struct MissingExternalProgramError
+struct MissingExternalProgramError <: Exception
     str::AbstractString
 end
 MissingExternalProgramError(strs...) = MissingExternalProgramError(join(strs))
