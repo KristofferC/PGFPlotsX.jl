@@ -1,7 +1,8 @@
-article#docs pre {
+article#documenter-page pre {
     line-height: 120%;
 }
 
-article#docs img {
+article#documenter-page img {
     width: 80%;
+    background-color: white;
 }
