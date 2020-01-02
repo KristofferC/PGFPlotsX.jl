@@ -1,3 +1,4 @@
+\RequirePackage{luatex85}
 \documentclass[tikz]{standalone}
 % Default preamble
 \usepackage{pgfplots}
@@ -116,8 +117,8 @@
             6.0  3.3333333333333335  \\
         }
         ;
-    \draw[dashed, blue] (\pgfkeysvalueof{/pgfplots/xmin},3)--(\pgfkeysvalueof{/pgfplots/xmax},3);
-    \draw[dotted, red] (3,\pgfkeysvalueof{/pgfplots/ymin})--(3,\pgfkeysvalueof{/pgfplots/ymax});
+    \draw[dashed, blue] ({rel axis cs:1,0}|-{axis cs:0,3}) -- ({rel axis cs:0,0}|-{axis cs:0,3});
+    \draw[dotted, red] ({axis cs:3,0}|-{rel axis cs:0,1}) -- ({axis cs:3,0}|-{rel axis cs:0,0});
 \end{axis}
 \end{tikzpicture}
 \end{document}
