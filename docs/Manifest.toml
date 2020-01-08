@@ -227,7 +227,7 @@ version = "0.9.10"
 
 [[PGFPlotsX]]
 deps = ["ArgCheck", "DataStructures", "Dates", "DefaultApplication", "DocStringExtensions", "MacroTools", "Parameters", "Requires", "StatsBase"]
-path = ".."
+git-tree-sha1 = "f840483da6f497c3a75975230fa168adc4c1ed92"
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
 version = "1.2.1"
 

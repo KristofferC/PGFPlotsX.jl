@@ -39,4 +39,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/KristofferC/PGFPlotsX.jl.git",
+    push_preview=true,
 )
