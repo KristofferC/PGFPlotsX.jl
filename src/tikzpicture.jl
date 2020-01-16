@@ -3,9 +3,9 @@ const TikzElementOrStr = Union{TikzElement, String}
 """
     TikzPicture([options], contents...)
 
-Corredponds to a `tikzpicture` block in PGFPlots.
+Corresponds to a `tikzpicture` block in PGFPlots.
 
-Elements can also be added with `push!` after contruction.
+Elements can also be added with `push!` after construction.
 """
 struct TikzPicture <: OptionType
     options::Options
