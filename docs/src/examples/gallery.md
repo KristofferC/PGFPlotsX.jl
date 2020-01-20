@@ -1,6 +1,6 @@
-# [pgfplots gallery](@id manual_gallery)
+# [PGFPlots gallery](@id manual_gallery)
 
-Gallery to show off different features of pgfplots and how they can be used from PGFPlotsX.jl.
+Gallery to show off different features of PGFPlots and how they can be used from PGFPlotsX.jl.
 
 ```@setup pgf
 using PGFPlotsX
