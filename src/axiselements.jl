@@ -720,3 +720,19 @@ function print_tex(io::IO, hline::HLine)
     print_options(io, options; newline = false)
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(y)}) -- ({rel axis cs:0,0}|-{axis cs:0,$(y)});")
 end
+
+
+##################
+# LeTex builtins #
+##################
+
+"""
+    Label(s::AbstractString)
+
+Corresponds to the `\\label{...}` in LaTeX.
+"""
+struct Label
+    s::AbstractString
+end
+
+print_tex(io::IO, l::Label) = print(io, "\\label{$(l.s)}")

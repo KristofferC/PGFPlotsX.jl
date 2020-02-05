@@ -13,7 +13,7 @@ using StatsBase: midpoints
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
-    TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine
+    TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine, Label
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
 
 struct PGFPlotsXDisplay <: AbstractDisplay end
