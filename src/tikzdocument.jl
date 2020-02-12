@@ -22,7 +22,8 @@ struct TikzDocument
     end
 end
 
-@forward TikzDocument.elements Base.push!, Base.append!
+Base.push!(t::TikzDocument, args...; kwargs...) = (push!(t.elements, args...; kwargs...); t)
+Base.append!(t::TikzDocument, args...; kwargs...) = (append!(t.elements, args...; kwargs...); t)
 
 """
     $SIGNATURES

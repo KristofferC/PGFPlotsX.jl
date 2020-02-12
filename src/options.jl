@@ -17,7 +17,9 @@ When `print_empty = false` (the default), empty options are not printed. Use
 Options(pairs::Pair...; print_empty::Bool = false) =
     Options(OrderedDict(pairs), print_empty)
 
-@forward Options.dict Base.getindex, Base.setindex!, Base.delete!
+Base.getindex(o::Options, args...; kwargs...) = getindex(o.dict, args...; kwargs...)
+Base.setindex!(o::Options, args...; kwargs...) = (setindex!(o.dict, args...; kwargs...); o)
+Base.delete!(o::Options, args...; kwargs...) = (delete!(o.dict, args...; kwargs...); o)
 
 Base.copy(options::Options) = deepcopy(options)
 
@@ -95,7 +97,9 @@ Subtypes have an `options::Options` field.
 """
 abstract type OptionType end
 
-@forward OptionType.options Base.getindex, Base.setindex!, Base.delete!
+Base.getindex(o::OptionType, args...; kwargs...) = getindex(o.options, args...; kwargs...)
+Base.setindex!(o::OptionType, args...; kwargs...) = (setindex!(o.options, args...; kwargs...); o)
+Base.delete!(o::OptionType, args...; kwargs...) = (delete!(o.options, args...; kwargs...); o)
 
 Base.copy(a::OptionType) = deepcopy(a)
 
