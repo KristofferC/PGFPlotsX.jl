@@ -1,6 +1,6 @@
 name = "PGFPlotsX"
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
-version = "1.2.1"
+version = "1.2.2"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
@@ -16,7 +16,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 [compat]
 ArgCheck = "^1"
 DataStructures = "^0.17"
-DefaultApplication = "^0.1"
+DefaultApplication = "1"
 DocStringExtensions = "^0.8"
 MacroTools = "^0.5"
 Parameters = "^0.12"
