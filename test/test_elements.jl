@@ -186,20 +186,20 @@ end
 
 @testset "push! and append!" begin
     plot = Plot(Expression("x"))
-    push!(plot, "a")
-    append!(plot, ["b", "c"])
+    push!(plot, "a")::Plot
+    append!(plot, ["b", "c"])::Plot
     @test plot.trailing == ["a", "b", "c"]
     axis = Axis()
-    push!(axis, plot)
-    append!(axis, ["non", "sense"])
+    push!(axis, plot)::Axis
+    append!(axis, ["non", "sense"])::Axis
     @test axis.contents == [plot, "non", "sense"]
     picture = TikzPicture()
-    push!(picture, axis)
-    append!(picture, ["some", "thing"])
+    push!(picture, axis)::TikzPicture
+    append!(picture, ["some", "thing"])::TikzPicture
     @test picture.elements == [axis, "some", "thing"]
     document = TikzDocument()
-    push!(document, picture)
-    append!(document, ["stuff"])
+    push!(document, picture)::TikzDocument
+    append!(document, ["stuff"])::TikzDocument
     @test document.elements == [picture, "stuff"]
 end
 

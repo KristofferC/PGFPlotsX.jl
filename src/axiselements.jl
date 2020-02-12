@@ -553,7 +553,8 @@ end
 Plot(is3d::Bool, incremental::Bool, options::Options, data::PlotData,
      trailing::Tuple) = Plot(is3d, incremental, options, data, collect(trailing))
 
-@forward Plot.trailing Base.push!, Base.append!
+Base.push!(p::Plot, args...; kwargs...) = (push!(p.trailing, args...; kwargs...); p)
+Base.append!(p::Plot, args...; kwargs...) = (append!(p.trailing, args...; kwargs...); p)
 
 """
     Plot([options::Options], data, trailing...)

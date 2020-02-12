@@ -5,7 +5,7 @@ using Dates
 using DataStructures: OrderedDict
 using DefaultApplication: DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
-using MacroTools: prewalk, @capture, @forward
+using MacroTools: prewalk, @capture
 using Parameters: @unpack
 using Requires: @require
 using StatsBase: midpoints
