@@ -14,7 +14,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
-ArgCheck = "^1"
+ArgCheck = "^1, 2.0"
 DataStructures = "^0.17"
 DefaultApplication = "1"
 DocStringExtensions = "^0.8"
