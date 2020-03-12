@@ -46,7 +46,7 @@ function run_latex_once(filename::AbstractString, eng::LaTeXEngine, flags)
     dir, file = splitdir(filename)
     cmd = `$(_engine_cmd(eng)) $flags $file`
     @debug "running latex command $cmd in dir $dir"
-    succ = cd(dir) do 
+    succ = cd(dir) do
         success(cmd)
     end
     logfile = _replace_fileext(filename, ".log")
@@ -125,7 +125,7 @@ function _default_preamble()
 end
 
 #######
-# PNG # 
+# PNG #
 #######
 @enum(PNGEngine, NO_PNG_ENGINE, PNG_PDF_TO_CAIRO, PDF_TO_PPM)
 const ACTIVE_PNG_ENGINE = Ref{Union{Nothing, PNGEngine}}(nothing)
@@ -152,7 +152,7 @@ function convert_pdf_to_png(pdf::String, png::String; engine::PNGEngine=png_engi
         cmd = `pdftocairo -png -r $dpi -singlefile $pdf $png`
     elseif engine == PDF_TO_PPM
         cmd = `pdftoppm -png -r $dpi -singlefile $pdf $png`
-    else 
+    else
         error("unreachable reached")
     end
     @debug "convert_pdf_to_png: running $cmd"
@@ -167,7 +167,7 @@ end
 const ACTIVE_SVG_ENGINE = Ref{Union{Nothing, SVGEngine}}(nothing)
 function svg_engine()
     if ACTIVE_SVG_ENGINE[] === nothing
-        for (engine, enum) in zip(("pdftocairo", "pdftosvg"), (SVG_PDF_TO_CAIRO, PDF_TO_SVG))
+        for (engine, enum) in zip(("pdftocairo", "pdf2svg"), (SVG_PDF_TO_CAIRO, PDF_TO_SVG))
             @debug "svg_engine: looking for svg engine $engine"
             if Sys.which(engine) !== nothing
                 @debug "svg_engine: found svg engine $engine, using it"
@@ -188,10 +188,9 @@ function convert_pdf_to_svg(pdf::String, svg::String, engine=svg_engine())
         cmd = `pdftocairo -svg -l 1 $pdf $svg`
     elseif engine == PDF_TO_SVG
         cmd = `pdf2svg $pdf $svg`
-    else 
+    else
         error("unreachable reached")
     end
     @debug "convert_pdf_to_svg: running $cmd"
     return run(cmd)
 end
-
