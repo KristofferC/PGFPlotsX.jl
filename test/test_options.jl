@@ -30,6 +30,8 @@ end
 @testset "pgf empty" begin
     @test squashed_repr_tex(@pgf Plot({}, Table("x" => [1,2,3]))) ==
         "\\addplot[]\ntable[row sep={\\\\}]\n{\nx \\\\\n1 \\\\\n2 \\\\\n3 \\\\\n}\n;" # note []
+    @test squashed_repr_tex(@pgf Plot({}, Table([], []))) ==
+        "\\addplot[]\ntable[\nrow sep={\\\\}\n]\n{\n\\\\\n}\n;" # note []
 end
 
 @testset "operations on options" begin

@@ -212,10 +212,16 @@ end
 function print_opt(io::IO, options::Options)
     @unpack dict = options
     replace_underline(x) = x
-    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_" => " ")
+    replace_underline(x::Union{String, Symbol}) = add_indent(replace(string(x), "_" => " "))
     for (i, (k, v)) in enumerate(dict)
-        print_opt(io, add_indent(replace_underline(k)))
-        if v != nothing
+        print_opt(io, replace_underline(k))
+        if v isa Options
+            println(io, "={")
+            print_indent(io) do io
+                print_opt(io, v)
+                print(io, add_indent("\n}"))
+            end
+        elseif v != nothing
             print(io, "={")
             print_opt(io, v)
             print(io, "}")
