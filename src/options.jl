@@ -172,9 +172,10 @@ function print_options(io::IO, options::Options; newline = true)
     if isempty(dict)
         print_empty && print(io, "[]")
     else
-        print(io, "[")
+        println(io, "[")
         print_opt(io, options)
-        print(io, "]")
+        println(io)
+        print(io, add_indent("]"))
     end
     newline ? println(io) : print(io, " ")
 end
@@ -213,14 +214,14 @@ function print_opt(io::IO, options::Options)
     replace_underline(x) = x
     replace_underline(x::Union{String, Symbol}) = replace(string(x), "_" => " ")
     for (i, (k, v)) in enumerate(dict)
-        print_opt(io, replace_underline(k))
+        print_opt(io, add_indent(replace_underline(k)))
         if v != nothing
             print(io, "={")
             print_opt(io, v)
             print(io, "}")
         end
         if i != length(dict)
-          print(io, ", ")
+          println(io, ",")
         end
     end
 end
