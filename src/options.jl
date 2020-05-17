@@ -215,7 +215,7 @@ function print_opt(io::IO, options::Options)
     replace_underline(x::Union{String, Symbol}) = add_indent(replace(string(x), "_" => " "))
     for (i, (k, v)) in enumerate(dict)
         print_opt(io, replace_underline(k))
-        if v isa Options
+        if v isa Options && !isempty(v.dict)
             println(io, "={")
             print_indent(io) do io
                 print_opt(io, v)
