@@ -14,8 +14,22 @@ see the [`@pgf`](@ref) convenience macro.
 When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.
 """
-Options(pairs::Pair...; print_empty::Bool = false) =
-    Options(OrderedDict(pairs), print_empty)
+function Options(args...; print_empty::Bool = false)
+    d = OrderedDict()
+    for arg in args
+        if arg isa Pair
+            k, v = arg
+            d[k] = v
+        elseif arg isa MergeEntry
+            for (k, v) in arg.d.dict
+                d[k] = v
+            end
+        else
+            error("unhandled arg type $arg")
+        end
+    end
+    return Options(d, print_empty)
+end
 
 Base.getindex(o::Options, args...; kwargs...) = getindex(o.dict, args...; kwargs...)
 Base.setindex!(o::Options, args...; kwargs...) = (setindex!(o.dict, args...; kwargs...); o)
@@ -26,13 +40,19 @@ Base.copy(options::Options) = deepcopy(options)
 Base.merge(a::Options, b::Options) =
     Options(merge(a.dict, b.dict), a.print_empty || b.print_empty)
 
+# Wrapper to wrap arguments in the `@pgf {theme...,}` syntax to
+# insert all entries in `theme` into the Option
+struct MergeEntry
+    d::Options
+end
+
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
         return :($(string(key)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
         return :($(string(a))=>$b)
     elseif @capture(key, g_...)
-        return :($g => nothing)
+        return :($MergeEntry($g))
     end
     error("Invalid pgf option $key")
 end
