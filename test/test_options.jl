@@ -38,3 +38,11 @@ end
     @test @pgf(push!({}, opt1, opt2)::Options).dict == Dict([opt1, opt2 => nothing])
     @test @pgf(append!({}, [opt1, opt2])::Options).dict == Dict([opt1, opt2 => nothing])
 end
+
+@testset "options constructor" begin
+    opts = PGFPlotsX.Options(
+        "fill" => "foo",
+        "draw opacity" => 0.1
+    )
+    @test opts.dict == Dict("fill" => "foo", "draw opacity" => 0.1)
+end

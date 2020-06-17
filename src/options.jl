@@ -3,6 +3,12 @@ struct Options
     print_empty::Bool
 end
 
+# Wrapper to wrap arguments in the `@pgf {theme...,}` syntax to
+# insert all entries in `theme` into the Option
+struct MergeEntry
+    d::Options
+end
+
 """
     $SIGNATURES
 
@@ -14,7 +20,7 @@ see the [`@pgf`](@ref) convenience macro.
 When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.
 """
-function Options(args...; print_empty::Bool = false)
+function Options(args::Union{Pair,MergeEntry}...; print_empty::Bool = false)
     d = OrderedDict()
     for arg in args
         if arg isa Pair
@@ -39,12 +45,6 @@ Base.copy(options::Options) = deepcopy(options)
 
 Base.merge(a::Options, b::Options) =
     Options(merge(a.dict, b.dict), a.print_empty || b.print_empty)
-
-# Wrapper to wrap arguments in the `@pgf {theme...,}` syntax to
-# insert all entries in `theme` into the Option
-struct MergeEntry
-    d::Options
-end
 
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
