@@ -1,0 +1,29 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[enlargelimits={false}, xtick={0,1,2}]
+    \addplot+[matrix plot, mark={*}, nodes near coords={\coordindex}, mesh/color input={explicit}, mesh/cols={3}]
+        coordinates {
+            (0,0) [color=red]
+            (1,0) [color=blue]
+            (2,0) [color=yellow]
+            (0,1) [color=black]
+            (1,1) [color=brown]
+            (2,1) [color=magenta]
+            (0,2) [color=green]
+            (1,2) [color=red]
+            (2,2) [color=white]
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
