@@ -3,6 +3,10 @@ struct Options
     print_empty::Bool
 end
 
+function Base.show(io::IO, options::Options)
+    print_options(io, options; newline = false)
+end
+
 # Wrapper to wrap arguments in the `@pgf {theme...,}` syntax to
 # insert all entries in `theme` into the Option
 struct MergeEntry
@@ -10,12 +14,20 @@ struct MergeEntry
 end
 
 """
-    $SIGNATURES
+    $(SIGNATURES)
 
 Options passed to PGFPlots for various structures (`table`, `plot`, etc).
 
-Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Also
-see the [`@pgf`](@ref) convenience macro.
+Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Example:
+
+```jldoctest
+julia> PGFPlotsX.Options(:color => "red", :only_marks => nothing)
+[color={red}, only marks]
+```
+
+The constuctor is not exported but part of the API, for use in packages that depend on
+PGFPlotsX, or code producing complicated plots. It is recommended that the [`@pgf`](@ref)
+macro is used in scripts and interactive code.
 
 When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.

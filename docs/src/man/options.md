@@ -179,3 +179,9 @@ Empty options are not printed by default, but printing `[]` can be useful in som
 ```julia
 @pgf Plot({}, ...)
 ```
+
+## The `PGFPlotsX.Options` constructor
+
+```@docs
+PGFPlotsX.Options
+```

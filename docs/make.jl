@@ -1,6 +1,6 @@
 using Documenter, PGFPlotsX
 PGFPlotsX.latexengine!(PGFPlotsX.LUALATEX)
-
+DocMeta.setdocmeta!(PGFPlotsX, :DocTestSetup, :(using PGFPlotsX); recursive=true)
 using Contour, Colors, DataFrames, Distributions
 
 makedocs(
