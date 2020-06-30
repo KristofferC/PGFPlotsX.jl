@@ -96,8 +96,8 @@ function __init__()
 
         function PGFPlotsX.TableData(histogram::StatsBase.Histogram{T, 2};
                                      kwargs...) where T
-            PGFPlotsX.TableData(midpoints(histogram.edges[1]),
-                                midpoints(histogram.edges[2]),
+            PGFPlotsX.TableData(StatsBase.midpoints(histogram.edges[1]),
+                                StatsBase.midpoints(histogram.edges[2]),
                                 histogram.weights; kwargs...)
         end
 
@@ -107,8 +107,8 @@ function __init__()
         end
 
         function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T
-            PGFPlotsX.Coordinates(midpoints(histogram.edges[1]),
-                                  midpoints(histogram.edges[2]),
+            PGFPlotsX.Coordinates(StatsBase.midpoints(histogram.edges[1]),
+                                  StatsBase.midpoints(histogram.edges[2]),
                                   histogram.weights)
         end
     end
