@@ -12,7 +12,6 @@ using DocStringExtensions: SIGNATURES, TYPEDEF
 using MacroTools: prewalk, @capture
 using Parameters: @unpack
 using Requires: @require
-using StatsBase: midpoints
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot
