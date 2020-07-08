@@ -3,7 +3,7 @@ struct Options
     print_empty::Bool
 end
 
-function Base.show(io::IO, options::Options)
+function Base.show(io::IO, ::MIME"text/plain", options::Options)
     print_options(io, options; newline = false)
 end
 
