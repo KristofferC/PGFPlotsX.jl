@@ -14,7 +14,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
 ArgCheck = "^1, 2.0"
-DataStructures = "^0.17"
+DataStructures = "^0.17, 0.18"
 DefaultApplication = "1"
 DocStringExtensions = "^0.8"
 MacroTools = "^0.5"
