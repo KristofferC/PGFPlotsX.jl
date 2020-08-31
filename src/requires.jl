@@ -63,7 +63,7 @@ function __init__()
         Construct table data from a `DataFrame`.
         """
         PGFPlotsX.TableData(df::DataFrames.DataFrame; rowsep = ROWSEP) =
-            TableData(reduce(hcat, eachcol(df)), string.(names(df)), 0, rowsep)
+            TableData(reduce(hcat, DataFrames.eachcol(df)), string.(names(df)), 0, rowsep)
     end
 
     @require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" begin
