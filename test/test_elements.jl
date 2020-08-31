@@ -76,10 +76,10 @@ end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = Table(hcat(1:10, 11:20), ["a", "b"], Int[])
-    table_unnamed_noopt = Table(hcat(1:10, 11:20), nothing, Int[])
+    table_named_noopt = Table(hcat(1:10, 11:20); colnames=["a", "b"], scanlines=Int[])
+    table_unnamed_noopt = Table(hcat(1:10, 11:20); colnames=nothing, scanlines=Int[])
     opt = @pgf { meaningless = "option" }
-    table_named_opt = Table(opt, hcat(1:10, 11:20), ["a", "b"], Int[])
+    table_named_opt = Table(opt, hcat(1:10, 11:20); colnames=["a", "b"], scanlines=Int[])
 
     # named columns, without options
     @test Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
@@ -100,13 +100,13 @@ end
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
         @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
-                                             hcat(PGFPlotsX.matrix_xyz(x, y, z)...),
-                                             ["x", "y", "z"], 10)
+                                             hcat(PGFPlotsX.matrix_xyz(x, y, z)...);
+                                             colnames=["x", "y", "z"], scanlines=10)
     end
 
     # dataframe
     @test Table(DataFrame(a = 1:5, b = 6:10)) ≅
-        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), ["a", "b"], 0)
+        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), colnames=["a", "b"], scanlines=0)
 
     # can't determine if it is named or unnamed
     @test_throws ArgumentError Table([1:10, :a => 11:20])
