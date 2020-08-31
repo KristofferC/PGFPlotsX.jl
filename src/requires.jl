@@ -63,11 +63,11 @@ function __init__()
         Construct table data from a `DataFrame`.
         """
         PGFPlotsX.TableData(df::DataFrames.DataFrame; rowsep = ROWSEP) =
-            TableData(hcat(DataFrames.eachcol(df, false)...), string.(names(df)), 0, rowsep)
+            TableData(hcat(DataFrames.eachcol(df, false)...), colnames=string.(names(df)); scanlines=0, rowsep=rowsep)
     end
 
     @require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" begin
-        function PGFPlotsX.TableData(c::Contour.ContourCollection; rowsep = ROWSEP)
+        function PGFPlotsX.TableData(c::Contour.ContourCollection; kwargs...)
             colx = Any[]
             coly = Any[]
             colz = Any[]
@@ -83,15 +83,14 @@ function __init__()
                     push!(ns, n)
                 end
             end
-            TableData(hcat(colx, coly, colz), ["x", "y", "z"], cumsum(ns), rowsep)
+            TableData(hcat(colx, coly, colz); colnames=["x", "y", "z"], scanlines=cumsum(ns), kwargs...)
         end
     end
 
     @require StatsBase="2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" begin
         function PGFPlotsX.TableData(h::StatsBase.Histogram{T, 1};
                                      kwargs...) where T
-            PGFPlotsX.TableData(hcat(h.edges[1], vcat(h.weights, 0)),
-                                nothing, 0; kwargs...)
+            PGFPlotsX.TableData(hcat(h.edges[1], vcat(h.weights, 0)); kwargs...)
         end
 
         function PGFPlotsX.TableData(histogram::StatsBase.Histogram{T, 2};
@@ -103,7 +102,7 @@ function __init__()
 
         function PGFPlotsX.TableData(e::StatsBase.ECDF; n = 100, kwargs...)
             x = range(extrema(e)...; length = n)
-            PGFPlotsX.TableData(hcat(x, map(e, x)), nothing, 0; kwargs...)
+            PGFPlotsX.TableData(hcat(x, map(e, x)); kwargs...)
         end
 
         function PGFPlotsX.Coordinates(histogram::StatsBase.Histogram{T, 2}) where T

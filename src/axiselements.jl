@@ -342,12 +342,6 @@ struct TableData
     end
 end
 
-function TableData(data::AbstractMatrix, colnames, scanlines, rowsep = ROWSEP)
-    TableData(data,
-              colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
-              expand_scanlines(scanlines, size(data, 1)), rowsep)
-end
-
 function print_tex(io::IO, tabledata::TableData)
     @unpack data, colnames, scanlines, rowsep = tabledata
     _colsep() = print(io, "  ")
@@ -371,6 +365,19 @@ function print_tex(io::IO, tabledata::TableData)
     end
 end
 
+
+"""
+    $SIGNATURES
+
+`data` provided directly as a matrix.
+"""
+function TableData(data::AbstractMatrix;
+                   colnames = nothing, scanlines = 0, rowsep = ROWSEP)
+    TableData(data,
+              colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
+              expand_scanlines(scanlines, size(data, 1)), rowsep)
+end
+
 """
     $SIGNATURES
 
@@ -381,19 +388,7 @@ arguments.
 """
 TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
           rowsep::Bool = ROWSEP) =
-    TableData(hcat(columns...), nothing, 0, rowsep)
-
-TableData(itr; kwargs...) = TableData(collect(itr); kwargs...) # fallback
-
-"""
-    $SIGNATURES
-
-`data` provided directly as a matrix.
-"""
-function TableData(data::AbstractMatrix;
-                   colnames = nothing, scanlines = 0, rowsep = ROWSEP)
-    TableData(data, colnames, scanlines, rowsep)
-end
+    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep)
 
 """
     $SIGNATURES
@@ -403,14 +398,21 @@ Symbols or strings are accepted as column names.
 """
 function TableData(name_column_pairs::Vector{<: Pair};
                    scanlines = 0, rowsep::Bool = ROWSEP)
-    TableData(hcat(last.(name_column_pairs)...), first.(name_column_pairs),
-              scanlines, rowsep)
+    TableData(reduce(hcat, last.(name_column_pairs)); colnames=first.(name_column_pairs),
+              scanlines=scanlines, rowsep=rowsep)
 end
 
 TableData(rest::AbstractVector...; kwargs...) = TableData(collect(rest); kwargs...)
 
 TableData(name_column_pairs::Pair...; kwargs...) =
     TableData(collect(name_column_pairs); kwargs...)
+
+function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix; kwargs...)
+    colnames = ["x", "y", "z"]
+    columns = reduce(hcat, matrix_xyz(x, y, z))
+    return TableData(columns; colnames=colnames, scanlines=length(x), kwargs...)
+end
+
 
 """
     $SIGNATURES
@@ -420,23 +422,10 @@ Use the keyword arguments as columns.
 Note that this precludes the possibily of providing other keywords; see the
 other constructors.
 """
-TableData(; named_columns...) = TableData(Pair(nc...) for nc in named_columns)
+TableData(; named_columns...) = TableData(collect(Pair(nc...) for nc in named_columns))
 
 TableData(::AbstractVector; kwargs...) =
     throw(ArgumentError("Could not determine whether columns are named from the element type."))
-
-function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
-                   meta::Union{Nothing, AbstractMatrix} = nothing,
-                   rowsep::Bool = ROWSEP)
-    colnames = ["x", "y", "z"]
-    columns = hcat(matrix_xyz(x, y, z)...)
-    if meta ≠ nothing
-        @argcheck size(z) == size(meta) "Incompatible sizes."
-        push!(colnames, "meta")
-        columns = hcat(columns, vec(meta))
-    end
-    TableData(columns, colnames, length(x), rowsep)
-end
 
 struct Table <: OptionType
     options::Options
