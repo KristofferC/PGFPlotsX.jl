@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Julia types · PGFPlotsX.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../index.html"><img src="../assets/logo.svg" alt="PGFPlotsX.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">PGFPlotsX.jl</span></div><form class="docs-search" action="../search.html"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../index.html">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../man/structs.html">Overview</a></li><li><a class="tocitem" href="../man/options.html">Options</a></li><li><a class="tocitem" href="../man/data.html">Data</a></li><li><a class="tocitem" href="../man/axiselements.html">Axis elements</a></li><li><a class="tocitem" href="../man/axislike.html"><code>Axis</code> &amp; friends</a></li><li><a class="tocitem" href="../man/picdoc.html">TikzPicture</a></li><li><a class="tocitem" href="../man/save.html">Showing / Exporting figures</a></li><li><a class="tocitem" href="../man/internals.html">Internals</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="coordinates.html">Coordinates</a></li><li><a class="tocitem" href="tables.html">Tables</a></li><li><a class="tocitem" href="axislike.html">Axis-like objects</a></li><li><a class="tocitem" href="gallery.html">PGFPlots gallery</a></li><li class="is-active"><a class="tocitem" href="juliatypes.html">Julia types</a><ul class="internal"><li><a class="tocitem" href="#Dates"><span>Dates</span></a></li><li><a class="tocitem" href="#Colors.jl"><span>Colors.jl</span></a></li><li><a class="tocitem" href="#DataFrames.jl"><span>DataFrames.jl</span></a></li><li><a class="tocitem" href="#Contour.jl"><span>Contour.jl</span></a></li><li><a class="tocitem" href="#StatsBase.jl"><span>StatsBase.jl</span></a></li><li><a class="tocitem" href="#ECDF"><span>ECDF</span></a></li><li><a class="tocitem" href="#Measurements.jl"><span>Measurements.jl</span></a></li></ul></li><li><a class="tocitem" href="convenience.html">Convenience constructs</a></li><li><a class="tocitem" href="latex.html">Using LaTeX code</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href="juliatypes.html">Julia types</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="juliatypes.html">Julia types</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/juliatypes.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Julia-types"><a class="docs-heading-anchor" href="#Julia-types">Julia types</a><a id="Julia-types-1"></a><a class="docs-heading-anchor-permalink" href="#Julia-types" title="Permalink"></a></h1><p>There is some support to directly use Julia objects from different popular packages in PGFPlotsX.jl. Examples of these are given here.</p><h2 id="Dates"><a class="docs-heading-anchor" href="#Dates">Dates</a><a id="Dates-1"></a><a class="docs-heading-anchor-permalink" href="#Dates" title="Permalink"></a></h2><p><code>Dates</code> is a standard library in Julia. <code>Date</code> and <code>DateTime</code> types are supported natively, but you should specify the <code>date_coordinates_in = ...</code> option in your plot for the relevant axes.</p><pre><code class="language-julia">using Dates
+dategrid = Date(2000,1,1):Day(1):Date(2000,12,31)
+relative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))
+
+@pgf Axis(
+    {
+        date_coordinates_in = &quot;x&quot;,
+        x_tick_label_style = &quot;{rotate=90}&quot;,
+        xlabel = &quot;date&quot;,
+        ylabel = &quot;relative solar irradiance&quot;,
+    },
+    Plot(
+    {
+        no_marks
+    },
+    Table(dategrid, relative_irradiance.(dategrid))))</code></pre><p><a href="dates.pdf">[.pdf]</a>, <a href="dates.tex">[generated .tex]</a></p><p><img src="dates.svg" alt/></p><h2 id="Colors.jl"><a class="docs-heading-anchor" href="#Colors.jl">Colors.jl</a><a id="Colors.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Colors.jl" title="Permalink"></a></h2><h3 id="LineColor"><a class="docs-heading-anchor" href="#LineColor">LineColor</a><a id="LineColor-1"></a><a class="docs-heading-anchor-permalink" href="#LineColor" title="Permalink"></a></h3><p>Using a colorant as the line color</p><pre><code class="language-julia">using Colors
+μ = 0
+σ = 1e-3
+
+axis = Axis()
+@pgf for (i, col) in enumerate(distinguishable_colors(10))
+    offset = i * 50
+    p = Plot(
+        {
+            color = col,
+            domain = &quot;-3*$σ:3*$σ&quot;,
+            style = { ultra_thick },
+            samples = 50
+        },
+        Expression(&quot;exp(-(x-$μ)^2 / (2 * $σ^2)) / ($σ * sqrt(2*pi)) + $offset&quot;))
+    push!(axis, p)
+end
+axis</code></pre><p><a href="colors.pdf">[.pdf]</a>, <a href="colors.tex">[generated .tex]</a></p><p><img src="colors.svg" alt/></p><h3 id="Colormap"><a class="docs-heading-anchor" href="#Colormap">Colormap</a><a id="Colormap-1"></a><a class="docs-heading-anchor-permalink" href="#Colormap" title="Permalink"></a></h3><p>Using a colormap</p><pre><code class="language-julia">using Colors
+p = @pgf Plot3(
+    {
+        surf,
+        point_meta = &quot;y&quot;,
+        samples = 13
+    },
+    Expression(&quot;cos(deg(x)) * sin(deg(y))&quot;)
+)
+colormaps = [&quot;Blues&quot;, &quot;Greens&quot;, &quot;Oranges&quot;, &quot;Purples&quot;]
+td = TikzDocument()
+for cmap in colormaps
+    push_preamble!(td, (cmap, Colors.colormap(cmap)))
+end
+
+tp = @pgf TikzPicture({ &quot;scale&quot; =&gt; 0.5 })
+push!(td, tp)
+gp = @pgf GroupPlot({ group_style = {group_size = &quot;2 by 2&quot;}})
+push!(tp, gp)
+
+for cmap in colormaps
+    @pgf push!(gp, { colormap_name = cmap }, p)
+end</code></pre><p><a href="colormap.pdf">[.pdf]</a>, <a href="colormap.tex">[generated .tex]</a></p><p><img src="colormap.svg" alt/></p><h3 id="Explicit-colors-in-surface-plots"><a class="docs-heading-anchor" href="#Explicit-colors-in-surface-plots">Explicit colors in surface plots</a><a id="Explicit-colors-in-surface-plots-1"></a><a class="docs-heading-anchor-permalink" href="#Explicit-colors-in-surface-plots" title="Permalink"></a></h3><p>When used outside options, all <code>Colors.Colorant</code> colors are printed in the format that can be used in surface plots explicitly.</p><pre><code class="language-julia">using Colors
+hues = 0:30:360
+saturations = 0:0.1:1
+HS = vec(tuple.(hues, saturations&#39;))
+c = Coordinates(first.(HS), last.(HS); meta = [HSL(hs..., 0.5) for hs in HS])
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xlabel = &quot;hue (degrees)&quot;,
+        ylabel = &quot;saturation&quot;
+    },
+    Plot(
+        {
+            &quot;matrix_plot*&quot;,
+            no_marks,
+            &quot;mesh/color input&quot; = &quot;explicit&quot;,
+            &quot;mesh/cols&quot; = length(hues)
+        },
+        c))</code></pre><p><a href="explicit_surface_color.pdf">[.pdf]</a>, <a href="explicit_surface_color.tex">[generated .tex]</a></p><p><img src="explicit_surface_color.svg" alt/></p><h3 id="ggplot2"><a class="docs-heading-anchor" href="#ggplot2">ggplot2</a><a id="ggplot2-1"></a><a class="docs-heading-anchor-permalink" href="#ggplot2" title="Permalink"></a></h3><p>Something that looks a bit like ggplot2.</p><pre><code class="language-julia">using Colors
+using LaTeXStrings
+
+ggplot2_axis_theme = @pgf {
+    tick_align = &quot;outside&quot;,
+    tick_pos = &quot;left&quot;,
+    xmajorgrids,
+    x_grid_style = &quot;white&quot;,
+    ymajorgrids,
+    y_grid_style = &quot;white&quot;,
+    axis_line_style = &quot;white&quot;,
+    &quot;axis_background/.style&quot; = {
+        fill = &quot;white!89.803921568627459!black&quot;
+    }
+}
+
+ggplot2_plot_theme = @pgf {
+    mark=&quot;*&quot;,
+    mark_size = 3,
+    mark_options = &quot;solid&quot;,
+    line_width = &quot;1.64pt&quot;,
+}
+
+x = 0:0.3:2
+y1 = sin.(2x)
+y2 = cos.(2x)
+y3 = cos.(5x)
+ys = [y1, y2, y3]
+n = length(ys)
+
+# Evenly spread out colors
+colors = [LCHuv(65, 100, h) for h in range(15; stop = 360+15, length = n+1)][1:n]
+
+@pgf Axis(
+    {
+         ggplot2_axis_theme...,
+         xmin = -0.095, xmax = 1.995,
+         ymin = -1.1,   ymax =1.1,
+         title = L&quot;Simple plot $\frac{\alpha}{2}$&quot;,
+         xlabel = &quot;time (s)&quot;,
+         ylabel = &quot;Voltage (mV)&quot;,
+    },
+    [
+        PlotInc(
+            {
+                ggplot2_plot_theme...,
+                color = colors[i]
+            },
+            Coordinates(x, _y))
+        for (i, _y) in enumerate(ys)]...,
+)</code></pre><p><a href="ggplot.pdf">[.pdf]</a>, <a href="ggplot.tex">[generated .tex]</a></p><p><img src="ggplot.svg" alt/></p><h2 id="DataFrames.jl"><a class="docs-heading-anchor" href="#DataFrames.jl">DataFrames.jl</a><a id="DataFrames.jl-1"></a><a class="docs-heading-anchor-permalink" href="#DataFrames.jl" title="Permalink"></a></h2><p>Creating a <code>Table</code> from a <code>DataFrame</code> will write it as expected.</p><pre><code class="language-julia">using DataFrames
+
+function mockdata(n, μ, σ, speed, racer)
+    distance = exp.(μ .+ randn(n).*σ)
+    noise = exp.(randn(n) * 0.1)
+    DataFrame(distance = distance,
+              tracktime = distance ./ (speed .* noise),
+              racer = fill(racer, n))
+end
+
+zenon_measurements = vcat(mockdata(20, 1, 0.2, 0.5, &quot;Tortoise&quot;),
+                          mockdata(20, 1, 0.2, 1, &quot;Achilles&quot;))
+
+@pgf Axis(
+    {
+        legend_pos = &quot;north west&quot;,
+        xlabel = &quot;distance&quot;,
+        ylabel = &quot;track time&quot;,
+    },
+    Plot(
+        {
+            scatter,
+            &quot;only marks&quot;,
+            &quot;scatter src&quot;=&quot;explicit symbolic&quot;,
+            &quot;scatter/classes&quot;=
+            {
+                Tortoise = {mark = &quot;square*&quot;,   &quot;blue&quot;},
+                Achilles = {mark = &quot;triangle*&quot;, &quot;red&quot;},
+            }
+        },
+        Table(
+            {
+                x = &quot;distance&quot;,
+                y = &quot;tracktime&quot;,
+                meta = &quot;racer&quot;
+            },
+            zenon_measurements, # &lt;--- Creating a Table from a DataFrame
+        )
+    ),
+    Legend([&quot;Tortoise&quot;, &quot;Achilles&quot;])
+)</code></pre><p><a href="dataframes.pdf">[.pdf]</a>, <a href="dataframes.tex">[generated .tex]</a></p><p><img src="dataframes.svg" alt/></p><h2 id="Contour.jl"><a class="docs-heading-anchor" href="#Contour.jl">Contour.jl</a><a id="Contour.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Contour.jl" title="Permalink"></a></h2><p>A <code>Table</code> of a contour from the <a href="https://github.com/JuliaGeometry/Contour.jl">Contour.jl package</a> will print as .tex in a format that is good to use with <code>contour_prepared</code>.</p><pre><code class="language-julia">using Contour
+x = 0.0:0.1:2π
+y = 0.0:0.1:2π
+f = (x,y) -&gt; sin(x)*sin(y)
+@pgf Plot({
+        contour_prepared,
+        very_thick
+    },
+    Table(contours(x, y, f.(x, y&#39;), 6)))</code></pre><p><a href="contour.pdf">[.pdf]</a>, <a href="contour.tex">[generated .tex]</a></p><p><img src="contour.svg" alt/></p><h2 id="StatsBase.jl"><a class="docs-heading-anchor" href="#StatsBase.jl">StatsBase.jl</a><a id="StatsBase.jl-1"></a><a class="docs-heading-anchor-permalink" href="#StatsBase.jl" title="Permalink"></a></h2><p><code>StatsBase.Histogram</code> can be plotted using <code>Table</code>, both for 1D and 2D histograms.</p><h3 id="D"><a class="docs-heading-anchor" href="#D">1D</a><a id="D-1"></a><a class="docs-heading-anchor-permalink" href="#D" title="Permalink"></a></h3><pre><code class="language-julia">using StatsBase: Histogram, fit
+@pgf Axis(
+    {
+        &quot;ybar interval&quot;,
+        &quot;xticklabel interval boundaries&quot;,
+        xmajorgrids = false,
+        xticklabel = raw&quot;$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$&quot;,
+        &quot;xticklabel style&quot; =
+        {
+            font = raw&quot;\tiny&quot;
+        },
+    },
+    Plot(Table(fit(Histogram, range(0; stop = 1, length = 100).^3, closed = :left))))</code></pre><p><a href="histogram-1d.pdf">[.pdf]</a>, <a href="histogram-1d.tex">[generated .tex]</a></p><p><img src="histogram-1d.svg" alt/></p><h3 id="D-2"><a class="docs-heading-anchor" href="#D-2">2D</a><a class="docs-heading-anchor-permalink" href="#D-2" title="Permalink"></a></h3><pre><code class="language-julia">using StatsBase: Histogram, fit
+w = range(-1; stop = 1, length = 100) .^ 3
+xy = vec(tuple.(w, w&#39;))
+h = fit(Histogram, (first.(xy), last.(xy)), closed = :left)
+@pgf Axis(
+    {
+        view = (0, 90),
+        colorbar,
+        &quot;colormap/jet&quot;
+    },
+    Plot3(
+        {
+            surf,
+            shader = &quot;flat&quot;,
+
+        },
+        Table(h))
+)</code></pre><p><a href="histogram-2d.pdf">[.pdf]</a>, <a href="histogram-2d.tex">[generated .tex]</a></p><p><img src="histogram-2d.svg" alt/></p><h2 id="ECDF"><a class="docs-heading-anchor" href="#ECDF">ECDF</a><a id="ECDF-1"></a><a class="docs-heading-anchor-permalink" href="#ECDF" title="Permalink"></a></h2><p>Empirical cumulative distribution functions (from <code>StatsBase.ecdf</code>) can be plotted using <code>Table</code>, automatically generating a grid on the range of the input data. The optional argument <code>n</code> selects the number of gridpoints.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>This feature requires StatsBase v0.26.0 or later.</p></div></div><pre><code class="language-julia">using StatsBase: ecdf
+x = randn(1000) # random standard normal values
+@pgf Axis(
+    {
+        xlabel = &quot;x&quot;,
+        ylabel = &quot;ecdf&quot;
+    },
+    Plot(
+        {
+            no_marks,
+            thick,
+            red
+        },
+        Table(ecdf(x)))
+)</code></pre><p><a href="ecdf.pdf">[.pdf]</a>, <a href="ecdf.tex">[generated .tex]</a></p><p><img src="ecdf.svg" alt/></p><h2 id="Measurements.jl"><a class="docs-heading-anchor" href="#Measurements.jl">Measurements.jl</a><a id="Measurements.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Measurements.jl" title="Permalink"></a></h2><p>Vectors of <code>Measurement</code> can be plotted using <code>Coordinates</code> in 2D.</p><pre><code class="language-julia">using Measurements
+x = [measurement(x, 0.1 + 0.1*rand()) for x in -5:1.0:5]
+y = x.^2
+
+@pgf Axis(
+    {
+        &quot;error bars/error bar style&quot; =
+        {
+            very_thin,
+        },
+    },
+    Plot(
+        {
+            only_marks,
+            mark = &quot;star&quot;,
+            &quot;error bars/y dir=both&quot;,
+            &quot;error bars/y explicit&quot;,
+        },
+        Coordinates(x, y)
+    )
+)</code></pre><p><a href="measurements.pdf">[.pdf]</a>, <a href="measurements.tex">[generated .tex]</a></p><p><img src="measurements.svg" alt/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="gallery.html">« PGFPlots gallery</a><a class="docs-footer-nextpage" href="convenience.html">Convenience constructs »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 31 August 2020 11:55">Monday 31 August 2020</span>. Using Julia version 1.5.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
