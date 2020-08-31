@@ -70,13 +70,20 @@ function prockey(key)
     error("Invalid pgf option $key")
 end
 
+if !isdefined(Base, :mapany)
+    mapany(f, itr) = map!(f, Vector{Any}(undef, length(itr)::Int), itr)  # convenient for Expr.args
+else
+    using Base: mapany
+end
+
+
 function procmap(d)
     if @capture(d, f_(xs__))
-        return :($f($(map(procmap, xs)...)))
+        return :($f($(mapany(procmap, xs)...)))
     elseif !@capture(d, {xs__})
         return d
     else
-        return :($(Options)($(map(prockey, xs)...); print_empty = true))
+        return :($(Options)($(mapany(prockey, xs)...); print_empty = true))
     end
 end
 
