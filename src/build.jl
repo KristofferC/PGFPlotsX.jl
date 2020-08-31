@@ -50,7 +50,7 @@ function run_latex_once(filename::AbstractString, eng::LaTeXEngine, flags)
         success(cmd)
     end
     logfile = _replace_fileext(filename, ".log")
-    logfile if !isfile(logfile)
+    log = if !isfile(logfile)
         @warn "failed to find logfile at $(repr(logfile))"
         ""
     else
