@@ -427,6 +427,14 @@ TableData(; named_columns...) = TableData(collect(Pair(nc...) for nc in named_co
 TableData(::AbstractVector; kwargs...) =
     throw(ArgumentError("Could not determine whether columns are named from the element type."))
 
+function TableData(table; kwargs...)
+    if !Tables.istable(table)
+        error("`$(typeof(table))` does not support the Table interface")
+    end
+    colnames = string.(Tables.columnnames(Tables.columns(table)))
+    TableData(Tables.matrix(table); colnames=colnames, kwargs...)
+end
+
 struct Table <: OptionType
     options::Options
     content::Union{TableData, AbstractString}

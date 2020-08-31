@@ -56,16 +56,6 @@ function __init__()
         end
     end
 
-    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" begin
-        """
-            $SIGNATURES
-
-        Construct table data from a `DataFrame`.
-        """
-        PGFPlotsX.TableData(df::DataFrames.DataFrame; rowsep = ROWSEP) =
-            TableData(hcat(DataFrames.eachcol(df, false)...), colnames=string.(names(df)); scanlines=0, rowsep=rowsep)
-    end
-
     @require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" begin
         function PGFPlotsX.TableData(c::Contour.ContourCollection; kwargs...)
             colx = Any[]

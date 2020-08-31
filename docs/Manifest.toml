@@ -207,7 +207,7 @@ uuid = "90014a1f-27ba-587c-ab20-58faa44d9150"
 version = "0.10.0"
 
 [[PGFPlotsX]]
-deps = ["ArgCheck", "DataStructures", "Dates", "DefaultApplication", "DocStringExtensions", "MacroTools", "Parameters", "Requires"]
+deps = ["ArgCheck", "DataStructures", "Dates", "DefaultApplication", "DocStringExtensions", "MacroTools", "Parameters", "Requires", "Tables"]
 path = ".."
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
 version = "1.2.9"

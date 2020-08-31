@@ -12,6 +12,7 @@ using DocStringExtensions: SIGNATURES, TYPEDEF
 using MacroTools: prewalk, @capture
 using Parameters: @unpack
 using Requires: @require
+using Tables: Tables
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot
