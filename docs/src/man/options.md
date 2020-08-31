@@ -103,7 +103,7 @@ Values should be valid Julia expressions, as they are evaluated, so you cannot u
 
 In addition to replacing underscores in keys, the following transformations of values are done when the options are written in `.tex` style:
 
-* A list as a value is written as "comma joined" e.g. `[1, 2, 3] -> "1, 2, 3"`.
+* A list as a value is written as “comma joined” e.g. `[1, 2, 3] -> "1, 2, 3"`.
 
 * A tuple as a value is written with braces delimiting the elements e.g. `(60, 30) -> {60}{30}`
 
@@ -142,7 +142,72 @@ julia> print_tex(p)
     ;
 ```
 
-You can also merge in options that have been created separately, using `merge!`:
+## Working with options
+
+Collections of options are first-class objects: they can be used independently of `Plot`, `Axis`, and similar, copied, modified, and merged.
+
+This allows a disciplined approach to working with complex plots: for example, you can create a set of default options for some purpose (eg plots in a research paper, with a style imposed by a journal), and then modify this as needed for individual plots. It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.
+
+Another use case is creating orthogonal sets of options, eg one for axis annotations and another one for legends, and merging these as necessary.
+
+### Extending and combining options
+
+Use  `...` to splice an option into another one, e.g.
+
+```jldoctest
+julia> theme = @pgf {xmajorgrids, ymajorgrids};
+
+julia> a = Axis(
+           @pgf {theme..., title = "Foo"}
+       );
+
+julia> print_tex(a)
+\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]
+\end{axis}
+
+julia> print_tex(theme) # original is not modified
+[xmajorgrids, ymajorgrids]
+```
+
+You can also `merge` sets of options:
+```jldoctest
+julia> O1 = @pgf { color = "red" };
+
+julia> O2 = @pgf { dashed };
+
+julia> O3 = @pgf { no_marks };
+
+julia> print_tex(Plot(merge(O1, O2, O3), Table(1:2, 1:2)))
+\addplot[color={red}, dashed, no marks]
+    table[row sep={\\}]
+    {
+        \\
+        1  1  \\
+        2  2  \\
+    }
+    ;
+```
+Again, the value of original options is unchanged above.
+
+
+### Modifying options
+
+You can modify existing options with `push!`, `append!`, and `merge!`. The first two expect pairs of a string and a value (may be `nothing` for options like `"red"`), and are mostly useful when you are generating options using a function. `merge!` of course accepts options.
+
+```jldoctest
+julia> opt = @pgf {};
+
+julia> push!(opt, :color => "red", :mark => "x");
+
+julia> append!(opt, [:style => "thick", :mark_options => @pgf { scale = 0.4 }]);
+
+julia> merge!(opt, @pgf { "error bars/y dir=both", "error bars/y explicit" });
+
+julia> print_tex(opt)
+[color={red}, mark={x}, style={thick}, mark options={scale={0.4}}, error bars/y dir=both, error bars/y explicit]
+```
+
+All containers with options also support using `merge!` directly.
 
 ```jldoctest
 julia> a = Axis();
@@ -156,25 +221,9 @@ julia> print_tex(a)
 \end{axis}
 ```
 
-An alternative to using `merge!` is using  `...` to splice an option into another one, e.g.
-
-```jldoctest
-julia> theme = @pgf {xmajorgrids, ymajorgrids};
-
-julia> a = Axis(
-           @pgf {theme..., title = "Foo"}
-       );
-
-julia> print_tex(a)
-\begin{axis}[xmajorgrids, ymajorgrids, title={Foo}]
-\end{axis}
-```
-
-It is then easy to apply, for example, a “theme” to an axis where the theme is a set of options already saved.
-
 ## Empty options
 
-Empty options are not printed by default, but printing `[]` can be useful in some cases, eg when combined with global settings `\pgfplotsset{every axis plot/.append style={...}}` in LaTeX code. In order to force printing empty options, it is recommended to use `{}` in expressions like
+Empty options are not emitted by default, but using in LaTeX code `[]` can be useful in some cases, eg when combined with global settings `\pgfplotsset{every axis plot/.append style={...}}`. In order to force printing empty options, it is recommended to use `{}` in expressions like
 
 ```julia
 @pgf Plot({}, ...)
