@@ -46,3 +46,8 @@ end
     )
     @test opts.dict == Dict("fill" => "foo", "draw opacity" => 0.1)
 end
+
+@testset "options haskey" begin
+    opts = PGFPlotsX.Options("foo" => "bar")
+    @test haskey(opts, "foo")
+end
