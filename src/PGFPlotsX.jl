@@ -120,5 +120,7 @@ include("tikzpicture.jl")
 include("tikzdocument.jl")
 include("requires.jl")
 include("build.jl")
+include("precompile_PGFPlotsX.jl")
+_precompile_()
 
 end # module
