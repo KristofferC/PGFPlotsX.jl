@@ -14,10 +14,10 @@ end
     a = 1
     b = 2
     theme = @pgf {color = "white"}
-    opt = @pgf { xmax = a + b, title = "42", justkey, theme... }
+    opt = @pgf { xmax = a + b, title = "42", justkey, raw"rawstring", theme... }
     @test opt["color"] == "white"
     @test repr_tex(opt) == repr_tex(Options("xmax" => 3, "title" => "42", "justkey" => nothing,
-                                            "color" => "white"))
+                                            "rawstring" => nothing, "color" => "white"))
     f(x...) = tuple(x...)
     y = @pgf f({ look, we, are = f(1, 2, 3), nesting = { stuff = 9 }})
     @test length(y) == 1
