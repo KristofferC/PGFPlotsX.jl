@@ -65,6 +65,8 @@ end
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
         return :($(string(key)) => nothing)
+    elseif @capture(key, @raw_str(str_))
+        return :($(string(str)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
         return :($(string(a))=>$b)
     elseif @capture(key, g_...)
