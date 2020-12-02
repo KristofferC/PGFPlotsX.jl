@@ -45,9 +45,9 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      -name Run tests
-          run:  |
-              echo "**** running Docker"
-              docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh ${{ matrix.version }}
-              echo "**** submitting coverage information"
-              julia --project=test/coverage -e 'using Pkg; Pkg.instantiate(); using Coverage; Codecov.submit(Codecov.process_folder())'
+      - name: Run tests
+        run: |
+            echo "**** running Docker"
+            docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh ${{ matrix.version }}
+            echo "**** submitting coverage information"
+            julia --project=test/coverage -e 'using Pkg; Pkg.instantiate(); using Coverage; Codecov.submit(Codecov.process_folder())'
