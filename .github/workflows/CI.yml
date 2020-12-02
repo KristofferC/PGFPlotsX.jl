@@ -48,6 +48,6 @@ jobs:
       - name: Run tests
         run: |
             echo "**** running Docker"
-            docker run --env-file travis_docker_env.list -it -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh ${{ matrix.version }}
+            docker run --env-file travis_docker_env.list -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh ${{ matrix.version }}
             echo "**** submitting coverage information"
             julia --project=test/coverage -e 'using Pkg; Pkg.instantiate(); using Coverage; Codecov.submit(Codecov.process_folder())'
