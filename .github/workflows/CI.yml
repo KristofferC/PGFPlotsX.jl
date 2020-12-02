@@ -1,0 +1,53 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+    tags: '*'
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.0'
+          - '1'
+          - 'nightly'
+        os:
+          - ubuntu-latest
+            #- macOS-latest
+            #- windows-latest
+        arch:
+          - x64
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: docker-practice/actions-setup-docker@master
+        with:
+          docker_channel: nightly
+          # see https://github.com/AkihiroSuda/moby-snapshot/releases
+          docker_nightly_version: snapshot-20201109
+      - uses: actions/cache@v1
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+      -name Run tests
+          run:  |
+              echo "**** running Docker"
+              docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt tkpapp/texlive-julia-minimal /mnt/travis_docker_test_script.sh ${{ matrix.version }}
+              echo "**** submitting coverage information"
+              julia --project=test/coverage -e 'using Pkg; Pkg.instantiate(); using Coverage; Codecov.submit(Codecov.process_folder())'
