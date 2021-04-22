@@ -8,3 +8,6 @@ LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 Measurements = "eff96d63-e80a-5855-80a2-b1b0885c5ab7"
 PGFPlotsX = "8314cec4-20b6-5062-9cdb-752b83310925"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
+[compat]
+Documenter = "~0.26"
