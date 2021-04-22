@@ -42,7 +42,7 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
       - run: |
-          apt-get update \
+          apt-get update && \
             apt-get install --no-install-recommends -qq texlive-latex-base git \
             texlive-luatex texlive-pictures texlive-latex-extra pdf2svg \
             poppler-utils gnuplot-nox wget ca-certificates openssh-client rsync file
