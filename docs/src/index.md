@@ -36,6 +36,6 @@ Studying this documentation, especially the [manual gallery](@ref manual_gallery
 
 Other useful sources of examples include:
 
-1. the [PGFplots examples gallery](http://www.pgfplots.net/tikz/examples/),
+1. the [PGFplots examples gallery](http://www.pgfplots.net/),
 
 2. the collection of [plots from the reference manuals](http://pgfplots.sourceforge.net/gallery.html).
