@@ -68,6 +68,7 @@ jobs:
           julia --project=docs -e '
             using Documenter: doctest
             using PGFPlotsX
+            DocMeta.setdocmeta!(PGFPlotsX, :DocTestSetup, :(using PGFPlotsX); recursive=true)
             doctest(PGFPlotsX)'
       - run: julia --project=docs docs/make.jl
         env:
