@@ -65,6 +65,11 @@ jobs:
             Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()'
       - run: |
+          sudo apt-get update && \
+            sudo apt-get install --no-install-recommends -qq texlive-latex-base git \
+            texlive-luatex texlive-pictures texlive-latex-extra pdf2svg \
+            poppler-utils gnuplot-nox wget ca-certificates openssh-client rsync file
+      - run: |
           julia --project=docs -e '
             using Documenter: doctest, DocMeta
             using PGFPlotsX
