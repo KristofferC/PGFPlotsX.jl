@@ -66,7 +66,7 @@ jobs:
             Pkg.instantiate()'
       - run: |
           julia --project=docs -e '
-            using Documenter: doctest
+            using Documenter: doctest, DocMeta
             using PGFPlotsX
             DocMeta.setdocmeta!(PGFPlotsX, :DocTestSetup, :(using PGFPlotsX); recursive=true)
             doctest(PGFPlotsX)'
