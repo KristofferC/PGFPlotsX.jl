@@ -158,6 +158,8 @@ end
     # graphics
     @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
         "graphics[\n    testopt={1}\n    ] {filename}\n"
+    @test repr_tex(IOContext(:compact => true, @pgf Graphics({ testopt = 1}, "filename")) ==
+        "graphics[testopt={1}] {filename}\n"
     # coordinates, tables, and plot
     c = Coordinates([(1, 2), (3, 4)])
     @test repr_tex(c) == "coordinates {\n    (1,2)\n    (3,4)\n}\n"
