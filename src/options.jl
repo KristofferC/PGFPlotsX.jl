@@ -211,11 +211,12 @@ end
 
 function print_opt(io::IO, options::Options)
     @unpack dict = options
+    iscompact = get(io, :compact, false)
     replace_underline(x) = x
-    replace_underline(x::Union{String, Symbol}) = add_indent(replace(string(x), "_" => " "))
+    replace_underline(x::Union{String, Symbol}) = iscompact ? replace(string(x), "_" => " ") : add_indent(replace(string(x), "_" => " "))
     for (i, (k, v)) in enumerate(dict)
         print_opt(io, replace_underline(k))
-        if v isa Options && !isempty(v.dict)
+        if v isa Options && !isempty(v.dict) && !iscompact
             println(io, "={")
             print_indent(io) do io
                 print_opt(io, v)
@@ -227,7 +228,7 @@ function print_opt(io::IO, options::Options)
             print(io, "}")
         end
         if i != length(dict)
-          println(io, ",")
+          iscompact ? print(io, ", ") : println(io, ",")
         end
     end
 end
