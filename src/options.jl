@@ -22,7 +22,10 @@ Contents emitted in `key = value` form, or `key` when `value ≡ nothing`. Examp
 
 ```jldoctest
 julia> PGFPlotsX.Options(:color => "red", :only_marks => nothing)
-[color={red}, only marks]
+[
+    color={red},
+    only marks
+    ]
 ```
 
 The constuctor is not exported but part of the API, for use in packages that depend on
