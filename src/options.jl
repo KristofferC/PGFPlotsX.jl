@@ -169,13 +169,20 @@ printed.
 """
 function print_options(io::IO, options::Options; newline = true)
     @unpack dict, print_empty = options
+    iscompact = get(io, :compact, false)
     if isempty(dict)
         print_empty && print(io, "[]")
     else
-        println(io, "[")
-        print_opt(io, options)
-        println(io)
-        print(io, add_indent("]"))
+        if iscompact
+            print(io, "[")
+            print_opt(io, options)
+            print(io, "]")
+        else
+            println(io, "[")
+            print_opt(io, options)
+            println(io)
+            print(io, add_indent("]"))
+        end
     end
     newline ? println(io) : print(io, " ")
 end
