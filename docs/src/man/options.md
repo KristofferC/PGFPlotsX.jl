@@ -169,6 +169,7 @@ This allows a disciplined approach to working with complex plots: for example, y
 
 Another use case is creating orthogonal sets of options, eg one for axis annotations and another one for legends, and merging these as necessary.
 
+### Extending and combining options
 julia> print_tex(a)
 \begin{axis}[
     xmin={0},
