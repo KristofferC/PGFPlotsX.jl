@@ -100,6 +100,7 @@ DEFAULT_PREAMBLE =
         "\\usepgfplotslibrary{smithchart}",
         "\\usepgfplotslibrary{statistics}",
         "\\usepgfplotslibrary{dateplot}",
+        "\\usepgfplotslibrary{ternary}",
     ]
 
 # Collects the full preamble from the different sources, default and custom
