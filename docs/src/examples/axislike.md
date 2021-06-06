@@ -128,3 +128,31 @@ savefigs("smith", ans) # hide
 [\[.pdf\]](smith.pdf), [\[generated .tex\]](smith.tex)
 
 ![](smith.svg)
+
+## Ternary axis
+
+```@example pgf
+@pgf TernaryAxis(
+    {
+        axis_on_top,
+        xlabel="x", ylabel="y", zlabel="z",
+        colorbar
+    },
+    Plot3(
+        {
+            patch,
+            shader="interp",
+            point_meta="\\thisrow{C}"
+        },
+        Table(["x" => [0, 1, 0.5, 0.5, 0, 0],
+               "y" => [0, 0, 0.5, 0.5, 1, 0],
+               "z" => [1, 0, 0, 0, 0, 1],
+               "C" => [100, 0, 0, 0, 20, 100]])
+    )
+)
+savefigs("ternary", ans) # hide
+```
+
+[\[.pdf\]](ternary.pdf), [\[generated .tex\]](ternary.tex)
+
+![](ternary.svg)

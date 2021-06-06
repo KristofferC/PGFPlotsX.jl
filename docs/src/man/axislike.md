@@ -168,4 +168,5 @@ julia> print_tex(p)
 SemiLogXAxis
 SemiLogYAxis
 LogLogAxis
+TernaryAxis
 ```

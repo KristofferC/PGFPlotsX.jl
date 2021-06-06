@@ -103,6 +103,13 @@ Smith Chart axes, corresponds to `smithchart` in PGFPlots.
 @define_axislike SmithChart "smithchart"
 
 """
+    TernaryAxis([options], elements...)
+
+Ternary axes, corresponds to `ternaryaxis` in PGFPlots.
+"""
+@define_axislike TernaryAxis "ternaryaxis"
+
+"""
     GroupPlot([options], contents...)
 
 A group plot, using the `groupplots` library of PGFPlots.
