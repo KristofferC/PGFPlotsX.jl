@@ -11,20 +11,19 @@
 \usepgfplotslibrary{ternary}
 \begin{document}
 \begin{tikzpicture}
-\begin{axis}[ybar interval, xticklabel interval boundaries, xmajorgrids={false}, xticklabel={$[\pgfmathprintnumber\tick,\pgfmathprintnumber\nexttick)$}, xticklabel style={font={\tiny}}]
-    \addplot
+\begin{ternaryaxis}[axis on top, xlabel={x}, ylabel={y}, zlabel={z}, colorbar]
+    \addplot3[patch, shader={interp}, point meta={\thisrow{C}}]
         table[row sep={\\}]
         {
-            \\
-            0.0  58.0  \\
-            0.2  15.0  \\
-            0.4  11.0  \\
-            0.6  8.0  \\
-            0.8  7.0  \\
-            1.0  1.0  \\
-            1.2  0.0  \\
+            x  y  z  C  \\
+            0.0  0.0  1.0  100.0  \\
+            1.0  0.0  0.0  0.0  \\
+            0.5  0.5  0.0  0.0  \\
+            0.5  0.5  0.0  0.0  \\
+            0.0  1.0  0.0  20.0  \\
+            0.0  0.0  1.0  100.0  \\
         }
         ;
-\end{axis}
+\end{ternaryaxis}
 \end{tikzpicture}
 \end{document}
