@@ -4,7 +4,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![build](https://github.com/KristofferC/PGFPlotsX.jl/workflows/CI/badge.svg)](https://github.com/KristofferC/PGFPlotsX.jl/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)|
+| [![][docs-stable-img]][docs-stable-url] | [![build](https://github.com/KristofferC/PGFPlotsX.jl/workflows/CI/badge.svg)](https://github.com/KristofferC/PGFPlotsX.jl/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/KristofferC/PGFPlotsX.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/KristofferC/PGFPlotsX.jl)|
 
 
 
@@ -41,12 +41,8 @@ julia> Pkg.add("PGFPlotsX")
 - Kristoffer Carlsson - [@KristofferC89](https://github.com/KristofferC/)
 - Tamas K. Papp - [@tpapp](https://github.com/tpapp)
 
-
-[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
-[docs-dev-url]: https://kristofferc.github.io/PGFPlotsX.jl/dev/
-
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://kristofferc.github.io/PGFPlotsX.jl/stable
+[docs-stable-img]: https://img.shields.io/badge/docs-blue.svg
+[docs-stable-url]: https://kristofferc.github.io/PGFPlotsX.jl/v1/
 
 [travis-img]: https://travis-ci.org/KristofferC/PGFPlotsX.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/KristofferC/PGFPlotsX.jl
