@@ -30,10 +30,7 @@ The package is registered in the general registry and so can be installed with `
 julia> Pkg.add("PGFPlotsX")
 ```
 
-## Documentation
-
-- [**STABLE**][docs-stable-url] &mdash; **most recently tagged version of the documentation.**
-- [**DEV**][docs-dev-url] &mdash; *in-development version of the documentation.*
+## [Documentation][docs-stable-url]
 
 
 ## Authors
