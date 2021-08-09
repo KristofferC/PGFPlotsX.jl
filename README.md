@@ -43,6 +43,7 @@ julia> Pkg.add("PGFPlotsX")
 
 [docs-stable-img]: https://img.shields.io/badge/docs-blue.svg
 [docs-stable-url]: https://kristofferc.github.io/PGFPlotsX.jl/v1/
+[docs-dev-url]: https://kristofferc.github.io/PGFPlotsX.jl/dev/
 
 [travis-img]: https://travis-ci.org/KristofferC/PGFPlotsX.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/KristofferC/PGFPlotsX.jl
