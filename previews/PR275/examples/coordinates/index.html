@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Coordinates · PGFPlotsX.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="PGFPlotsX.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">PGFPlotsX.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../../man/structs/">Overview</a></li><li><a class="tocitem" href="../../man/options/">Options</a></li><li><a class="tocitem" href="../../man/data/">Data</a></li><li><a class="tocitem" href="../../man/axiselements/">Axis elements</a></li><li><a class="tocitem" href="../../man/axislike/"><code>Axis</code> &amp; friends</a></li><li><a class="tocitem" href="../../man/picdoc/">TikzPicture</a></li><li><a class="tocitem" href="../../man/save/">Showing / Exporting figures</a></li><li><a class="tocitem" href="../../man/internals/">Internals</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li class="is-active"><a class="tocitem" href>Coordinates</a><ul class="internal"><li><a class="tocitem" href="#Basic-usage"><span>Basic usage</span></a></li><li><a class="tocitem" href="#Error-bars"><span>Error bars</span></a></li><li><a class="tocitem" href="#symbolic_coordinates_example"><span>Symbolic coordinates</span></a></li><li><a class="tocitem" href="#D"><span>3D</span></a></li><li><a class="tocitem" href="#Edge-vectors"><span>Edge vectors</span></a></li><li><a class="tocitem" href="#Heatmap"><span>Heatmap</span></a></li><li><a class="tocitem" href="#Matrix-plot"><span>Matrix plot</span></a></li></ul></li><li><a class="tocitem" href="../tables/">Tables</a></li><li><a class="tocitem" href="../axislike/">Axis-like objects</a></li><li><a class="tocitem" href="../gallery/">PGFPlots gallery</a></li><li><a class="tocitem" href="../juliatypes/">Julia types</a></li><li><a class="tocitem" href="../convenience/">Convenience constructs</a></li><li><a class="tocitem" href="../latex/">Using LaTeX code</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Coordinates</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Coordinates</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/coordinates.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Coordinates"><a class="docs-heading-anchor" href="#Coordinates">Coordinates</a><a id="Coordinates-1"></a><a class="docs-heading-anchor-permalink" href="#Coordinates" title="Permalink"></a></h1><p>Use <code>Coordinates</code> to construct the <code>pgfplots</code> construct <code>coordinates</code>. Various constructors are available.</p><h2 id="Basic-usage"><a class="docs-heading-anchor" href="#Basic-usage">Basic usage</a><a id="Basic-usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-usage" title="Permalink"></a></h2><p>For basic usage, consider <code>AbstractVectors</code> and iterables. Notice how non-finite values are skipped. You can also use <code>()</code> or <code>nothing</code> for jumps in functions.</p><pre><code class="language-julia">x = range(-1; stop = 1, length = 51) # so that it contains 1/0
+@pgf Axis(
+    {
+        xmajorgrids,
+        ymajorgrids,
+    },
+    Plot(
+        {
+            no_marks,
+        },
+        Coordinates(x, 1 ./ x)
+    )
+)</code></pre><p><a href="../coordinates-simple.pdf">[.pdf]</a>, <a href="../coordinates-simple.tex">[generated .tex]</a></p><p><img src="../coordinates-simple.svg" alt/></p><h2 id="Error-bars"><a class="docs-heading-anchor" href="#Error-bars">Error bars</a><a id="Error-bars-1"></a><a class="docs-heading-anchor-permalink" href="#Error-bars" title="Permalink"></a></h2><p>Use <code>xerror</code>, <code>xerrorplus</code>, <code>xerrorminus</code>, <code>yerror</code> etc. for error bars.</p><pre><code class="language-julia">x = range(0; stop = 2π, length = 20)
+@pgf Plot(
+    {
+        &quot;no marks&quot;,
+        &quot;error bars/y dir=both&quot;,
+        &quot;error bars/y explicit&quot;,
+    },
+    Coordinates(x, sin.(x); yerror = 0.2*cos.(x))
+)</code></pre><p><a href="../coordinates-errorbars.pdf">[.pdf]</a>, <a href="../coordinates-errorbars.tex">[generated .tex]</a></p><p><img src="../coordinates-errorbars.svg" alt/></p><h2 id="symbolic_coordinates_example"><a class="docs-heading-anchor" href="#symbolic_coordinates_example">Symbolic coordinates</a><a id="symbolic_coordinates_example-1"></a><a class="docs-heading-anchor-permalink" href="#symbolic_coordinates_example" title="Permalink"></a></h2><pre><code class="language-julia">@pgf Axis(
+    {
+        ybar,
+        enlargelimits = 0.15,
+        legend_style =
+        {
+            at = Coordinate(0.5, -0.15),
+            anchor = &quot;north&quot;,
+            legend_columns = -1
+        },
+        ylabel = raw&quot;\#participants&quot;,
+        symbolic_x_coords=[&quot;tool8&quot;, &quot;tool9&quot;, &quot;tool10&quot;],
+        xtick = &quot;data&quot;,
+        nodes_near_coords,
+        nodes_near_coords_align={vertical},
+    },
+    Plot(Coordinates([(&quot;tool8&quot;, 7), (&quot;tool9&quot;, 9), (&quot;tool10&quot;, 4)])),
+    Plot(Coordinates([(&quot;tool8&quot;, 4), (&quot;tool9&quot;, 4), (&quot;tool10&quot;, 4)])),
+    Plot(Coordinates([(&quot;tool8&quot;, 1), (&quot;tool9&quot;, 1), (&quot;tool10&quot;, 1)])),
+    Legend([&quot;used&quot;, &quot;understood&quot;, &quot;not understood&quot;])
+)</code></pre><p><a href="../coordinates-symbolic.pdf">[.pdf]</a>, <a href="../coordinates-symbolic.tex">[generated .tex]</a></p><p><img src="../coordinates-symbolic.svg" alt/></p><h2 id="D"><a class="docs-heading-anchor" href="#D">3D</a><a id="D-1"></a><a class="docs-heading-anchor-permalink" href="#D" title="Permalink"></a></h2><p>Use three vectors to construct 3D coordinates.</p><pre><code class="language-julia">t = range(0; stop = 6*π, length = 100)
+@pgf Plot3(
+    {
+        no_marks,
+    },
+    Coordinates(t .* sin.(t), t .* cos.(t), .-t)
+)</code></pre><p><a href="../coordinates-3d.pdf">[.pdf]</a>, <a href="../coordinates-3d.tex">[generated .tex]</a></p><p><img src="../coordinates-3d.svg" alt/></p><h2 id="Edge-vectors"><a class="docs-heading-anchor" href="#Edge-vectors">Edge vectors</a><a id="Edge-vectors-1"></a><a class="docs-heading-anchor-permalink" href="#Edge-vectors" title="Permalink"></a></h2><p>A convenience constructor is available for plotting a matrix of values calculated from edge vectors.</p><pre><code class="language-julia">x = range(-2; stop = 2, length = 20)
+y = range(-0.5; stop = 3, length = 25)
+f(x, y) = (1 - x)^2 + 100*(y - x^2)^2
+@pgf Plot3(
+    {
+        surf,
+    },
+    Coordinates(x, y, f.(x, y&#39;))
+)</code></pre><p><a href="../coordinates-3d-matrix.pdf">[.pdf]</a>, <a href="../coordinates-3d-matrix.tex">[generated .tex]</a></p><p><img src="../coordinates-3d-matrix.svg" alt/></p><h2 id="Heatmap"><a class="docs-heading-anchor" href="#Heatmap">Heatmap</a><a id="Heatmap-1"></a><a class="docs-heading-anchor-permalink" href="#Heatmap" title="Permalink"></a></h2><pre><code class="language-julia">x = range(-2; stop = 2, length = 40)
+y = range(-0.5; stop = 3, length = 50)
+@pgf Axis(
+    {
+        view = (0, 90),
+        colorbar,
+        &quot;colormap/jet&quot;,
+    },
+    Plot3(
+        {
+            surf,
+            shader = &quot;flat&quot;,
+        },
+        Coordinates(x, y, @. √(f(x, y&#39;)))
+    )
+)</code></pre><p><a href="../coordinates-3d-matrix-heatmap.pdf">[.pdf]</a>, <a href="../coordinates-3d-matrix-heatmap.tex">[generated .tex]</a></p><p><img src="../coordinates-3d-matrix-heatmap.svg" alt/></p><h2 id="Matrix-plot"><a class="docs-heading-anchor" href="#Matrix-plot">Matrix plot</a><a id="Matrix-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Matrix-plot" title="Permalink"></a></h2><pre><code class="language-julia">x = repeat(0:2, outer = 3)
+y = repeat(0:2, inner = 3)
+meta = [&quot;color=$c&quot; for c in [&quot;red&quot;, &quot;blue&quot;, &quot;yellow&quot;, &quot;black&quot;, &quot;brown&quot;, &quot;magenta&quot;, &quot;green&quot;, &quot;red&quot;, &quot;white&quot;]]
+c = Coordinates(x, y; meta = meta)
+@pgf Axis(
+    {
+        enlargelimits = false,
+        xtick = [0, 1, 2]
+    },
+    PlotInc(
+        {
+            matrix_plot,
+            mark = &quot;*&quot;,
+            nodes_near_coords = raw&quot;\coordindex&quot;,
+            &quot;mesh/color input&quot; = &quot;explicit&quot;,
+            &quot;mesh/cols&quot; = 3
+        },
+        c,
+    )
+)</code></pre><p><a href="../matrix-plot.pdf">[.pdf]</a>, <a href="../matrix-plot.tex">[generated .tex]</a></p><p><img src="../matrix-plot.svg" alt/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../man/internals/">« Internals</a><a class="docs-footer-nextpage" href="../tables/">Tables »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 11 August 2021 14:06">Wednesday 11 August 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

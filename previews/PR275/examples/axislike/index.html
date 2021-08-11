@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Axis-like objects · PGFPlotsX.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/custom.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.svg" alt="PGFPlotsX.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">PGFPlotsX.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../../man/structs/">Overview</a></li><li><a class="tocitem" href="../../man/options/">Options</a></li><li><a class="tocitem" href="../../man/data/">Data</a></li><li><a class="tocitem" href="../../man/axiselements/">Axis elements</a></li><li><a class="tocitem" href="../../man/axislike/"><code>Axis</code> &amp; friends</a></li><li><a class="tocitem" href="../../man/picdoc/">TikzPicture</a></li><li><a class="tocitem" href="../../man/save/">Showing / Exporting figures</a></li><li><a class="tocitem" href="../../man/internals/">Internals</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><a class="tocitem" href="../coordinates/">Coordinates</a></li><li><a class="tocitem" href="../tables/">Tables</a></li><li class="is-active"><a class="tocitem" href>Axis-like objects</a><ul class="internal"><li><a class="tocitem" href="#Simple-group-plot"><span>Simple group plot</span></a></li><li><a class="tocitem" href="#Multiple-group-plots"><span>Multiple group plots</span></a></li><li><a class="tocitem" href="#Using-Axis-etc-in-group-plots"><span>Using <code>Axis</code> etc in group plots</span></a></li><li><a class="tocitem" href="#Polar-axis"><span>Polar axis</span></a></li><li><a class="tocitem" href="#Smith-Chart"><span>Smith Chart</span></a></li><li><a class="tocitem" href="#Ternary-axis"><span>Ternary axis</span></a></li></ul></li><li><a class="tocitem" href="../gallery/">PGFPlots gallery</a></li><li><a class="tocitem" href="../juliatypes/">Julia types</a></li><li><a class="tocitem" href="../convenience/">Convenience constructs</a></li><li><a class="tocitem" href="../latex/">Using LaTeX code</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Axis-like objects</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Axis-like objects</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/KristofferC/PGFPlotsX.jl/blob/master/docs/src/examples/axislike.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Axis-like-objects"><a class="docs-heading-anchor" href="#Axis-like-objects">Axis-like objects</a><a id="Axis-like-objects-1"></a><a class="docs-heading-anchor-permalink" href="#Axis-like-objects" title="Permalink"></a></h1><h2 id="Simple-group-plot"><a class="docs-heading-anchor" href="#Simple-group-plot">Simple group plot</a><a id="Simple-group-plot-1"></a><a class="docs-heading-anchor-permalink" href="#Simple-group-plot" title="Permalink"></a></h2><hr/><pre><code class="language-julia">cs = [[(0,0), (1,1), (2,2)],
+      [(0,2), (1,1), (2,0)],
+      [(0,2), (1,1), (2,1)],
+      [(0,2), (1,1), (1,0)]]
+
+@pgf gp = GroupPlot(
+    {
+        group_style = { group_size = &quot;2 by 2&quot;,},
+        height = &quot;4cm&quot;,
+        width = &quot;4cm&quot;
+    }
+)
+
+@pgf for (i, coords) in enumerate(cs)
+    push!(gp, {title = i})
+    push!(gp, PlotInc(Coordinates(coords)))
+end
+gp</code></pre><p><a href="../groupplot-simple.pdf">[.pdf]</a>, <a href="../groupplot-simple.tex">[generated .tex]</a></p><p><img src="../groupplot-simple.svg" alt/></p><h2 id="Multiple-group-plots"><a class="docs-heading-anchor" href="#Multiple-group-plots">Multiple group plots</a><a id="Multiple-group-plots-1"></a><a class="docs-heading-anchor-permalink" href="#Multiple-group-plots" title="Permalink"></a></h2><p>Each set of options (here, empty <code>{}</code>) starts a new set of axes.</p><pre><code class="language-julia">x = range(0; stop =2*pi, length = 100)
+@pgf GroupPlot(
+    {
+        group_style =
+        {
+            group_size=&quot;2 by 1&quot;,
+            xticklabels_at=&quot;edge bottom&quot;,
+            yticklabels_at=&quot;edge left&quot;
+        },
+        no_markers
+    },
+    {},
+    PlotInc(Table(x, sin.(x))),
+    PlotInc(Table(x, sin.(x .+ 0.5))),
+    {},
+    PlotInc(Table(x, cos.(x))),
+    PlotInc(Table(x, cos.(x .+ 0.5))))</code></pre><p><a href="../groupplot-multiple.pdf">[.pdf]</a>, <a href="../groupplot-multiple.tex">[generated .tex]</a></p><p><img src="../groupplot-multiple.svg" alt/></p><h2 id="Using-Axis-etc-in-group-plots"><a class="docs-heading-anchor" href="#Using-Axis-etc-in-group-plots">Using <code>Axis</code> etc in group plots</a><a id="Using-Axis-etc-in-group-plots-1"></a><a class="docs-heading-anchor-permalink" href="#Using-Axis-etc-in-group-plots" title="Permalink"></a></h2><p>Alternatively, you can use <code>Axis</code>, <code>SemiLogXAxis</code>, <code>SemiLogYAxis</code> and <code>LogLogAxis</code> to group together options and a set of plots. This makes it easier to combine existing plots into a grouped plot.</p><pre><code class="language-julia">x = range(0; stop=2, length = 100)
+exp_plot = PlotInc(Table(x, exp.(x)))
+exp_legend = LegendEntry(raw&quot;$\exp(x)$&quot;)
+log_plot = PlotInc(Table(x, log.(x)))
+log_legend = LegendEntry(raw&quot;$\log(x)$&quot;)
+
+axs1 = @pgf Axis(exp_plot, exp_legend, log_plot, log_legend)
+axs2 = @pgf SemiLogYAxis(exp_plot, exp_legend, log_plot, log_legend)
+axs3 = @pgf SemiLogXAxis(exp_plot, exp_legend, log_plot, log_legend)
+axs4 = @pgf LogLogAxis(exp_plot, exp_legend, log_plot, log_legend)
+
+@pgf GroupPlot(
+    { group_style = { group_size=&quot;2 by 2&quot; },
+      no_markers,
+      legend_pos=&quot;north west&quot;,
+      xlabel=raw&quot;$x$&quot;,
+    },
+    axs1, axs2, axs3, axs4)</code></pre><p><a href="../groupplot-multiple-axis.pdf">[.pdf]</a>, <a href="../groupplot-multiple-axis.tex">[generated .tex]</a></p><p><img src="../groupplot-multiple-axis.svg" alt/></p><h2 id="Polar-axis"><a class="docs-heading-anchor" href="#Polar-axis">Polar axis</a><a id="Polar-axis-1"></a><a class="docs-heading-anchor-permalink" href="#Polar-axis" title="Permalink"></a></h2><pre><code class="language-julia">angles = [ℯ/50*360*i for i in 1:500]
+radius = [1/(sqrt(i)) for i in range(1; stop = 10, length = 500)]
+PolarAxis(PlotInc(Coordinates(angles, radius)))</code></pre><p><a href="../polar.pdf">[.pdf]</a>, <a href="../polar.tex">[generated .tex]</a></p><p><img src="../polar.svg" alt/></p><h2 id="Smith-Chart"><a class="docs-heading-anchor" href="#Smith-Chart">Smith Chart</a><a id="Smith-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#Smith-Chart" title="Permalink"></a></h2><pre><code class="language-julia"> # Samples for 100 MHz to 10 GHz
+frequency = range(100e6,stop=10e9,length=10)
+L = 1e-9 # 1 nH
+R = 25   # 25 Ω
+Z0 = 50  # 50 Ω Reference
+# Series network of R + jωL, normalized
+network = @. (R + 1.0im*2*pi*frequency*L) / Z0
+SmithChart(Plot(Coordinates([(real(z),imag(z)) for z in network])))</code></pre><p><a href="../smith.pdf">[.pdf]</a>, <a href="../smith.tex">[generated .tex]</a></p><p><img src="../smith.svg" alt/></p><h2 id="Ternary-axis"><a class="docs-heading-anchor" href="#Ternary-axis">Ternary axis</a><a id="Ternary-axis-1"></a><a class="docs-heading-anchor-permalink" href="#Ternary-axis" title="Permalink"></a></h2><pre><code class="language-julia">@pgf TernaryAxis(
+    {
+        axis_on_top,
+        xlabel=&quot;x&quot;, ylabel=&quot;y&quot;, zlabel=&quot;z&quot;,
+        colorbar
+    },
+    Plot3(
+        {
+            patch,
+            shader=&quot;interp&quot;,
+            point_meta=&quot;\\thisrow{C}&quot;
+        },
+        Table([&quot;x&quot; =&gt; [0, 1, 0.5, 0.5, 0, 0],
+               &quot;y&quot; =&gt; [0, 0, 0.5, 0.5, 1, 0],
+               &quot;z&quot; =&gt; [1, 0, 0, 0, 0, 1],
+               &quot;C&quot; =&gt; [100, 0, 0, 0, 20, 100]])
+    )
+)</code></pre><p><a href="../ternary.pdf">[.pdf]</a>, <a href="../ternary.tex">[generated .tex]</a></p><p><img src="../ternary.svg" alt/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../tables/">« Tables</a><a class="docs-footer-nextpage" href="../gallery/">PGFPlots gallery »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 11 August 2021 14:06">Wednesday 11 August 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
