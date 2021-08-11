@@ -148,7 +148,7 @@ function png_engine()
     return ACTIVE_PNG_ENGINE[]
 end
 
-function convert_pdf_to_png(pdf::String, png::String; engine::PNGEngine=png_engine(), dpi=150::Integer)
+function convert_pdf_to_png(pdf::String, png::String; engine::PNGEngine=png_engine(), dpi=150::Number)
     if engine == NO_PNG_ENGINE
         throw(MissingExternalProgramError("No PDF to PNG converter found, we looked for `pdftocairo` and `pdftoppm`. ",
                                           "Make sure one of these are installed and available at PATH and restart Julia."))

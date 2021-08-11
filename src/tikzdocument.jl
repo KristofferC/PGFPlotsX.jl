@@ -307,7 +307,7 @@ end
 function savepng(filename::AbstractString, td::TikzDocument;
                  latex_engine = latexengine(),
                  buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 dpi::Int = 150)
+                 dpi::Number = 150)
     found_ijulia_cache_matching = false
     local tmp
     if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
