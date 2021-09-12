@@ -210,6 +210,13 @@ end
         "\\draw[dashed] ({rel axis cs:1,0}|-{axis cs:0,4.0}) -- ({rel axis cs:0,0}|-{axis cs:0,4.0});\n"
 end
 
+@testset "vertical and horizontal bands" begin
+    @test repr_tex((@pgf VBand({blue}, 8, 9))) ==
+        "\\draw[blue] ({axis cs:8,0}|-{rel axis cs:0,1}) rectangle ({axis cs:9,0}|-{rel axis cs:0,0});\n"
+    @test repr_tex((@pgf HBand({dashed}, 4.0, 6.5))) ==
+        "\\draw[dashed] ({rel axis cs:1,0}|-{axis cs:0,4.0}) rectangle ({rel axis cs:0,0}|-{axis cs:0,6.5});\n"
+end
+
 @testset "colors" begin
     @test squashed_repr_tex(@pgf { color = RGB(1e-10, 1, 1) }) ==
         "[color={rgb,1:red,0.0;green,1.0;blue,1.0}]"
