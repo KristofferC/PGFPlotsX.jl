@@ -708,7 +708,7 @@ end
 """
     HLine([options], y)
 
-A horizontal vertical line at `y`.
+A horizontal line at `y`.
 """
 HLine(y::Real) = HLine(Options(), y)
 
@@ -717,4 +717,48 @@ function print_tex(io::IO, hline::HLine)
     print(io, "\\draw")
     print_options(io, options; newline = false)
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(y)}) -- ({rel axis cs:0,0}|-{axis cs:0,$(y)});")
+end
+
+###################
+# VBand and HBand #
+###################
+
+struct VBand
+    options::Options
+    xmin::Real
+    xmax::Real
+end
+
+"""
+    VBand([options], xmin, xmax)
+
+A vertical band from `xmin` to `xmax`.
+"""
+VBand(xmin::Real, xmax::Real) = VBand(Options(), xmin, xmax)
+
+function print_tex(io::IO, vband::VBand)
+    @unpack options, xmin, xmax = vband
+    print(io, "\\draw")
+    print_options(io, options; newline = false)
+    println(io, "({axis cs:$(xmin),0}|-{rel axis cs:0,1}) rectangle ({axis cs:$(xmax),0}|-{rel axis cs:0,0});")
+end
+
+struct HBand
+    options::Options
+    ymin::Real
+    ymax::Real
+end
+
+"""
+    HBand([options], ymin, ymax)
+
+A horizontal band from `ymin` to `ymax`.
+"""
+HBand(ymin::Real, ymax::Real) = HBand(Options(), ymin, ymax)
+
+function print_tex(io::IO, hband::HBand)
+    @unpack options, ymin, ymax = hband
+    print(io, "\\draw")
+    print_options(io, options; newline = false)
+    println(io, "({rel axis cs:1,0}|-{axis cs:0,$(ymin)}) rectangle ({rel axis cs:0,0}|-{axis cs:0,$(ymax)});")
 end
