@@ -95,6 +95,15 @@ HLine
 VLine
 ```
 
+## Horizontal and vertical bands
+
+[`HBand`](@ref) and [`VBand`](@ref) have no equivalent constructs in `pgfplots`, they are provided for convenient drawing of horizontal and vertical bands. These bands are simply rectangles that span across an axis. When options are used, they are passed to the TikZ function `\draw[...]`.
+
+```@docs
+HBand
+VBand
+```
+
 ## [Using LaTeX code directly](@id latex_code_strings)
 
 In case there is no type defined in this package for some construct, you can use a `String` in an axis, and it is inserted verbatim into the generated LaTeX code. [Raw string literals](https://docs.julialang.org/en/latest/manual/strings/#man-raw-string-literals-1) and the package [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) are useful to avoid a lot of escaping.
