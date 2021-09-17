@@ -662,7 +662,8 @@ end
 Corresponds to the `\\addlegendentry` and `\\addlegendentryexpanded` forms of
 PGFPlots.
 """
-LegendEntry(options::Options, name::AbstractString, isexpanded = false)
+LegendEntry(options::Options, name::AbstractString, isexpanded = false) =
+    LegendEntry(options, name, isexpanded)
 
 LegendEntry(name::AbstractString, isexpanded = false) =
     LegendEntry(Options(), name, isexpanded)
