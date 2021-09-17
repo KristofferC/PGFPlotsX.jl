@@ -170,6 +170,8 @@ end
         "        1  3  \\\\\n        2  4  \\\\\n    }\n    trailing\n    ;\n"
     # legend
     @test repr_tex(Legend(["a", "b", "c"])) == "\\legend{{a},{b},{c}}\n"
+    @test repr_tex(@pgf LegendEntry({red}, "a")) == "\\addlegendentry[red] {a}\n"
+    @test repr_tex(@pgf LegendEntry({red}, "a", true)) == "\\addlegendentryexpanded[red] {a}\n"
     l = LegendEntry("a")
     @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
