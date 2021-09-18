@@ -273,7 +273,7 @@ savefigs("table-label", ans) # hide
             mark = "*",
             patch,
             mesh, # without mesh, pgfplots tries to fill,
-            # "patch type" = "quadratic spline", <- Should work??
+            "patch type" = "quadratic spline",
         },
         Coordinates(
             [
