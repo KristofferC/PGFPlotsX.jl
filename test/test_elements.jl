@@ -69,6 +69,10 @@ end
             Coordinates([1.0, 2.0], [3.0, 4.0], yerror = [0.3, 0.4]).data
     end
 
+    # missing values
+    @test Coordinates([1,2], [3,missing]).data == Coordinates([(1,3), nothing]).data
+    @test Coordinates([(1,3), (2,missing)]).data == Coordinates([(1,3), nothing]).data
+
     # meta printing
     @test squashed_repr_tex(Coordinates([1], [1]; meta = [RGB(0.1, 0.2, 0.3)])) ==
         "coordinates {\n(1,1) [rgb=0.1,0.2,0.3]\n}"
