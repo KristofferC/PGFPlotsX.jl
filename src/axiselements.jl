@@ -175,7 +175,7 @@ function Coordinates(itr)
         coordinate_or_nothing(data)
     end
     data = [ensure_c(data) for data in itr]
-    @argcheck common_N ≠ 0 || "Could not determine dimension from coordinates"
+    @argcheck common_N ≠ 0 "Could not determine dimension from coordinates"
     Coordinates{common_N}(data)
 end
 
