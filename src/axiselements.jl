@@ -132,7 +132,7 @@ struct Coordinates{N}
 end
 
 coordinate_or_nothing(data, args...) =
-    all(x -> x isa AbstractString || isfinite(x), data) ? Coordinate(data, args...) : nothing
+    all(x -> x isa AbstractString || isfinite(x)===true, data) ? Coordinate(data, args...) : nothing
 
 """
     $SIGNATURES
@@ -170,12 +170,12 @@ function Coordinates(itr)
     ensure_c(::Union{Nothing, Tuple{}}) = nothing
     ensure_c(c::Coordinate{N}) where N = (check_N(N); c)
     ensure_c(x) = throw(ArgumentError("Can't interpret $x as a coordinate."))
-    function ensure_c(data::NTuple{N, CoordinateType}) where N
+    function ensure_c(data::NTuple{N, Union{CoordinateType, Missing}}) where N
         check_N(N)
         coordinate_or_nothing(data)
     end
     data = [ensure_c(data) for data in itr]
-    @argcheck common_N ≠ 0 || "Could not determine dimension from coordinates"
+    @argcheck common_N ≠ 0 "Could not determine dimension from coordinates"
     Coordinates{common_N}(data)
 end
 
