@@ -10,4 +10,4 @@ PGFPlotsX = "8314cec4-20b6-5062-9cdb-752b83310925"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
-Documenter = "~0.26"
+Documenter = "~0.27"
