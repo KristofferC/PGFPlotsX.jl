@@ -32,6 +32,14 @@ end
         "\\addplot[]\ntable[row sep={\\\\}]\n{\nx \\\\\n1 \\\\\n2 \\\\\n3 \\\\\n}\n;" # note []
 end
 
+@testset "nested options vector" begin
+    cycle_list = [@pgf({ color = RGB(1, 1, 1), mark = "+"}),
+                  @pgf({ color = RGB(1, 0, 1), mark = "o"})]
+    opt = @pgf { cycle_list = cycle_list }
+    @test repr_tex(opt) ==
+        "[cycle list={color={rgb,1:red,1.0;green,1.0;blue,1.0}, mark={+},color={rgb,1:red,1.0;green,0.0;blue,1.0}, mark={o}}] "
+end
+
 @testset "operations on options" begin
     O1 = @pgf { a = 1 }
 
@@ -53,7 +61,7 @@ end
     @test merge!(P, @pgf({ b = 2 }), @pgf({ c = 3 })) ≡ P
     @test P.options ≅ O3
 end
-  
+
 @testset "options push! and append!" begin
     opt1 = "color" => "red"
     opt2 = "dashed"
