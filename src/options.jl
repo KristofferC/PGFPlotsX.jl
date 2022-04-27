@@ -226,7 +226,13 @@ function print_opt(io::IO, options::Options)
 end
 
 print_opt(io::IO, s) = print_tex(io, s)
-print_opt(io::IO, v::AbstractVector) = print(io, join(v, ","))
+
+function print_opt(io::IO, v::AbstractVector)
+    for (i, o) in enumerate(v)
+        i == 1 || print(io, ",")
+        print_opt(io, o)
+    end
+end
 
 function print_opt(io::IO, t::Tuple)
     length(t) == 0 && return
