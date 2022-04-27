@@ -26,7 +26,7 @@ function is_tikz_standalone(filename)
     end
     s = read(filename,String)
     m = match(r"^([^%].*$)"m,s) # First non-commented non-empty line
-    if isnothing(m)
+    if nothing ≡ m
         return false
     end
     return occursin(r"\\begin{tikzpicture}",m.captures[1])
