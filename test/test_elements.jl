@@ -160,8 +160,10 @@ end
     @test repr_tex(Expression("x^2")) == "{x^2}"
     @test repr_tex(Expression(["x^2", "y^2"])) == "(\n{x^2},\n{y^2})"
     # graphics
-    @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
-        "graphics[testopt={1}] {filename}\n"
+    let gp = abspath("filename")
+        @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
+            "graphics[testopt={1}] {$(gp)}\n"
+    end
     # coordinates, tables, and plot
     c = Coordinates([(1, 2), (3, 4)])
     @test repr_tex(c) == "coordinates {\n    (1,2)\n    (3,4)\n}\n"

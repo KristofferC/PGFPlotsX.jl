@@ -512,6 +512,10 @@ end
 struct Graphics <: OptionType
     options::Options
     filename::String
+    function Graphics(options::Options, filename::AbstractString)
+        # expand path and make it absolute
+        new(options, abspath(expanduser(filename)))
+    end
 end
 
 function Graphics(filename::AbstractString, args::Vararg{PGFOption})
