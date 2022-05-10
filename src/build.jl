@@ -1,7 +1,7 @@
 ################
 # LaTeX-engine #
 ################
-@enum(LaTeXEngine, LUALATEX, PDFLATEX)
+@enum(LaTeXEngine, LUALATEX, PDFLATEX, XELATEX)
 
 """
 The active LaTeX engine. Initialized the first time [`latexengine`](@ref) is called.
@@ -9,7 +9,7 @@ The active LaTeX engine. Initialized the first time [`latexengine`](@ref) is cal
 const ACTIVE_LATEX_ENGINE = Ref{Union{Nothing, LaTeXEngine}}(nothing)
 function latexengine()
     if ACTIVE_LATEX_ENGINE[] === nothing
-        for (engine, enum) in zip(("lualatex", "pdflatex"), (LUALATEX, PDFLATEX))
+        for (engine, enum) in zip(("lualatex", "pdflatex", "xelatex"), (LUALATEX, PDFLATEX, XELATEX))
             @debug "latexengine: looking for latex engine $engine"
             if Sys.which(engine) !== nothing
                 @debug "latexengine: found latex engine $engine, using it"
@@ -17,7 +17,7 @@ function latexengine()
             end
         end
         throw(MissingExternalProgramError("No LaTeX installation found, figures will not be generated. ",
-                                          "Make sure either pdflatex or lualatex are installed and that ",
+                                          "Make sure either pdflatex, xelatex or lualatex are installed and that ",
                                           "the PATH variable is correctly set."))
     end
     return ACTIVE_LATEX_ENGINE[]

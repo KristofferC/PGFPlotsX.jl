@@ -57,8 +57,8 @@ PGFPlotsX.CLASS_OPTIONS
 
 ## Choosing the LaTeX engine used
 
-Thee are two different choices for latex engines, `PDFLATEX`, `LUALATEX`.
-By default, `LUALATEX` is used if it was available during `Pkg.build()`. The active engine can be retrieved with the `latexengine()` function and be set with `latexengine!(engine)` where `engine` is one of the two previously mentioned engines (e.g. `PGFPlotsX.PDFLATEX`).
+Thee are three different choices for latex engines, `PDFLATEX`, `LUALATEX` and `XELATEX`.
+By default, `LUALATEX` is used if it was available during `Pkg.build()`. The active engine can be retrieved with the `latexengine()` function and be set with `latexengine!(engine)` where `engine` is one of the three previously mentioned engines (i.e. `PGFPlotsX.PDFLATEX` or `PGFPlotsX.XELATEX`).
 
 ## Custom flags
 
