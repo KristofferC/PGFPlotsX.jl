@@ -347,8 +347,7 @@ _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_vscode() = isdefined(Main, :_vscodeserver) || (isdefined(Main, :VSCodeServer) && Main.VSCodeServer.PLOT_PANE_ENABLED[] == true)
-_is_juno()   = __is_juno[]
-_is_ide()    = _is_ijulia() || _is_vscode() || _is_juno()
+_is_ide()    = _is_ijulia() || _is_vscode()
 
 function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
     if _DISPLAY_PDF

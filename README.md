@@ -17,7 +17,7 @@ easily be incorporated in the Julia code.
 
 Features include:
 
-* Showing figures inline in Jupyter notebooks, Juno and VSCode-julia. Both png- and svg-figures can be shown.
+* Showing figures inline in Jupyter notebooks, VSCode-julia. Both png- and svg-figures can be shown.
 * Exporting to tex, pdf, svg, and png, file formats.
 * Customizing the preamble so that commands from latex packages can be used.
 * [Extra functionality](https://kristofferc.github.io/PGFPlotsX.jl/stable/examples/juliatypes) when different packages are loaded, for example *Colors*, *DataFrames*, *Contour* etc.
