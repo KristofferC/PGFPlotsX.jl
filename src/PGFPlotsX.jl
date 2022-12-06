@@ -6,7 +6,7 @@ end
 
 using ArgCheck: @argcheck
 using Dates
-using DataStructures: OrderedDict
+using OrderedCollections: OrderedDict
 using DefaultApplication: DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
 using MacroTools: prewalk, @capture
