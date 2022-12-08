@@ -11,7 +11,6 @@ using DefaultApplication: DefaultApplication
 using DocStringExtensions: SIGNATURES, TYPEDEF
 using MacroTools: prewalk, @capture
 using Parameters: @unpack
-using Requires: @require
 using Tables: Tables
 
 export TikzDocument, TikzPicture
@@ -126,7 +125,7 @@ _precompile_()
 const EXTENSIONS_SUPPORTED = isdefined(Base, :get_extension)
 
 if !EXTENSIONS_SUPPORTED
-    using Requires
+    using Requires: @require
 end
 
 function __init__()
