@@ -124,7 +124,7 @@ c = Coordinates(first.(HS), last.(HS); meta = [HSL(hs..., 0.5) for hs in HS])
     },
     Plot(
         {
-            "matrix_plot*",
+            "matrix plot*",
             no_marks,
             "mesh/color input" = "explicit",
             "mesh/cols" = length(hues)
