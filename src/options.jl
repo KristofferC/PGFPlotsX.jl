@@ -1,7 +1,13 @@
 struct Options
-    dict::OrderedDict{Any, Any}
+    dict::OrderedDict{String, Any}
     print_empty::Bool
 end
+
+# normalize keys to String
+normalize_key(x::Symbol) = replace(string(x), "_" => " ")
+normalize_key(x::String) = x
+normalize_key(x::AbstractString) = String(x)
+normalize_key(x) = error("Invalid pgf key $x")
 
 function Base.show(io::IO, ::MIME"text/plain", options::Options)
     print_options(io, options; newline = false)
@@ -33,14 +39,14 @@ When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.
 """
 function Options(args::Union{Pair,MergeEntry}...; print_empty::Bool = false)
-    d = OrderedDict()
+    d = OrderedDict{String,Any}()
     for arg in args
         if arg isa Pair
             k, v = arg
-            d[k] = v
+            d[normalize_key(k)] = v
         elseif arg isa MergeEntry
             for (k, v) in arg.d.dict
-                d[k] = v
+                d[normalize_key(k)] = v
             end
         else
             error("unhandled arg type $arg")
@@ -63,15 +69,12 @@ function Base.merge(options::Options, others::Options...)
 end
 
 function prockey(key)
-    _string(x::Symbol) = replace(string(x), "_" => " ")
-    _string(x::AbstractString) = x
-    _string(x) = error("Invalid pgf key $x")
     if isa(key, Symbol) || isa(key, String)
-        return :($(_string(key)) => nothing)
+        return :($(normalize_key(key)) => nothing)
     elseif @capture(key, @raw_str(str_))
-        return :($(_string(str)) => nothing)
+        return :($(normalize_key(str)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
-        return :($(_string(a))=>$b)
+        return :($(normalize_key(a))=>$b)
     elseif @capture(key, g_...)
         return :($MergeEntry($g))
     end
@@ -188,11 +191,11 @@ end
 
 print_tex(io::IO, options::Options) = print_options(io, options; newline = false)
 
-accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
-accum_opt!(d::AbstractDict, opt::Pair) = d[first(opt)] = last(opt)
+accum_opt!(d::AbstractDict, opt::Union{String,Symbol}) = d[normalize_key(opt)] = nothing
+accum_opt!(d::AbstractDict, opt::Pair) = d[normalize_key(first(opt))] = last(opt)
 function accum_opt!(d::AbstractDict, opt::AbstractDict)
     for (k, v) in opt
-        d[k] = v
+        d[normalize_key(k)] = v
     end
 end
 

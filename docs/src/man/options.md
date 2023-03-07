@@ -124,7 +124,7 @@ julia> p["fill"]
 
 julia> @pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
 
-julia> p["axis background/.style"]["top_color"];
+julia> p["axis background/.style"]["top color"];
 
 julia> p["very thick"] = nothing # Set a value-less options;
 
