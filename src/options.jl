@@ -63,12 +63,15 @@ function Base.merge(options::Options, others::Options...)
 end
 
 function prockey(key)
+    _string(x::Symbol) = replace(string(x), "_" => " ")
+    _string(x::AbstractString) = x
+    _string(x) = error("Invalid pgf key $x")
     if isa(key, Symbol) || isa(key, String)
-        return :($(string(key)) => nothing)
+        return :($(_string(key)) => nothing)
     elseif @capture(key, @raw_str(str_))
-        return :($(string(str)) => nothing)
+        return :($(_string(str)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
-        return :($(string(a))=>$b)
+        return :($(_string(a))=>$b)
     elseif @capture(key, g_...)
         return :($MergeEntry($g))
     end
@@ -80,7 +83,6 @@ if !isdefined(Base, :mapany)
 else
     using Base: mapany
 end
-
 
 function procmap(d)
     if @capture(d, f_(xs__))
@@ -102,11 +104,16 @@ Construct [`Options`](@ref) from comma-delimited `key` (without value),
 `key = value`, `key : value`, or `key => value` pairs enclosed in `{ ... }`,
 anywhere in the expression.
 
+Keys can be
+
+1. symbols, which are converted to strings, with `_` replaced by spaces,
+
+2. strings or raw strings, used as is
+
 The argument is traversed recursively, allowing `{ ... }` expressions in
 multiple places.
 
-Multi-word keys need to be either quoted, or written with underscores replacing
-spaces.
+Multi-word keys need to be either quoted, or written as strings with underscores.
 
 ```julia
 @pgf {
@@ -210,10 +217,8 @@ end
 
 function print_opt(io::IO, options::Options)
     @unpack dict = options
-    replace_underline(x) = x
-    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_" => " ")
     for (i, (k, v)) in enumerate(dict)
-        print_opt(io, replace_underline(k))
+        print_opt(io, k)
         if v != nothing
             print(io, "={")
             print_opt(io, v)
