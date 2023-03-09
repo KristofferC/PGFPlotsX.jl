@@ -1,7 +1,13 @@
 struct Options
-    dict::OrderedDict{Any, Any}
+    dict::OrderedDict{String, Any}
     print_empty::Bool
 end
+
+# normalize keys to String
+normalize_key(x::Symbol) = replace(string(x), "_" => " ")
+normalize_key(x::String) = x
+normalize_key(x::AbstractString) = String(x)
+normalize_key(x) = error("Invalid pgf key $x")
 
 function Base.show(io::IO, ::MIME"text/plain", options::Options)
     print_options(io, options; newline = false)
@@ -33,14 +39,14 @@ When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.
 """
 function Options(args::Union{Pair,MergeEntry}...; print_empty::Bool = false)
-    d = OrderedDict()
+    d = OrderedDict{String,Any}()
     for arg in args
         if arg isa Pair
             k, v = arg
-            d[k] = v
+            d[normalize_key(k)] = v
         elseif arg isa MergeEntry
             for (k, v) in arg.d.dict
-                d[k] = v
+                d[normalize_key(k)] = v
             end
         else
             error("unhandled arg type $arg")
@@ -64,11 +70,11 @@ end
 
 function prockey(key)
     if isa(key, Symbol) || isa(key, String)
-        return :($(string(key)) => nothing)
+        return :($(normalize_key(key)) => nothing)
     elseif @capture(key, @raw_str(str_))
-        return :($(string(str)) => nothing)
+        return :($(normalize_key(str)) => nothing)
     elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
-        return :($(string(a))=>$b)
+        return :($(normalize_key(a))=>$b)
     elseif @capture(key, g_...)
         return :($MergeEntry($g))
     end
@@ -80,7 +86,6 @@ if !isdefined(Base, :mapany)
 else
     using Base: mapany
 end
-
 
 function procmap(d)
     if @capture(d, f_(xs__))
@@ -102,11 +107,16 @@ Construct [`Options`](@ref) from comma-delimited `key` (without value),
 `key = value`, `key : value`, or `key => value` pairs enclosed in `{ ... }`,
 anywhere in the expression.
 
+Keys can be
+
+1. symbols, which are converted to strings, with `_` replaced by spaces,
+
+2. strings or raw strings, used as is
+
 The argument is traversed recursively, allowing `{ ... }` expressions in
 multiple places.
 
-Multi-word keys need to be either quoted, or written with underscores replacing
-spaces.
+Multi-word keys need to be either quoted, or written as strings with underscores.
 
 ```julia
 @pgf {
@@ -181,11 +191,11 @@ end
 
 print_tex(io::IO, options::Options) = print_options(io, options; newline = false)
 
-accum_opt!(d::AbstractDict, opt::String) = d[opt] = nothing
-accum_opt!(d::AbstractDict, opt::Pair) = d[first(opt)] = last(opt)
+accum_opt!(d::AbstractDict, opt::Union{String,Symbol}) = d[normalize_key(opt)] = nothing
+accum_opt!(d::AbstractDict, opt::Pair) = d[normalize_key(first(opt))] = last(opt)
 function accum_opt!(d::AbstractDict, opt::AbstractDict)
     for (k, v) in opt
-        d[k] = v
+        d[normalize_key(k)] = v
     end
 end
 
@@ -210,10 +220,8 @@ end
 
 function print_opt(io::IO, options::Options)
     @unpack dict = options
-    replace_underline(x) = x
-    replace_underline(x::Union{String, Symbol}) = replace(string(x), "_" => " ")
     for (i, (k, v)) in enumerate(dict)
-        print_opt(io, replace_underline(k))
+        print_opt(io, k)
         if v != nothing
             print(io, "={")
             print_opt(io, v)
