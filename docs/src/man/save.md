@@ -60,6 +60,23 @@ PGFPlotsX.CLASS_OPTIONS
 Thee are three different choices for latex engines, `PDFLATEX`, `LUALATEX` and `XELATEX`.
 By default, `LUALATEX` is used if it was available during `Pkg.build()`. The active engine can be retrieved with the `latexengine()` function and be set with `latexengine!(engine)` where `engine` is one of the three previously mentioned engines (i.e. `PGFPlotsX.PDFLATEX` or `PGFPlotsX.XELATEX`).
 
+## File conversions
+
+When saving a file in PNG or SVG formats, it is first saved as a PDF and then converted using external programs. When the user needs more than one version, this can be done more efficiently by converting the PDF manually, as in
+```julia
+pdf_path = "/tmp/filename.pdf"
+pgfsave(pdf_path, my_figure)
+PGFPlotsX.convert_pdf_to_png(pdf_path) # /tmp/filename.png
+PGFPlotsX.convert_pdf_to_svg(pdf_path) # /tmp/filename.svg
+```
+
+The following are utility functions available for this purpose, but not exported.
+
+```@docs
+PGFPlotsX.convert_pdf_to_png
+PGFPlotsX.convert_pdf_to_svg
+```
+
 ## Custom flags
 
 ```@docs
