@@ -28,6 +28,7 @@ relative_irradiance(d) = (1 + 0.034*cospi(2*Dates.dayofyear(d)/365.25))
         xlabel = "date",
         ylabel = "relative solar irradiance",
     },
+    VBand({ draw="none", fill="red", opacity = 0.5}, dategrid[50], dategrid[100]),
     Plot(
     {
         no_marks

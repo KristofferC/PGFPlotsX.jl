@@ -33,7 +33,10 @@ end
 # Coordinate #
 ##############
 
-const CoordinateType = Union{Real, AbstractString}
+"""
+Types we accept as coordinates. Need to support [`print_tex`](@ref).
+"""
+const CoordinateType = Union{Real,AbstractString,Date}
 
 struct Coordinate{N}
     data::NTuple{N, CoordinateType}
@@ -684,7 +687,7 @@ end
 
 struct VLine
     options::Options
-    x::Real
+    x::CoordinateType
 end
 
 """
@@ -692,18 +695,18 @@ end
 
 A vertical line at `x`.
 """
-VLine(x::Real) = VLine(Options(), x)
+VLine(x::CoordinateType) = VLine(Options(), x)
 
 function print_tex(io::IO, vline::VLine)
-    @unpack options, x = vline
     print(io, "\\draw")
-    print_options(io, options; newline = false)
+    print_options(io, vline.options; newline = false)
+    x = print_tex(String, vline.x)
     println(io, "({axis cs:$(x),0}|-{rel axis cs:0,1}) -- ({axis cs:$(x),0}|-{rel axis cs:0,0});")
 end
 
 struct HLine
     options::Options
-    y::Real
+    y::CoordinateType
 end
 
 """
@@ -711,12 +714,12 @@ end
 
 A horizontal line at `y`.
 """
-HLine(y::Real) = HLine(Options(), y)
+HLine(y::CoordinateType) = HLine(Options(), y)
 
 function print_tex(io::IO, hline::HLine)
-    @unpack options, y = hline
     print(io, "\\draw")
-    print_options(io, options; newline = false)
+    print_options(io, hline.options; newline = false)
+    y = print_tex(String, hline.y)
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(y)}) -- ({rel axis cs:0,0}|-{axis cs:0,$(y)});")
 end
 
@@ -726,8 +729,8 @@ end
 
 struct VBand
     options::Options
-    xmin::Real
-    xmax::Real
+    xmin::CoordinateType
+    xmax::CoordinateType
 end
 
 """
@@ -735,19 +738,19 @@ end
 
 A vertical band from `xmin` to `xmax`.
 """
-VBand(xmin::Real, xmax::Real) = VBand(Options(), xmin, xmax)
+VBand(xmin::CoordinateType, xmax::CoordinateType) = VBand(Options(), xmin, xmax)
 
 function print_tex(io::IO, vband::VBand)
-    @unpack options, xmin, xmax = vband
     print(io, "\\draw")
-    print_options(io, options; newline = false)
+    print_options(io, vband.options; newline = false)
+    xmin, xmax = print_tex.(String, (vband.xmin, vband.xmax))
     println(io, "({axis cs:$(xmin),0}|-{rel axis cs:0,1}) rectangle ({axis cs:$(xmax),0}|-{rel axis cs:0,0});")
 end
 
 struct HBand
     options::Options
-    ymin::Real
-    ymax::Real
+    ymin::CoordinateType
+    ymax::CoordinateType
 end
 
 """
@@ -755,11 +758,11 @@ end
 
 A horizontal band from `ymin` to `ymax`.
 """
-HBand(ymin::Real, ymax::Real) = HBand(Options(), ymin, ymax)
+HBand(ymin::CoordinateType, ymax::CoordinateType) = HBand(Options(), ymin, ymax)
 
 function print_tex(io::IO, hband::HBand)
-    @unpack options, ymin, ymax = hband
     print(io, "\\draw")
-    print_options(io, options; newline = false)
+    print_options(io, hband.options; newline = false)
+    ymin, ymax = print_tex.(String, (hband.ymin, hband.ymax))
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(ymin)}) rectangle ({rel axis cs:0,0}|-{axis cs:0,$(ymax)});")
 end
