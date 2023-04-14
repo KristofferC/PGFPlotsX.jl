@@ -342,8 +342,11 @@ struct TableData
     end
 end
 
-function print_tex(io::IO, tabledata::TableData)
+function print_tex(io::IO, tabledata::TableData; rowsep_off=false)
     @unpack data, colnames, scanlines, rowsep = tabledata
+    if rowsep_off
+        rowsep =false
+    end
     _colsep() = print(io, "  ")
     _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
     if colnames ≠ nothing
@@ -492,11 +495,16 @@ function print_tex(io::IO, table::Table)
         print(io, "{")
         print(io, content)
         print(io, "}")
-    else
+    elseif !export_data2file
         print_options(io, all_options, newline = true)
         println(io, "{")
         print_indent(io, content)
         println(io, "}")
+    elseif export_data2file
+        filepath = ExternalDataFile(content)
+        print(io, "{")
+        print(io, filepath)
+        print(io, "}")
     end
 end
 

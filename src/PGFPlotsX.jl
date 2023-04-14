@@ -17,7 +17,7 @@ export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot, TernaryAxis
 export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
     TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine, VBand, HBand
-export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!
+export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!, export2tikz
 
 struct PGFPlotsXDisplay <: AbstractDisplay end
 
@@ -144,5 +144,48 @@ function __init__()
         @require Measurements="eff96d63-e80a-5855-80a2-b1b0885c5ab7" include("../ext/MeasurementsExt.jl")
     end
 end
+
+
+# Allow creation of external data file for light tikz files
+# if export_data2file is true, table data are written into a file.
+# if export2tex is called, the daa files are moved toward the folder of the file
+function ExternalDataFile(content)
+    filepath = get_filepath()
+    open(filepath,"w") do io
+        print_tex(io,content; rowsep_off=true)
+    end
+    push!(external_file_storage,filepath)
+    return filepath
+end
+get_filepath() = Base.Filesystem.tempname(;cleanup=true)
+# global variables to store exported datafile paths
+global external_file_storage = Vector{AbstractString}()
+global export_data2file = true
+
+function export2tikz(fn::AbstractString,p; datapath="fig_data", relpath="", ext="tikz")
+    bn = splitext(basename(fn))[1]
+    fn = string(splitext(abspath(expanduser(fn)))[1],".", ext)
+    io = IOBuffer()
+    show(io, MIME("application/x-tex"), p)
+    s = String(take!(io));
+    close(io)
+
+    dirpath = joinpath(dirname(fn),datapath)
+    if !isdir(dirpath)
+        mkdir(dirpath)
+    end 
+    for (i,filepath) in enumerate(external_file_storage)
+        new_filename = joinpath(dirpath,"$(bn)_$i.tsv")
+        new_filename_relative = joinpath(relpath,datapath,"$(bn)_$i.tsv")
+        ss = replace(s, filepath => new_filename_relative)
+        open(fn,"w") do io
+            write(io,ss)
+        end
+        mv(filepath, new_filename; force=true)
+    end
+    empty!(external_file_storage);
+    nothing
+end 
+
 
 end # module
