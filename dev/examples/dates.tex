@@ -12,6 +12,7 @@
 \begin{document}
 \begin{tikzpicture}
 \begin{axis}[date coordinates in={x}, x tick label style={{rotate=90}}, xlabel={date}, ylabel={relative solar irradiance}]
+    \draw[draw={none}, fill={red}, opacity={0.5}] ({axis cs:2000-02-19,0}|-{rel axis cs:0,1}) rectangle ({axis cs:2000-04-09,0}|-{rel axis cs:0,0});
     \addplot[no marks]
         table[row sep={\\}]
         {
