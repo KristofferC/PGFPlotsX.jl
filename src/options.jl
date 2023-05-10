@@ -170,21 +170,25 @@ end
 """
     $(SIGNATURES)
 
-Print options between `[]`. For each option, the value is printed using
-[`print_opt`](@ref). Unless `newline == true` (the default), a newline follows
-the `]`, otherwise a space.
+Print options between `brackets` (defaults to "[]"). For each option, the value is printed
+using [`print_opt`](@ref). Unless `newline == true` (the default), a newline follows the
+closing bracket, otherwise a space.
 
-Note that you can also use `print_tex` for this purpose, in which case a newline is not
-printed.
+# Notes
+
+1. you can also use `print_tex` for this purpose, in which case a newline is not printed.
+
+2. customizing brackets is only needed in some corner cases, cf [LegendImage](@ref).
 """
-function print_options(io::IO, options::Options; newline = true)
+function print_options(io::IO, options::Options; newline = true, brackets = "[]")
+    @argcheck length(brackets) == 2
     @unpack dict, print_empty = options
     if isempty(dict)
-        print_empty && print(io, "[]")
+        print_empty && print(io, brackets)
     else
-        print(io, "[")
+        print(io, brackets[1])
         print_opt(io, options)
-        print(io, "]")
+        print(io, brackets[2])
     end
     newline ? println(io) : print(io, " ")
 end
