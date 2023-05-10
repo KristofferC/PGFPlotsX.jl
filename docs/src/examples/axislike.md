@@ -162,14 +162,14 @@ savefigs("ternary", ans) # hide
 The following example shows how to construct multiple plots using the same styles, then display the legend separately.
 
 First, define some common styles we reuse.
-```@example style-reuse
+```@example pgf
 using Colors, PGFPlotsX
 x = range(-π, π; length = 100)
 styles = map(color -> @pgf({ color = color, thick, no_marks }), [colorant"#faab36", colorant"#249ea0"])
 ```
 
 Then make use of them to create a plot.
-```@example style-reuse
+```@example pgf
 function _make_axis(x, fs, styles, ylabel)
     axis = @pgf Axis({ xlabel = "x", ylabel = ylabel })
     for (f, style) in zip(fs, styles)
@@ -197,7 +197,7 @@ savefigs("style-reuse-plots", ans) # hide
 ![](style-reuse-plots.svg)
 
 Then we construct the legend.
-```@example style-reuse
+```@example pgf
 axis = @pgf Axis({ hide_axis, xmin = 0, xmax = 5, ymin = 0, ymax = 1, # magnitudes don't matter
                    legend_style={ draw="white!15!black", "legend cell align=left"}});
 for (style, label) in zip(styles, labels)
