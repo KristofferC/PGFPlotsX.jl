@@ -200,7 +200,7 @@ Then we construct the legend.
 ```@example pgf
 axis = @pgf Axis({ hide_axis, xmin = 0, xmax = 5, ymin = 0, ymax = 1, # magnitudes don't matter
                    legend_style={ draw="white!15!black", "legend cell align=left"}});
-for (style, label) in zip(styles, labels)
+for (style, label) in zip(styles, ["sin", "cos"])
     push!(axis, LegendImage(style), LegendEntry(label))
 end
 axis
