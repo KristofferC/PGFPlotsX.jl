@@ -681,6 +681,24 @@ function print_tex(io::IO, legendentry::LegendEntry)
     println(io, "}")
 end
 
+###############
+# LegendImage #
+###############
+
+"""
+    LegendImage(options::Options)
+
+Corresponds to the `\\addlegendimage` form of pgfplots.
+"""
+struct LegendImage
+    options::Options
+end
+
+function print_tex(io::IO, legend_image::LegendImage)
+    print(io, "\\addlegendimage")
+    print_options(io, legend_image.options; newline = false, brackets = "{}")
+end
+
 ###################
 # VLine and HLine #
 ###################
