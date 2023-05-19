@@ -22,7 +22,7 @@ end
     $SIGNATURES
 
 Call the `f` with an IO buffer, capture the output, print it to `io_main`
-indended with four spaces.
+indented with four spaces.
 """
 function print_indent(f, io_main::IO)
     io = IOBuffer()
