@@ -422,7 +422,7 @@ end
 
 Use the keyword arguments as columns.
 
-Note that this precludes the possibily of providing other keywords; see the
+Note that this precludes the possibility of providing other keywords; see the
 other constructors.
 """
 TableData(; named_columns...) = TableData(collect(Pair(nc...) for nc in named_columns))
