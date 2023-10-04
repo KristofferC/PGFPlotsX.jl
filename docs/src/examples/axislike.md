@@ -156,3 +156,57 @@ savefigs("ternary", ans) # hide
 [\[.pdf\]](ternary.pdf), [\[generated .tex\]](ternary.tex)
 
 ![](ternary.svg)
+
+# Legend independently of axes
+
+The following example shows how to construct multiple plots using the same styles, then display the legend separately.
+
+First, define some common styles we reuse.
+```@example pgf
+using Colors, PGFPlotsX
+x = range(-π, π; length = 100)
+styles = map(color -> @pgf({ color = color, thick, no_marks }), [colorant"#faab36", colorant"#249ea0"])
+```
+
+Then make use of them to create a plot.
+```@example pgf
+function _make_axis(x, fs, styles, ylabel)
+    axis = @pgf Axis({ xlabel = "x", ylabel = ylabel })
+    for (f, style) in zip(fs, styles)
+        @pgf push!(axis, Plot(style, Table(x, f.(x))))
+    end
+    axis
+end
+@pgf GroupPlot(
+    {
+        group_style =
+            {
+                group_size="2 by 1",
+                xticklabels_at="edge bottom",
+                yticklabels_at="edge left"
+            },
+    },
+    _make_axis(x, [sin, cos], styles, "functions"),
+    _make_axis(x, [cos, x -> -sin(x)], styles, "derivatives"),
+)
+savefigs("style-reuse-plots", ans) # hide
+```
+
+[\[.pdf\]](style-reuse-plots.pdf), [\[generated .tex\]](style-reuse-plots.tex)
+
+![](style-reuse-plots.svg)
+
+Then we construct the legend.
+```@example pgf
+axis = @pgf Axis({ hide_axis, xmin = 0, xmax = 5, ymin = 0, ymax = 1, # magnitudes don't matter
+                   legend_style={ draw="white!15!black", "legend cell align=left"}});
+for (style, label) in zip(styles, ["sin", "cos"])
+    push!(axis, LegendImage(style), LegendEntry(label))
+end
+axis
+savefigs("style-reuse-legend", ans) # hide
+```
+
+[\[.pdf\]](style-reuse-legend.pdf), [\[generated .tex\]](style-reuse-legend.tex)
+
+![](style-reuse-legend.svg)
