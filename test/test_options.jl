@@ -14,10 +14,15 @@ end
     a = 1
     b = 2
     theme = @pgf {color = "white"}
-    opt = @pgf { xmax = a + b, title = "42", justkey, raw"rawstring", theme... }
+    opt = @pgf { xmax = a + b, title = "42", justkey, raw"rawstring", under_scores => 3,
+                 "quoted spaces" => 5, theme... }
     @test opt["color"] == "white"
-    @test repr_tex(opt) == repr_tex(Options("xmax" => 3, "title" => "42", "justkey" => nothing,
-                                            "rawstring" => nothing, "color" => "white"))
+    @test opt["under scores"] == 3
+    @test opt["quoted spaces"] == 5
+    @test repr_tex(opt) == repr_tex(Options("xmax" => 3, "title" => "42",
+                                            "justkey" => nothing, "rawstring" => nothing,
+                                            "under scores" => 3, "quoted spaces" => 5,
+                                            "color" => "white"))
     f(x...) = tuple(x...)
     y = @pgf f({ look, we, are = f(1, 2, 3), nesting = { stuff = 9 }})
     @test length(y) == 1

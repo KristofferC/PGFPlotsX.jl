@@ -79,11 +79,9 @@ julia> print_tex(a)
 
 Each option is either a standalone *keyword* (without value, modifying the plot by itself), or a *keyword-value pair*. Keywords can be entered
 
-1. as Julia identifiers, which is useful for keywords with no spaces (eg `smooth`),
+1. as Julia symbols (eg `smooth`); in symbols, underscores are replaced by spaces which allows entering multi-word keys (eg `only_marks` will appear in LaTeX code as `only marks`),
 
-2. separated by underscores, which are replaced by spaces (eg `only_marks` will appear in LaTeX code as `only marks`),
-
-3. or quoted as strings, eg `"very thick"`.
+2. or quoted as strings, eg `"very thick"`.
 
 *Values* are provided after a `=`, `:`, or `=>`, so the following are equivalent:
 
@@ -97,11 +95,11 @@ Values should be valid Julia expressions, as they are evaluated, so you cannot u
 
 !!! note
 
-    Keys that contain symbols that in Julia are operators (e.g the key `"axis background/.style"`) have to be entered as strings.
+    Keys that contain spaces (eg `marks only`), underscores (eg `tdplot_main_coords`), or symbols that in Julia are operators (eg `axis background/.style`) have to be entered as strings.
 
 ### Transformations
 
-In addition to replacing underscores in keys, the following transformations of values are done when the options are written in `.tex` style:
+The following transformations of values are done when the options are written in `.tex` style:
 
 * A list as a value is written as “comma joined” e.g. `[1, 2, 3] -> "1, 2, 3"`.
 
@@ -126,7 +124,7 @@ julia> p["fill"]
 
 julia> @pgf p["axis background/.style"] = { shade, top_color = "gray", bottom_color = "white" };
 
-julia> p["axis background/.style"]["top_color"];
+julia> p["axis background/.style"]["top color"];
 
 julia> p["very thick"] = nothing # Set a value-less options;
 

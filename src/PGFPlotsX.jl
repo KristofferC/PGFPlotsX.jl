@@ -15,9 +15,9 @@ using Tables: Tables
 
 export TikzDocument, TikzPicture
 export Axis, SemiLogXAxis, SemiLogYAxis, LogLogAxis, PolarAxis, SmithChart, GroupPlot, TernaryAxis
-export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates,
-    TableData, Table, Graphics, Legend, LegendEntry, VLine, HLine, VBand, HBand
+export Plot, PlotInc, Plot3, Plot3Inc, Expression, Coordinate, Coordinates, TableData, Table, Graphics, Legend, LegendEntry, LegendImage, VLine, HLine, VBand, HBand
 export @pgf, pgfsave, print_tex, latexengine, latexengine!, push_preamble!, export2tikz
+
 
 struct PGFPlotsXDisplay <: AbstractDisplay end
 
