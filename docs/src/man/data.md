@@ -157,7 +157,7 @@ Graphics
 
 Example:
 
-```jldoctest
+```jldoctest; filter = r"{.*}"
 julia> print_tex(Graphics("img.png"))
 graphics {img.png}
 ```

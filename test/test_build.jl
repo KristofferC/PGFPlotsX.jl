@@ -198,3 +198,17 @@ end
         end
     end
 end
+
+@testset "graphics with relative path" begin
+    # cf https://github.com/KristofferC/PGFPlotsX.jl/issues/283
+    tmp_pdf = tempname() * ".pdf"
+    mktempdir() do dir
+        cd(dir)
+        pgfsave("img.png", Plot(Table([0, 1], [0, 1])))
+        axis = @pgf Axis(Plot(Graphics({ xmin = 0, xmax = 1, ymin = 0, ymax = 1},
+                                       "img.png")))
+        pgfsave(tmp_pdf, axis)
+        @test is_pdf_file(tmp_pdf)
+        rm(tmp_pdf)
+    end
+end
