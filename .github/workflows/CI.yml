@@ -16,21 +16,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version:
+        julia-version:
           - 'lts'
           - '1' # Leave this line unchanged. '1' will automatically expand to the latest stable 1.x release of Julia.
           - 'alpha'
           - 'nightly'
         os:
           - ubuntu-latest
-        arch:
-          - x64
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/install-juliaup@v1
         with:
-          version: ${{ matrix.version }}
-          arch: ${{ matrix.arch }}
+            julia-version: ${{ matrix.julia-version }}
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
