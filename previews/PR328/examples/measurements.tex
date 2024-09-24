@@ -1,0 +1,32 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{ternary}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[error bars/error bar style={very thin}]
+    \addplot[only marks, mark={star}, error bars/y dir=both, error bars/y explicit]
+        coordinates {
+            (-5.0,25.0) +- (0.12485699615900114,1.2485699615900114)
+            (-4.0,16.0) +- (0.17485508905068176,1.398840712405454)
+            (-3.0,9.0) +- (0.10344875532112376,0.6206925319267426)
+            (-2.0,4.0) +- (0.19731915539500722,0.7892766215800289)
+            (-1.0,1.0) +- (0.14997453077981165,0.2999490615596233)
+            (0.0,0.0) +- (0.10058724685988456,0.0)
+            (1.0,1.0) +- (0.14997389705142358,0.29994779410284717)
+            (2.0,4.0) +- (0.1685133370761765,0.674053348304706)
+            (3.0,9.0) +- (0.17442430108972212,1.0465458065383326)
+            (4.0,16.0) +- (0.1415295754587653,1.1322366036701224)
+            (5.0,25.0) +- (0.11622386520366801,1.16223865203668)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
