@@ -9,7 +9,6 @@ makedocs(
                              prettyurls = get(ENV, "CI", nothing) == "true"),
     sitename = "PGFPlotsX.jl",
     doctest = true,
-    strict = true,
     checkdocs = :none,
     pages = Any[
         "Home" => "index.md",
