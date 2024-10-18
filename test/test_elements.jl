@@ -11,20 +11,26 @@ end
 
 @testset "coordinate" begin
     # invalid coordinates
-    @test_throws ArgumentError PGFPlotsX.Coordinate((1, ))    # dimension not 2 or 3
-    @test_throws ArgumentError PGFPlotsX.Coordinate((1, 2);   # can't specify both
-                                              error = (0, 0), errorplus = (0, 0))
-    @test_throws MethodError Coordinates((1, 2); error = (3, )) # incompatible dims
+    @test_throws ArgumentError PGFPlotsX.Coordinate((1,))    # dimension not 2 or 3
+    @test_throws ArgumentError PGFPlotsX.Coordinate(
+        (1, 2);   # can't specify both
+        error = (0, 0), errorplus = (0, 0)
+    )
+    @test_throws MethodError Coordinates((1, 2); error = (3,)) # incompatible dims
 
     # valid forms
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2))) == "(1,2)" # NOTE important not to have whitespace
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); error = (3, 4))) == "(1,2) +- (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); errorminus = (3, 4))) ==
         "(1,2) -= (3,4)"
-    @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2);
-                                           errorminus = (3, 4),
-                                           errorplus = (5, 6))) ==
-                                               "(1,2) += (5,6) -= (3,4)"
+    @test squashed_repr_tex(
+        PGFPlotsX.Coordinate(
+            (1, 2);
+            errorminus = (3, 4),
+            errorplus = (5, 6)
+        )
+    ) ==
+        "(1,2) += (5,6) -= (3,4)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((1, 2); meta = "blue")) == "(1,2) [blue]"
     @test squashed_repr_tex(PGFPlotsX.Coordinate((NaN, 1))) == "(NaN,1)"
     @test squashed_repr_tex(PGFPlotsX.Coordinate(("a fish", 1))) == "(a fish,1)"
@@ -44,19 +50,21 @@ end
     # skip empty
     @test Coordinates([(2, 3), (), nothing]).data ==
         [PGFPlotsX.Coordinate((2, 3)), nothing, nothing]
-    @test Coordinates(1:2, 3:4, (1:2)./((3:4)')).data ==
-        Coordinates(Any[1, 2, NaN, 1, 2, NaN],
-                    Any[3, 3, NaN, 4, 4, NaN],
-                    Any[1/3, 2/3, NaN, 1/4, 2/4, NaN]).data
+    @test Coordinates(1:2, 3:4, (1:2) ./ ((3:4)')).data ==
+        Coordinates(
+        Any[1, 2, NaN, 1, 2, NaN],
+        Any[3, 3, NaN, 4, 4, NaN],
+        Any[1 / 3, 2 / 3, NaN, 1 / 4, 2 / 4, NaN]
+    ).data
     # from iterables
     @test Coordinates(enumerate(3:4)).data == PGFPlotsX.Coordinate.([(1, 3), (2, 4)])
-    @test Coordinates((x, 1/x) for x in -1:1).data ==
+    @test Coordinates((x, 1 / x) for x in -1:1).data ==
         [PGFPlotsX.Coordinate((-1, -1.0)), nothing, PGFPlotsX.Coordinate((1, 1.0))]
     let x = 1:3,
         y = -1:1,
         z = x ./ y
         @test Coordinates(x, y, z).data ==
-            Coordinates((x, y, x / y) for (x,y) in zip(x, y)).data
+            Coordinates((x, y, x / y) for (x, y) in zip(x, y)).data
     end
     # from Measurements
     let x = [1.0 ± 0.1, 2.0 ± 0.2]
@@ -70,8 +78,8 @@ end
     end
 
     # missing values
-    @test Coordinates([1,2], [3,missing]).data == Coordinates([(1,3), nothing]).data
-    @test Coordinates([(1,3), (2,missing)]).data == Coordinates([(1,3), nothing]).data
+    @test Coordinates([1, 2], [3, missing]).data == Coordinates([(1, 3), nothing]).data
+    @test Coordinates([(1, 3), (2, missing)]).data == Coordinates([(1, 3), nothing]).data
 
     # meta printing
     @test squashed_repr_tex(Coordinates([1], [1]; meta = [RGB(0.1, 0.2, 0.3)])) ==
@@ -80,10 +88,10 @@ end
 
 @testset "tables" begin
     # compare results to these using ≅, defined above
-    table_named_noopt = Table(hcat(1:10, 11:20); colnames=["a", "b"], scanlines=Int[])
-    table_unnamed_noopt = Table(hcat(1:10, 11:20); colnames=nothing, scanlines=Int[])
-    opt = @pgf { meaningless = "option" }
-    table_named_opt = Table(opt, hcat(1:10, 11:20); colnames=["a", "b"], scanlines=Int[])
+    table_named_noopt = Table(hcat(1:10, 11:20); colnames = ["a", "b"], scanlines = Int[])
+    table_unnamed_noopt = Table(hcat(1:10, 11:20); colnames = nothing, scanlines = Int[])
+    opt = @pgf {meaningless = "option"}
+    table_named_opt = Table(opt, hcat(1:10, 11:20); colnames = ["a", "b"], scanlines = Int[])
 
     # named columns, without options
     @test Table(:a => 1:10, :b => 11:20) ≅ table_named_noopt
@@ -103,23 +111,31 @@ end
 
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
-        @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
-                                             hcat(PGFPlotsX.matrix_xyz(x, y, z)...);
-                                             colnames=["x", "y", "z"], scanlines=10)
+        @test Table(x, y, z) ≅ Table(
+            PGFPlotsX.Options(),
+            hcat(PGFPlotsX.matrix_xyz(x, y, z)...);
+            colnames = ["x", "y", "z"], scanlines = 10
+        )
     end
 
     # dataframe
     @test Table(DataFrame(a = 1:5, b = 6:10)) ≅
-        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), colnames=["a", "b"], scanlines=0)
+        Table(PGFPlotsX.Options(), hcat(1:5, 6:10), colnames = ["a", "b"], scanlines = 0)
 
     # can't determine if it is named or unnamed
     @test_throws ArgumentError Table([1:10, :a => 11:20])
 
-    @test squashed_repr_tex(Table(PGFPlotsX.Options(),
-                                      [1 NaN;
-                                       -Inf 4.0],
-                                      ["xx", "yy"],
-                                      [1])) == "table[row sep={\\\\}]\n{\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
+    @test squashed_repr_tex(
+        Table(
+            PGFPlotsX.Options(),
+            [
+                1 NaN;
+                -Inf 4.0
+            ],
+            ["xx", "yy"],
+            [1]
+        )
+    ) == "table[row sep={\\\\}]\n{\nxx yy \\\\\n1.0 nan \\\\\n\\\\\n-inf 4.0 \\\\\n}"
 end
 
 @testset "table file" begin
@@ -144,8 +160,12 @@ end
     # printing incremental w/ options, 2D and 3D
     @test squashed_repr_tex(PlotInc(data2)) ==
         "\\addplot+\ntable[row sep={\\\\}]\n{\nx y \\\\\n1 3 \\\\\n2 4 \\\\\n}\n;"
-    @test squashed_repr_tex(@pgf Plot3Inc({xtick = 1:3},
-                                          Table(x = 1:2, y = 3:4, z = 5:6))) ==
+    @test squashed_repr_tex(
+        @pgf Plot3Inc(
+            {xtick = 1:3},
+            Table(x = 1:2, y = 3:4, z = 5:6)
+        )
+    ) ==
         "\\addplot3+[xtick={1,2,3}]\ntable[row sep={\\\\}]\n{\nx y z \\\\\n1 3 5 \\\\\n2 4 6 \\\\\n}\n;"
 end
 
@@ -160,16 +180,16 @@ end
     @test repr_tex(Expression("x^2")) == "{x^2}"
     @test repr_tex(Expression(["x^2", "y^2"])) == "(\n{x^2},\n{y^2})"
     # graphics
-    @test repr_tex(@pgf Graphics({ testopt = 1}, "filename")) ==
+    @test repr_tex(@pgf Graphics({testopt = 1}, "filename")) ==
         "graphics[testopt={1}] {filename}\n"
     # coordinates, tables, and plot
     c = Coordinates([(1, 2), (3, 4)])
     @test repr_tex(c) == "coordinates {\n    (1,2)\n    (3,4)\n}\n"
     t = Table(x = 1:2, y = 3:4)
     @test repr_tex(t) == "table[row sep={\\\\}]\n{\n    x  y  \\\\\n    1  3  \\\\\n    2  4  \\\\\n}\n"
-    @test repr_tex(@pgf Plot({ no_marks }, c)) ==
+    @test repr_tex(@pgf Plot({no_marks}, c)) ==
         "\\addplot[no marks]\n    coordinates {\n        (1,2)\n        (3,4)\n    }\n    ;\n"
-    @test repr_tex(@pgf Plot({ no_marks }, t, "trailing")) ==
+    @test repr_tex(@pgf Plot({no_marks}, t, "trailing")) ==
         "\\addplot[no marks]\n    table[row sep={\\\\}]\n    {\n        x  y  \\\\\n" *
         "        1  3  \\\\\n        2  4  \\\\\n    }\n    trailing\n    ;\n"
     # legend
@@ -179,7 +199,7 @@ end
     l = LegendEntry("a")
     @test repr_tex(l) == "\\addlegendentry {a}\n"
     # axis
-    @test repr_tex(@pgf Axis({ optaxis }, Plot({ optplot }, c), l)) ==
+    @test repr_tex(@pgf Axis({optaxis}, Plot({optplot}, c), l)) ==
         "\\begin{axis}[optaxis]\n    \\addplot[optplot]\n" *
         "        coordinates {\n            (1,2)\n            (3,4)\n        }\n" *
         "        ;\n    \\addlegendentry {a}\n\\end{axis}\n"
@@ -224,21 +244,23 @@ end
 end
 
 @testset "colors" begin
-    @test squashed_repr_tex(@pgf { color = RGB(1e-10, 1, 1) }) ==
+    @test squashed_repr_tex(@pgf {color = RGB(1.0e-10, 1, 1)}) ==
         "[color={rgb,1:red,0.0;green,1.0;blue,1.0}]"
-    @test squashed_repr_tex(@pgf { color = HSV(1, 1e-10, 1) }) ==
+    @test squashed_repr_tex(@pgf {color = HSV(1, 1.0e-10, 1)}) ==
         "[color={rgb,1:red,1.0;green,1.0;blue,1.0}]"
 end
 
 @testset "Axis, SemiLogXAxis, SemiLogYAxis and LogLogAxis inside GroupPlot" begin
-    gp = @pgf GroupPlot({group_style={group_size="2 by 2"}},
-        Axis(), SemiLogXAxis(), SemiLogYAxis(), LogLogAxis())
+    gp = @pgf GroupPlot(
+        {group_style = {group_size = "2 by 2"}},
+        Axis(), SemiLogXAxis(), SemiLogYAxis(), LogLogAxis()
+    )
     @test repr_tex(gp) == """
-    \\begin{groupplot}[group style={group size={2 by 2}}]
-        \\nextgroupplot
-        \\nextgroupplot[xmode=log,ymode=normal]
-        \\nextgroupplot[xmode=normal,ymode=log]
-        \\nextgroupplot[xmode=log,ymode=log]
-    \\end{groupplot}
-    """
+        \\begin{groupplot}[group style={group size={2 by 2}}]
+            \\nextgroupplot
+            \\nextgroupplot[xmode=log,ymode=normal]
+            \\nextgroupplot[xmode=normal,ymode=log]
+            \\nextgroupplot[xmode=log,ymode=log]
+        \\end{groupplot}
+        """
 end

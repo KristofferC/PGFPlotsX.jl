@@ -37,18 +37,19 @@ function print_tex(io::IO, axislike::T) where {T <: AxisLike}
         for elt in contents
             print_tex(io, elt, axislike)
         end
+        return
     end
     println(io, "\\end{", name, "}")
+    return
 end
 
-function save(filename::AbstractString, axislike::AxisLike; kwargs...)
+save(filename::AbstractString, axislike::AxisLike; kwargs...) =
     save(filename, TikzPicture(axislike); kwargs...)
-end
 
 macro define_axislike(name, latex_environment)
     @argcheck latex_environment isa String
     _name = esc(name)
-    quote
+    return quote
         Base.@__doc__ struct $(_name) <: AxisLike
             options::Options
             contents::Vector{Any}
@@ -160,6 +161,8 @@ function print_tex(io::IO, groupplot::GroupPlot)
                 print_tex(io, elt)
             end
         end
+        return
     end
     println(io, raw"\end{groupplot}")
+    return
 end
