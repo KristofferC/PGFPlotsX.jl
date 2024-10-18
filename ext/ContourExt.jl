@@ -2,7 +2,7 @@ module ContourExt
 
 import PGFPlotsX
 
-PGFPlotsX.EXTENSIONS_SUPPORTED ? (using Contour) : (using ..Contour)
+using Contour
 
 function PGFPlotsX.TableData(c::Contour.ContourCollection; kwargs...)
     colx = Any[]
