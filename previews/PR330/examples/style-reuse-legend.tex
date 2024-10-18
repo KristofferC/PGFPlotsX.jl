@@ -1,0 +1,19 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{ternary}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[hide axis, xmin={0}, xmax={5}, ymin={0}, ymax={1}, legend style={draw={white!15!black}, legend cell align=left}]
+    \addlegendimage{color={rgb,1:red,0.9804;green,0.6706;blue,0.2118}, thick, no marks} \addlegendentry {sin}
+    \addlegendimage{color={rgb,1:red,0.1412;green,0.6196;blue,0.6275}, thick, no marks} \addlegendentry {cos}
+\end{axis}
+\end{tikzpicture}
+\end{document}
