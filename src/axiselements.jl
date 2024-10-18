@@ -111,7 +111,8 @@ function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where 
         i == 1 || print(io, ",")
         print(io, x)
     end
-    return print(io, ")")
+    print(io, ")")
+    return
 end
 
 # Print raw strings inside coordinates. Compared to generic `print_tex`, print no newline,
@@ -122,10 +123,11 @@ function print_tex(io::IO, coordinate::Coordinate)
     @unpack data, error, errorplus, errorminus, meta = coordinate
     print_tex(io, data, coordinate)
     function _print_error(prefix, error)
-        return if error ≠ nothing
+        if error ≠ nothing
             print(io, " $(prefix) ")
             print_tex(io, error, coordinate)
         end
+        return
     end
     _print_error("+-", error)
     _print_error("+=", errorplus)
@@ -135,7 +137,8 @@ function print_tex(io::IO, coordinate::Coordinate)
         print_tex(io, meta, coordinate)
         print(io, "]")
     end
-    return println(io)
+    println(io)
+    return
 end
 
 struct Coordinates{N}
@@ -318,7 +321,8 @@ function print_tex(io::IO, coordinates::Coordinates)
         end
         return
     end
-    return println(io, "}")
+    println(io, "}")
+    return
 end
 
 #########
@@ -542,7 +546,7 @@ function print_tex(io::IO, table::Table)
     @unpack options, content = table
     all_options = merge(container_options(content, table), options)
     print(io, "table")
-    return if content isa String
+    if content isa String
         print_options(io, all_options, newline = false)
         print(io, "{")
         print(io, content)
@@ -553,6 +557,7 @@ function print_tex(io::IO, table::Table)
         print_indent(io, content)
         println(io, "}")
     end
+    return
 end
 
 ############
@@ -576,7 +581,8 @@ end
 function print_tex(io::IO, t::Graphics)
     print(io, "graphics")
     print_options(io, t.options; newline = false)
-    return println(io, "{", t.filename, "}")
+    println(io, "{", t.filename, "}")
+    return
 end
 
 ########
@@ -682,7 +688,8 @@ function print_tex(io::IO, plot::Plot)
         for t in trailing
             print_tex(io, t)
         end
-        return println(io, ";")
+        println(io, ";")
+        return
     end
     return
 end

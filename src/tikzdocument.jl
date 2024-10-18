@@ -51,7 +51,8 @@ end
 MissingExternalProgramError(strs...) = MissingExternalProgramError(join(strs))
 
 function Base.showerror(io::IO, e::MissingExternalProgramError)
-    return print(io, e.str)
+    print(io, e.str)
+    return
 end
 
 """
@@ -157,9 +158,10 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     for element in td.elements
         print_tex(io, element, td)
     end
-    return if include_preamble
+    if include_preamble
         println(io, "\\end{document}")
     end
+    return
 end
 
 _HAS_WARNED_SHELL_ESCAPE = false
@@ -233,7 +235,8 @@ function savepdf(
         return
     end
     rm_tmpfiles(tmp_tex)
-    return mv(tmp_pdf, filename; force = true)
+    mv(tmp_pdf, filename; force = true)
+    return
 end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
@@ -242,7 +245,8 @@ function Base.show(io::IO, ::MIME"application/pdf", p::_SHOWABLE)
     filename = tempname() * ".pdf"
     save(filename, p; showing_ide = _is_ide())
     write(io, read(filename))
-    return rm(filename; force = true)
+    rm(filename; force = true)
+    return
 end
 
 # Copyright TikzPictures.jl (see LICENSE.md)
@@ -300,11 +304,12 @@ function savesvg(
         Ijulia_cache[[1, 2]] = [hsh, tmp_ijulia_pdf]
     end
     convert_pdf_to_svg(tmp_pdf, filename)
-    return if keep_pdf
+    if keep_pdf
         mv(tmp_pdf, _replace_fileext(filename, ".pdf"); force = true)
     else
         rm(tmp_pdf)
     end
+    return
 end
 
 Base.showable(::MIME"image/svg+xml", td::_SHOWABLE) = svg_engine() !== NO_SVG_ENGINE
@@ -330,7 +335,8 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
     s = replace(s, "image id=\"" => "image style=\"image-rendering: pixelated;\" id=\"")
     _tikzid += 1
     println(f, s)
-    return rm(filename; force = true)
+    rm(filename; force = true)
+    return
 end
 
 function savepng(
@@ -368,7 +374,8 @@ function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
         global showing_Ijulia = false
     end
     write(io, read(filename))
-    return rm(filename; force = true)
+    rm(filename; force = true)
+    return
 end
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
@@ -377,7 +384,7 @@ _is_vscode() = isdefined(Main, :_vscodeserver) || (isdefined(Main, :VSCodeServer
 _is_ide() = _is_ijulia() || _is_vscode()
 
 function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
-    return if _DISPLAY_PDF
+    if _DISPLAY_PDF
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
@@ -388,4 +395,5 @@ function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
     else
         throw(MethodError(display, (d, p)))
     end
+    return
 end

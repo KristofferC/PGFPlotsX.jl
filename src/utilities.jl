@@ -27,7 +27,8 @@ indented with four spaces.
 function print_indent(f, io_main::IO)
     io = IOBuffer()
     f(io)
-    return print(io_main, add_indent(String(take!(io))))
+    print(io_main, add_indent(String(take!(io))))
+    return
 end
 
 """
@@ -37,9 +38,11 @@ Print `elt` to `io` with indentation. Shortcut for the function wrapper of
 `print_indent` for a single element.
 """
 function print_indent(io_main::IO, elt)
-    return print_indent(io_main) do io
-        return print_tex(io, elt)
+    print_indent(io_main) do io
+        print_tex(io, elt)
+        return
     end
+    return
 end
 
 """

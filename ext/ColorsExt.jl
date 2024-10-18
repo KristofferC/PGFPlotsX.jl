@@ -12,12 +12,13 @@ end
 
 function PGFPlotsX.print_opt(io::IO, c::Colors.Colorant)
     rgb_64 = _rgb_for_printing(c)
-    return print(
+    print(
         io, "rgb,1:",
         "red,", rgb_64[1], ";",
         "green,", rgb_64[2], ";",
         "blue,", rgb_64[3]
     )
+    return
 end
 
 # For printing surface plots with explicit color, pgfplots manual 4.6.7.
@@ -25,13 +26,15 @@ end
 # we should introduce a wrapper type.
 function PGFPlotsX.print_tex(io::IO, c::Colors.Colorant)
     rgb_64 = _rgb_for_printing(c)
-    return print(io, "rgb=", rgb_64[1], ",", rgb_64[2], ",", rgb_64[3])
+    print(io, "rgb=", rgb_64[1], ",", rgb_64[2], ",", rgb_64[3])
+    return
 end
 
 function PGFPlotsX.print_tex(io::IO, c::Tuple{String, Colors.Colorant}, ::Any)
     name, color = c
     rgb_64 = _rgb_for_printing(color)
-    return print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
+    print(io, "\\definecolor{$name}{rgb}{$(rgb_64[1]), $(rgb_64[2]), $(rgb_64[3])}")
+    return
 end
 
 function PGFPlotsX.print_tex(
@@ -45,7 +48,8 @@ function PGFPlotsX.print_tex(
         rgb_64 = _rgb_for_printing(col)
         println(io, "rgb=(", join(rgb_64, ","), ")")
     end
-    return println(io, "}}")
+    println(io, "}}")
+    return
 end
 
 end

@@ -39,7 +39,8 @@ function print_tex(io::IO, axislike::T) where {T <: AxisLike}
         end
         return
     end
-    return println(io, "\\end{", name, "}")
+    println(io, "\\end{", name, "}")
+    return
 end
 
 function save(filename::AbstractString, axislike::AxisLike; kwargs...) =

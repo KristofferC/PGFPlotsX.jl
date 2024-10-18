@@ -79,7 +79,7 @@ print_tex(io::IO, vector::AbstractVector) = foreach(elt -> print_tex(io, elt), v
 Real numbers are printed as is, except for non-finite representation.
 """
 function print_tex(io::IO, x::Real)
-    return if isfinite(x)
+    if isfinite(x)
         print(io, x)
     elseif isnan(x)
         print(io, "nan")
@@ -89,6 +89,7 @@ function print_tex(io::IO, x::Real)
     else
         throw(ArgumentError("Don't know how to print $x for LaTeX."))
     end
+    return
 end
 
 print_tex(io::IO, ::Missing) = print(io, "nan")
