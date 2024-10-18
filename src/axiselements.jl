@@ -673,9 +673,8 @@ Plot3Inc(options::Options, data::PlotData, trailing...) =
 Plot3Inc(data::PlotData, trailing...) =
     Plot(true, true, Options(), data, trailing)
 
-function save(filename::AbstractString, plot::Plot; kwargs...)
-    return save(filename, Axis(plot); kwargs...)
-end
+save(filename::AbstractString, plot::Plot; kwargs...) =
+    save(filename, Axis(plot); kwargs...)
 
 function print_tex(io::IO, plot::Plot)
     @unpack is3d, incremental, options, data, trailing = plot

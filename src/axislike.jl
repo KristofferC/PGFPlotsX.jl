@@ -43,7 +43,7 @@ function print_tex(io::IO, axislike::T) where {T <: AxisLike}
     return
 end
 
-function save(filename::AbstractString, axislike::AxisLike; kwargs...) =
+save(filename::AbstractString, axislike::AxisLike; kwargs...) =
     save(filename, TikzPicture(axislike); kwargs...)
 
 macro define_axislike(name, latex_environment)
