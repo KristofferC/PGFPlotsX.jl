@@ -20,7 +20,7 @@ function PGFPlotsX.TableData(c::Contour.ContourCollection; kwargs...)
             push!(ns, n)
         end
     end
-    PGFPlotsX.TableData(hcat(colx, coly, colz); colnames=["x", "y", "z"], scanlines=cumsum(ns), kwargs...)
+    return PGFPlotsX.TableData(hcat(colx, coly, colz); colnames = ["x", "y", "z"], scanlines = cumsum(ns), kwargs...)
 end
 
 end

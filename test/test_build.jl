@@ -1,5 +1,5 @@
 function is_file_starting_with(filename, bytes::DenseVector{UInt8})
-    isfile(filename) && read(filename, length(bytes)) == bytes
+    return isfile(filename) && read(filename, length(bytes)) == bytes
 end
 
 function is_file_starting_with(filename, regex::Regex, nlines = 1)
@@ -9,27 +9,28 @@ function is_file_starting_with(filename, regex::Regex, nlines = 1)
         for _ in 1:nlines
             content *= readline(io; keep = false)
         end
+        return
     end
-    occursin(regex, content)
+    return occursin(regex, content)
 end
 
 is_png_file(filename) = is_file_starting_with(filename, b"\x89PNG")
 
 is_pdf_file(filename) = is_file_starting_with(filename, b"%PDF")
 
-is_tex_document(filename) =     # may have a \Require in the first line
+is_tex_document(filename) = # may have a \Require in the first line
     is_file_starting_with(filename, r"\\documentclass\[tikz\]{standalone}", 2)
 
 function is_tikz_standalone(filename)
     if !isfile(filename)
         return false
     end
-    s = read(filename,String)
-    m = match(r"^([^%].*$)"m,s) # First non-commented non-empty line
+    s = read(filename, String)
+    m = match(r"^([^%].*$)"m, s) # First non-commented non-empty line
     if nothing ≡ m
         return false
     end
-    return occursin(r"\\begin{tikzpicture}",m.captures[1])
+    return occursin(r"\\begin{tikzpicture}", m.captures[1])
 end
 
 is_svg_file(filename) = is_file_starting_with(filename, r"<svg .*>", 2)
@@ -96,40 +97,44 @@ end
     end
 end
 
-@testset "show(io, mime, plot)" begin; mktempdir() do dir; cd(dir) do
-    tmp = tempname()
-    io = IOBuffer()
-    a = Axis(Plot(Expression("x^2")))
-    # pdf
-    let tmp = tmp * ".pdf", mime = MIME"application/pdf"()
-        show(io, mime, a)
-        write(tmp, take!(io))
-        @test is_pdf_file(tmp)
-        rm(tmp; force=true)
-    end
-    # svg
-    let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
-        if PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE
-            show(io, mime, a)
-            write(tmp, take!(io))
-            @test is_svg_file(tmp)
-            rm(tmp; force=true)
-        else
-            @test_throws MethodError show(io, mime, a)
+@testset "show(io, mime, plot)" begin
+    mktempdir() do dir
+        cd(dir) do
+            tmp = tempname()
+            io = IOBuffer()
+            a = Axis(Plot(Expression("x^2")))
+            # pdf
+            let tmp = tmp * ".pdf", mime = MIME"application/pdf"()
+                show(io, mime, a)
+                write(tmp, take!(io))
+                @test is_pdf_file(tmp)
+                rm(tmp; force = true)
+            end
+            # svg
+            let tmp = tmp * ".svg", mime = MIME"image/svg+xml"()
+                if PGFPlotsX.svg_engine() !== PGFPlotsX.NO_SVG_ENGINE
+                    show(io, mime, a)
+                    write(tmp, take!(io))
+                    @test is_svg_file(tmp)
+                    rm(tmp; force = true)
+                else
+                    @test_throws MethodError show(io, mime, a)
+                end
+            end
+            # png
+            let tmp = tmp * ".png", mime = MIME"image/png"()
+                if PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE
+                    show(io, mime, a)
+                    write(tmp, take!(io))
+                    @test is_png_file(tmp)
+                    rm(tmp; force = true)
+                else
+                    @test_throws MethodError show(io, mime, a)
+                end
+            end
         end
     end
-    # png
-    let tmp = tmp * ".png", mime = MIME"image/png"()
-        if PGFPlotsX.png_engine() !== PGFPlotsX.NO_PNG_ENGINE
-            show(io, mime, a)
-            write(tmp, take!(io))
-            @test is_png_file(tmp)
-            rm(tmp; force=true)
-        else
-            @test_throws MethodError show(io, mime, a)
-        end
-    end
-end end end
+end
 
 @testset "gnuplot / shell-escape" begin
     if HAVE_GNUPLOT
@@ -139,23 +144,26 @@ end end end
             cd(dir) do
                 @pgf p =
                     Axis(
+                    {
+                        colorbar,
+                        xlabel = "x",
+                        ylabel = "y",
+                        domain = "1:2",
+                        y_domain = "74:87.9",
+                        view = (0, 90),
+                    },
+                    Plot3(
                         {
-                            colorbar,
-                            xlabel = "x",
-                            ylabel = "y",
-                            domain = "1:2",
-                            y_domain = "74:87.9",
-                            view = (0, 90),
-                        },
-                        Plot3(
-                            {
-                                contour_gnuplot = {
-                                    number = 30,
-                                    labels = false},
-                                thick,
-                                samples = 40,
+                            contour_gnuplot = {
+                                number = 30,
+                                labels = false,
                             },
-                            Expression(expr)))
+                            thick,
+                            samples = 40,
+                        },
+                        Expression(expr)
+                    )
+                )
                 pgfsave(tmp_pdf, p)
                 @test is_pdf_file(tmp_pdf)
                 rm(tmp_pdf)
@@ -168,14 +176,22 @@ end
     tmp_pdf = tempname() * ".pdf"
     mktempdir() do dir
         cd(dir) do
-            @pgf a = [Axis({legend_to_name = "named",
+            @pgf a = [
+                Axis(
+                        {
+                            legend_to_name = "named",
                             title = "k = $k", legend_columns = 2,
-                            legend_entries = {"\$x^k\$", "\$(x + 1)^k\$"}},
-                            PlotInc(Expression("x^$k")),
-                            PlotInc(Expression("(x + 1)^$k")))
-                      for k in 1:3]
-            p = TikzPicture("\\matrix{", a[1], "&", a[2], "&", a[3], raw"\\\\};",
-                            raw"\node at (.5, -4.5) {\ref{named}};")
+                            legend_entries = {"\$x^k\$", "\$(x + 1)^k\$"},
+                        },
+                        PlotInc(Expression("x^$k")),
+                        PlotInc(Expression("(x + 1)^$k"))
+                    )
+                    for k in 1:3
+            ]
+            p = TikzPicture(
+                "\\matrix{", a[1], "&", a[2], "&", a[3], raw"\\\\};",
+                raw"\node at (.5, -4.5) {\ref{named}};"
+            )
             pgfsave(tmp_pdf, p)
             @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)
@@ -189,9 +205,11 @@ end
         cd(dir) do
             PGFPlotsX.CLASS_OPTIONS[1] = "varwidth"
             push!(PGFPlotsX.CLASS_OPTIONS, "crop = false")
-            td = TikzDocument("\\begin{tabular}{cc}",
-                              TikzPicture(Axis(Plot(Expression("x^2")))),
-                              "& A \\end{tabular}")
+            td = TikzDocument(
+                "\\begin{tabular}{cc}",
+                TikzPicture(Axis(Plot(Expression("x^2")))),
+                "& A \\end{tabular}"
+            )
             pgfsave(tmp_pdf, td)
             @test is_pdf_file(tmp_pdf)
             rm(tmp_pdf)

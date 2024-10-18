@@ -45,7 +45,7 @@ print_tex(a) = print_tex(stdout, a)
 function print_tex(::Type{String}, args...)
     io = IOBuffer()
     print_tex(io, args...)
-    String(take!(io))
+    return String(take!(io))
 end
 
 include("options.jl")
@@ -79,7 +79,7 @@ print_tex(io::IO, vector::AbstractVector) = foreach(elt -> print_tex(io, elt), v
 Real numbers are printed as is, except for non-finite representation.
 """
 function print_tex(io::IO, x::Real)
-    if isfinite(x)
+    return if isfinite(x)
         print(io, x)
     elseif isnan(x)
         print(io, "nan")
@@ -97,9 +97,15 @@ print_tex(io::IO, dt::Date) = Dates.format(io, dt, dateformat"YYYY-mm-dd")
 
 print_tex(io::IO, dt::DateTime) = Dates.format(io, dt, dateformat"YYYY-mm-dd HH:MM")
 
-print_tex(io::IO,   v) = throw(ArgumentError(string("No tex function available for data of type $(typeof(v)). ",
-                                                  "Define one by overloading print_tex(io::IO, data::T) ",
-                                                  "where T is the type of the data to dispatch on.")))
+print_tex(io::IO, v) = throw(
+    ArgumentError(
+        string(
+            "No tex function available for data of type $(typeof(v)). ",
+            "Define one by overloading print_tex(io::IO, data::T) ",
+            "where T is the type of the data to dispatch on."
+        )
+    )
+)
 
 
 """
@@ -130,18 +136,20 @@ end
 
 function __init__()
     pushdisplay(PGFPlotsXDisplay())
-    atreplinit(i -> begin
-        if PlotDisplay() in Base.Multimedia.displays
-            popdisplay(PGFPlotsXDisplay())
+    atreplinit(
+        i -> begin
+            if PlotDisplay() in Base.Multimedia.displays
+                popdisplay(PGFPlotsXDisplay())
+            end
+            pushdisplay(PGFPlotsXDisplay())
         end
-        pushdisplay(PGFPlotsXDisplay())
-    end)
+    )
 
-    @static if !EXTENSIONS_SUPPORTED
-        @require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" include("../ext/ColorsExt.jl")
-        @require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" include("../ext/ContourExt.jl")
-        @require StatsBase="2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" include("../ext/StatsBaseExt.jl")
-        @require Measurements="eff96d63-e80a-5855-80a2-b1b0885c5ab7" include("../ext/MeasurementsExt.jl")
+    return @static if !EXTENSIONS_SUPPORTED
+        @require Colors = "5ae59095-9a9b-59fe-a467-6f913c188581" include("../ext/ColorsExt.jl")
+        @require Contour = "d38c429a-6771-53c6-b99e-75d170b6e991" include("../ext/ContourExt.jl")
+        @require StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" include("../ext/StatsBaseExt.jl")
+        @require Measurements = "eff96d63-e80a-5855-80a2-b1b0885c5ab7" include("../ext/MeasurementsExt.jl")
     end
 end
 

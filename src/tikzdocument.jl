@@ -18,7 +18,7 @@ struct TikzDocument
     "Add to the preamble."
     preamble::Vector{Any}
     function TikzDocument(elements...; use_default_preamble = true, preamble = [])
-        new(collect(Any, elements), use_default_preamble, preamble)
+        return new(collect(Any, elements), use_default_preamble, preamble)
     end
 end
 
@@ -51,7 +51,7 @@ end
 MissingExternalProgramError(strs...) = MissingExternalProgramError(join(strs))
 
 function Base.showerror(io::IO, e::MissingExternalProgramError)
-    print(io, e.str)
+    return print(io, e.str)
 end
 
 """
@@ -64,12 +64,14 @@ Keywords specify options, some specific to some output formats.
 
 `pgfsave` is an alias which is exported.
 """
-function save(filename::AbstractString, td::TikzDocument;
-              include_preamble::Bool = true,
-              latex_engine = latexengine(),
-              buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-              dpi = 150,
-              showing_ide = false)
+function save(
+        filename::AbstractString, td::TikzDocument;
+        include_preamble::Bool = true,
+        latex_engine = latexengine(),
+        buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+        dpi = 150,
+        showing_ide = false
+    )
     filebase, fileext = splitext(filename)
     if showing_ide
         td = deepcopy(td)
@@ -85,11 +87,15 @@ function save(filename::AbstractString, td::TikzDocument;
     elseif fileext == ".pdf"
         savepdf(filename, td; latex_engine = latex_engine, buildflags = buildflags)
     elseif fileext == ".png"
-        savepng(filename, td;
-                latex_engine = latex_engine, buildflags = buildflags, dpi = dpi)
+        savepng(
+            filename, td;
+            latex_engine = latex_engine, buildflags = buildflags, dpi = dpi
+        )
     else
-        allowed_file_endings = vcat(["tex", "pdf", "png", "svg"],
-                                    lstrip.(STANDALONE_TIKZ_FILEEXTS, '.'))
+        allowed_file_endings = vcat(
+            ["tex", "pdf", "png", "svg"],
+            lstrip.(STANDALONE_TIKZ_FILEEXTS, '.')
+        )
         throw(ArgumentError("allowed file endings are $(join(allowed_file_endings, ", "))."))
     end
     return
@@ -98,10 +104,12 @@ end
 const pgfsave = save
 
 # TeX
-function savetex(filename::AbstractString, td::TikzDocument;
-                 include_preamble::Bool = true)
-    open(filename, "w") do io
-        savetex(io, td; include_preamble = include_preamble)
+function savetex(
+        filename::AbstractString, td::TikzDocument;
+        include_preamble::Bool = true
+    )
+    return open(filename, "w") do io
+        return savetex(io, td; include_preamble = include_preamble)
     end
 end
 
@@ -141,33 +149,37 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         end
         println(io, "\\begin{document}")
     else
-        print_tex(io,"% Recommended preamble:")
+        print_tex(io, "% Recommended preamble:")
         for preamble_line in preamble
-            print_tex(io,replace(preamble_line,r"^"m => s"% "),td)
+            print_tex(io, replace(preamble_line, r"^"m => s"% "), td)
         end
     end
     for element in td.elements
         print_tex(io, element, td)
     end
-    if include_preamble
+    return if include_preamble
         println(io, "\\end{document}")
     end
 end
 
 _HAS_WARNED_SHELL_ESCAPE = false
 
-function savepdf(filename::AbstractString, td::TikzDocument;
-                 latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 run_count = 0, tmp = tempname())
+function savepdf(
+        filename::AbstractString, td::TikzDocument;
+        latex_engine = latexengine(),
+        buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+        run_count = 0, tmp = tempname()
+    )
     global _HAS_WARNED_SHELL_ESCAPE, _OLD_LUALATEX
     run_again = false
 
     tmp_tex = tmp * ".tex"
     tmp_pdf = tmp * ".pdf"
     savetex(tmp_tex, td)
-    latex_success, log, latexcmd = run_latex_once(tmp_tex,
-                                                  latex_engine, buildflags)
+    latex_success, log, latexcmd = run_latex_once(
+        tmp_tex,
+        latex_engine, buildflags
+    )
 
     if !latex_success
         @debug "LaTeX command $latexcmd failed"
@@ -175,8 +187,10 @@ function savepdf(filename::AbstractString, td::TikzDocument;
             @debug "The log indicates luatex85.sty is not found, trying again without require"
             _OLD_LUALATEX = true
             run_again = true
-        elseif (occursin("Maybe you need to enable the shell-escape feature", log) ||
-                occursin("Package pgfplots Error: sorry, plot file{", log))
+        elseif (
+                occursin("Maybe you need to enable the shell-escape feature", log) ||
+                    occursin("Package pgfplots Error: sorry, plot file{", log)
+            )
             if !_HAS_WARNED_SHELL_ESCAPE
                 @warn("Detecting need of --shell-escape flag, enabling it for the rest of the session and running latex again")
                 _HAS_WARNED_SHELL_ESCAPE = true
@@ -192,9 +206,13 @@ function savepdf(filename::AbstractString, td::TikzDocument;
             else
                 latexerrormsg(log)
                 rm_tmpfiles(tmp_tex)
-                error(string("The latex command $latexcmd failed ",
-                             "shell-escape feature seemed to not be ",
-                             "detected even though it was passed as a flag"))
+                error(
+                    string(
+                        "The latex command $latexcmd failed ",
+                        "shell-escape feature seemed to not be ",
+                        "detected even though it was passed as a flag"
+                    )
+                )
             end
         else
             latexerrormsg(log)
@@ -208,21 +226,23 @@ function savepdf(filename::AbstractString, td::TikzDocument;
         error("ran latex 5 times without converging, log is:\n$log")
     end
     if run_again
-        savepdf(filename, td; latex_engine=latex_engine, buildflags=buildflags,
-                run_count=run_count+1, tmp = tmp)
+        savepdf(
+            filename, td; latex_engine = latex_engine, buildflags = buildflags,
+            run_count = run_count + 1, tmp = tmp
+        )
         return
     end
     rm_tmpfiles(tmp_tex)
-    mv(tmp_pdf, filename; force = true)
+    return mv(tmp_pdf, filename; force = true)
 end
 
 const _SHOWABLE = Union{Plot, AbstractVector{Plot}, AxisLike, TikzDocument, TikzPicture}
 
 function Base.show(io::IO, ::MIME"application/pdf", p::_SHOWABLE)
     filename = tempname() * ".pdf"
-    save(filename, p; showing_ide=_is_ide())
+    save(filename, p; showing_ide = _is_ide())
     write(io, read(filename))
-    rm(filename; force = true)
+    return rm(filename; force = true)
 end
 
 # Copyright TikzPictures.jl (see LICENSE.md)
@@ -242,9 +262,10 @@ function latexerrormsg(s)
             end
         end
     end
+    return
 end
 
-global _tikzid = round(UInt64, time() * 1e6)
+global _tikzid = round(UInt64, time() * 1.0e6)
 
 # The purpose of this is to not have IJulia call latex twice every time
 # we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
@@ -264,20 +285,22 @@ Generates an interim PDF which is deleted; use `keep_pdf = true` to copy it to
 `filename` with the extension (if any) replaced by `".pdf"`. This overwrites
 an existing PDF file with the same name.
 """
-function savesvg(filename::AbstractString, td::TikzDocument;
-                 latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 keep_pdf = false)
+function savesvg(
+        filename::AbstractString, td::TikzDocument;
+        latex_engine = latexengine(),
+        buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+        keep_pdf = false
+    )
     tmp_pdf = tempname() * ".pdf"
     savepdf(tmp_pdf, td, latex_engine = latex_engine, buildflags = buildflags)
     if _is_ijulia() && showing_Ijulia
         tmp_ijulia_pdf = tempname() * ".pdf"
         hsh = hash(sprint(print_tex, td))
         cp(tmp_pdf, tmp_ijulia_pdf)
-        Ijulia_cache[[1,2]] = [hsh, tmp_ijulia_pdf]
+        Ijulia_cache[[1, 2]] = [hsh, tmp_ijulia_pdf]
     end
     convert_pdf_to_svg(tmp_pdf, filename)
-    if keep_pdf
+    return if keep_pdf
         mv(tmp_pdf, _replace_fileext(filename, ".pdf"); force = true)
     else
         rm(tmp_pdf)
@@ -291,7 +314,8 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
     global _tikzid
     filename = tempname() * ".svg"
     global showing_Ijulia = true
-    try save(filename, td; showing_ide=_is_ide())
+    try
+        save(filename, td; showing_ide = _is_ide())
     finally
         global showing_Ijulia = false
     end
@@ -306,13 +330,15 @@ function Base.show(f::IO, ::MIME"image/svg+xml", td::_SHOWABLE)
     s = replace(s, "image id=\"" => "image style=\"image-rendering: pixelated;\" id=\"")
     _tikzid += 1
     println(f, s)
-    rm(filename; force = true)
+    return rm(filename; force = true)
 end
 
-function savepng(filename::AbstractString, td::TikzDocument;
-                 latex_engine = latexengine(),
-                 buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
-                 dpi::Number = 150)
+function savepng(
+        filename::AbstractString, td::TikzDocument;
+        latex_engine = latexengine(),
+        buildflags = vcat(DEFAULT_FLAGS, CUSTOM_FLAGS),
+        dpi::Number = 150
+    )
     found_ijulia_cache_matching = false
     local tmp
     if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
@@ -328,29 +354,30 @@ function savepng(filename::AbstractString, td::TikzDocument;
         savepdf(tmp, td, latex_engine = latex_engine, buildflags = buildflags)
     end
     filebase = splitext(filename)[1]
-    convert_pdf_to_png(tmp, filebase; dpi=dpi)
-    found_ijulia_cache_matching && rm(tmp; force=true)
+    convert_pdf_to_png(tmp, filebase; dpi = dpi)
+    return found_ijulia_cache_matching && rm(tmp; force = true)
 end
 
 Base.showable(::MIME"image/png", ::_SHOWABLE) = png_engine() !== NO_PNG_ENGINE
 function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
     filename = tempname() * ".png"
     global showing_Ijulia = true
-    try save(filename, p; showing_ide=_is_ide())
+    try
+        save(filename, p; showing_ide = _is_ide())
     finally
         global showing_Ijulia = false
     end
     write(io, read(filename))
-    rm(filename; force = true)
+    return rm(filename; force = true)
 end
 _DISPLAY_PDF = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_vscode() = isdefined(Main, :_vscodeserver) || (isdefined(Main, :VSCodeServer) && Main.VSCodeServer.PLOT_PANE_ENABLED[] == true)
-_is_ide()    = _is_ijulia() || _is_vscode()
+_is_ide() = _is_ijulia() || _is_vscode()
 
 function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
-    if _DISPLAY_PDF
+    return if _DISPLAY_PDF
         filename = tempname() .* ".pdf"
         save(filename, p)
         try
