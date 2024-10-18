@@ -2,7 +2,7 @@ module StatsBaseExt
 
 import PGFPlotsX
 
-PGFPlotsX.EXTENSIONS_SUPPORTED ? (using StatsBase) : (using ..StatsBase)
+using StatsBase
 
 function PGFPlotsX.TableData(h::StatsBase.Histogram{T, 1};
                                 kwargs...) where T

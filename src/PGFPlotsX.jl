@@ -121,13 +121,6 @@ include("build.jl")
 include("precompile_PGFPlotsX.jl")
 _precompile_()
 
-# TODO: Replace with proper version
-const EXTENSIONS_SUPPORTED = isdefined(Base, :get_extension)
-
-if !EXTENSIONS_SUPPORTED
-    using Requires: @require
-end
-
 function __init__()
     pushdisplay(PGFPlotsXDisplay())
     atreplinit(i -> begin
@@ -136,13 +129,6 @@ function __init__()
         end
         pushdisplay(PGFPlotsXDisplay())
     end)
-
-    @static if !EXTENSIONS_SUPPORTED
-        @require Colors="5ae59095-9a9b-59fe-a467-6f913c188581" include("../ext/ColorsExt.jl")
-        @require Contour="d38c429a-6771-53c6-b99e-75d170b6e991" include("../ext/ContourExt.jl")
-        @require StatsBase="2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" include("../ext/StatsBaseExt.jl")
-        @require Measurements="eff96d63-e80a-5855-80a2-b1b0885c5ab7" include("../ext/MeasurementsExt.jl")
-    end
 end
 
 end # module
