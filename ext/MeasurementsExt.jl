@@ -2,7 +2,7 @@ module MeasurementsExt
 
 import PGFPlotsX
 
-PGFPlotsX.EXTENSIONS_SUPPORTED ? (using Measurements) : (using ..Measurements)
+using Measurements
 
 function PGFPlotsX.Coordinates(x::AbstractVector{T}, y::AbstractVector;
                             kwargs...) where T <: Measurements.Measurement{<:Real}
