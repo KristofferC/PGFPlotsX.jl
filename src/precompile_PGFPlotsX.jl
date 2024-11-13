@@ -1,4 +1,4 @@
-const __bodyfunction__ = Dict{Method,Any}()
+const __bodyfunction__ = Dict{Method, Any}()
 
 # Find keyword "body functions" (the function that contains the body
 # as written by the developer, called after all missing keyword-arguments
@@ -22,7 +22,7 @@ function __lookup_kwbody__(mnokw::Method)
         # where `mkw` is the name of the "active" keyword body-function.
         ast = Base.uncompressed_ast(mnokw)
         if isa(ast, Core.CodeInfo) && length(ast.code) >= 2
-            callexpr = ast.code[end-1]
+            callexpr = ast.code[end - 1]
             if isa(callexpr, Expr) && callexpr.head == :call
                 fsym = callexpr.args[1]
                 if isa(fsym, Symbol)
@@ -51,15 +51,17 @@ end
 
 function _precompile_()
     ccall(:jl_generating_output, Cint, ()) == 1 || return nothing
-    Base.precompile(Tuple{Core.kwftype(typeof(PGFPlotsX.Type)),NamedTuple{(:print_empty,), Tuple{Bool}},Type{PGFPlotsX.Options},Pair{String, Nothing},Pair{String, Nothing}})
-    Base.precompile(Tuple{Type{Axis},PGFPlotsX.Options,Plot})
-    Base.precompile(Tuple{Type{Coordinates},StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}},Vector{Float64}})
-    Base.precompile(Tuple{typeof(display),PGFPlotsX.PGFPlotsXDisplay,Axis})
-    Base.precompile(Tuple{typeof(print_tex),IOStream,TikzPicture,TikzDocument})
-    Base.precompile(Tuple{typeof(procmap),Expr})
-    let fbody = try __lookup_kwbody__(which(PGFPlotsX.save, (String,TikzDocument,))) catch missing end
+    Base.precompile(Tuple{Core.kwftype(typeof(PGFPlotsX.Type)), NamedTuple{(:print_empty,), Tuple{Bool}}, Type{PGFPlotsX.Options}, Pair{String, Nothing}, Pair{String, Nothing}})
+    Base.precompile(Tuple{Type{Axis}, PGFPlotsX.Options, Plot})
+    Base.precompile(Tuple{Type{Coordinates}, StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}}, Vector{Float64}})
+    Base.precompile(Tuple{typeof(display), PGFPlotsX.PGFPlotsXDisplay, Axis})
+    Base.precompile(Tuple{typeof(print_tex), IOStream, TikzPicture, TikzDocument})
+    Base.precompile(Tuple{typeof(procmap), Expr})
+    return let fbody = try
+            __lookup_kwbody__(which(PGFPlotsX.save, (String, TikzDocument)))
+        catch missing end
         if !ismissing(fbody)
-            Base.precompile(fbody, (Bool,PGFPlotsX.LaTeXEngine,Vector{String},Int64,Bool,typeof(PGFPlotsX.save),String,TikzDocument,))
+            Base.precompile(fbody, (Bool, PGFPlotsX.LaTeXEngine, Vector{String}, Int64, Bool, typeof(PGFPlotsX.save), String, TikzDocument))
         end
     end
 end
