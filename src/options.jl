@@ -232,7 +232,11 @@ function print_opt(io::IO, options::Options)
             print(io, "}")
         end
         if i != length(dict)
-          print(io, ", ")
+            if v isa Options
+                print(io, ",\n ")
+            else
+                print(io,",")
+            end
         end
     end
 end

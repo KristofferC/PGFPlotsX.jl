@@ -118,8 +118,9 @@ See https://www.ctan.org/pkg/standalone for a list of options.
 """
 CLASS_OPTIONS = ["tikz"]
 
-savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
+function savetex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     print_tex(io, td; include_preamble = include_preamble)
+end
 
 function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
