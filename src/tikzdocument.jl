@@ -25,6 +25,8 @@ end
 Base.push!(t::TikzDocument, args...; kwargs...) = (push!(t.elements, args...; kwargs...); t)
 Base.append!(t::TikzDocument, args...; kwargs...) = (append!(t.elements, args...; kwargs...); t)
 
+Base.copy(t::TikzDocument) = deepcopy(t)
+
 """
     $SIGNATURES
 
