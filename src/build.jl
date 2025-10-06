@@ -96,6 +96,7 @@ DEFAULT_PREAMBLE =
         "\\usepackage{pgfplots}",
         "\\pgfplotsset{compat=newest}",
         "\\usepgfplotslibrary{groupplots}",
+        "\\usepgfplotslibrary{patchplots}",
         "\\usepgfplotslibrary{polar}",
         "\\usepgfplotslibrary{smithchart}",
         "\\usepgfplotslibrary{statistics}",
