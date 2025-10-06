@@ -1,6 +1,6 @@
 name = "PGFPlotsX"
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
-version = "1.6.1"
+version = "1.6.2"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
@@ -26,7 +26,7 @@ StatsBaseExt = "StatsBase"
 
 [compat]
 ArgCheck = "^1, 2.0"
-Colors = "0.12"
+Colors = "0.12, 0.13"
 Contour = "0.6"
 DefaultApplication = "1"
 DocStringExtensions = "^0.8, 0.9"
