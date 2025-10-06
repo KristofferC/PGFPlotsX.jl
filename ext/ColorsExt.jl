@@ -2,7 +2,7 @@ module ColorsExt
 
 import PGFPlotsX
 
-PGFPlotsX.EXTENSIONS_SUPPORTED ? (using Colors) : (using ..Colors)
+using Colors
 
 function _rgb_for_printing(c::Colors.Colorant)
     rgb = convert(Colors.RGB{Float64}, c)
