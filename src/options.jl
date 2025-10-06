@@ -11,6 +11,7 @@ normalize_key(x) = error("Invalid pgf key $x")
 
 function Base.show(io::IO, ::MIME"text/plain", options::Options)
     print_options(io, options; newline = false)
+    return
 end
 
 # Wrapper to wrap arguments in the `@pgf {theme...,}` syntax to
@@ -38,8 +39,8 @@ macro is used in scripts and interactive code.
 When `print_empty = false` (the default), empty options are not printed. Use
 `print_empty = true` to force printing a `[]` in this case.
 """
-function Options(args::Union{Pair,MergeEntry}...; print_empty::Bool = false)
-    d = OrderedDict{String,Any}()
+function Options(args::Union{Pair, MergeEntry}...; print_empty::Bool = false)
+    d = OrderedDict{String, Any}()
     for arg in args
         if arg isa Pair
             k, v = arg
@@ -64,8 +65,10 @@ Base.copy(options::Options) = deepcopy(options)
 
 function Base.merge(options::Options, others::Options...)
     args = (options, others...)
-    Options(mapreduce(opts -> opts.dict, merge, args),
-            mapreduce(opts -> opts.print_empty, |, args))
+    return Options(
+        mapreduce(opts -> opts.dict, merge, args),
+        mapreduce(opts -> opts.print_empty, |, args)
+    )
 end
 
 function prockey(key)
@@ -73,8 +76,8 @@ function prockey(key)
         return :($(normalize_key(key)) => nothing)
     elseif @capture(key, @raw_str(str_))
         return :($(normalize_key(str)) => nothing)
-    elseif @capture(key, (a_ : b_) | (a_ => b_) | (a_ = b_))
-        return :($(normalize_key(a))=>$b)
+    elseif @capture(key, (a_:b_) | (a_ => b_) | (a_ = b_))
+        return :($(normalize_key(a)) => $b)
     elseif @capture(key, g_...)
         return :($MergeEntry($g))
     end
@@ -138,7 +141,7 @@ axis_opt = @pgf {theme..., title = "My figure"}
 Use `{}` for empty options that print as `[]` in LaTeX.
 """
 macro pgf(ex)
-    esc(prewalk(procmap, ex))
+    return esc(prewalk(procmap, ex))
 end
 
 """
@@ -158,13 +161,13 @@ Base.delete!(o::OptionType, args...; kwargs...) = (delete!(o.options, args...; k
 
 Base.copy(a::OptionType) = deepcopy(a)
 
-function Base.merge!(options::Union{Options,OptionType}, others::Options...)
+function Base.merge!(options::Union{Options, OptionType}, others::Options...)
     for other in others
         for (k, v) in other.dict
             options[k] = v
         end
     end
-    options
+    return options
 end
 
 """
@@ -190,36 +193,35 @@ function print_options(io::IO, options::Options; newline = true, brackets = "[]"
         print_opt(io, options)
         print(io, brackets[2])
     end
-    newline ? println(io) : print(io, " ")
+    return newline ? println(io) : print(io, " ")
 end
 
 print_tex(io::IO, options::Options) = print_options(io, options; newline = false)
 
-accum_opt!(d::AbstractDict, opt::Union{String,Symbol}) = d[normalize_key(opt)] = nothing
+accum_opt!(d::AbstractDict, opt::Union{String, Symbol}) = d[normalize_key(opt)] = nothing
 accum_opt!(d::AbstractDict, opt::Pair) = d[normalize_key(first(opt))] = last(opt)
 function accum_opt!(d::AbstractDict, opt::AbstractDict)
     for (k, v) in opt
         d[normalize_key(k)] = v
     end
+    return
 end
 
 function Base.append!(options::Options, opts)
     for opt in opts
         accum_opt!(options.dict, opt)
     end
-    options
+    return options
 end
 
-function Base.push!(options::Options, opts::Union{String,Pair}...)
-    append!(options, opts)
-end
+Base.push!(options::Options, opts::Union{String, Pair}...) = append!(options, opts)
 
 function dictify(args)
     options = Options()
     for arg in args
         accum_opt!(options.dict, arg)
     end
-    options
+    return options
 end
 
 function print_opt(io::IO, options::Options)
@@ -232,9 +234,10 @@ function print_opt(io::IO, options::Options)
             print(io, "}")
         end
         if i != length(dict)
-          print(io, ", ")
+            print(io, ", ")
         end
     end
+    return
 end
 
 print_opt(io::IO, s) = print_tex(io, s)
@@ -244,6 +247,7 @@ function print_opt(io::IO, v::AbstractVector)
         i == 1 || print(io, ",")
         print_opt(io, o)
     end
+    return
 end
 
 function print_opt(io::IO, t::Tuple)
@@ -253,6 +257,7 @@ function print_opt(io::IO, t::Tuple)
         print_opt(io, t[i])
         i != length(t) && print(io, "}")
     end
+    return
 end
 
 print_opt(io::IO, str::AbstractString) = print(io, str)

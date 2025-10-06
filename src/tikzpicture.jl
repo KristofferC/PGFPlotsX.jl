@@ -11,7 +11,7 @@ struct TikzPicture <: OptionType
     options::Options
     elements::Vector{TikzElementOrStr} # Plots, nodes etc
     function TikzPicture(options::Options, elements::TikzElementOrStr...)
-        new(options, collect(TikzElementOrStr, elements))
+        return new(options, collect(TikzElementOrStr, elements))
     end
 end
 
@@ -28,8 +28,10 @@ function print_tex(io::IO, tp::TikzPicture)
         print_tex(io, element, tp)
     end
     println(io, "\\end{tikzpicture}")
+    return
 end
 
 function save(filename::AbstractString, tp::TikzPicture; kwargs...)
     save(filename, TikzDocument(tp); kwargs...)
+    return
 end

@@ -26,7 +26,7 @@ function print_tex(io::IO, f::Expression)
         end
     end
     multiple_f && print(io, ")")
-    nothing
+    return nothing
 end
 
 ##############
@@ -36,7 +36,7 @@ end
 """
 Types we accept as coordinates. Need to support [`print_tex`](@ref).
 """
-const CoordinateType = Union{Real,AbstractString,Date}
+const CoordinateType = Union{Real, AbstractString, Date}
 
 struct Coordinate{N}
     data::NTuple{N, CoordinateType}
@@ -44,18 +44,24 @@ struct Coordinate{N}
     errorplus::Union{Nothing, NTuple{N, Real}}
     errorminus::Union{Nothing, NTuple{N, Real}}
     meta::Any
-    function Coordinate(data::NTuple{N, CoordinateType},
-                        error::Union{Nothing, NTuple{N, Real}},
-                        errorplus::Union{Nothing, NTuple{N, Real}},
-                        errorminus::Union{Nothing, NTuple{N, Real}}, meta) where N
+    function Coordinate(
+            data::NTuple{N, CoordinateType},
+            error::Union{Nothing, NTuple{N, Real}},
+            errorplus::Union{Nothing, NTuple{N, Real}},
+            errorminus::Union{Nothing, NTuple{N, Real}}, meta
+        ) where {N}
         @argcheck 2 ≤ N ≤ 3 "A Coordinate has to be two- or three dimensional."
-        @argcheck(!(error ≠ nothing &&
-                    (errorplus ≠ nothing || errorminus ≠ nothing)),
-                  "You can specify *either* `error`, or `errorplus`/`errorminus`.")
+        @argcheck(
+            !(
+                error ≠ nothing &&
+                    (errorplus ≠ nothing || errorminus ≠ nothing)
+            ),
+            "You can specify *either* `error`, or `errorplus`/`errorminus`."
+        )
         error ≠ nothing && @argcheck all(isfinite, error)
         errorplus ≠ nothing && @argcheck all(isfinite, errorplus)
         errorminus ≠ nothing && @argcheck all(isfinite, errorminus)
-        new{N}(data, error, errorplus, errorminus, meta)
+        return new{N}(data, error, errorplus, errorminus, meta)
     end
 end
 
@@ -78,8 +84,10 @@ Metadata can be provided in `meta`.
 Users rarely need to use this constructor, see methods of [`Coordinates`](@ref)
 for constructing coordinates from arrays.
 """
-Coordinate(data; error = nothing, errorplus = nothing, errorminus = nothing,
-           meta = nothing) = Coordinate(data, error, errorplus, errorminus, meta)
+Coordinate(
+    data; error = nothing, errorplus = nothing, errorminus = nothing,
+    meta = nothing
+) = Coordinate(data, error, errorplus, errorminus, meta)
 
 """
     $SIGNATURES
@@ -97,13 +105,14 @@ Convenience constructor for 3-dimensional coordinates.
 Coordinate(x::CoordinateType, y::CoordinateType, z; args...) =
     Coordinate((x, y, z); args...)
 
-function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where N
+function print_tex(io::IO, data::NTuple{N, CoordinateType}, ::Coordinate) where {N}
     print(io, "(")
     for (i, x) in enumerate(data)
         i == 1 || print(io, ",")
         print(io, x)
     end
     print(io, ")")
+    return
 end
 
 # Print raw strings inside coordinates. Compared to generic `print_tex`, print no newline,
@@ -118,6 +127,7 @@ function print_tex(io::IO, coordinate::Coordinate)
             print(io, " $(prefix) ")
             print_tex(io, error, coordinate)
         end
+        return
     end
     _print_error("+-", error)
     _print_error("+=", errorplus)
@@ -128,6 +138,7 @@ function print_tex(io::IO, coordinate::Coordinate)
         print(io, "]")
     end
     println(io)
+    return
 end
 
 struct Coordinates{N}
@@ -135,7 +146,7 @@ struct Coordinates{N}
 end
 
 coordinate_or_nothing(data, args...) =
-    all(x -> x isa AbstractString || isfinite(x)===true, data) ? Coordinate(data, args...) : nothing
+    all(x -> x isa AbstractString || isfinite(x) === true, data) ? Coordinate(data, args...) : nothing
 
 """
     $SIGNATURES
@@ -171,15 +182,15 @@ function Coordinates(itr)
     check_N(N) = common_N == 0 ? common_N = N :
         @argcheck N == common_N "Incompatible dimensions."
     ensure_c(::Union{Nothing, Tuple{}}) = nothing
-    ensure_c(c::Coordinate{N}) where N = (check_N(N); c)
+    ensure_c(c::Coordinate{N}) where {N} = (check_N(N); c)
     ensure_c(x) = throw(ArgumentError("Can't interpret $x as a coordinate."))
-    function ensure_c(data::NTuple{N, Union{CoordinateType, Missing}}) where N
+    function ensure_c(data::NTuple{N, Union{CoordinateType, Missing}}) where {N}
         check_N(N)
-        coordinate_or_nothing(data)
+        return coordinate_or_nothing(data)
     end
     data = [ensure_c(data) for data in itr]
     @argcheck common_N ≠ 0 "Could not determine dimension from coordinates"
-    Coordinates{common_N}(data)
+    return Coordinates{common_N}(data)
 end
 
 expand_errors(_::Nothing...) = nothing
@@ -192,19 +203,31 @@ expand_errors(data::Union{Real, Nothing}...) = map(x -> x isa Nothing ? 0 : x, d
 
 Two dimensional coordinates from two vectors, with error bars.
 """
-function Coordinates(x::AbstractVector, y::AbstractVector;
-                     xerror = nothing, yerror = nothing,
-                     xerrorplus = nothing, yerrorplus = nothing,
-                     xerrorminus = nothing, yerrorminus = nothing,
-                     meta = nothing)
-    Coordinates{2}(@. coordinate_or_nothing(tuple(x, y),
-                                            expand_errors(xerror,
-                                                          yerror),
-                                            expand_errors(xerrorplus,
-                                                          yerrorplus),
-                                            expand_errors(xerrorminus,
-                                                          yerrorminus),
-                                            meta))
+function Coordinates(
+        x::AbstractVector, y::AbstractVector;
+        xerror = nothing, yerror = nothing,
+        xerrorplus = nothing, yerrorplus = nothing,
+        xerrorminus = nothing, yerrorminus = nothing,
+        meta = nothing
+    )
+    return Coordinates{2}(
+        @. coordinate_or_nothing(
+            tuple(x, y),
+            expand_errors(
+                xerror,
+                yerror
+            ),
+            expand_errors(
+                xerrorplus,
+                yerrorplus
+            ),
+            expand_errors(
+                xerrorminus,
+                yerrorminus
+            ),
+            meta
+        )
+    )
 end
 
 """
@@ -212,23 +235,35 @@ end
 
 Three dimensional coordinates from two vectors, with error bars.
 """
-function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractVector;
-                     xerror = nothing, yerror = nothing, zerror = nothing,
-                     xerrorplus = nothing, yerrorplus = nothing,
-                     zerrorplus = nothing, xerrorminus = nothing,
-                     yerrorminus = nothing, zerrorminus = nothing,
-                     meta = nothing)
-    Coordinates{3}(@. coordinate_or_nothing(tuple(x, y, z),
-                                            expand_errors(xerror,
-                                                          yerror,
-                                                          zerror),
-                                            expand_errors(xerrorplus,
-                                                          yerrorplus,
-                                                          zerrorplus),
-                                            expand_errors(xerrorminus,
-                                                          yerrorminus,
-                                                          zerrorminus),
-                                            meta))
+function Coordinates(
+        x::AbstractVector, y::AbstractVector, z::AbstractVector;
+        xerror = nothing, yerror = nothing, zerror = nothing,
+        xerrorplus = nothing, yerrorplus = nothing,
+        zerrorplus = nothing, xerrorminus = nothing,
+        yerrorminus = nothing, zerrorminus = nothing,
+        meta = nothing
+    )
+    return Coordinates{3}(
+        @. coordinate_or_nothing(
+            tuple(x, y, z),
+            expand_errors(
+                xerror,
+                yerror,
+                zerror
+            ),
+            expand_errors(
+                xerrorplus,
+                yerrorplus,
+                zerrorplus
+            ),
+            expand_errors(
+                xerrorminus,
+                yerrorminus,
+                zerrorminus
+            ),
+            meta
+        )
+    )
 end
 
 """
@@ -236,7 +271,7 @@ end
 
 Return new coordinates, inserting [`nothing`](@ref) after every `stride` lines.
 """
-function insert_scanlines(coordinates::Coordinates{N}, stride) where N
+function insert_scanlines(coordinates::Coordinates{N}, stride) where {N}
     data = Vector{Union{Nothing, Coordinate{N}}}()
     for (i, coordinate) in enumerate(coordinates.data)
         push!(data, coordinate)
@@ -244,7 +279,7 @@ function insert_scanlines(coordinates::Coordinates{N}, stride) where N
             push!(data, nothing)
         end
     end
-    Coordinates(data)
+    return Coordinates(data)
 end
 
 """
@@ -262,12 +297,18 @@ z = sin.(x) + cos.(y')
 Coordinates(x, y, z)
 ```
 """
-function Coordinates(x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
-                     meta::Union{Nothing, AbstractMatrix} = nothing)
+function Coordinates(
+        x::AbstractVector, y::AbstractVector, z::AbstractMatrix;
+        meta::Union{Nothing, AbstractMatrix} = nothing
+    )
     meta ≠ nothing && @argcheck size(meta) == size(z)
-    insert_scanlines(Coordinates(matrix_xyz(x, y, z)...;
-                                 meta = meta ≠ nothing ? vec(meta) : meta),
-                     length(x))
+    return insert_scanlines(
+        Coordinates(
+            matrix_xyz(x, y, z)...;
+            meta = meta ≠ nothing ? vec(meta) : meta
+        ),
+        length(x)
+    )
 end
 
 print_tex(io::IO, ::Nothing, ::Coordinates) = println(io)
@@ -278,8 +319,10 @@ function print_tex(io::IO, coordinates::Coordinates)
         for coordinate in coordinates.data
             print_tex(io, coordinate, coordinates)
         end
+        return
     end
     println(io, "}")
+    return
 end
 
 #########
@@ -330,18 +373,20 @@ for `surf` and `mesh` plots. They are expanded using [`expand_scanlines`](@ref).
 """
 struct TableData
     data::AbstractMatrix
-    colnames::Union{Nothing, Vector{<: AbstractString}}
+    colnames::Union{Nothing, Vector{<:AbstractString}}
     scanlines::AbstractVector{Int}
     rowsep::Bool
-    function TableData(data::AbstractMatrix,
-                       colnames::Union{Nothing, Vector{<: AbstractString}},
-                       scanlines::AbstractVector{Int},
-                       rowsep::Bool = ROWSEP)
+    function TableData(
+            data::AbstractMatrix,
+            colnames::Union{Nothing, Vector{<:AbstractString}},
+            scanlines::AbstractVector{Int},
+            rowsep::Bool = ROWSEP
+        )
         if colnames ≠ nothing
             @argcheck allunique(colnames) "Column names are not unique."
             @argcheck length(colnames) == size(data, 2)
         end
-        new(data, colnames, scanlines, rowsep)
+        return new(data, colnames, scanlines, rowsep)
     end
 end
 
@@ -366,6 +411,7 @@ function print_tex(io::IO, tabledata::TableData)
             _rowsep()
         end
     end
+    return
 end
 
 
@@ -374,11 +420,15 @@ end
 
 `data` provided directly as a matrix.
 """
-function TableData(data::AbstractMatrix;
-                   colnames = nothing, scanlines = 0, rowsep = ROWSEP)
-    TableData(data,
-              colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
-              expand_scanlines(scanlines, size(data, 1)), rowsep)
+function TableData(
+        data::AbstractMatrix;
+        colnames = nothing, scanlines = 0, rowsep = ROWSEP
+    )
+    return TableData(
+        data,
+        colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
+        expand_scanlines(scanlines, size(data, 1)), rowsep
+    )
 end
 
 """
@@ -389,9 +439,11 @@ Columns, given as vectors.
 Use of this constructor is encouraged for conversion, passing on keyword
 arguments.
 """
-TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
-          rowsep::Bool = ROWSEP) =
-    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep)
+TableData(
+    columns::Vector{<:AbstractVector}, colnames = nothing, scanlines = 0;
+    rowsep::Bool = ROWSEP
+) =
+    TableData(reduce(hcat, columns); colnames = nothing, scanlines = 0, rowsep = rowsep)
 
 """
     $SIGNATURES
@@ -399,10 +451,14 @@ TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
 Named columns provided as a vector of pairs, eg `[:x => 1:10, :y => 11:20]`.
 Symbols or strings are accepted as column names.
 """
-function TableData(name_column_pairs::Vector{<: Pair};
-                   scanlines = 0, rowsep::Bool = ROWSEP)
-    TableData(reduce(hcat, last.(name_column_pairs)); colnames=first.(name_column_pairs),
-              scanlines=scanlines, rowsep=rowsep)
+function TableData(
+        name_column_pairs::Vector{<:Pair};
+        scanlines = 0, rowsep::Bool = ROWSEP
+    )
+    return TableData(
+        reduce(hcat, last.(name_column_pairs)); colnames = first.(name_column_pairs),
+        scanlines = scanlines, rowsep = rowsep
+    )
 end
 
 TableData(rest::AbstractVector...; kwargs...) = TableData(collect(rest); kwargs...)
@@ -413,7 +469,7 @@ TableData(name_column_pairs::Pair...; kwargs...) =
 function TableData(x::AbstractVector, y::AbstractVector, z::AbstractMatrix; kwargs...)
     colnames = ["x", "y", "z"]
     columns = reduce(hcat, matrix_xyz(x, y, z))
-    return TableData(columns; colnames=colnames, scanlines=length(x), kwargs...)
+    return TableData(columns; colnames = colnames, scanlines = length(x), kwargs...)
 end
 
 
@@ -435,7 +491,7 @@ function TableData(table; kwargs...)
         error("`$(typeof(table))` does not support the Table interface")
     end
     colnames = string.(Tables.columnnames(Tables.columns(table)))
-    TableData(Tables.matrix(table); colnames=colnames, kwargs...)
+    return TableData(Tables.matrix(table); colnames = colnames, kwargs...)
 end
 
 struct Table <: OptionType
@@ -501,6 +557,7 @@ function print_tex(io::IO, table::Table)
         print_indent(io, content)
         println(io, "}")
     end
+    return
 end
 
 ############
@@ -518,13 +575,14 @@ struct Graphics <: OptionType
 end
 
 function Graphics(filename::AbstractString, args::Vararg{PGFOption})
-    Graphics(dictify(args), filename)
+    return Graphics(dictify(args), filename)
 end
 
 function print_tex(io::IO, t::Graphics)
     print(io, "graphics")
     print_options(io, t.options; newline = false)
     println(io, "{", t.filename, "}")
+    return
 end
 
 ########
@@ -550,8 +608,10 @@ struct Plot <: OptionType
     trailing::AbstractVector{Any} # FIXME can/should we be more specific?
 end
 
-Plot(is3d::Bool, incremental::Bool, options::Options, data::PlotData,
-     trailing::Tuple) = Plot(is3d, incremental, options, data, collect(trailing))
+Plot(
+    is3d::Bool, incremental::Bool, options::Options, data::PlotData,
+    trailing::Tuple
+) = Plot(is3d, incremental, options, data, collect(trailing))
 
 Base.push!(p::Plot, args...; kwargs...) = (push!(p.trailing, args...; kwargs...); p)
 Base.append!(p::Plot, args...; kwargs...) = (append!(p.trailing, args...; kwargs...); p)
@@ -613,9 +673,8 @@ Plot3Inc(options::Options, data::PlotData, trailing...) =
 Plot3Inc(data::PlotData, trailing...) =
     Plot(true, true, Options(), data, trailing)
 
-function save(filename::AbstractString, plot::Plot; kwargs...)
+save(filename::AbstractString, plot::Plot; kwargs...) =
     save(filename, Axis(plot); kwargs...)
-end
 
 function print_tex(io::IO, plot::Plot)
     @unpack is3d, incremental, options, data, trailing = plot
@@ -629,7 +688,9 @@ function print_tex(io::IO, plot::Plot)
             print_tex(io, t)
         end
         println(io, ";")
+        return
     end
+    return
 end
 
 struct Legend
@@ -679,6 +740,7 @@ function print_tex(io::IO, legendentry::LegendEntry)
     print(io, "{")
     print(io, name)
     println(io, "}")
+    return
 end
 
 ###############
@@ -697,6 +759,7 @@ end
 function print_tex(io::IO, legend_image::LegendImage)
     print(io, "\\addlegendimage")
     print_options(io, legend_image.options; newline = false, brackets = "{}")
+    return
 end
 
 ###################
@@ -720,6 +783,7 @@ function print_tex(io::IO, vline::VLine)
     print_options(io, vline.options; newline = false)
     x = print_tex(String, vline.x)
     println(io, "({axis cs:$(x),0}|-{rel axis cs:0,1}) -- ({axis cs:$(x),0}|-{rel axis cs:0,0});")
+    return
 end
 
 struct HLine
@@ -739,6 +803,7 @@ function print_tex(io::IO, hline::HLine)
     print_options(io, hline.options; newline = false)
     y = print_tex(String, hline.y)
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(y)}) -- ({rel axis cs:0,0}|-{axis cs:0,$(y)});")
+    return
 end
 
 ###################
@@ -763,6 +828,7 @@ function print_tex(io::IO, vband::VBand)
     print_options(io, vband.options; newline = false)
     xmin, xmax = print_tex.(String, (vband.xmin, vband.xmax))
     println(io, "({axis cs:$(xmin),0}|-{rel axis cs:0,1}) rectangle ({axis cs:$(xmax),0}|-{rel axis cs:0,0});")
+    return
 end
 
 struct HBand
@@ -783,4 +849,5 @@ function print_tex(io::IO, hband::HBand)
     print_options(io, hband.options; newline = false)
     ymin, ymax = print_tex.(String, (hband.ymin, hband.ymax))
     println(io, "({rel axis cs:1,0}|-{axis cs:0,$(ymin)}) rectangle ({rel axis cs:0,0}|-{axis cs:0,$(ymax)});")
+    return
 end
