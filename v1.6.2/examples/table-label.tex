@@ -1,0 +1,47 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{ternary}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[scatter/classes={a={mark={square*}, blue}, b={mark={triangle*}, red}, c={mark={o}, draw={black}}}]
+    \addplot[scatter, only marks, scatter src={explicit symbolic}]
+        table[row sep={\\}, meta={label}]
+        {
+            x  y  label  \\
+            0.1  0.15  a
+              \\
+            0.45  0.27  c
+              \\
+            0.02  0.17  a
+              \\
+            0.06  0.1  a
+              \\
+            0.9  0.5  b
+              \\
+            0.5  0.3  c
+              \\
+            0.85  0.52  b
+              \\
+            0.12  0.05  a
+              \\
+            0.73  0.45  b
+              \\
+            0.53  0.25  c
+              \\
+            0.76  0.5  b
+              \\
+            0.55  0.32  c
+              \\
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
