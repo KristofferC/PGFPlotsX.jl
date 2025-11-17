@@ -301,6 +301,10 @@ expand_scanlines(itr, _) = collect(Int, itr)
 
 "Default for additional row separator `\\`."
 const ROWSEP = true
+"Default column separator string. space|tab|comma|semicolon|colon|braces|&|ampersand (initially space)"
+const COLSEP = "space"
+# TODO: braces is not implemented yet, requires additional logic in print_tex(io::IO, tabledata::TableData)
+const COLSEPARATORMAP = Dict("space" => " ", "tab" => "\t", "comma" => ",", "semicolon" => ";", "colon" => ":", "ampersand" => "&")
 
 """
 Tabular data with optional column names.
@@ -333,33 +337,37 @@ struct TableData
     colnames::Union{Nothing, Vector{<: AbstractString}}
     scanlines::AbstractVector{Int}
     rowsep::Bool
+    colsep::AbstractString
     function TableData(data::AbstractMatrix,
                        colnames::Union{Nothing, Vector{<: AbstractString}},
                        scanlines::AbstractVector{Int},
-                       rowsep::Bool = ROWSEP)
+                       rowsep::Bool = ROWSEP,
+                       colsep::AbstractString = COLSEP)
         if colnames ≠ nothing
             @argcheck allunique(colnames) "Column names are not unique."
             @argcheck length(colnames) == size(data, 2)
         end
-        new(data, colnames, scanlines, rowsep)
+        new(data, colnames, scanlines, rowsep, colsep)
     end
 end
 
 function print_tex(io::IO, tabledata::TableData)
-    @unpack data, colnames, scanlines, rowsep = tabledata
-    _colsep() = print(io, "  ")
+    @unpack data, colnames, scanlines, rowsep, colsep = tabledata
+    colseparator = get(COLSEPARATORMAP, colsep, colsep)
+    _colsep() = print(io, colseparator)
     _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
     if colnames ≠ nothing
-        for colname in colnames
+        for (idx, colname) in enumerate(colnames)
             print(io, colname)
-            _colsep()
+            idx < length(colnames) && _colsep()
         end
     end
     _rowsep()
     for row_index in axes(data, 1)
-        for col_index in axes(data, 2)
+        col_axes = axes(data, 2)
+        for col_index in col_axes
             print_tex(io, data[row_index, col_index])
-            _colsep()
+            col_index < length(col_axes) && _colsep()
         end
         _rowsep()
         if row_index ∈ scanlines
@@ -375,10 +383,10 @@ end
 `data` provided directly as a matrix.
 """
 function TableData(data::AbstractMatrix;
-                   colnames = nothing, scanlines = 0, rowsep = ROWSEP)
+                   colnames = nothing, scanlines = 0, rowsep = ROWSEP, colsep = COLSEP)
     TableData(data,
               colnames ≡ nothing ? colnames : collect(string(c) for c in colnames),
-              expand_scanlines(scanlines, size(data, 1)), rowsep)
+              expand_scanlines(scanlines, size(data, 1)), rowsep, colsep)
 end
 
 """
@@ -390,8 +398,8 @@ Use of this constructor is encouraged for conversion, passing on keyword
 arguments.
 """
 TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
-          rowsep::Bool = ROWSEP) =
-    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep)
+          rowsep::Bool = ROWSEP, colsep::String = COLSEP) =
+    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep, colsep=colsep)
 
 """
     $SIGNATURES
@@ -400,9 +408,9 @@ Named columns provided as a vector of pairs, eg `[:x => 1:10, :y => 11:20]`.
 Symbols or strings are accepted as column names.
 """
 function TableData(name_column_pairs::Vector{<: Pair};
-                   scanlines = 0, rowsep::Bool = ROWSEP)
+                   scanlines = 0, rowsep::Bool = ROWSEP, colsep::String = COLSEP)
     TableData(reduce(hcat, last.(name_column_pairs)); colnames=first.(name_column_pairs),
-              scanlines=scanlines, rowsep=rowsep)
+              scanlines=scanlines, rowsep=rowsep, colsep=colsep)
 end
 
 TableData(rest::AbstractVector...; kwargs...) = TableData(collect(rest); kwargs...)
@@ -472,7 +480,7 @@ end
 ```
 """
 Table(options::Options, args...; kwargs...) =
-    Table(options, TableData(args...; kwargs...))
+    Table(options, TableData(args...; rowsep = get(options, "row sep", ROWSEP), colsep = get(options, "col sep", COLSEP), kwargs...))
 
 Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 
@@ -482,7 +490,7 @@ Table(args...; kwargs...) = Table(Options(), args...; kwargs...)
 Options to mix in for the container. Currently used for `TableData` and `Table`.
 """
 container_options(tabledata::TableData, ::Table) =
-    Options("row sep" => tabledata.rowsep ? "\\\\" : "newline")
+    Options("row sep" => tabledata.rowsep ? "\\\\" : "newline", "col sep" => tabledata.colsep)
 
 container_options(::AbstractString, ::Table) = Options() # included from file
 

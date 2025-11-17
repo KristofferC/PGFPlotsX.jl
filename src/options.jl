@@ -59,6 +59,8 @@ Base.getindex(o::Options, args...; kwargs...) = getindex(o.dict, args...; kwargs
 Base.setindex!(o::Options, args...; kwargs...) = (setindex!(o.dict, args...; kwargs...); o)
 Base.delete!(o::Options, args...; kwargs...) = (delete!(o.dict, args...; kwargs...); o)
 Base.haskey(o::Options, args...; kwargs...) = haskey(o.dict, args...; kwargs...)
+Base.get(o::Options, key) = o.dict[key]
+Base.get(o::Options, key, default) = haskey(o.dict, key) ? o.dict[key] : default
 
 Base.copy(options::Options) = deepcopy(options)
 

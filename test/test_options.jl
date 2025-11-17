@@ -34,7 +34,7 @@ end
 
 @testset "pgf empty" begin
     @test squashed_repr_tex(@pgf Plot({}, Table("x" => [1,2,3]))) ==
-        "\\addplot[]\ntable[row sep={\\\\}]\n{\nx \\\\\n1 \\\\\n2 \\\\\n3 \\\\\n}\n;" # note []
+        "\\addplot[]\ntable[row sep={\\\\}, col sep={space}]\n{\nx\\\\\n1\\\\\n2\\\\\n3\\\\\n}\n;" # note []
 end
 
 @testset "nested options vector" begin
