@@ -389,9 +389,14 @@ Columns, given as vectors.
 Use of this constructor is encouraged for conversion, passing on keyword
 arguments.
 """
-TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
+TableData(columns::Vector{<: AbstractVector}; colnames = nothing, scanlines = 0,
           rowsep::Bool = ROWSEP) =
-    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep)
+    TableData(reduce(hcat, columns); colnames = colnames, scanlines = scanlines, rowsep = rowsep)
+
+function TableData(columns::Vector{<: AbstractVector}, colnames, scanlines = 0;
+                   rowsep::Bool = ROWSEP)
+    TableData(columns; colnames, scanlines, rowsep)
+end
 
 """
     $SIGNATURES

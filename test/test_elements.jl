@@ -101,6 +101,10 @@ end
     @test Table([1:10, 11:20]) ≅ table_unnamed_noopt
     @test Table(hcat(1:10, 11:20)) ≅ table_unnamed_noopt
 
+    # vector-of-columns constructor keeps caller-provided metadata
+    @test Table([1:3, 4:6]; colnames = ["x", "y"], scanlines = [2], rowsep = false) ≅
+        Table(PGFPlotsX.Options(), hcat(1:3, 4:6); colnames = ["x", "y"], scanlines = [2], rowsep = false)
+
     # matrix and edges
     let x = randn(10), y = randn(5), z = cos.(x .+ y')
         @test Table(x, y, z) ≅ Table(PGFPlotsX.Options(),
