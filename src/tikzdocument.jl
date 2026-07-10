@@ -46,7 +46,7 @@ extensions should be recognized by `\\includegraphics` when the
 const STANDALONE_TIKZ_FILEEXTS = [".tikz", ".TIKZ", ".TikZ", ".pgf", ".PGF"]
 
 struct MissingExternalProgramError <: Exception
-    str::AbstractString
+    str::String
 end
 MissingExternalProgramError(strs...) = MissingExternalProgramError(join(strs))
 
@@ -105,7 +105,7 @@ function savetex(filename::AbstractString, td::TikzDocument;
     end
 end
 
-_OLD_LUALATEX = false
+_OLD_LUALATEX::Bool = false
 
 """
 List of class options used in the preamble (default `["tikz"]`).
@@ -116,7 +116,7 @@ the preamble will contain `documentclass[varwidth,crop=false]{standalone}`.
 
 See https://www.ctan.org/pkg/standalone for a list of options.
 """
-CLASS_OPTIONS = ["tikz"]
+CLASS_OPTIONS::Vector{String} = ["tikz"]
 
 savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
     print_tex(io, td; include_preamble = include_preamble)
@@ -141,9 +141,10 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
         end
         println(io, "\\begin{document}")
     else
-        print_tex(io,"% Recommended preamble:")
+        print_tex(io, "% Recommended preamble:")
         for preamble_line in preamble
-            print_tex(io,replace(preamble_line,r"^"m => s"% "),td)
+            rendered = chomp(print_tex(String, preamble_line, td))
+            print_tex(io, replace(rendered, r"^"m => s"% "))
         end
     end
     for element in td.elements
@@ -154,7 +155,7 @@ function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     end
 end
 
-_HAS_WARNED_SHELL_ESCAPE = false
+_HAS_WARNED_SHELL_ESCAPE::Bool = false
 
 function savepdf(filename::AbstractString, td::TikzDocument;
                  latex_engine = latexengine(),
@@ -244,7 +245,7 @@ function latexerrormsg(s)
     end
 end
 
-global _tikzid = round(UInt64, time() * 1e6)
+global _tikzid::UInt64 = round(UInt64, time() * 1e6)
 
 # The purpose of this is to not have IJulia call latex twice every time
 # we show a figure (https://github.com/JuliaLang/IJulia.jl/issues/574)
@@ -253,7 +254,7 @@ global _tikzid = round(UInt64, time() * 1e6)
 # the svg is showed. The PNG shower looks for the existence of these and re-uses
 # the pdf if the hash is the same
 const Ijulia_cache = Any[nothing, nothing]
-global showing_Ijulia = false
+global showing_Ijulia::Bool = false
 
 """
 $SIGNATURES
@@ -315,7 +316,7 @@ function savepng(filename::AbstractString, td::TikzDocument;
                  dpi::Number = 150)
     found_ijulia_cache_matching = false
     local tmp
-    if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] != nothing
+    if _is_ijulia() && showing_Ijulia && Ijulia_cache[1] !== nothing
         hsh = hash(sprint(print_tex, td))
         if Ijulia_cache[1] == hsh
             tmp = Ijulia_cache[2]
@@ -329,7 +330,7 @@ function savepng(filename::AbstractString, td::TikzDocument;
     end
     filebase = splitext(filename)[1]
     convert_pdf_to_png(tmp, filebase; dpi=dpi)
-    found_ijulia_cache_matching && rm(tmp; force=true)
+    rm(tmp; force=true)
 end
 
 Base.showable(::MIME"image/png", ::_SHOWABLE) = png_engine() !== NO_PNG_ENGINE
@@ -343,7 +344,7 @@ function Base.show(io::IO, ::MIME"image/png", p::_SHOWABLE)
     write(io, read(filename))
     rm(filename; force = true)
 end
-_DISPLAY_PDF = true
+_DISPLAY_PDF::Bool = true
 enable_interactive(v::Bool) = global _DISPLAY_PDF = v
 _is_ijulia() = isdefined(Main, :IJulia) && Main.IJulia.inited
 _is_vscode() = isdefined(Main, :_vscodeserver) || (isdefined(Main, :VSCodeServer) && Main.VSCodeServer.PLOT_PANE_ENABLED[] == true)
@@ -351,7 +352,7 @@ _is_ide()    = _is_ijulia() || _is_vscode()
 
 function Base.display(d::PGFPlotsXDisplay, p::_SHOWABLE)
     if _DISPLAY_PDF
-        filename = tempname() .* ".pdf"
+        filename = tempname() * ".pdf"
         save(filename, p)
         try
             DefaultApplication.open(filename)

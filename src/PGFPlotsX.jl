@@ -23,7 +23,7 @@ struct PGFPlotsXDisplay <: AbstractDisplay end
 
 """
 A file which is spliced directly to the preamble. Customize the file at this
-path for site-specific setting that apply for every plot.
+path for site-specific settings that apply for every plot.
 """
 const CUSTOM_PREAMBLE_PATH = joinpath(@__DIR__, "..", "deps", "custom_preamble.tex")
 
@@ -42,9 +42,9 @@ print_tex(io::IO, a, b) = print_tex(io, a)
 
 print_tex(a) = print_tex(stdout, a)
 
-function print_tex(::Type{String}, args...)
+function print_tex(::Type{String}, args...; kwargs...)
     io = IOBuffer()
-    print_tex(io, args...)
+    print_tex(io, args...; kwargs...)
     String(take!(io))
 end
 
@@ -118,13 +118,12 @@ include("axislike.jl")
 include("tikzpicture.jl")
 include("tikzdocument.jl")
 include("build.jl")
-include("precompile_PGFPlotsX.jl")
-_precompile_()
+include("precompile.jl")
 
 function __init__()
     pushdisplay(PGFPlotsXDisplay())
     atreplinit(i -> begin
-        if PlotDisplay() in Base.Multimedia.displays
+        if PGFPlotsXDisplay() in Base.Multimedia.displays
             popdisplay(PGFPlotsXDisplay())
         end
         pushdisplay(PGFPlotsXDisplay())
