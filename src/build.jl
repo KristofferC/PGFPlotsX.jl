@@ -67,31 +67,31 @@ function rm_tmpfiles(filename::AbstractString)
     rm(filename; force = true)
 end
 
-DEFAULT_FLAGS = Union{String}[] # no default flags currently
+DEFAULT_FLAGS::Vector{String} = String[] # no default flags currently
 
 """
 Custom flags to the engine can be used in the latex command by `push!`-ing them
 into the global variable `CUSTOM_FLAGS`.
 """
-CUSTOM_FLAGS = Union{String}[]
+CUSTOM_FLAGS::Vector{String} = String[]
 
 ############
 # Preamble #
 ############
 
 """
-A vector of stings, added after [`DEFAULT_PREAMBLE`](@ref).
+A vector of strings, added after [`DEFAULT_PREAMBLE`](@ref).
 
 Use this for additional definitions `\\usepackage` statements required by the LaTeX
 code you include into plots.
 """
-CUSTOM_PREAMBLE = String[]
+CUSTOM_PREAMBLE::Vector{String} = String[]
 
 """
 The default preamble for LaTeX documents. Don't change this, customize
 [`CUSTOM_PREAMBLE`](@ref) instead.
 """
-DEFAULT_PREAMBLE =
+const DEFAULT_PREAMBLE =
     String[
         "\\usepackage{pgfplots}",
         "\\pgfplotsset{compat=newest}",

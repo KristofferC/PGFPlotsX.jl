@@ -22,7 +22,7 @@ where the file extension of `filename` determines the file type (can be `pdf`, `
 pgfsave
 ```
 
-The standalone file extensions `tikz`, `TIKZ`, `TikZ`, `pgf`, `PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
+The standalone file extensions `tikz`, `TIKZ`, `TikZ`, `pgf`, `PGF` save LaTeX code for a `tikzpicture` environment without a preamble. You can `\input` them directly into a LaTeX document, or use the [tikzscale](https://www.ctan.org/pkg/tikzscale) LaTeX package for using `\includegraphics` with possible size adjustments.
 
 !!! hint
 

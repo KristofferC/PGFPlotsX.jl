@@ -475,7 +475,7 @@ push!(axis, area)
                   z = dat_pdf[i](x_pnts))
         )
 
-        # The fill is drawn seperately to handle the the end of the curves nicely.
+        # The fill is drawn separately to handle the end of the curves nicely.
         # This is an alternative to "\fillbetween"
         fill = Plot3(
             {

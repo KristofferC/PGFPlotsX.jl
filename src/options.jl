@@ -31,7 +31,7 @@ julia> PGFPlotsX.Options(:color => "red", :only_marks => nothing)
 [color={red}, only marks]
 ```
 
-The constuctor is not exported but part of the API, for use in packages that depend on
+The constructor is not exported but part of the API, for use in packages that depend on
 PGFPlotsX, or code producing complicated plots. It is recommended that the [`@pgf`](@ref)
 macro is used in scripts and interactive code.
 
@@ -171,7 +171,7 @@ end
     $(SIGNATURES)
 
 Print options between `brackets` (defaults to "[]"). For each option, the value is printed
-using [`print_opt`](@ref). Unless `newline == true` (the default), a newline follows the
+using [`print_opt`](@ref). When `newline == true` (the default), a newline follows the
 closing bracket, otherwise a space.
 
 # Notes
@@ -226,7 +226,7 @@ function print_opt(io::IO, options::Options)
     @unpack dict = options
     for (i, (k, v)) in enumerate(dict)
         print_opt(io, k)
-        if v != nothing
+        if v !== nothing
             print(io, "={")
             print_opt(io, v)
             print(io, "}")

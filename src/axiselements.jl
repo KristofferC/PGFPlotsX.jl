@@ -131,7 +131,7 @@ function print_tex(io::IO, coordinate::Coordinate)
 end
 
 struct Coordinates{N}
-    data::AbstractVector{Union{Nothing, Coordinate{N}}}
+    data::Vector{Union{Nothing, Coordinate{N}}}
 end
 
 coordinate_or_nothing(data, args...) =
@@ -330,8 +330,8 @@ for `surf` and `mesh` plots. They are expanded using [`expand_scanlines`](@ref).
 """
 struct TableData
     data::AbstractMatrix
-    colnames::Union{Nothing, Vector{<: AbstractString}}
-    scanlines::AbstractVector{Int}
+    colnames::Union{Nothing, Vector{String}}
+    scanlines::Vector{Int}
     rowsep::Bool
     function TableData(data::AbstractMatrix,
                        colnames::Union{Nothing, Vector{<: AbstractString}},
@@ -389,9 +389,9 @@ Columns, given as vectors.
 Use of this constructor is encouraged for conversion, passing on keyword
 arguments.
 """
-TableData(columns::Vector{<: AbstractVector}, colnames = nothing, scanlines = 0;
+TableData(columns::Vector{<: AbstractVector}; colnames = nothing, scanlines = 0,
           rowsep::Bool = ROWSEP) =
-    TableData(reduce(hcat, columns); colnames=nothing, scanlines=0, rowsep=rowsep)
+    TableData(reduce(hcat, columns); colnames=colnames, scanlines=scanlines, rowsep=rowsep)
 
 """
     $SIGNATURES
@@ -440,9 +440,9 @@ end
 
 struct Table <: OptionType
     options::Options
-    content::Union{TableData, AbstractString}
+    content::Union{TableData, String}
     Table(options::Options, content::Union{TableData, AbstractString}) =
-        new(options, content)
+        new(options, content isa AbstractString ? String(content) : content)
 end
 
 """
@@ -462,7 +462,7 @@ Table(["x" => 1:10, "y" => 11:20])        # from a vector
 
 Table([1:10, 11:20])                      # same contents, unnamed
 
-Table(Dict(:x => 1:10, :y = 11:20))       # a Dict with symbols
+Table(Dict(:x => 1:10, :y => 11:20))      # a Dict with symbols
 
 @pgf Table({ "x index" = 2, "y index" = 1 }, randn(10, 3))
 
@@ -547,7 +547,7 @@ struct Plot <: OptionType
     incremental::Bool
     options::Options
     data::PlotData
-    trailing::AbstractVector{Any} # FIXME can/should we be more specific?
+    trailing::Vector{Any}
 end
 
 Plot(is3d::Bool, incremental::Bool, options::Options, data::PlotData,
@@ -655,7 +655,7 @@ print_tex(io::IO, l::Legend) =
 
 struct LegendEntry
     options::Options
-    name::AbstractString
+    name::String
     isexpanded::Bool
 end
 
@@ -665,8 +665,8 @@ end
 Corresponds to the `\\addlegendentry` and `\\addlegendentryexpanded` forms of
 PGFPlots.
 """
-LegendEntry(options::Options, name::AbstractString, isexpanded = false) =
-    LegendEntry(options, name, isexpanded)
+LegendEntry(options::Options, name::AbstractString) =
+    LegendEntry(options, name, false)
 
 LegendEntry(name::AbstractString, isexpanded = false) =
     LegendEntry(Options(), name, isexpanded)
