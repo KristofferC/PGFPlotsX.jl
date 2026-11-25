@@ -182,7 +182,7 @@ closing bracket, otherwise a space.
 """
 function print_options(io::IO, options::Options; newline = true, brackets = "[]")
     @argcheck length(brackets) == 2
-    @unpack dict, print_empty = options
+    (; dict, print_empty) = options
     if isempty(dict)
         print_empty && print(io, brackets)
     else
@@ -223,7 +223,7 @@ function dictify(args)
 end
 
 function print_opt(io::IO, options::Options)
-    @unpack dict = options
+    (; dict) = options
     for (i, (k, v)) in enumerate(dict)
         print_opt(io, k)
         if v != nothing
