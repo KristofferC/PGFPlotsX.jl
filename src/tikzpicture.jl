@@ -21,7 +21,7 @@ Base.push!(t::TikzPicture, args...; kwargs...) = (push!(t.elements, args...; kwa
 Base.append!(t::TikzPicture, args...; kwargs...) = (append!(t.elements, args...; kwargs...); t)
 
 function print_tex(io::IO, tp::TikzPicture)
-    @unpack options, elements = tp
+    (; options, elements) = tp
     print(io, "\\begin{tikzpicture}")
     print_options(io, options)
     for element in elements

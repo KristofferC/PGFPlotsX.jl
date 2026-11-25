@@ -123,7 +123,7 @@ savetex(io::IO, td::TikzDocument; include_preamble::Bool = true) =
 
 function print_tex(io::IO, td::TikzDocument; include_preamble::Bool = true)
     global _OLD_LUALATEX
-    @unpack elements, use_default_preamble, preamble = td
+    (; elements, use_default_preamble, preamble) = td
     if isempty(td.elements)
         @warn("Tikz document is empty")
     end

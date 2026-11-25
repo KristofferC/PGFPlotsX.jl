@@ -1,6 +1,6 @@
 name = "PGFPlotsX"
 uuid = "8314cec4-20b6-5062-9cdb-752b83310925"
-version = "1.6.3"
+version = "1.6.4"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
@@ -9,7 +9,6 @@ DefaultApplication = "3f0dd361-4fe0-5fc6-8523-80b14ec94d85"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
 [weakdeps]
@@ -33,7 +32,6 @@ DocStringExtensions = "^0.8, 0.9"
 MacroTools = "^0.5"
 Measurements = "2.8"
 OrderedCollections = "1.4"
-Parameters = "0.12, 0.13"
 StatsBase = "0.33, 0.34"
 Tables = "1"
 julia = "1.10"

@@ -111,7 +111,7 @@ end
 print_tex(io::IO, str::AbstractString, ::Coordinate) = print(io, str)
 
 function print_tex(io::IO, coordinate::Coordinate)
-    @unpack data, error, errorplus, errorminus, meta = coordinate
+    (; data, error, errorplus, errorminus, meta) = coordinate
     print_tex(io, data, coordinate)
     function _print_error(prefix, error)
         if error ≠ nothing
@@ -346,7 +346,7 @@ struct TableData
 end
 
 function print_tex(io::IO, tabledata::TableData)
-    @unpack data, colnames, scanlines, rowsep = tabledata
+    (; data, colnames, scanlines, rowsep) = tabledata
     _colsep() = print(io, "  ")
     _rowsep() = print(io, rowsep ? "\\\\\n" : "\n")
     if colnames ≠ nothing
@@ -487,7 +487,7 @@ container_options(tabledata::TableData, ::Table) =
 container_options(::AbstractString, ::Table) = Options() # included from file
 
 function print_tex(io::IO, table::Table)
-    @unpack options, content = table
+    (; options, content) = table
     all_options = merge(container_options(content, table), options)
     print(io, "table")
     if content isa String
@@ -618,7 +618,7 @@ function save(filename::AbstractString, plot::Plot; kwargs...)
 end
 
 function print_tex(io::IO, plot::Plot)
-    @unpack is3d, incremental, options, data, trailing = plot
+    (; is3d, incremental, options, data, trailing) = plot
     print(io, "\\addplot")
     is3d && print(io, "3")
     incremental && print(io, "+")
@@ -672,7 +672,7 @@ LegendEntry(name::AbstractString, isexpanded = false) =
     LegendEntry(Options(), name, isexpanded)
 
 function print_tex(io::IO, legendentry::LegendEntry)
-    @unpack options, name, isexpanded = legendentry
+    (; options, name, isexpanded) = legendentry
     print(io, "\\addlegendentry")
     isexpanded && print(io, "expanded")
     print_options(io, options; newline = false)

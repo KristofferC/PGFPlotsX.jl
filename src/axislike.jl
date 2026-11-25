@@ -29,7 +29,7 @@ Base.append!(a::AxisLike, args...; kwargs...) = (append!(a.contents, args...; kw
 (T::Type{<:AxisLike})(contents...) = T(Options(), contents...)
 
 function print_tex(io::IO, axislike::T) where {T <: AxisLike}
-    @unpack options, contents = axislike
+    (; options, contents) = axislike
     name = axislike_environment(T)
     print(io, "\\begin{", name, "}")
     print_options(io, options)
@@ -128,7 +128,7 @@ The `contents` after the global options are processed as follows:
 @define_axislike GroupPlot "groupplot"
 
 function print_tex(io::IO, groupplot::GroupPlot)
-    @unpack options, contents = groupplot
+    (; options, contents) = groupplot
     isempty(contents) && return
     print(io, raw"\begin{groupplot}")
     print_options(io, options)
