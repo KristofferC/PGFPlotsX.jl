@@ -1,0 +1,29 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+% Default preamble
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{polar}
+\usepgfplotslibrary{smithchart}
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{ternary}
+\begin{document}
+\begin{tikzpicture}
+\begin{ternaryaxis}[axis on top, xlabel={x}, ylabel={y}, zlabel={z}, colorbar]
+    \addplot3[patch, shader={interp}, point meta={\thisrow{C}}]
+        table[row sep={\\}]
+        {
+            x  y  z  C  \\
+            0.0  0.0  1.0  100.0  \\
+            1.0  0.0  0.0  0.0  \\
+            0.5  0.5  0.0  0.0  \\
+            0.5  0.5  0.0  0.0  \\
+            0.0  1.0  0.0  20.0  \\
+            0.0  0.0  1.0  100.0  \\
+        }
+        ;
+\end{ternaryaxis}
+\end{tikzpicture}
+\end{document}
